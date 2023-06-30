@@ -2210,7 +2210,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^8.43.0":
+"eslint@npm:^8.22.0":
   version: 8.43.0
   resolution: "eslint@npm:8.43.0"
   dependencies:
@@ -5049,7 +5049,7 @@ __metadata:
     autoprefixer: ^10.4.14
     axios: ^1.4.0
     babel-plugin-macros: ^3.1.0
-    eslint: ^8.43.0
+    eslint: ^8.22.0
     eslint-config-prettier: ^8.8.0
     eslint-import-resolver-typescript: ^3.5.5
     eslint-plugin-import: ^2.27.5
