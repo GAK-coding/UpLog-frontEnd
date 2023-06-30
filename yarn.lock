@@ -1769,7 +1769,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^8.38.0":
+"eslint@npm:^8.22.0":
   version: 8.43.0
   resolution: "eslint@npm:8.43.0"
   dependencies:
@@ -3726,7 +3726,7 @@ __metadata:
     "@vitejs/plugin-react": ^4.0.0
     autoprefixer: ^10.4.14
     babel-plugin-macros: ^3.1.0
-    eslint: ^8.38.0
+    eslint: ^8.22.0
     eslint-plugin-react-hooks: ^4.6.0
     eslint-plugin-react-refresh: ^0.3.4
     postcss: ^8.4.24
