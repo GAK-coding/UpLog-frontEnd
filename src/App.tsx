@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { useState } from 'react';
+import Home from './pages/Home';
 
 const queryClient = new QueryClient();
 
@@ -14,11 +15,8 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <RecoilRoot>
         <BrowserRouter>
-          <div>
-            <h1 className="text-2xl font-bold underline">Hello world!</h1>
-          </div>
           <Routes>
-            <Route></Route>
+            <Route path={'/'} element={<Home />} />
           </Routes>
         </BrowserRouter>
       </RecoilRoot>
