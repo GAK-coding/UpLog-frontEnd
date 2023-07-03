@@ -1,7 +1,8 @@
 module.exports = {
     "env": {
         "browser": true,
-        "es2021": true
+        "es2021": true,
+        "node": true
     },
     "extends": [
         "eslint:recommended",
@@ -21,7 +22,15 @@ module.exports = {
         "no-duplicate-imports": "error",
         "no-console": ["warn", { "allow": ["warn", "error", "info"] }],
         "no-unused-vars": "error",
-        "no-multiple-empty-lines": "error"
+        "no-multiple-empty-lines": "error",
+
+        // error 해결하기 위해서 추가한 규칙
+        "react/jsx-filename-extension": [1, { "extensions": [".ts", ".tsx"] }],
+        "@typescript-eslint/ban-ts-ignore": "off",
+        "@typescript-eslint/ban-ts-comment": "off",
+        "@typescript-eslint/no-use-before-define": "off",
+        "react/react-in-jsx-scope": "off",
+        "react/jsx-uses-react": "off",
     },
     "settings": {
         "import/resolver": {

@@ -1,7 +1,7 @@
 // src/styles/GlobalStyles.tsx
-import React from 'react'
 import { Global } from '@emotion/react'
 import tw, { css, theme, GlobalStyles as BaseStyles } from 'twin.macro'
+import React from 'react';
 
 const customStyles = css({
     body: {
@@ -10,11 +10,10 @@ const customStyles = css({
     },
 })
 
-const GlobalStyles = () => (
-    <>
-        <BaseStyles />
-        <Global styles={customStyles} />
-    </>
-)
+export default function GlobalStyles () {
 
-export default GlobalStyles
+    return (<>
+        <BaseStyles/>
+        <Global styles={customStyles}/>
+    </>)
+}

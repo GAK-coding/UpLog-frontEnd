@@ -1,5 +1,5 @@
 {
-  "name": "vite-project",
+  "name": "UpLog-frontEnd",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -31,7 +31,7 @@
     "@types/babel__core": "^7.20.1",
     "@types/react": "^18.2.14",
     "@types/react-dom": "^18.0.11",
-    "@typescript-eslint/eslint-plugin": "latest",
+    "@typescript-eslint/eslint-plugin": "^5.60.1",
     "@typescript-eslint/parser": "^5.60.1",
     "@vitejs/plugin-react": "^4.0.0",
     "autoprefixer": "^10.4.14",
