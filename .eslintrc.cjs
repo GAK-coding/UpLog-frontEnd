@@ -1,40 +1,59 @@
 module.exports = {
-    "env": {
-        "browser": true,
-        "es2021": true,
-        "node": true
+    env: {
+        browser: true,
+        es2021: true,
     },
-    "extends": [
-        "eslint:recommended",
-        "plugin:react/recommended",
-        "plugin:@typescript-eslint/recommended"
+    extends: [
+        'airbnb',
+        'airbnb-typescript',
+        'airbnb/hooks',
+        'plugin:react/recommended',
+        'plugin:@typescript-eslint/recommended',
     ],
-    "overrides": [],
-    "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-        "ecmaVersion": "latest",
-        "sourceType": "module"
+    overrides: [],
+    parser: '@typescript-eslint/parser',
+    parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+        project: './tsconfig.json',
     },
-    "plugins": ["react", "react-hooks", "@typescript-eslint", "prettier"],
-    // 원하는 규칙 추가하기
-    "rules": {
-        "quotes": ["error", "single"],
-        "no-duplicate-imports": "error",
-        "no-console": ["warn", { "allow": ["warn", "error", "info"] }],
-        "no-unused-vars": "error",
-        "no-multiple-empty-lines": "error",
-
-        // error 해결하기 위해서 추가한 규칙
-        "react/jsx-filename-extension": [1, { "extensions": [".ts", ".tsx"] }],
-        "@typescript-eslint/ban-ts-ignore": "off",
-        "@typescript-eslint/ban-ts-comment": "off",
-        "@typescript-eslint/no-use-before-define": "off",
-        "react/react-in-jsx-scope": "off",
-        "react/jsx-uses-react": "off",
+    plugins: ['react', '@typescript-eslint'],
+    rules: {
+        'react/react-in-jsx-scope': 0,
     },
-    "settings": {
-        "import/resolver": {
-            "typescript": {}
-        }
-    }
-}
+};
+// module.exports = {
+//     "env": {
+//         "browser": true,
+//         "es2021": true
+//     },
+//     "extends": [
+//         "eslint:recommended",
+//         "plugin:@typescript-eslint/recommended",
+//         "plugin:react/recommended"
+//     ],
+//     "overrides": [
+//         {
+//             "env": {
+//                 "node": true
+//             },
+//             "files": [
+//                 ".eslintrc.{js,cjs}"
+//             ],
+//             "parserOptions": {
+//                 "sourceType": "script"
+//             }
+//         }
+//     ],
+//     "parser": "@typescript-eslint/parser",
+//     "parserOptions": {
+//         "ecmaVersion": "latest",
+//         "sourceType": "module"
+//     },
+//     "plugins": [
+//         "@typescript-eslint",
+//         "react"
+//     ],
+//     "rules": {
+//     }
+// }

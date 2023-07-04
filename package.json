@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "react-scripts test --watchAll"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
@@ -16,19 +17,25 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.4.3",
+    "@types/react-test-renderer": "^18.0.0",
     "@types/testing-library__jest-dom": "^5.14.6",
     "axios": "^1.4.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-query": "^3.39.3",
     "react-router-dom": "^6.14.1",
+    "react-scripts": "^5.0.1",
+    "react-test-renderer": "^18.2.0",
     "recoil": "^0.7.7"
   },
   "devDependencies": {
     "@babel/core": "^7.22.5",
     "@babel/plugin-transform-react-jsx": "^7.22.5",
+    "@babel/preset-typescript": "^7.22.5",
     "@emotion/babel-plugin-jsx-pragmatic": "^0.2.1",
+    "@jest/globals": "^29.5.0",
     "@types/babel__core": "^7.20.1",
+    "@types/jest": "^29.5.2",
     "@types/react": "^18.2.14",
     "@types/react-dom": "^18.0.11",
     "@typescript-eslint/eslint-plugin": "^5.60.1",
@@ -37,9 +44,11 @@
     "autoprefixer": "^10.4.14",
     "babel-plugin-macros": "^3.1.0",
     "eslint": "^8.22.0",
+    "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^8.8.0",
     "eslint-import-resolver-typescript": "^3.5.5",
     "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "latest",
     "eslint-plugin-react-hooks": "^4.6.0",
@@ -47,15 +56,21 @@
     "postcss": "^8.4.24",
     "prettier": "^2.8.8",
     "tailwindcss": "^3.3.2",
+    "ts-jest": "^29.1.1",
     "twin.macro": "^3.3.1",
     "typescript": "^5.0.2",
-    "vite": "^4.3.9"
+    "vite": "^4.3.9",
+    "vitest": "^0.32.4"
   },
   "babelMacros": {
     "twin": {
       "preset": "emotion"
     }
   },
+  "moduleDirectories": [
+    "node_modules",
+    "src"
+  ],
   "format": "prettier --write --cache .",
   "lint": "eslint src/**/*.{ts,tsx} --fix",
   "packageManager": "yarn@3.6.0"
