@@ -2,6 +2,8 @@ import { describe, expect, test } from '@jest/globals';
 import Home from '../Home';
 import {render, screen} from '@testing-library/react'
 import '@testing-library/jest-dom'
+import {withRouter} from "../../tests/utils";
+import {Route} from "react-router-dom";
 
 
 describe('Home', () => {
@@ -12,4 +14,9 @@ describe('Home', () => {
     render(<Home />)
     expect(screen.getByText('여긴 홈')).toBeInTheDocument();
   });
+
+  test("test2",()=>{
+    render(withRouter(<Route path={"/"} element={<Home/>} />))
+    expect(screen.getByText('여긴 홈')).toBeInTheDocument();
+  })
 });
