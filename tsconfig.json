@@ -7,6 +7,7 @@
     "skipLibCheck": true,
 //    "jsxImportSource": "@emotion/react",
 
+
     /* Bundler mode */
     "moduleResolution": "node",
     "allowImportingTsExtensions": true,
@@ -23,5 +24,8 @@
     "allowSyntheticDefaultImports": true
   },
   "include": ["src", "types"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "references": [{ "path": "./tsconfig.node.json" }],
+  "exclude": [
+    "*/**/*.test.tsx"
+  ]
 }
