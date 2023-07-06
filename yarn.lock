@@ -4011,6 +4011,7 @@ __metadata:
     autoprefixer: ^10.4.14
     axios: ^1.4.0
     babel-plugin-macros: ^3.1.0
+    cypress-vite: ^1.4.1
     eslint: ^8.22.0
     eslint-config-airbnb: ^19.0.4
     eslint-config-prettier: ^8.8.0
@@ -5788,6 +5789,18 @@ __metadata:
   version: 3.1.2
   resolution: "csstype@npm:3.1.2"
   checksum: e1a52e6c25c1314d6beef5168da704ab29c5186b877c07d822bd0806717d9a265e8493a2e35ca7e68d0f5d472d43fac1cdce70fd79fd0853dff81f3028d857b5
+  languageName: node
+  linkType: hard
+
+"cypress-vite@npm:^1.4.1":
+  version: 1.4.1
+  resolution: "cypress-vite@npm:1.4.1"
+  dependencies:
+    chokidar: ^3.5.3
+    debug: ^4.3.4
+  peerDependencies:
+    vite: ^2.9.0 || ^3.0.0 || ^4.0.0
+  checksum: ee0c06f14a6324491e0177ef262cceed28a72bccade0160709a200731f3f0451ca29e9a70214724393d838bec6ca11184c040c22cbd0d691e00beafc13309856
   languageName: node
   linkType: hard
 
