@@ -1,59 +1,124 @@
 module.exports = {
-    env: {
-        browser: true,
-        es2021: true,
+    "env": {
+        "browser": true,
+        "es2022": true
     },
-    extends: [
-        'airbnb',
-        'airbnb-typescript',
-        'airbnb/hooks',
-        'plugin:react/recommended',
-        'plugin:@typescript-eslint/recommended',
+    "extends": [
+        "plugin:react/recommended",
+        "airbnb",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:etc/recommended",
+        "plugin:unicorn/recommended"
     ],
-    overrides: [],
-    parser: '@typescript-eslint/parser',
-    parserOptions: {
-        ecmaVersion: 'latest',
-        sourceType: 'module',
-        project: './tsconfig.json',
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 12,
+        "sourceType": "module",
+        "project": "./tsconfig.json"
     },
-    plugins: ['react', '@typescript-eslint'],
-    rules: {
-        'react/react-in-jsx-scope': 0,
+    "plugins": [
+        "react",
+        "@typescript-eslint",
+        "react-hooks",
+        "unicorn"
+    ],
+    "rules": {
+        "no-use-before-define": "off",
+        "@typescript-eslint/no-use-before-define": [
+            "error"
+        ],
+        "react/react-in-jsx-scope": "off",
+        "react/jsx-filename-extension": [
+            "warn",
+            {
+                "extensions": [
+                    ".tsx",
+                    ".js"
+                ]
+            }
+        ],
+        "import/extensions": [
+            "error",
+            "ignorePackages",
+            {
+                "ts": "never",
+                "tsx": "never"
+            }
+        ],
+        "no-shadow": "off",
+        "@typescript-eslint/no-shadow": [
+            "error"
+        ],
+        "@typescript-eslint/explicit-function-return-type": [
+            "error",
+            {
+                "allowExpressions": true
+            }
+        ],
+        "max-len": [
+            "warn",
+            {
+                "code": 180
+            }
+        ],
+        "react-hooks/rules-of-hooks": "error",
+        "react-hooks/exhaustive-deps": "warn",
+        "react/function-component-definition": [
+            "error",
+            {
+                "namedComponents": "arrow-function"
+            }
+        ],
+        "import/prefer-default-export": "off",
+        "comma-dangle": [
+            "error",
+            "never"
+        ],
+        "import/no-unresolved": [
+            "error",
+            {
+                "ignore": [
+                    "^react$"
+                ]
+            }
+        ],
+        "import/no-extraneous-dependencies": [
+            "error",
+            {
+                "devDependencies": [
+                    "src/stories/**/*.stories.tsx"
+                ]
+            }
+        ],
+        "no-multiple-empty-lines": "error",
+        "sort-keys": [
+            "error",
+            "asc",
+            {
+                "caseSensitive": true,
+                "natural": false,
+                "minKeys": 3
+            }
+        ],
+        "etc/prefer-interface": "error",
+        "unicorn/prevent-abbreviations": [
+            "error",
+            {
+                "allowList": {
+                    "props": true
+                }
+            }
+        ]
     },
-};
-// module.exports = {
-//     "env": {
-//         "browser": true,
-//         "es2021": true
-//     },
-//     "extends": [
-//         "eslint:recommended",
-//         "plugin:@typescript-eslint/recommended",
-//         "plugin:react/recommended"
-//     ],
-//     "overrides": [
-//         {
-//             "env": {
-//                 "node": true
-//             },
-//             "files": [
-//                 ".eslintrc.{js,cjs}"
-//             ],
-//             "parserOptions": {
-//                 "sourceType": "script"
-//             }
-//         }
-//     ],
-//     "parser": "@typescript-eslint/parser",
-//     "parserOptions": {
-//         "ecmaVersion": "latest",
-//         "sourceType": "module"
-//     },
-//     "plugins": [
-//         "@typescript-eslint",
-//         "react"
-//     ],
-//     "rules": {
-//     }
-// }
+    "settings": {
+        "import/resolver": {
+            "typescript": {}
+        },
+        "react": {
+            "version": "18"
+        }
+    }
+}

@@ -5,7 +5,8 @@
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
-    "jsxImportSource": "@emotion/react",
+//    "jsxImportSource": "@emotion/react",
+
 
     /* Bundler mode */
     "moduleResolution": "node",
@@ -17,12 +18,14 @@
 
     /* Linting */
     "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
-
-    "esModuleInterop": true
+    "allowSyntheticDefaultImports": true
   },
   "include": ["src", "types"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "references": [{ "path": "./tsconfig.node.json" }],
+  "exclude": [
+    "*/**/*.test.tsx"
+  ]
 }
