@@ -18,3 +18,5 @@ export default function GlobalStyles() {
     </>
   );
 }
+
+export const TestBtn = tw.button`bg-blue-500`;
