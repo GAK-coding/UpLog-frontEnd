@@ -7,6 +7,7 @@ WORKDIR /app
 # Copy the package.json as well as the yarn.lock and install the dependencies.
 COPY package.json yarn.lock ./
 RUN yarn install
+RUN yarn set version berry
 
 # Copy the main application
 COPY . ./
@@ -21,23 +22,20 @@ RUN yarn build
 
 CMD ["yarn", "dev"]
 
+# Stage 2: Create the production image with Nginx
+FROM nginx:latest
 
-##### Stage 2: Serve the React application from Nginx
-##FROM nginx:1.17.0-alpine
-#FROM nginx:alpine
-#
-## Remove default nginx static files
-#RUN rm -rf /usr/share/nginx/html/*
-#
-## Copy the react build from Stage 1
-##COPY --from=build /app/build /usr/share/nginx/html
-#COPY --from=build /app /usr/share/nginx/html
-#
-## Copy our custom nginx config
-#COPY nginx.conf /etc/nginx/nginx.conf
-#
-## Expose port 80 to the Docker host, so we can access it from the outside.
-#EXPOSE 80
-#
-## Start Nginx server
-#CMD ["nginx", "-g", "daemon off;"]
+# Remove default nginx configurations
+RUN rm -rf /etc/nginx/conf.d/*
+
+# Copy the build artifacts from the previous stage
+COPY --from=build /app/dist /usr/share/nginx/html
+
+# Copy the nginx.conf file
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Expose the default Nginx port
+EXPOSE 80
+
+# Start Nginx
+CMD ["nginx", "-g", "daemon off;"]
