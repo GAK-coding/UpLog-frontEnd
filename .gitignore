@@ -41,3 +41,6 @@ dist-ssr
 !.yarn/sdks
 !.yarn/versions
 .pnp.*
+
+coverage
+cypress

@@ -1,40 +1,124 @@
 module.exports = {
     "env": {
         "browser": true,
-        "es2021": true,
-        "node": true
+        "es2022": true
     },
     "extends": [
-        "eslint:recommended",
         "plugin:react/recommended",
-        "plugin:@typescript-eslint/recommended"
+        "airbnb",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:etc/recommended",
+        "plugin:unicorn/recommended"
     ],
-    "overrides": [],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
-        "ecmaVersion": "latest",
-        "sourceType": "module"
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 12,
+        "sourceType": "module",
+        "project": "./tsconfig.json"
     },
-    "plugins": ["react", "react-hooks", "@typescript-eslint", "prettier"],
-    // 원하는 규칙 추가하기
+    "plugins": [
+        "react",
+        "@typescript-eslint",
+        "react-hooks",
+        "unicorn"
+    ],
     "rules": {
-        "quotes": ["error", "single"],
-        "no-duplicate-imports": "error",
-        "no-console": ["warn", { "allow": ["warn", "error", "info"] }],
-        "no-unused-vars": "error",
-        "no-multiple-empty-lines": "error",
-
-        // error 해결하기 위해서 추가한 규칙
-        "react/jsx-filename-extension": [1, { "extensions": [".ts", ".tsx"] }],
-        "@typescript-eslint/ban-ts-ignore": "off",
-        "@typescript-eslint/ban-ts-comment": "off",
-        "@typescript-eslint/no-use-before-define": "off",
+        "no-use-before-define": "off",
+        "@typescript-eslint/no-use-before-define": [
+            "error"
+        ],
         "react/react-in-jsx-scope": "off",
-        "react/jsx-uses-react": "off",
+        "react/jsx-filename-extension": [
+            "warn",
+            {
+                "extensions": [
+                    ".tsx",
+                    ".js"
+                ]
+            }
+        ],
+        "import/extensions": [
+            "error",
+            "ignorePackages",
+            {
+                "ts": "never",
+                "tsx": "never"
+            }
+        ],
+        "no-shadow": "off",
+        "@typescript-eslint/no-shadow": [
+            "error"
+        ],
+        "@typescript-eslint/explicit-function-return-type": [
+            "error",
+            {
+                "allowExpressions": true
+            }
+        ],
+        "max-len": [
+            "warn",
+            {
+                "code": 180
+            }
+        ],
+        "react-hooks/rules-of-hooks": "error",
+        "react-hooks/exhaustive-deps": "warn",
+        "react/function-component-definition": [
+            "error",
+            {
+                "namedComponents": "arrow-function"
+            }
+        ],
+        "import/prefer-default-export": "off",
+        "comma-dangle": [
+            "error",
+            "never"
+        ],
+        "import/no-unresolved": [
+            "error",
+            {
+                "ignore": [
+                    "^react$"
+                ]
+            }
+        ],
+        "import/no-extraneous-dependencies": [
+            "error",
+            {
+                "devDependencies": [
+                    "src/stories/**/*.stories.tsx"
+                ]
+            }
+        ],
+        "no-multiple-empty-lines": "error",
+        "sort-keys": [
+            "error",
+            "asc",
+            {
+                "caseSensitive": true,
+                "natural": false,
+                "minKeys": 3
+            }
+        ],
+        "etc/prefer-interface": "error",
+        "unicorn/prevent-abbreviations": [
+            "error",
+            {
+                "allowList": {
+                    "props": true
+                }
+            }
+        ]
     },
     "settings": {
         "import/resolver": {
             "typescript": {}
+        },
+        "react": {
+            "version": "18"
         }
     }
 }
