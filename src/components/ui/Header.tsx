@@ -11,7 +11,7 @@ export default function Header() {
   }, [pathname]);
 
   return (
-    <header className={` ${isLogin ? '' : 'border-solid border-b-2 border-header-gray'} `}>
+    <header className={`h-full ${isLogin ? '' : 'border-solid border-b-2 border-header-gray'}`}>
       <Link to={'/'}>홈</Link> <br />
       <Link to={'/login'}>로그인</Link> <br />
       <Link to={'/signup'}>회원가입</Link>

@@ -18,10 +18,10 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <RecoilRoot>
         <BrowserRouter>
-          <section className={'min-h-15'}>
+          <section className={'h-12vh'}>
             <Header />
           </section>
-          <section className={'min-h-85'}>
+          <section className={'h-88vh'}>
             <Routes>
               <Route path={'/'} element={<Home />} />
               <Route path={'/login'} element={<Login />} />

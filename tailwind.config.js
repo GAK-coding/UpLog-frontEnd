@@ -6,9 +6,16 @@ export default {
       colors: {
         'header-gray': '#E5E7EB',
       },
-      minHeight: {
-        15: '15vh',
-        85: '85vh',
+      height: {
+        '12vh': '12vh',
+        '88vh': '88vh',
+        '42rem': '42rem',
+      },
+      width: {
+        '39rem': '39rem',
+      },
+      margin: {
+        '12vh': '-12vh',
       },
     },
   },
