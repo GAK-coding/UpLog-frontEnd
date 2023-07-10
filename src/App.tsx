@@ -5,6 +5,9 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import React, { useState } from 'react';
 import Home from './pages/Home';
+import Header from './components/ui/Header';
+import Login from './pages/Login';
+import SignUp from './pages/SignUp';
 
 const queryClient = new QueryClient();
 
@@ -15,9 +18,16 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <RecoilRoot>
         <BrowserRouter>
-          <Routes>
-            <Route path={'/'} element={<Home />} />
-          </Routes>
+          <section className={'h-12vh'}>
+            <Header />
+          </section>
+          <section className={'h-88vh'}>
+            <Routes>
+              <Route path={'/'} element={<Home />} />
+              <Route path={'/login'} element={<Login />} />
+              <Route path={'/signup'} element={<SignUp />} />
+            </Routes>
+          </section>
         </BrowserRouter>
       </RecoilRoot>
       {showDevtools && <ReactQueryDevtools />}
