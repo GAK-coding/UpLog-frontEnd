@@ -10,12 +10,13 @@ export default {
         '12vh': '12vh',
         '88vh': '88vh',
         '42rem': '42rem',
+        noneHeader: 'calc(100vh - 7rem)',
       },
       width: {
         '39rem': '39rem',
       },
       margin: {
-        '12vh': '-12vh',
+        '[-7rem]': '-7rem',
       },
     },
   },
