@@ -21,7 +21,7 @@ function App() {
           <section className={'h-28'}>
             <Header />
           </section>
-          <section className={'flex-column h-noneHeader'}>
+          <section className={'h-noneHeader'}>
             <Routes>
               <Route path={'/'} element={<Home />} />
               <Route path={'/login'} element={<Login />} />
