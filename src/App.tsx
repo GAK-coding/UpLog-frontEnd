@@ -8,6 +8,7 @@ import Home from './pages/Home';
 import Header from './components/ui/Header';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
+import Post from './pages/Post';
 
 const queryClient = new QueryClient();
 
@@ -26,6 +27,7 @@ function App() {
               <Route path={'/'} element={<Home />} />
               <Route path={'/login'} element={<Login />} />
               <Route path={'/signup'} element={<SignUp />} />
+              <Route path={'/post'} element={<Post />} />
             </Routes>
           </section>
         </BrowserRouter>
