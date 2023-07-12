@@ -40,7 +40,7 @@ export default function SignUp() {
                     }`}
                     onClick={() => onChangeIsEach(true)}
                   >
-                    개인
+                    개인2
                   </button>
                   <button
                     className={`w-1/2 h-full text-xl border-solid border-r ${
