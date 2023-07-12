@@ -26,17 +26,17 @@ export default function SignUp() {
             <div className={'flex justify-center items-center w-full h-2/5'}>
               <div
                 className={
-                  'border-solid border border-sign-up-gray rounded-md w-full h-full flex flex-col justify-around shadow-sign-up-info'
+                  'border-solid border border-light-gray rounded-md w-full h-full flex flex-col justify-around shadow-sign-up-info'
                 }
               >
                 <div
                   className={
-                    'w-full h-1/3 flex items-center border-solid border-b border-sign-up-gray font-bold'
+                    'w-full h-1/3 flex items-center border-solid border-b border-light-gray font-bold'
                   }
                 >
                   <button
                     className={`w-1/2 h-full text-xl border-solid border-r ${
-                      isEach ? 'bg-orange text-black rounded-md' : 'text-sign-up-gray'
+                      isEach ? 'bg-orange text-black rounded-md' : 'text-light-gray'
                     }`}
                     onClick={() => onChangeIsEach(true)}
                   >
@@ -44,7 +44,7 @@ export default function SignUp() {
                   </button>
                   <button
                     className={`w-1/2 h-full text-xl border-solid border-r ${
-                      !isEach ? 'bg-orange text-black rounded-md' : 'text-sign-up-gray'
+                      !isEach ? 'bg-orange text-black rounded-md' : 'text-light-gray'
                     }`}
                     onClick={() => onChangeIsEach(false)}
                   >
@@ -53,13 +53,13 @@ export default function SignUp() {
                 </div>
                 <span
                   className={
-                    'w-full h-1/3 flex items-center border-solid border-b border-sign-up-gray'
+                    'w-full h-1/3 flex items-center border-solid border-b border-light-gray'
                   }
                 >
                   <label className={'w-full h-full border-solid border flex items-center'}>
                     <span className={'w-1/6 flex h-full justify-center items-center text-3xl '}>
                       <div>
-                        <FiUser style={{ stroke: 'red' }} />
+                        <FiUser className={''} />
                       </div>
                     </span>
                     <input
@@ -78,7 +78,7 @@ export default function SignUp() {
             <div className={'flex justify-center items-center w-full h-2/5'}>
               <div
                 className={
-                  'border-solid border border-sign-up-gray rounded-md w-full h-full flex flex-col justify-around shadow-sign-up-info'
+                  'border-solid border border-light-gray rounded-md w-full h-full flex flex-col justify-around shadow-sign-up-info'
                 }
               >
                 <div>
