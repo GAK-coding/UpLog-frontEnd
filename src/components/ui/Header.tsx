@@ -11,7 +11,18 @@ export default function Header() {
   }, [pathname]);
 
   return (
-    <header className={`h-full ${isLogin ? '' : 'border-solid border-b-2 border-header-gray'}`}>
+    <header
+      className={`pt-5 flex-row h-full ${
+        isLogin ? '' : 'border-solid border-b-2 border-header-gray'
+      }`}
+    >
+      <img
+        className={'h-12 ml-32'}
+        src={'/images/mainLogo.png'}
+        alt={'main-logo'}
+        style={{ fontFamily: 'Baloo Tammudu 2' }}
+      />
+      <nav>upLog</nav>
       <Link to={'/'}>홈</Link> <br />
       <Link to={'/login'}>로그인</Link> <br />
       <Link to={'/signup'}>회원가입</Link>
