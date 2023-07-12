@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import useInput from '../hooks/useInput';
 import { FiUser } from 'react-icons/fi';
+import { IconContext } from 'react-icons';
 
 export default function SignUp() {
   const [isEach, , setIsEach] = useInput(true);
@@ -58,7 +59,7 @@ export default function SignUp() {
                   <label className={'w-full h-full border-solid border flex items-center'}>
                     <span className={'w-1/6 flex h-full justify-center items-center text-3xl '}>
                       <div>
-                        <FiUser />
+                        <FiUser style={{ stroke: 'red' }} />
                       </div>
                     </span>
                     <input
