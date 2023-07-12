@@ -6,7 +6,7 @@ export default {
       colors: {
         'header-gray': '#E5E7EB',
         orange: '#FFAA2A',
-        'sign-up-gray': '#C4C4C4',
+        'light-gray': '#C4C4C4',
       },
       height: {
         '42rem': '42rem',
