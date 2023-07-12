@@ -2,9 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 1rem => 10px */
 html {
-    /*font-size: 62.5%;*/
-    font-size: 11.8px;
+  font-size: 11.8px;
+}
 
+* {
+  color: #292723;
 }
