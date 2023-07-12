@@ -11,6 +11,7 @@ export default function SignUp() {
             <img className={'h-16'} src={'/images/login.png'} alt={'login logo'} />
           </div>
           <div></div>
+          <FiUser color={'#c4c4c4'} />
           <div></div>
         </section>
       </main>
