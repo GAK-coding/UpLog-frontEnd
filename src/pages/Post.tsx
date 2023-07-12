@@ -16,7 +16,7 @@ export default function Post() {
         // editorUrl="https://your-website.example/ckeditor/ckeditor.js"
         initData="<p>Hello from CKEditor 4!</p>"
         name="my-ckeditor"
-        onChange={({ event, editor }) => {
+        onChange={({ event, editor }: { event: any; editor: any }) => {
           const data = editor.getData();
           console.log(data);
         }}

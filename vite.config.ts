@@ -37,7 +37,7 @@ export default defineConfig({
       },
     }),
     ViteFaviconsPlugin({
-      logo: 'public/asserts/logo.svg',
+      logo: 'public/logo.svg',
     }),
     ckeditor5({ theme: require.resolve('@ckeditor/ckeditor5-theme-lark') }),
   ],
