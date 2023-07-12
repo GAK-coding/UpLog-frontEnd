@@ -1,15 +1,29 @@
 import React, { useCallback } from 'react';
 import useInput from '../hooks/useInput';
 import { FiUser } from 'react-icons/fi';
-import { IconContext } from 'react-icons';
+import { MdOutlineMailOutline } from 'react-icons/md';
+import {
+  AiOutlineCheckCircle,
+  AiOutlineEye,
+  AiOutlineEyeInvisible,
+  AiOutlineLock,
+} from 'react-icons/ai';
 
 export default function SignUp() {
   const [isEach, , setIsEach] = useInput(true);
+  const [isPwVisible, , setIsPwVisible] = useInput(false);
+
   const onChangeIsEach = useCallback((check: boolean) => setIsEach(check), []);
+  const onChangeIsPwVisible = useCallback(() => setIsPwVisible((prev) => !prev), []);
 
   return (
     <>
-      <main className={'h-full flex flex-col justify-center items-center'}>
+      <form
+        onSubmit={() => {
+          alert('클릭');
+        }}
+        className={'h-full flex flex-col justify-center items-center'}
+      >
         <section
           className={
             'border-solid border-0.6 border-header-gray w-39rem h-42rem min-h-42rem shadow-sign-up px-20'
@@ -29,6 +43,7 @@ export default function SignUp() {
                   'border-solid border border-light-gray rounded-md w-full h-full flex flex-col justify-around shadow-sign-up-info'
                 }
               >
+                {/*개인 기업 선택*/}
                 <div
                   className={
                     'w-full h-1/3 flex items-center border-solid border-b border-light-gray font-bold'
@@ -36,41 +51,52 @@ export default function SignUp() {
                 >
                   <button
                     className={`w-1/2 h-full text-xl border-solid border-r ${
-                      isEach ? 'bg-orange text-black rounded-md' : 'text-light-gray'
+                      isEach ? 'bg-orange text-black rounded-tl' : 'text-light-gray'
                     }`}
                     onClick={() => onChangeIsEach(true)}
                   >
-                    개인2
+                    개인
                   </button>
                   <button
                     className={`w-1/2 h-full text-xl border-solid border-r ${
-                      !isEach ? 'bg-orange text-black rounded-md' : 'text-light-gray'
+                      !isEach ? 'bg-orange text-black rounded-tr' : 'text-light-gray'
                     }`}
                     onClick={() => onChangeIsEach(false)}
                   >
                     기업
                   </button>
                 </div>
+                {/* 이름 */}
                 <span
                   className={
                     'w-full h-1/3 flex items-center border-solid border-b border-light-gray'
                   }
                 >
-                  <label className={'w-full h-full border-solid border flex items-center'}>
+                  <label className={'w-full h-full flex items-center'}>
                     <span className={'w-1/6 flex h-full justify-center items-center text-3xl '}>
-                      <div>
-                        <FiUser className={''} />
-                      </div>
+                      <FiUser className={'stroke-light-gray'} />
                     </span>
                     <input
                       type="text"
                       placeholder={'이름'}
-                      className={'w-full h-full focus:outline-none text-xl'}
+                      required
+                      className={'w-5/6 h-full focus:outline-none text-xl'}
                     />
                   </label>
                 </span>
+                {/*닉네임*/}
                 <span className={'w-full h-1/3 flex items-center'}>
-                  <input type="text" placeholder={'닉네임'} />
+                  <label className={'w-full h-full flex items-center'}>
+                    <span className={'w-1/6 flex h-full justify-center items-center text-3xl '}>
+                      <FiUser className={'stroke-light-gray'} />
+                    </span>
+                    <input
+                      type="text"
+                      placeholder={'닉네임'}
+                      required
+                      className={'w-5/6 h-full focus:outline-none text-xl rounded-br-md'}
+                    />
+                  </label>
                 </span>
               </div>
             </div>
@@ -81,17 +107,89 @@ export default function SignUp() {
                   'border-solid border border-light-gray rounded-md w-full h-full flex flex-col justify-around shadow-sign-up-info'
                 }
               >
-                <div>
-                  <span>
-                    <input type="text" placeholder={'이메일'} />
-                  </span>
-                  <span>
-                    <input type="text" placeholder={'인증번호'} />
-                  </span>
-                  <span>
-                    <input type="text" placeholder={'비밀번호'} />
-                  </span>
-                </div>
+                {/* 이메일 */}
+                <span
+                  className={
+                    'w-full h-1/3 flex items-center border-solid border-b border-light-gray'
+                  }
+                >
+                  <label className={'w-full h-full flex items-center '}>
+                    <span className={'w-1/6 flex h-full justify-center items-center text-3xl '}>
+                      <MdOutlineMailOutline className={'fill-light-gray'} />
+                    </span>
+                    <input
+                      type="email"
+                      placeholder={'이메일'}
+                      required
+                      className={'w-5/6 h-full focus:outline-none text-xl rounded-tr-md'}
+                    />
+                  </label>
+                </span>{' '}
+                {/* 인증번호 */}
+                <span
+                  className={
+                    'w-full h-1/3 flex items-center border-solid border-b border-light-gray'
+                  }
+                >
+                  <label className={'w-full h-full flex items-center'}>
+                    <span className={'w-1/6 flex h-full justify-center items-center text-3xl'}>
+                      <AiOutlineCheckCircle className={'fill-light-gray'} />
+                    </span>
+                    <span className={'w-5/6 h-full flex'}>
+                      <input
+                        type="text"
+                        placeholder={'인증번호'}
+                        required
+                        className={'w-9/12 h-full focus:outline-none text-xl'}
+                      />
+                      <span className={'w-3/12 h-full flex flex-col justify-evenly items-center'}>
+                        <button
+                          className={'w-16 h-9 rounded text-sm font-bold text-white bg-orange'}
+                        >
+                          확인
+                        </button>
+                        <span className={'text-xs text-dark-gray box-border'}>
+                          <span
+                            className={
+                              'text-dark-gray border-solid border-r border-dark-gray pr-1 mr-1'
+                            }
+                          >
+                            0:00
+                          </span>
+                          <button type={'button'}>재전송</button>
+                        </span>
+                      </span>
+                    </span>
+                  </label>
+                </span>
+                {/*비밀번호*/}
+                <span
+                  className={
+                    'w-full h-1/3 flex items-center border-solid border-b border-light-gray'
+                  }
+                >
+                  <label className={'w-full h-full flex items-center'}>
+                    <span className={'w-1/6 flex h-full justify-center items-center text-3xl'}>
+                      <AiOutlineLock className={'fill-light-gray'} />
+                    </span>
+                    <span className={'w-5/6 h-full flex'}>
+                      <input
+                        type={`${isPwVisible ? 'text' : 'password'}`}
+                        placeholder={'비밀번호'}
+                        required
+                        className={'w-9/12 h-full focus:outline-none text-xl'}
+                      />
+                      <span
+                        className={
+                          'w-3/12 h-full flex flex-col justify-evenly items-center text-2xl cursor-pointer'
+                        }
+                        onClick={onChangeIsPwVisible}
+                      >
+                        {!isPwVisible ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+                      </span>
+                    </span>
+                  </label>
+                </span>{' '}
               </div>
             </div>
           </article>
@@ -105,7 +203,7 @@ export default function SignUp() {
         >
           회원가입
         </button>
-      </main>
+      </form>
     </>
   );
 }
