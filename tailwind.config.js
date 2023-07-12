@@ -7,6 +7,7 @@ export default {
         'header-gray': '#E5E7EB',
         orange: '#FFAA2A',
         'light-gray': '#C4C4C4',
+        'dark-gray': '#64635E',
       },
       height: {
         '42rem': '42rem',
