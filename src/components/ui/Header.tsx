@@ -46,10 +46,14 @@ export default function Header() {
 
       {/*TODO : 스토리지 값 체크후에 변경하기 (조건으로 렌더링 여부 바꿔야함)*/}
       {/*로그인 상태*/}
-      {isLogin && (
+      {!isLogin && (
         <div className={'flex w-[28rem] h-full justify-between mr-12 font-bold items-center '}>
-          <div className={'w-48 mt-1.5 h-3/5 border-solid border border-gray-light rounded-lg'}>
-            {/*<BsSearch className={'text-2xl fill-gray-dark '} />*/}
+          <div
+            className={
+              'flex items-center justify-between w-48 h-3/5 p-2 mt-1 border-solid border border-gray-light rounded-lg'
+            }
+          >
+            <BsSearch className={' text-base fill-gray-dark '} />
           </div>
           <BsSunFill className={'text-[2.1rem] fill-gray-dark cursor-pointer'} />
           <BsBellFill className={'text-[2.1rem] fill-gray-dark cursor-pointer'} />
@@ -63,7 +67,7 @@ export default function Header() {
       )}
 
       {/*로그인 X */}
-      {!isLogin && (
+      {isLogin && (
         <div className={'flex mr-12 font-bold cursor-pointer'}>
           <BsSunFill className={'text-[2.1rem] mr-6 fill-gray-dark'} />
           <span
