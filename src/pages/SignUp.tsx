@@ -40,19 +40,19 @@ export default function SignUp() {
           <div className={'flex justify-center items-center w-full h-2/5'}>
             <div
               className={
-                'border-solid border border-light-gray rounded-md w-full h-full flex flex-col justify-around shadow-sign-up-info'
+                'border-solid border border-gray-light rounded-md w-full h-full flex flex-col justify-around shadow-sign-up-info'
               }
             >
               {/*개인 기업 선택*/}
               <div
                 className={
-                  'w-full h-1/3 flex items-center border-solid border-b border-light-gray font-bold'
+                  'w-full h-1/3 flex items-center border-solid border-b border-gray-light font-bold'
                 }
               >
                 <button
                   type="button"
                   className={`w-1/2 h-full text-xl border-solid border-r
-                   ${isEach ? 'bg-red text-red rounded-tl' : 'text-light-gray'}
+                   ${isEach ? 'bg-red text-red rounded-tl' : 'text-gray-light'}
                   `}
                   onClick={() => onChangeIsEach(true)}
                 >
@@ -60,7 +60,7 @@ export default function SignUp() {
                 </button>
                 <button
                   className={`w-1/2 h-full text-xl border-solid border-r ${
-                    !isEach ? 'bg-orange text-black rounded-tr' : 'text-light-gray'
+                    !isEach ? 'bg-orange text-black rounded-tr' : 'text-gray-light'
                   }`}
                   onClick={() => onChangeIsEach(false)}
                   type="button"
@@ -70,11 +70,11 @@ export default function SignUp() {
               </div>
               {/* 이름 */}
               <span
-                className={'w-full h-1/3 flex items-center border-solid border-b border-light-gray'}
+                className={'w-full h-1/3 flex items-center border-solid border-b border-gray-light'}
               >
                 <label className={'w-full h-full flex items-center'}>
                   <span className={'w-1/6 flex h-full justify-center items-center text-3xl '}>
-                    <FiUser className={'stroke-light-gray'} />
+                    <FiUser className={'stroke-gray-light'} />
                   </span>
                   <input
                     type="text"
@@ -88,7 +88,7 @@ export default function SignUp() {
               <span className={'w-full h-1/3 flex items-center'}>
                 <label className={'w-full h-full flex items-center'}>
                   <span className={'w-1/6 flex h-full justify-center items-center text-3xl '}>
-                    <FiUser className={'stroke-light-gray'} />
+                    <FiUser className={'stroke-gray-light'} />
                   </span>
                   <input
                     type="text"
@@ -104,16 +104,16 @@ export default function SignUp() {
           <div className={'flex justify-center items-center w-full h-2/5'}>
             <div
               className={
-                'border-solid border border-light-gray rounded-md w-full h-full flex flex-col justify-around shadow-sign-up-info'
+                'border-solid border border-gray-light rounded-md w-full h-full flex flex-col justify-around shadow-sign-up-info'
               }
             >
               {/* 이메일 */}
               <span
-                className={'w-full h-1/3 flex items-center border-solid border-b border-light-gray'}
+                className={'w-full h-1/3 flex items-center border-solid border-b border-gray-light'}
               >
                 <label className={'w-full h-full flex items-center '}>
                   <span className={'w-1/6 flex h-full justify-center items-center text-3xl '}>
-                    <MdOutlineMailOutline className={'fill-light-gray'} />
+                    <MdOutlineMailOutline className={'fill-gray-light'} />
                   </span>
                   <input
                     type="email"
@@ -125,11 +125,11 @@ export default function SignUp() {
               </span>
               {/* 인증번호 */}
               <span
-                className={'w-full h-1/3 flex items-center border-solid border-b border-light-gray'}
+                className={'w-full h-1/3 flex items-center border-solid border-b border-gray-light'}
               >
                 <label className={'w-full h-full flex items-center'}>
                   <span className={'w-1/6 flex h-full justify-center items-center text-3xl'}>
-                    <AiOutlineCheckCircle className={'fill-light-gray'} />
+                    <AiOutlineCheckCircle className={'fill-gray-light'} />
                   </span>
                   <span className={'w-5/6 h-full flex'}>
                     <input
@@ -142,10 +142,10 @@ export default function SignUp() {
                       <button className={'w-16 h-9 rounded text-sm font-bold text-white bg-orange'}>
                         확인
                       </button>
-                      <span className={'text-xs text-dark-gray box-border'}>
+                      <span className={'text-xs text-gray-dark box-border'}>
                         <span
                           className={
-                            'text-dark-gray border-solid border-r border-dark-gray pr-1 mr-1'
+                            'text-gray-dark border-solid border-r border-gray-dark pr-1 mr-1'
                           }
                         >
                           0:00
@@ -158,11 +158,11 @@ export default function SignUp() {
               </span>
               {/*비밀번호*/}
               <span
-                className={'w-full h-1/3 flex items-center border-solid border-b border-light-gray'}
+                className={'w-full h-1/3 flex items-center border-solid border-b border-gray-light'}
               >
                 <label className={'w-full h-full flex items-center'}>
                   <span className={'w-1/6 flex h-full justify-center items-center text-3xl'}>
-                    <AiOutlineLock className={'fill-light-gray'} />
+                    <AiOutlineLock className={'fill-gray-light'} />
                   </span>
                   <span className={'w-5/6 h-full flex relative'}>
                     <input

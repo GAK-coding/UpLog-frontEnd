@@ -22,7 +22,9 @@ export default function Header() {
       {/*로고 + 글자 (메인페이지로 이동)*/}
       <nav className={'flex flex-row cursor-pointer ml-32'} onClick={() => navigate('/')}>
         <img className={'mr-4 h-12'} src={'/images/mainLogo.png'} alt={'main-logo'} />
-        <span className={'flex justify-center items-center font-logo text-4xl font-bold'}>
+        <span
+          className={'flex justify-center items-center font-logo text-4xl font-bold text-gray-dark'}
+        >
           upLog
         </span>
       </nav>
@@ -32,12 +34,12 @@ export default function Header() {
         <div
           className={'flex mr-12 font-bold items-center cursor-pointer border-solid border black'}
         >
-          <BsSunFill className={'text-3xl mr-4 fill-dark-gray'} />
-          <span className={'text-bold text-dark-gray text-lg'} onClick={() => navigate('/login')}>
+          <BsSunFill className={'text-3xl mr-4 fill-gray-dark'} />
+          <span className={'text-bold text-gray-dark text-lg'} onClick={() => navigate('/login')}>
             로그인 •
           </span>
 
-          <span className={'text-dark-gray text-lg'} onClick={() => navigate('/signup')}>
+          <span className={'text-gray-dark text-lg'} onClick={() => navigate('/signup')}>
             &nbsp; 회원가입
           </span>
         </div>
@@ -48,12 +50,12 @@ export default function Header() {
         <div
           className={'flex mr-12 font-bold items-center cursor-pointer border-solid border black'}
         >
-          <BsSunFill className={'text-3xl mr-4 fill-dark-gray'} />
-          <span className={'text-bold text-dark-gray text-lg'} onClick={() => navigate('/login')}>
+          <BsSunFill className={'text-3xl mr-4 fill-gray-dark'} />
+          <span className={'text-bold text-gray-dark text-lg'} onClick={() => navigate('/login')}>
             로그인 •
           </span>
 
-          <span className={'text-dark-gray text-lg'} onClick={() => navigate('/signup')}>
+          <span className={'text-gray-dark text-lg'} onClick={() => navigate('/signup')}>
             &nbsp; 회원가입
           </span>
         </div>
