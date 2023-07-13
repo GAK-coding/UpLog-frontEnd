@@ -16,25 +16,27 @@ export default function Header() {
         isLogin ? '' : 'border-solid border border-header-gray'
       }`}
     >
-      <Link to={'/'} className={'border-solid border black'}>
-        <img
-          className={'mr-4 h-12 ml-32 border-solid border black'}
-          src={'/images/mainLogo.png'}
-          alt={'main-logo'}
-        />
-        {/*<nav*/}
-        {/*  className={*/}
-        {/*    'font-['"Baloo Tammudu 2", "cursive"'] text-4xl font-bold border-solid border black'*/}
-        {/*  }*/}
-        {/*>    */}
-        <nav
-          className={
-            'font-["Baloo Tammudu 2", "cursive"] text-4xl font-bold border-solid border black'
-          }
-        >
-          upLog
-        </nav>
-      </Link>
+      <div className={'flex flex-row'}>
+        <Link to={'/'} className={'border-solid border black'}>
+          <img
+            className={'mr-4 h-12 ml-32 border-solid border black'}
+            src={'/images/mainLogo.png'}
+            alt={'main-logo'}
+          />
+          {/*<nav*/}
+          {/*  className={*/}
+          {/*    'font-['"Baloo Tammudu 2", "cursive"'] text-4xl font-bold border-solid border black'*/}
+          {/*  }*/}
+          {/*>    */}
+          <nav
+            className={
+              'font-["Baloo Tammudu 2", "cursive"] text-4xl font-bold border-solid border black'
+            }
+          >
+            upLog
+          </nav>
+        </Link>
+      </div>
 
       {!isLogin && (
         <>
