@@ -101,8 +101,7 @@ export default function SignUp() {
 
   // 비밀번호 유효성 검사
   useEffect(() => {
-    const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
-
+    const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,15}$/;
     setIsCheckPw(regex.test(password));
   }, [password, isCheckPw]);
 
@@ -274,7 +273,7 @@ export default function SignUp() {
                       placeholder={'비밀번호'}
                       maxLength={15}
                       required
-                      className={'w-9/12 h-full focus:outline-none text-xl'}
+                      className={`w-9/12 h-full focus:outline-none text-xl ${password && !isPwVisible &&"tracking-[-0.3rem]"}`}
                     />
                     <span
                       className={
