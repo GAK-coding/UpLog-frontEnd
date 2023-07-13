@@ -9,6 +9,7 @@ import Header from './components/ui/Header';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import Post from './pages/Post';
+import Switcher from './components/darkMode/Switcher.tsx';
 
 const queryClient = new QueryClient();
 
@@ -19,7 +20,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <RecoilRoot>
         <BrowserRouter>
-          <section className={'h-[5.5rem]'}>
+          <section className={'h-[6rem]'}>
             <Header />
           </section>
           <section className={'h-noneHeader'}>
