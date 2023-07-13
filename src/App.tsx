@@ -19,7 +19,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <RecoilRoot>
         <BrowserRouter>
-          <section className={'h-header-height'}>
+          <section className={'h-[5.5rem]'}>
             <Header />
           </section>
           <section className={'h-noneHeader'}>
