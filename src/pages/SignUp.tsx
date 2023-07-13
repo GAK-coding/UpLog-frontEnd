@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, {useCallback, useState} from 'react';
 import useInput from '../hooks/useInput';
 import { FiUser } from 'react-icons/fi';
 import { MdOutlineMailOutline } from 'react-icons/md';
@@ -10,8 +10,9 @@ import {
 } from 'react-icons/ai';
 
 export default function SignUp() {
-  const [isEach, , setIsEach] = useInput(true);
-  const [isPwVisible, , setIsPwVisible] = useInput(false);
+  const [isEach, setIsEach] = useState(true);
+  const [isPwVisible, setIsPwVisible] = useState(false);
+  
 
   const onChangeIsEach = useCallback((check: boolean) => setIsEach(check), []);
   const onChangeIsPwVisible = useCallback(() => setIsPwVisible((prev) => !prev), []);
@@ -49,24 +50,22 @@ export default function SignUp() {
                   'w-full h-1/3 flex items-center border-solid border-b border-gray-light font-bold'
                 }
               >
-                <button
-                  type="button"
-                  className={`w-1/2 h-full text-xl border-solid border-r
-                   ${isEach ? 'bg-red text-red rounded-tl' : 'text-gray-light'}
+                <div
+                  className={`w-1/2 h-full text-xl cursor-pointer flex justify-center items-center border-solid border-r border-gray-light
+                   ${isEach ? 'text-black bg-orange rounded-tl' : 'text-gray-light'}
                   `}
                   onClick={() => onChangeIsEach(true)}
                 >
                   개인
-                </button>
-                <button
-                  className={`w-1/2 h-full text-xl border-solid border-r ${
+                </div>
+                <div
+                  className={`w-1/2 h-full text-xl cursor-pointer flex justify-center items-center ${
                     !isEach ? 'bg-orange text-black rounded-tr' : 'text-gray-light'
                   }`}
                   onClick={() => onChangeIsEach(false)}
-                  type="button"
                 >
                   기업
-                </button>
+                </div>
               </div>
               {/* 이름 */}
               <span
@@ -87,7 +86,7 @@ export default function SignUp() {
               {/*닉네임*/}
               <span className={'w-full h-1/3 flex items-center'}>
                 <label className={'w-full h-full flex items-center'}>
-                  <span className={'w-1/6 flex h-full justify-center items-center text-3xl '}>
+                  <span className={'w-1/6 flex h-full justify-center items-center text-3xl'}>
                     <FiUser className={'stroke-gray-light'} />
                   </span>
                   <input
@@ -139,17 +138,22 @@ export default function SignUp() {
                       className={'w-9/12 h-full focus:outline-none text-xl'}
                     />
                     <span className={'w-3/12 h-full flex flex-col justify-evenly items-center'}>
-                      <button className={'w-16 h-9 rounded text-sm font-bold text-white bg-orange'}>
+                      <div
+                        className={
+                          'w-16 h-9 rounded text-sm font-bold text-white bg-orange flex justify-center items-center cursor-pointer'
+                        }
+                      >
                         확인
-                      </button>
+                      </div>
                       <span className={'text-xs text-gray-dark box-border'}>
                         <span
                           className={
-                            'text-gray-dark border-solid border-r border-gray-dark pr-1 mr-1'
+                            'text-gray-dark'
                           }
                         >
                           0:00
                         </span>
+                        <span className={"text-xs text-gray-dark px-1"}>|</span>
                         <button type={'button'}>재전송</button>
                       </span>
                     </span>
@@ -178,9 +182,9 @@ export default function SignUp() {
                       onClick={onChangeIsPwVisible}
                     >
                       {isPwVisible ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
-                      <span className={'absolute text-[#E06469] text-xs bottom-[2px] left-0'}>
-                        영어/숫자/특수문자 포함, 8~15자로 입력해주세요.
-                      </span>
+                    </span>
+                    <span className={'absolute text-[#E06469] text-xs bottom-[2px] left-0'}>
+                      영어/숫자/특수문자 포함, 8~15자로 입력해주세요.
                     </span>
                   </span>
                 </label>
