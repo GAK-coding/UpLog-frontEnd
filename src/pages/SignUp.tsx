@@ -49,7 +49,7 @@ export default function SignUp() {
     }
 
     // TODO: 인증번호 확인
-    const check = false;
+    const check = true;
 
     if (check) {
       setIsAuth(true);
@@ -70,11 +70,12 @@ export default function SignUp() {
       e.preventDefault();
 
       if (!name || !nickName || !email || !isAuth || !isCheckPw) {
-        alert('모든 정보를 입력해주세요.');
+        showMessage('warning', '모든 정보를 입력해주세요.');
+
         return;
       }
 
-      alert('잘됨');
+      showMessage('success', '잘됨.');
     },
     [name, nickName, email, isAuth, isCheckPw]
   );
@@ -100,14 +101,13 @@ export default function SignUp() {
 
   // 비밀번호 유효성 검사
   useEffect(() => {
-    const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
-
+    const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,15}$/;
     setIsCheckPw(regex.test(password));
   }, [password, isCheckPw]);
 
   return (
     <form onSubmit={onSubmit} className={'h-full flex flex-col justify-center items-center'}>
-      <div className={"antd"}>{contextHolder}</div>
+      <div className={'antd'}>{contextHolder}</div>
       <section
         className={
           'border-solid border-[0.6px] border-header-gray w-[39rem] h-[42rem] min-h-[42rem] shadow-sign-up px-20'
@@ -273,7 +273,7 @@ export default function SignUp() {
                       placeholder={'비밀번호'}
                       maxLength={15}
                       required
-                      className={'w-9/12 h-full focus:outline-none text-xl'}
+                      className={`w-9/12 h-full focus:outline-none text-xl ${password && !isPwVisible &&"tracking-[-0.3rem]"}`}
                     />
                     <span
                       className={
