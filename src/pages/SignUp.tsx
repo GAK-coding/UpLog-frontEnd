@@ -51,8 +51,8 @@ export default function SignUp() {
               >
                 <button
                   type="button"
-                  className={`w-1/2 h-full text-xl border-solid border-r 
-                   ${isEach ? 'bg-orange text-black rounded-tl' : 'text-light-gray'}
+                  className={`w-1/2 h-full text-xl border-solid border-r
+                   ${isEach ? 'bg-red text-red rounded-tl' : 'text-light-gray'}
                   `}
                   onClick={() => onChangeIsEach(true)}
                 >
@@ -122,7 +122,7 @@ export default function SignUp() {
                     className={'w-5/6 h-full focus:outline-none text-xl rounded-tr-md'}
                   />
                 </label>
-              </span>{' '}
+              </span>
               {/* 인증번호 */}
               <span
                 className={'w-full h-1/3 flex items-center border-solid border-b border-light-gray'}
@@ -177,8 +177,7 @@ export default function SignUp() {
                       }
                       onClick={onChangeIsPwVisible}
                     >
-                      {!isPwVisible ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
-
+                      {isPwVisible ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
                       <span className={'absolute text-[#E06469] text-xs bottom-[2px] left-0'}>
                         영어/숫자/특수문자 포함, 8~15자로 입력해주세요.
                       </span>
