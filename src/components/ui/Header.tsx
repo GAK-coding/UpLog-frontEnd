@@ -36,13 +36,13 @@ export default function Header() {
 
       {!isLogin && (
         <div className={'flex border-solid border black font-bold items-center '}>
-          <BsSunFill className={'text-3xl mr-4 fill-dark-gray'} />
+          <BsSunFill className={'text-3xl mr-4 fill-gray-dark'} />
           <Link to={'/login'}>
-            <span className={'text-bold text-dark-gray text-lg'}>로그인 •</span>
+            <span className={'text-bold text-gray-dark text-lg'}>로그인 •</span>
           </Link>
 
           <Link to={'/signup'}>
-            <span className={'text-dark-gray text-lg'}>&nbsp; 회원가입</span>
+            <span className={'text-gray-dark text-lg'}>&nbsp; 회원가입</span>
           </Link>
         </div>
       )}

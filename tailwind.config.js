@@ -6,9 +6,11 @@ export default {
     extend: {
       colors: {
         'header-gray': '#E5E7EB',
-        orange: '#FFAA2A',
-        'light-gray': '#C4C4C4',
-        'dark-gray': '#64635E',
+        orange: 'var(--orange)',
+        gray: {
+          light: 'var(--gray-light)',
+          dark: 'var(--gray-dark)',
+        },
       },
       fontFamily: {
         logo: "'Baloo Tammudu 2', cursive",
