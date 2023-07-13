@@ -1,12 +1,14 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  darkMode: true,
   theme: {
     extend: {
       colors: {
         'header-gray': '#E5E7EB',
         orange: '#FFAA2A',
         'light-gray': '#C4C4C4',
+        'dark-gray': '#64635E',
       },
       height: {
         '42rem': '42rem',
