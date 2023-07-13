@@ -16,7 +16,7 @@ export default {
         logo: "'Baloo Tammudu 2', cursive",
       },
       height: {
-        noneHeader: 'calc(100vh - 6rem)',
+        noneHeader: 'calc(100vh - 5.5rem)',
       },
       boxShadow: {
         'sign-up': '2px 2px 10px 1px rgba(0, 0, 0, 0.15), -2px -2px 10px 0px rgba(0, 0, 0, 0.15)',

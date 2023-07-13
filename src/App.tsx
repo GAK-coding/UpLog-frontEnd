@@ -22,7 +22,7 @@ function App() {
       <ChakraProvider>
         <RecoilRoot>
           <BrowserRouter>
-            <section className={'h-[6rem]'}>
+            <section className={'h-[5.5rem]'}>
               <Header />
             </section>
             <section className={'h-noneHeader'}>
