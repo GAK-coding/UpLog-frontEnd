@@ -26,7 +26,7 @@ export default function SignUp() {
     >
       <section
         className={
-          'border-solid border-0.6 border-header-gray w-39rem h-42rem min-h-42rem shadow-sign-up px-20'
+          'border-solid border-[0.6px] border-header-gray w-[39rem] h-[42rem] min-h-[42rem] shadow-sign-up px-20'
         }
       >
         {/* logo */}
