@@ -193,7 +193,7 @@ export default function SignUp() {
       {/* button */}
       <button
         className={
-          'flex justify-center items-center border-solid border border-header-gray rounded-md w-39rem h-12 mt-10 py-7 font-bold text-xl bg-orange text-white'
+          'flex justify-center items-center border-solid border border-header-gray rounded-md w-[39rem] h-12 mt-10 py-7 font-bold text-xl bg-orange text-white'
         }
       >
         회원가입
