@@ -277,7 +277,11 @@ export default function SignUp() {
                       }
                       onClick={onClickPwVisible}
                     >
-                      {isPwVisible ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+                      {isPwVisible ? (
+                        <AiOutlineEyeInvisible className={'fill-gray-light'} />
+                      ) : (
+                        <AiOutlineEye className={'fill-gray-light'} />
+                      )}
                     </span>
                     <span className={'absolute text-[#E06469] text-xs bottom-[2px] left-0'}>
                       {!isCheckPw && password && '영어/숫자/특수문자 포함, 8~15자로 입력해주세요.'}
