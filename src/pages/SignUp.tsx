@@ -9,6 +9,7 @@ import {
   AiOutlineLock,
 } from 'react-icons/ai';
 import { convertMinutes } from '../utils/convertMinutes.ts';
+import { useMessage } from '../hooks/useMessage.ts';
 
 export default function SignUp() {
   const [name, onChangeName, setName] = useInput('');
@@ -31,7 +32,7 @@ export default function SignUp() {
   const sendAuth = useCallback(() => {
     //TODO: 인증번호 전송
 
-    alert('인증번호가 전송되었습니다.');
+    showMessage('success', '인증번호가 전송되었습니다.');
     setTimer(300);
   }, []);
 
@@ -48,19 +49,21 @@ export default function SignUp() {
     }
 
     // TODO: 인증번호 확인
-    const check = true;
+    const check = false;
 
     if (check) {
       setIsAuth(true);
-      alert('인증되었습니다.');
+      showMessage('success', '인증되었습니다.');
     } else {
-      alert('인증번호가 일치하지 않습니다.');
+      showMessage('warning', '인증번호가 일치하지 않습니다.');
     }
   }, [isAuthClick, isAuth]);
 
   // 개인 기업 선택
   const onClickEach = useCallback((check: boolean) => setIsEach(check), []);
   const onClickPwVisible = useCallback(() => setIsPwVisible((prev) => !prev), []);
+
+  const { showMessage, contextHolder } = useMessage();
 
   const onSubmit = useCallback(
     (e: FormEvent<HTMLFormElement>) => {
@@ -104,6 +107,7 @@ export default function SignUp() {
 
   return (
     <form onSubmit={onSubmit} className={'h-full flex flex-col justify-center items-center'}>
+      <div className={"antd"}>{contextHolder}</div>
       <section
         className={
           'border-solid border-[0.6px] border-header-gray w-[39rem] h-[42rem] min-h-[42rem] shadow-sign-up px-20'
