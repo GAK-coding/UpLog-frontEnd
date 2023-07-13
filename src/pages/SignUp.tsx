@@ -49,7 +49,7 @@ export default function SignUp() {
     }
 
     // TODO: 인증번호 확인
-    const check = false;
+    const check = true;
 
     if (check) {
       setIsAuth(true);
@@ -70,11 +70,12 @@ export default function SignUp() {
       e.preventDefault();
 
       if (!name || !nickName || !email || !isAuth || !isCheckPw) {
-        alert('모든 정보를 입력해주세요.');
+        showMessage('warning', '모든 정보를 입력해주세요.');
+
         return;
       }
 
-      alert('잘됨');
+      showMessage('success', '잘됨.');
     },
     [name, nickName, email, isAuth, isCheckPw]
   );
@@ -107,7 +108,7 @@ export default function SignUp() {
 
   return (
     <form onSubmit={onSubmit} className={'h-full flex flex-col justify-center items-center'}>
-      <div className={"antd"}>{contextHolder}</div>
+      <div className={'antd'}>{contextHolder}</div>
       <section
         className={
           'border-solid border-[0.6px] border-header-gray w-[39rem] h-[42rem] min-h-[42rem] shadow-sign-up px-20'
