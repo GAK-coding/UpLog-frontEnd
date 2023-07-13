@@ -9,6 +9,9 @@ export default {
         'light-gray': '#C4C4C4',
         'dark-gray': '#64635E',
       },
+      fontFamily: {
+        logo: "'Baloo Tammudu 2', cursive",
+      },
       height: {
         '42rem': '42rem',
         noneHeader: 'calc(100vh - 5.5rem)',

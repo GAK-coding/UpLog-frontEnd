@@ -22,7 +22,7 @@ export default function SignUp() {
         onSubmit={() => {
           alert('클릭');
         }}
-        className={'h-full flex flex-col justify-center items-center'}
+        className={'h-full flex flex-col y'}
       >
         <section
           className={

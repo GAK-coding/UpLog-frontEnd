@@ -12,44 +12,31 @@ export default function Header() {
 
   return (
     <header
-      className={`flex flex-row pt-5 h-full ${
+      className={`flex flex-row justify-between items-center ml-32 mr-6 pt-2 h-full border-solid border-red-400 ${
         isLogin ? '' : 'border-solid border border-header-gray'
       }`}
     >
-      <div className={'flex flex-row'}>
-        <Link to={'/'} className={'border-solid border black'}>
-          <img
-            className={'mr-4 h-12 ml-32 border-solid border black'}
-            src={'/images/mainLogo.png'}
-            alt={'main-logo'}
-          />
-          {/*<nav*/}
-          {/*  className={*/}
-          {/*    'font-['"Baloo Tammudu 2", "cursive"'] text-4xl font-bold border-solid border black'*/}
-          {/*  }*/}
-          {/*>    */}
-          <nav
-            className={
-              'font-["Baloo Tammudu 2", "cursive"] text-4xl font-bold border-solid border black'
-            }
-          >
-            upLog
-          </nav>
-        </Link>
+      {/*<Link to={'/'}>*/}
+      <div className={'flex flex-row border-solid border-red-400'}>
+        <img
+          className={'mr-4 h-12 border-solid border black'}
+          src={'/images/mainLogo.png'}
+          alt={'main-logo'}
+        />
+        <nav className={'font-logo text-4xl font-bold border-solid border black'}>upLog</nav>
       </div>
+      {/*</Link>*/}
 
       {!isLogin && (
-        <>
-          <div className={'flex flex-end'}>
-            <Link to={'/login'} className={'border-solid border black'}>
-              로그인 •
-            </Link>
+        <div className={'flex border-solid border-red-400'}>
+          <Link to={'/login'} className={''}>
+            로그인 •
+          </Link>
 
-            <Link to={'/signup'} className={'border-solid border black'}>
-              회원가입
-            </Link>
-          </div>
-        </>
+          <Link to={'/signup'} className={''}>
+            회원가입
+          </Link>
+        </div>
       )}
     </header>
   );
