@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { BsSunFill } from 'react-icons/bs';
 
 export default function Header() {
   // 로그인, 회원가입이면 border-bottom을 보여주지 않기 위한 로직
   const { pathname } = useLocation();
   const [isLogin, setIsLogin] = useState(pathname === '/login' || pathname === '/signup');
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     setIsLogin(pathname === '/login' || pathname === '/signup');
@@ -17,8 +19,10 @@ export default function Header() {
         isLogin ? '' : 'border-solid border border-header-gray'
       }`}
     >
-      {/*<Link to={'/'}>*/}
-      <nav className={'flex flex-row border-solid border-red-400'}>
+      <nav
+        className={'flex flex-row border-solid border-red-400 cursor-pointer'}
+        onClick={() => navigate('/')}
+      >
         <img
           className={'mr-4 h-12 border-solid border black'}
           src={'/images/mainLogo.png'}
@@ -32,18 +36,17 @@ export default function Header() {
           upLog
         </span>
       </nav>
-      {/*</Link>*/}
 
       {!isLogin && (
-        <div className={'flex border-solid border black font-bold items-center '}>
+        <div className={'flex border-solid border black font-bold items-center cursor-pointer'}>
           <BsSunFill className={'text-3xl mr-4 fill-dark-gray'} />
-          <Link to={'/login'}>
-            <span className={'text-bold text-dark-gray text-lg'}>로그인 •</span>
-          </Link>
+          <span className={'text-bold text-dark-gray text-lg'} onClick={() => navigate('/login')}>
+            로그인 •
+          </span>
 
-          <Link to={'/signup'}>
-            <span className={'text-dark-gray text-lg'}>&nbsp; 회원가입</span>
-          </Link>
+          <span className={'text-dark-gray text-lg'} onClick={() => navigate('/signup')}>
+            &nbsp; 회원가입
+          </span>
         </div>
       )}
     </header>
