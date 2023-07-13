@@ -62,6 +62,7 @@ export default function SignUp() {
                       !isEach ? 'bg-orange text-black rounded-tr' : 'text-light-gray'
                     }`}
                     onClick={() => onChangeIsEach(false)}
+                    type="button"
                   >
                     기업
                   </button>

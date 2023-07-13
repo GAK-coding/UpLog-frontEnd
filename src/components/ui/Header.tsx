@@ -12,20 +12,43 @@ export default function Header() {
 
   return (
     <header
-      className={`pt-5 flex-row h-full ${
-        isLogin ? '' : 'border-solid border-b-2 border-header-gray'
+      className={`flex flex-row pt-5 h-full ${
+        isLogin ? '' : 'border-solid border border-header-gray'
       }`}
     >
-      <img
-        className={'h-12 ml-32'}
-        src={'/images/mainLogo.png'}
-        alt={'main-logo'}
-        style={{ fontFamily: 'Baloo Tammudu 2' }}
-      />
-      <nav>upLog</nav>
-      <Link to={'/'}>홈</Link> <br />
-      <Link to={'/login'}>로그인</Link> <br />
-      <Link to={'/signup'}>회원가입</Link>
+      <Link to={'/'} className={'border-solid border black'}>
+        <img
+          className={'mr-4 h-12 ml-32 border-solid border black'}
+          src={'/images/mainLogo.png'}
+          alt={'main-logo'}
+        />
+        {/*<nav*/}
+        {/*  className={*/}
+        {/*    'font-['"Baloo Tammudu 2", "cursive"'] text-4xl font-bold border-solid border black'*/}
+        {/*  }*/}
+        {/*>    */}
+        <nav
+          className={
+            'font-["Baloo Tammudu 2", "cursive"] text-4xl font-bold border-solid border black'
+          }
+        >
+          upLog
+        </nav>
+      </Link>
+
+      {!isLogin && (
+        <>
+          <div className={'flex flex-end'}>
+            <Link to={'/login'} className={'border-solid border black'}>
+              로그인 •
+            </Link>
+
+            <Link to={'/signup'} className={'border-solid border black'}>
+              회원가입
+            </Link>
+          </div>
+        </>
+      )}
     </header>
   );
 }
