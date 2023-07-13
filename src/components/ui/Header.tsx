@@ -2,16 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { BsBellFill, BsQuestionCircle, BsSearch, BsSunFill } from 'react-icons/bs';
 import { FaUserCircle } from 'react-icons/fa';
+import useInput from '../../hooks/useInput.ts';
 
 export default function Header() {
-  // 로그인 하기 전, border-bottom을 보여주지 않기 위한 로직
-  const { pathname } = useLocation();
-  const [isLogin, setIsLogin] = useState(pathname === '/login' || pathname === '/signup');
+  // TODO: 실제 userprofile 값으로 변경하기
+  const userprofile = '';
+  const [searchTag, onChageSearchTag, setSearchTag] = useInput('');
 
   const navigate = useNavigate();
 
-  // TODO: 실제 userprofile 값으로 변경하기
-  const userprofile = '';
+  // 로그인 하기 전, border-bottom을 보여주지 않기 위한 로직
+  const { pathname } = useLocation();
+  const [isLogin, setIsLogin] = useState(pathname === '/login' || pathname === '/signup');
 
   useEffect(() => {
     setIsLogin(pathname === '/login' || pathname === '/signup');
@@ -48,13 +50,23 @@ export default function Header() {
       {/*로그인 상태*/}
       {!isLogin && (
         <div className={'flex w-[28rem] h-full justify-between mr-12 font-bold items-center '}>
+          {/*검색창*/}
           <div
             className={
               'flex items-center justify-between w-48 h-3/5 p-2 mt-1 border-solid border border-gray-light rounded-lg'
             }
           >
-            <BsSearch className={' text-base fill-gray-dark '} />
+            <BsSearch className={'ml-2 text-base fill-gray-dark '} />
+            <input
+              type="text"
+              value={searchTag}
+              onChange={onChageSearchTag}
+              placeholder={'검색'}
+              required
+              className={'w-[8.7rem] h-full outline-transparent font-medium text-gray-dark'}
+            />
           </div>
+          {/*아이콘*/}
           <BsSunFill className={'text-[2.1rem] fill-gray-dark cursor-pointer'} />
           <BsBellFill className={'text-[2.1rem] fill-gray-dark cursor-pointer'} />
           <BsQuestionCircle className={'text-[2.1rem] fill-gray-dark cursor-pointer'} />
@@ -71,7 +83,7 @@ export default function Header() {
         <div className={'flex mr-12 font-bold cursor-pointer'}>
           <BsSunFill className={'text-[2.1rem] mr-6 fill-gray-dark'} />
           <span
-            className={'flex self-end text-bold text-gray-dark text-xl'}
+            className={'flex self-end text-gray-dark text-xl'}
             onClick={() => navigate('/login')}
           >
             로그인 •
