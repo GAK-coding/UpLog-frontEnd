@@ -64,6 +64,7 @@ export default function Header() {
                 onChageSearchTag(event);
               }}
               placeholder={'검색'}
+              maxLength={20}
               required
               className={'w-[8.7rem] h-full font-medium text-gray-dark'}
             />
