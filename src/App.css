@@ -2,6 +2,8 @@
   --orange: #ffaa2a;
   --gray-light: #c4c4c4;
   --gray-dark: #64635e;
+  --black: #292723;
+  --white: #ffffff;
 }
 
 /* http://meyerweb.com/eric/tools/css/reset/
@@ -99,6 +101,7 @@ video {
   font: inherit;
   vertical-align: baseline;
   font-family: 'Noto Sans KR', sans-serif;
+  color: #292723;
 }
 /* HTML5 display-role reset for older browsers */
 article,
@@ -135,4 +138,12 @@ q:after {
 table {
   border-collapse: collapse;
   border-spacing: 0;
+}
+
+html input::placeholder{
+  color: var(--gray-light);
+}
+
+html input:focus {
+  outline: none;
 }
