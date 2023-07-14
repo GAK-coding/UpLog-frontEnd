@@ -21,7 +21,7 @@ export default function Header() {
 
   return (
     <header
-      className={`flex-row-center justify-between pt-[1.5rem] h-full  ${
+      className={`fixed top-0 flex-row-center justify-between pt-[1.5rem] w-full h-[5.5rem]   ${
         isLogin ? '' : 'border-solid border-b border-header-gray'
       }`}
     >
