@@ -38,6 +38,7 @@ export default function SignUp() {
 
   /** 인증번호 버튼 */
   const onClickIsAuth = useCallback(() => {
+    // 인증이 되어있으면 return
     if (isAuth) return;
 
     // 인증 번호 전송
@@ -48,7 +49,7 @@ export default function SignUp() {
       return;
     }
 
-    // TODO: 인증번호 확인
+    // TODO: 인증번호 확인, 이메일 입력됐는지 확인 + 이메일 유효성 검사
     const check = true;
 
     if (check) {
