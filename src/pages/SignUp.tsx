@@ -22,11 +22,11 @@ export default function SignUp() {
   // 인증 성공했는지
   const [isAuth, setIsAuth] = useState(false);
   const [timer, setTimer] = useState(time);
-
   // 개인 기업 선택
   const [isEach, setIsEach] = useState(true);
   const [isPwVisible, setIsPwVisible] = useState(false);
   const [isCheckPw, setIsCheckPw] = useState(false);
+  const { showMessage, contextHolder } = useMessage();
 
   /** 인증번호 전송 함수, 재전송에서도 활용하기 위해서 밖으로 뺌 */
   const sendAuth = useCallback(() => {
@@ -65,8 +65,6 @@ export default function SignUp() {
   // 개인 기업 선택
   const onClickEach = useCallback((check: boolean) => setIsEach(check), []);
   const onClickPwVisible = useCallback(() => setIsPwVisible((prev) => !prev), []);
-
-  const { showMessage, contextHolder } = useMessage();
 
   const onSubmit = useCallback(
     (e: FormEvent<HTMLFormElement>) => {
@@ -120,7 +118,7 @@ export default function SignUp() {
       >
         {/* logo */}
         <article className={'h-[18%] text-3xl flex items-center'}>
-          <img className={'h-16 mr-6'} src={'/images/login.png'} alt={'login logo'} />
+          <img className={'h-16 mr-6'} src={'logo.svg'} alt={'login logo'} />
           <span className={'font-bold'}>회원가입</span>
         </article>
 
@@ -278,9 +276,7 @@ export default function SignUp() {
                 </label>
               </span>
               {/*비밀번호*/}
-              <span
-                className={'w-full h-1/3 flex-row-center border-solid border-b border-gray-light'}
-              >
+              <span className={'w-full h-1/3 flex-row-center'}>
                 <label className={'w-h-full flex-row-center'}>
                   <span className={'w-1/6 h-full flex-row-center text-3xl'}>
                     <AiOutlineLock className={`${isCheckPw ? 'fill-orange' : 'fill-gray-light'}`} />
