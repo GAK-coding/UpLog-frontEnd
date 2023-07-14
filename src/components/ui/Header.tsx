@@ -89,20 +89,20 @@ export default function Header() {
 
       {/*로그인 X */}
       {!isLogin && (
-        <div className={'flex mr-12 font-bold cursor-pointer'}>
+        <div className={'flex mr-12 font-bold'}>
           <BsSunFill className={'text-[2.1rem] mr-6 fill-gray-dark'} />
           <span
-            className={'flex self-end text-gray-dark text-xl'}
+            className={'flex self-end text-gray-dark text-xl cursor-pointer'}
             onClick={() => navigate('/login')}
           >
-            로그인 •
+            로그인
           </span>
-
+          <span className={'flex self-end text-gray-dark text-xl'}>&nbsp;•</span>
           <span
-            className={'flex self-end text-gray-dark text-xl'}
+            className={'flex self-end text-gray-dark text-xl cursor-pointer'}
             onClick={() => navigate('/signup')}
           >
-            &nbsp; 회원가입
+            &nbsp;회원가입
           </span>
         </div>
       )}
