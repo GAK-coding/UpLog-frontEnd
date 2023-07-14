@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { BsBellFill, BsQuestionCircle, BsSearch, BsSunFill } from 'react-icons/bs';
 import { FaUserCircle } from 'react-icons/fa';
 import useInput from '../../hooks/useInput.ts';
+import useDarkSide from '../../hooks/useDarkSide.ts';
 
 export default function Header() {
   // TODO: 실제 userprofile 값으로 변경하기
@@ -10,6 +11,13 @@ export default function Header() {
   const [searchTag, onChageSearchTag, setSearchTag] = useInput('');
 
   const navigate = useNavigate();
+
+  // 검색창에서 엔터를 눌렀을 때, 검색 페이지로 이동
+  const activeEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      navigate(`/search/${e.currentTarget.value}`);
+    }
+  };
 
   // 로그인 하기 전, border-bottom을 보여주지 않기 위한 로직
   const { pathname } = useLocation();
@@ -51,9 +59,8 @@ export default function Header() {
             <input
               type="text"
               value={searchTag}
-              onChange={(event) => {
-                onChageSearchTag(event);
-              }}
+              onChange={onChageSearchTag}
+              onKeyDown={(e) => activeEnter(e)}
               placeholder={'검색'}
               maxLength={20}
               required
@@ -70,7 +77,7 @@ export default function Header() {
             className={'text-[2.1rem] fill-gray-dark cursor-pointer'}
             onClick={() => navigate('/')}
           />
-          {userprofile === '' ? (
+          {userprofile ? (
             <FaUserCircle className={'text-[2.1rem] fill-gray-dark cursor-pointer'} />
           ) : (
             <img
