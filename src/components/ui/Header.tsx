@@ -70,7 +70,7 @@ export default function Header() {
             className={'text-[2.1rem] fill-gray-dark cursor-pointer'}
             onClick={() => navigate('/')}
           />
-          {!!userprofile ? (
+          {userprofile ? (
             <FaUserCircle className={'text-[2.1rem] fill-gray-dark cursor-pointer'} />
           ) : (
             <img
