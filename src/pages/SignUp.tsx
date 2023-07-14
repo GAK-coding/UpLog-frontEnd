@@ -87,7 +87,6 @@ export default function SignUp() {
         setTimer((prevTimer) => {
           if (prevTimer === 0) {
             clearInterval(interval);
-
             setIsAuthClick(false);
 
             return 0;
@@ -136,22 +135,34 @@ export default function SignUp() {
                   'w-full h-1/3 flex items-center border-solid border-b border-gray-light font-bold'
                 }
               >
-                <div
-                  className={`w-1/2 h-full text-xl cursor-pointer flex justify-center items-center border-solid border-r border-gray-light
-                   ${isEach ? 'text-black bg-orange rounded-tl' : 'text-gray-light'}
-                  `}
+                <button
+                  type={'button'}
+                  className={'w-1/2 h-full text-xl border-solid border-r border-gray-light'}
                   onClick={() => onClickEach(true)}
                 >
-                  개인
-                </div>
-                <div
-                  className={`w-1/2 h-full text-xl cursor-pointer flex justify-center items-center ${
-                    !isEach ? 'bg-orange text-black rounded-tr' : 'text-gray-light'
+                  <span
+                    className={`w-full h-full flex justify-center items-center ${
+                      isEach ? 'text-black bg-orange rounded-tl' : 'text-gray-light'
+                    }`}
+                  >
+                    개인
+                  </span>
+                </button>
+                <button
+                  type={'button'}
+                  className={`w-1/2 h-full text-xl ${
+                    !isEach ? 'text-black bg-orange rounded-tl' : 'text-gray-light'
                   }`}
                   onClick={() => onClickEach(false)}
                 >
-                  기업
-                </div>
+                  <span
+                    className={`w-full h-full flex justify-center items-center ${
+                      !isEach ? 'text-black bg-orange rounded-tr' : 'text-gray-light'
+                    }`}
+                  >
+                    기업
+                  </span>
+                </button>
               </div>
               {/* 이름 */}
               <span
@@ -239,14 +250,17 @@ export default function SignUp() {
                       className={'w-9/12 h-full focus:outline-none text-xl disabled:bg-inherit'}
                     />
                     <span className={'w-3/12 h-full flex flex-col justify-evenly items-center'}>
-                      <div
+                      <button
+                        type={'button'}
                         className={
-                          'w-16 h-9 rounded text-sm font-bold text-white bg-orange flex justify-center items-center cursor-pointer'
+                          'w-16 h-9 rounded text-sm font-bold'
                         }
                         onClick={onClickIsAuth}
                       >
-                        {isAuthClick ? '확인' : '전송'}
-                      </div>
+                        <span className={'w-full h-full bg-orange rounded-md flex justify-center items-center text-white'}>
+                          {isAuthClick ? '확인' : '전송'}
+                        </span>
+                      </button>
                       {isAuthClick && !isAuth && (
                         <span className={'text-xs text-gray-dark box-border'}>
                           <span className={'text-gray-dark'}>{convertMinutes(timer)}</span>
@@ -276,9 +290,12 @@ export default function SignUp() {
                       placeholder={'비밀번호'}
                       maxLength={15}
                       required
-                      className={`w-9/12 h-full focus:outline-none text-xl ${password && !isPwVisible &&"tracking-[-0.3rem]"}`}
+                      className={`w-9/12 h-full focus:outline-none text-xl ${
+                        password && !isPwVisible && 'tracking-[-0.3rem]'
+                      }`}
                     />
-                    <span
+                    <button
+                        type={'button'}
                       className={
                         'w-3/12 h-full flex flex-col justify-evenly items-center text-2xl cursor-pointer'
                       }
@@ -289,7 +306,7 @@ export default function SignUp() {
                       ) : (
                         <AiOutlineEye className={'fill-gray-light'} />
                       )}
-                    </span>
+                    </button>
                     <span className={'absolute text-[#E06469] text-xs bottom-[2px] left-0'}>
                       {!isCheckPw && password && '영어/숫자/특수문자 포함, 8~15자로 입력해주세요.'}
                     </span>
