@@ -249,7 +249,7 @@ export default function SignUp() {
                       maxLength={10}
                       className={'w-9/12 h-full text-xl disabled:bg-inherit'}
                     />
-                    <span className={'w-3/12 h-full flex-col-center'}>
+                    <span className={'w-3/12 h-full flex-col-center justify-evenly'}>
                       <button
                         type={'button'}
                         className={'w-16 h-9 rounded text-sm font-bold'}
