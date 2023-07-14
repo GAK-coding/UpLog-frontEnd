@@ -6,7 +6,7 @@ import useInput from '../../hooks/useInput.ts';
 
 export default function Header() {
   // TODO: 실제 userprofile 값으로 변경하기
-  const userprofile = '';
+  const userprofile = '/images/test_userprofile.png';
   const [searchTag, onChageSearchTag, setSearchTag] = useInput('');
 
   const navigate = useNavigate();
@@ -73,7 +73,11 @@ export default function Header() {
           {userprofile === '' ? (
             <FaUserCircle className={'text-[2.1rem] fill-gray-dark cursor-pointer'} />
           ) : (
-            <img src={userprofile} alt="userprofile" className={'h-[2.6rem] cursor-pointer'} />
+            <img
+              src={userprofile}
+              alt="userprofile"
+              className={'w-[2.1rem] h-[2.1rem] cursor-pointer'}
+            />
           )}
         </div>
       )}
