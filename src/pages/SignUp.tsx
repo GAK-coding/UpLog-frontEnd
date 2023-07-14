@@ -10,7 +10,7 @@ import {
 } from 'react-icons/ai';
 import { convertMinutes } from '../utils/convertMinutes.ts';
 import { useMessage } from '../hooks/useMessage.ts';
-
+const time = 300;
 export default function SignUp() {
   const [name, onChangeName, setName] = useInput('');
   const [nickName, onChangeNickName, setNickName] = useInput('');
@@ -21,7 +21,7 @@ export default function SignUp() {
   const [isAuthClick, setIsAuthClick] = useState(false);
   // 인증 성공했는지
   const [isAuth, setIsAuth] = useState(false);
-  const [timer, setTimer] = useState(300);
+  const [timer, setTimer] = useState(time);
 
   // 개인 기업 선택
   const [isEach, setIsEach] = useState(true);
@@ -33,7 +33,7 @@ export default function SignUp() {
     //TODO: 인증번호 전송
 
     showMessage('success', '인증번호가 전송되었습니다.');
-    setTimer(300);
+    setTimer(time);
   }, []);
 
   /** 인증번호 버튼 */
@@ -85,8 +85,11 @@ export default function SignUp() {
     if (isAuthClick && !isAuth) {
       const interval = setInterval(() => {
         setTimer((prevTimer) => {
-          if (prevTimer === 1) {
+          if (prevTimer === 0) {
             clearInterval(interval);
+
+            setIsAuthClick(false);
+
             return 0;
           }
           return prevTimer - 1;
