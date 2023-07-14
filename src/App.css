@@ -2,6 +2,8 @@
   --orange: #ffaa2a;
   --gray-light: #c4c4c4;
   --gray-dark: #64635e;
+  --black: #292723;
+  --white: #ffffff;
 }
 
 /* http://meyerweb.com/eric/tools/css/reset/
@@ -136,4 +138,8 @@ q:after {
 table {
   border-collapse: collapse;
   border-spacing: 0;
+}
+
+html input::placeholder{
+  color: var(--gray-light);
 }
