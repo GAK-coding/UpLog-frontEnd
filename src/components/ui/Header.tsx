@@ -21,7 +21,7 @@ export default function Header() {
 
   return (
     <header
-      className={`flex flex-row justify-between items-center pt-[1.5rem] h-full bg-white ${
+      className={`flex flex-row justify-between items-center pt-[1.5rem] h-full  ${
         isLogin ? '' : 'border-solid border-b border-header-gray'
       }`}
     >
@@ -65,7 +65,7 @@ export default function Header() {
               }}
               placeholder={'검색'}
               required
-              className={'w-[8.7rem] h-full outline-transparent font-medium text-gray-dark'}
+              className={'w-[8.7rem] h-full font-medium text-gray-dark'}
             />
           </div>
           {/*아이콘*/}
