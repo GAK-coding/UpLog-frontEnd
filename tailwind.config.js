@@ -5,8 +5,10 @@ export default {
   theme: {
     extend: {
       colors: {
-        'header-gray': '#E5E7EB',
+        black: 'var(--black)',
+        white: 'var(--white)',
         orange: 'var(--orange)',
+        'header-gray': '#E5E7EB',
         gray: {
           light: 'var(--gray-light)',
           dark: 'var(--gray-dark)',
