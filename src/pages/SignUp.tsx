@@ -41,6 +41,8 @@ export default function SignUp() {
     // 인증이 되어있으면 return
     if (isAuth) return;
 
+    if (!email) return showMessage('warning', '이메일을 입력해주세요.');
+
     // 인증 번호 전송
     if (!isAuthClick) {
       sendAuth();
@@ -58,7 +60,7 @@ export default function SignUp() {
     } else {
       showMessage('warning', '인증번호가 일치하지 않습니다.');
     }
-  }, [isAuthClick, isAuth]);
+  }, [isAuthClick, isAuth, email]);
 
   // 개인 기업 선택
   const onClickEach = useCallback((check: boolean) => setIsEach(check), []);
@@ -109,7 +111,7 @@ export default function SignUp() {
   }, [password, isCheckPw]);
 
   return (
-    <form onSubmit={onSubmit} className={'h-full flex-col-center'}>
+    <form onSubmit={onSubmit} className={'h-full flex-col-center min-h-[55rem]'}>
       {contextHolder}
       <section
         className={
@@ -257,9 +259,7 @@ export default function SignUp() {
                         onClick={onClickIsAuth}
                       >
                         <span
-                          className={
-                            'w-h-full bg-orange rounded-md flex-row-center text-white'
-                          }
+                          className={'w-h-full bg-orange rounded-md flex-row-center text-white'}
                         >
                           {isAuthClick ? '확인' : '전송'}
                         </span>
