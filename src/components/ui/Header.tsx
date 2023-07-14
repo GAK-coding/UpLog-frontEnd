@@ -21,7 +21,7 @@ export default function Header() {
 
   return (
     <header
-      className={`flex flex-row justify-between items-center pt-[1.5rem] h-full  ${
+      className={`flex-row-center justify-between pt-[1.5rem] h-full  ${
         isLogin ? '' : 'border-solid border-b border-header-gray'
       }`}
     >
@@ -29,23 +29,14 @@ export default function Header() {
       <div className={'flex ml-32'}>
         <nav className={'flex flex-row cursor-pointer'} onClick={() => navigate('/')}>
           <img className={'mr-4 h-10'} src={'/images/mainLogo.png'} alt={'main-logo'} />
-          <span
-            className={
-              'flex justify-items-center items-center font-logo text-[2.3rem] font-semibold text-gray-dark'
-            }
-          >
+          <span className={'flex-row-center font-logo text-[2.3rem] font-semibold text-gray-dark'}>
             upLog
           </span>
         </nav>
 
         {/*TODO : 스토리지 값 체크후에 변경하기 (조건으로 렌더링 여부 바꿔야함)*/}
-        <div
-          className={
-            'flex flex-row justify-center items-center ml-4 h-9 border-solid border-r border-header-gray'
-          }
-        ></div>
+        <div className={'flex-row-center ml-4 h-9 border-solid border-r border-header-gray'}></div>
       </div>
-
       {/*TODO : 스토리지 값 체크후에 변경하기 (조건으로 렌더링 여부 바꿔야함)*/}
       {/*로그인 상태*/}
       {isLogin && (
@@ -53,7 +44,7 @@ export default function Header() {
           {/*검색창*/}
           <div
             className={
-              'flex items-center justify-between w-48 h-3/5 p-2 mt-1 border-solid border border-gray-light rounded-lg'
+              'flex-row-center justify-between w-48 h-3/5 p-2 mt-1 border-solid border border-gray-light rounded-lg'
             }
           >
             <BsSearch className={'ml-2 text-base fill-gray-dark '} />
@@ -86,7 +77,6 @@ export default function Header() {
           )}
         </div>
       )}
-
       {/*로그인 X */}
       {!isLogin && (
         <div className={'flex mr-12 font-bold'}>
