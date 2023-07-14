@@ -9,7 +9,6 @@ import Header from './components/ui/Header';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import Post from './pages/Post';
-import Switcher from './components/darkMode/Switcher.tsx';
 import { ChakraProvider } from '@chakra-ui/react';
 
 const queryClient = new QueryClient();
