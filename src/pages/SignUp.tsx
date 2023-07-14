@@ -118,7 +118,7 @@ export default function SignUp() {
       >
         {/* logo */}
         <article className={'h-[18%] text-3xl flex items-center'}>
-          <img className={'h-16 mr-6'} src={'/images/login.png'} alt={'login logo'} />
+          <img className={'h-16 mr-6'} src={'logo.svg'} alt={'login logo'} />
           <span className={'font-bold'}>회원가입</span>
         </article>
 
@@ -276,9 +276,7 @@ export default function SignUp() {
                 </label>
               </span>
               {/*비밀번호*/}
-              <span
-                className={'w-full h-1/3 flex-row-center border-solid border-b border-gray-light'}
-              >
+              <span className={'w-full h-1/3 flex-row-center'}>
                 <label className={'w-h-full flex-row-center'}>
                   <span className={'w-1/6 h-full flex-row-center text-3xl'}>
                     <AiOutlineLock className={`${isCheckPw ? 'fill-orange' : 'fill-gray-light'}`} />
