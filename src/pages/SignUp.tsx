@@ -108,8 +108,8 @@ export default function SignUp() {
   }, [password, isCheckPw]);
 
   return (
-    <form onSubmit={onSubmit} className={'h-full flex flex-col justify-center items-center'}>
-      <div className={'antd'}>{contextHolder}</div>
+    <form onSubmit={onSubmit} className={'h-full flex-col-center'}>
+      {contextHolder}
       <section
         className={
           'border-solid border-[0.6px] border-header-gray w-[39rem] h-[42rem] min-h-[42rem] shadow-sign-up px-20'
@@ -122,17 +122,17 @@ export default function SignUp() {
         </article>
 
         {/* infos */}
-        <article className={'h-[82%] flex flex-col justify-evenly items-center mt-[-1rem]'}>
-          <div className={'flex justify-center items-center w-full h-2/5'}>
+        <article className={'h-[82%] flex-col-center justify-evenly mt-[-1rem]'}>
+          <div className={'flex-row-center w-full h-2/5'}>
             <div
               className={
-                'border-solid border border-gray-light rounded-md w-full h-full flex flex-col justify-around shadow-sign-up-info'
+                'border-base border-gray-light rounded-md w-h-full flex flex-col justify-around shadow-sign-up-info'
               }
             >
               {/*개인 기업 선택*/}
               <div
                 className={
-                  'w-full h-1/3 flex items-center border-solid border-b border-gray-light font-bold'
+                  'w-full h-1/3 flex-row-center border-solid border-b border-gray-light font-bold'
                 }
               >
                 <button
@@ -141,7 +141,7 @@ export default function SignUp() {
                   onClick={() => onClickEach(true)}
                 >
                   <span
-                    className={`w-full h-full flex justify-center items-center ${
+                    className={`w-h-full flex-row-center ${
                       isEach ? 'text-black bg-orange rounded-tl' : 'text-gray-light'
                     }`}
                   >
@@ -156,7 +156,7 @@ export default function SignUp() {
                   onClick={() => onClickEach(false)}
                 >
                   <span
-                    className={`w-full h-full flex justify-center items-center ${
+                    className={`w-h-full flex-row-center ${
                       !isEach ? 'text-black bg-orange rounded-tr' : 'text-gray-light'
                     }`}
                   >
@@ -166,10 +166,10 @@ export default function SignUp() {
               </div>
               {/* 이름 */}
               <span
-                className={'w-full h-1/3 flex items-center border-solid border-b border-gray-light'}
+                className={'w-full h-1/3 flex-row-center border-solid border-b border-gray-light'}
               >
-                <label className={'w-full h-full flex items-center'}>
-                  <span className={'w-1/6 flex h-full justify-center items-center text-3xl '}>
+                <label className={'w-h-full flex-row-center'}>
+                  <span className={'w-1/6 h-full flex-row-center text-3xl '}>
                     <FiUser className={name ? 'stroke-orange' : 'stroke-gray-light'} />
                   </span>
                   <input
@@ -179,14 +179,14 @@ export default function SignUp() {
                     placeholder={'이름'}
                     maxLength={10}
                     required
-                    className={'w-5/6 h-full focus:outline-none text-xl'}
+                    className={'w-5/6 h-full text-xl'}
                   />
                 </label>
               </span>
               {/*닉네임*/}
-              <span className={'w-full h-1/3 flex items-center'}>
-                <label className={'w-full h-full flex items-center'}>
-                  <span className={'w-1/6 flex h-full justify-center items-center text-3xl'}>
+              <span className={'w-full h-1/3 flex-row-center'}>
+                <label className={'w-h-full flex-row-center'}>
+                  <span className={'w-1/6 h-full flex-row-center text-3xl'}>
                     <FiUser className={nickName ? 'stroke-orange' : 'stroke-gray-light'} />
                   </span>
                   <input
@@ -196,25 +196,25 @@ export default function SignUp() {
                     placeholder={'닉네임'}
                     maxLength={10}
                     required
-                    className={'w-5/6 h-full focus:outline-none text-xl rounded-br-md'}
+                    className={'w-5/6 h-full text-xl rounded-br-md'}
                   />
                 </label>
               </span>
             </div>
           </div>
 
-          <div className={'flex justify-center items-center w-full h-2/5'}>
+          <div className={'flex-row-center w-full h-2/5'}>
             <div
               className={
-                'border-solid border border-gray-light rounded-md w-full h-full flex flex-col justify-around shadow-sign-up-info'
+                'border-base border-gray-light rounded-md w-h-full flex flex-col justify-around shadow-sign-up-info'
               }
             >
               {/* 이메일 */}
               <span
-                className={'w-full h-1/3 flex items-center border-solid border-b border-gray-light'}
+                className={'w-full h-1/3 flex-row-center border-solid border-b border-gray-light'}
               >
-                <label className={'w-full h-full flex items-center '}>
-                  <span className={'w-1/6 flex h-full justify-center items-center text-3xl '}>
+                <label className={'w-h-full flex-row-center '}>
+                  <span className={'w-1/6 h-full flex-row-center text-3xl '}>
                     <MdOutlineMailOutline className={email ? 'fill-orange' : 'fill-gray-light'} />
                   </span>
                   <input
@@ -224,16 +224,16 @@ export default function SignUp() {
                     placeholder={'이메일'}
                     required
                     maxLength={30}
-                    className={'w-5/6 h-full focus:outline-none text-xl rounded-tr-md'}
+                    className={'w-5/6 h-full text-xl rounded-tr-md'}
                   />
                 </label>
               </span>
               {/* 인증번호 */}
               <span
-                className={'w-full h-1/3 flex items-center border-solid border-b border-gray-light'}
+                className={'w-full h-1/3 flex-row-center border-solid border-b border-gray-light'}
               >
-                <label className={'w-full h-full flex items-center'}>
-                  <span className={'w-1/6 flex h-full justify-center items-center text-3xl'}>
+                <label className={'w-h-full flex-row-center'}>
+                  <span className={'w-1/6 h-full flex-row-center text-3xl'}>
                     <AiOutlineCheckCircle
                       className={`${isAuth ? 'fill-orange' : 'fill-gray-light'}`}
                     />
@@ -247,17 +247,19 @@ export default function SignUp() {
                       required
                       disabled={isAuth}
                       maxLength={10}
-                      className={'w-9/12 h-full focus:outline-none text-xl disabled:bg-inherit'}
+                      className={'w-9/12 h-full text-xl disabled:bg-inherit'}
                     />
-                    <span className={'w-3/12 h-full flex flex-col justify-evenly items-center'}>
+                    <span className={'w-3/12 h-full flex-col-center'}>
                       <button
                         type={'button'}
-                        className={
-                          'w-16 h-9 rounded text-sm font-bold'
-                        }
+                        className={'w-16 h-9 rounded text-sm font-bold'}
                         onClick={onClickIsAuth}
                       >
-                        <span className={'w-full h-full bg-orange rounded-md flex justify-center items-center text-white'}>
+                        <span
+                          className={
+                            'w-h-full bg-orange rounded-md flex-row-center text-white'
+                          }
+                        >
                           {isAuthClick ? '확인' : '전송'}
                         </span>
                       </button>
@@ -276,10 +278,10 @@ export default function SignUp() {
               </span>
               {/*비밀번호*/}
               <span
-                className={'w-full h-1/3 flex items-center border-solid border-b border-gray-light'}
+                className={'w-full h-1/3 flex-row-center border-solid border-b border-gray-light'}
               >
-                <label className={'w-full h-full flex items-center'}>
-                  <span className={'w-1/6 flex h-full justify-center items-center text-3xl'}>
+                <label className={'w-h-full flex-row-center'}>
+                  <span className={'w-1/6 h-full flex-row-center text-3xl'}>
                     <AiOutlineLock className={`${isCheckPw ? 'fill-orange' : 'fill-gray-light'}`} />
                   </span>
                   <span className={'w-5/6 h-full flex relative'}>
@@ -290,14 +292,14 @@ export default function SignUp() {
                       placeholder={'비밀번호'}
                       maxLength={15}
                       required
-                      className={`w-9/12 h-full focus:outline-none text-xl ${
+                      className={`w-9/12 h-full text-xl ${
                         password && !isPwVisible && 'tracking-[-0.3rem]'
                       }`}
                     />
                     <button
-                        type={'button'}
+                      type={'button'}
                       className={
-                        'w-3/12 h-full flex flex-col justify-evenly items-center text-2xl cursor-pointer'
+                        'w-3/12 h-full flex-col-center justify-evenly text-2xl cursor-pointer'
                       }
                       onClick={onClickPwVisible}
                     >
@@ -321,7 +323,7 @@ export default function SignUp() {
       {/* button */}
       <button
         className={
-          'flex justify-center items-center border-solid border border-header-gray rounded-md w-[39rem] h-12 mt-10 py-7 font-bold text-xl bg-orange text-white'
+          'flex-row-center border-solid border border-header-gray rounded-md w-[39rem] h-12 mt-10 py-7 font-bold text-xl bg-orange text-white'
         }
       >
         회원가입
