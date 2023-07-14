@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { BsBellFill, BsQuestionCircle, BsSearch, BsSunFill } from 'react-icons/bs';
 import { FaUserCircle } from 'react-icons/fa';
 import useInput from '../../hooks/useInput.ts';
+import useDarkSide from '../../hooks/useDarkSide.ts';
 
 export default function Header() {
   // TODO: 실제 userprofile 값으로 변경하기
