@@ -11,6 +11,13 @@ export default function Header() {
 
   const navigate = useNavigate();
 
+  // 검색창에서 엔터를 눌렀을 때, 검색 페이지로 이동
+  const activeEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      navigate(`/search/${e.currentTarget.value}`);
+    }
+  };
+
   // 로그인 하기 전, border-bottom을 보여주지 않기 위한 로직
   const { pathname } = useLocation();
   const [isLogin, setIsLogin] = useState(pathname === '/login' || pathname === '/signup');
@@ -51,9 +58,8 @@ export default function Header() {
             <input
               type="text"
               value={searchTag}
-              onChange={(event) => {
-                onChageSearchTag(event);
-              }}
+              onChange={onChageSearchTag}
+              onKeyDown={(e) => activeEnter(e)}
               placeholder={'검색'}
               maxLength={20}
               required
