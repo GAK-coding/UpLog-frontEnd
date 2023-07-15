@@ -88,7 +88,7 @@ export default function Login() {
         </article>
 
         <article className={'w-[39rem] flex-col-center text-xl font-bold'}>
-          <div
+          <nav
             className={'flex-row-center w-full border-solid border-b border-gray-spring pb-7 mb-5'}
           >
             <Link to={'/pwinquiry'} className={'w-[46%] text-right'}>
@@ -100,7 +100,7 @@ export default function Login() {
             <Link to={'/signup'} className={'w-[46%]'}>
               <button>회원가입</button>
             </Link>
-          </div>
+          </nav>
           <div className={'flex-col-center w-full'}>
             <button className={'mb-7'}>
               <span>간편 로그인</span>
