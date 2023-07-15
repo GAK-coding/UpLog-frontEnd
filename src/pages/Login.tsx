@@ -1,27 +1,34 @@
-import React from 'react';
+import React, { FormEvent, useCallback } from 'react';
 import { useMessage } from '../hooks/useMessage.ts';
 import { MdOutlineMailOutline } from 'react-icons/md';
 import useInput from '../hooks/useInput.ts';
 import { AiOutlineLock } from 'react-icons/ai';
+import { Link } from 'react-router-dom';
 
 export default function Login() {
   const { showMessage, contextHolder } = useMessage();
   const [email, onChangeEmail, setEmail] = useInput('');
   const [password, onChangePassword, setPassword] = useInput('');
 
+  const onSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!email || !password) showMessage('warning', '이메일과 비밀번호를 입력해주세요.');
+  }, []);
+
   return (
-    <form onSubmit={() => {}} className={'h-full flex-col-center min-h-[55rem] mt-[-1.7rem]'}>
+    <section className={'h-full min-h-[55rem] mt-[-1.7rem]'}>
       {contextHolder}
-      <section className={'w-h-full flex-col-center'}>
+      <div className={'w-h-full flex-col-center'}>
         <article>
-          <img src={'logo.svg'} alt={'로고'} />
+          <img className={'w-[6.7rem] h-[7.7rem]'} src={'logo.svg'} alt={'로고'} />
         </article>
         <article
           className={
             'flex-row-center border-solid border-[0.6px] border-header-gray w-[39rem] h-[23.5rem] min-h-[23.5rem] shadow-sign-up px-20 my-10'
           }
         >
-          <form className={'flex-col-center justify-center w-h-full'}>
+          <form onSubmit={onSubmit} className={'flex-col-center justify-center w-h-full'}>
             <div
               className={
                 'border-gray-light w-full flex flex-col justify-around rounded-xl shadow-sign-up-info mb-[1rem]'
@@ -84,15 +91,15 @@ export default function Login() {
           <div
             className={'flex-row-center w-full border-solid border-b border-gray-spring pb-7 mb-5'}
           >
-            <div className={'w-[46%] text-right'}>
+            <Link to={'/pwinquiry'} className={'w-[46%] text-right'}>
               <button>비밀번호 찾기</button>
-            </div>
+            </Link>
             <div className={'w-[8%] text-center'}>
               <span className={''}>|</span>
             </div>
-            <div className={'w-[46%]'}>
+            <Link to={'/signup'} className={'w-[46%]'}>
               <button>회원가입</button>
-            </div>
+            </Link>
           </div>
           <div className={'flex-col-center w-full'}>
             <button className={'mb-7'}>
@@ -108,7 +115,7 @@ export default function Login() {
             </div>
           </div>
         </article>
-      </section>
-    </form>
+      </div>
+    </section>
   );
 }
