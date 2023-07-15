@@ -10,6 +10,7 @@ import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import Post from './pages/Post';
 import { ChakraProvider } from '@chakra-ui/react';
+import PwInquiry from './pages/PwInquiry.tsx';
 
 const queryClient = new QueryClient();
 
@@ -30,6 +31,7 @@ function App() {
                 <Route path={'/login'} element={<Login />} />
                 <Route path={'/signup'} element={<SignUp />} />
                 <Route path={'/post'} element={<Post />} />
+                <Route path={'/pwinquiry'} element={<PwInquiry />} />
               </Routes>
             </section>
           </BrowserRouter>
