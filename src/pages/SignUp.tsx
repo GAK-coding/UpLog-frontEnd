@@ -119,7 +119,7 @@ export default function SignUp() {
         {/* logo */}
         <article className={'h-[18%] text-3xl flex items-center'}>
           <img className={'h-16 mr-6'} src={'logo.svg'} alt={'login logo'} />
-          <span className={'font-bold'}>회원가입</span>
+          <h1 className={'font-bold'}>회원가입</h1>
         </article>
 
         {/* infos */}

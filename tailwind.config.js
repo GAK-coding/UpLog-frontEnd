@@ -12,6 +12,7 @@ export default {
         gray: {
           light: 'var(--gray-light)',
           dark: 'var(--gray-dark)',
+          spring: 'var(--gray-spring)',
         },
       },
       fontFamily: {
