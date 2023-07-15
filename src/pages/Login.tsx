@@ -1,7 +1,5 @@
 import React from 'react';
 import { useMessage } from '../hooks/useMessage.ts';
-import { border } from '@chakra-ui/react';
-import { convertMinutes } from '../utils/convertMinutes.ts';
 import { MdOutlineMailOutline } from 'react-icons/md';
 import useInput from '../hooks/useInput.ts';
 import { AiOutlineLock } from 'react-icons/ai';
@@ -12,15 +10,15 @@ export default function Login() {
   const [password, onChangePassword, setPassword] = useInput('');
 
   return (
-    <form onSubmit={() => {}} className={'h-full flex-col-center min-h-[55rem]'}>
+    <form onSubmit={() => {}} className={'h-full flex-col-center min-h-[55rem] mt-[-1.7rem]'}>
       {contextHolder}
-      <section className={'border-base w-h-full flex-col-center'}>
-        <div>
+      <section className={'w-h-full flex-col-center'}>
+        <article>
           <img src={'logo.svg'} alt={'로고'} />
-        </div>
-        <div
+        </article>
+        <article
           className={
-            'flex-row-center border-solid border-[0.6px] border-header-gray w-[39rem] h-[23.5rem] min-h-[23.5rem] shadow-sign-up px-20'
+            'flex-row-center border-solid border-[0.6px] border-header-gray w-[39rem] h-[23.5rem] min-h-[23.5rem] shadow-sign-up px-20 my-10'
           }
         >
           <form className={'flex-col-center justify-center w-h-full'}>
@@ -80,7 +78,36 @@ export default function Login() {
               로그인
             </button>
           </form>
-        </div>
+        </article>
+
+        <article className={'w-[39rem] flex-col-center text-xl font-bold'}>
+          <div
+            className={'flex-row-center w-full border-solid border-b border-gray-spring pb-7 mb-5'}
+          >
+            <div className={'w-[46%] text-right'}>
+              <button>비밀번호 찾기</button>
+            </div>
+            <div className={'w-[8%] text-center'}>
+              <span className={''}>|</span>
+            </div>
+            <div className={'w-[46%]'}>
+              <button>회원가입</button>
+            </div>
+          </div>
+          <div className={'flex-col-center w-full'}>
+            <button className={'mb-7'}>
+              <span>간편 로그인</span>
+            </button>
+            <div className={'w-3/5 flex-row-center justify-evenly'}>
+              <button>
+                <img className={'w-14'} src={'google.svg'} alt={'google'} />
+              </button>
+              <button>
+                <img className={'w-14'} src={'kakao.svg'} alt={'kakao'} />
+              </button>
+            </div>
+          </div>
+        </article>
       </section>
     </form>
   );
