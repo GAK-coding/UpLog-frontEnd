@@ -5177,6 +5177,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-oauth/google@npm:latest":
+  version: 0.11.0
+  resolution: "@react-oauth/google@npm:0.11.0"
+  peerDependencies:
+    react: ">=16.8.0"
+    react-dom: ">=16.8.0"
+  checksum: 9ea37a0647d8ddb8b2449eb6249317a2e75f1f486d7554870f752518ae3011d95090d849e0a12a3d837a40238a87fd2a558b2782ca9c22c37ff1de92c3e01fd3
+  languageName: node
+  linkType: hard
+
 "@remix-run/router@npm:1.7.1":
   version: 1.7.1
   resolution: "@remix-run/router@npm:1.7.1"
@@ -6530,6 +6540,7 @@ __metadata:
     "@emotion/styled": ^11.11.0
     "@esbuild/linux-arm64": ^0.18.11
     "@jest/globals": ^29.5.0
+    "@react-oauth/google": latest
     "@tanstack/react-query": ^4.29.19
     "@testing-library/cypress": ^9.0.0
     "@testing-library/jest-dom": ^5.16.5

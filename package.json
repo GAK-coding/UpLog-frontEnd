@@ -22,6 +22,7 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@esbuild/linux-arm64": "^0.18.11",
+    "@react-oauth/google": "latest",
     "@tanstack/react-query": "^4.29.19",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.4.3",
