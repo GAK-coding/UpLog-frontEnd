@@ -1,22 +1,30 @@
 :root {
+  --bg-dark: #ffffff;
+  --header-bg : #ffffff;
   --orange: #ffaa2a;
   --gray-light: #c4c4c4;
   --gray-dark: #64635e;
   --gray-spring: #e5e5e5;
   --black: #292723;
   --white: #ffffff;
+
 }
 
 html.dark {
+  --bg-dark: #33302C;
+  --header-bg : #292723;
   --orange: #ffaa2a;
   --gray-light: #c4c4c4;
-  --gray-dark: #64635e;
+  --gray-dark: #ffffff;
   --gray-spring: #e5e5e5;
   --black: #ffffff;
   --white: #292723;
 
 }
 
+#root{
+  background-color: var(--bg-dark);
+}
 /* http://meyerweb.com/eric/tools/css/reset/
    v2.0 | 20110126
    License: none (public domain)
@@ -129,7 +137,7 @@ section {
   display: block;
 }
 header{
-  background-color: white;
+  background-color: var(--header-bg);
 }
 body {
   line-height: 1;
@@ -160,4 +168,8 @@ html input::placeholder{
 
 html input:focus {
   outline: none;
+}
+
+html input {
+  background-color: var(--bg-dark);
 }

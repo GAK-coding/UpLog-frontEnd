@@ -41,9 +41,8 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed top-0 flex-row-center justify-between pt-[1.5rem] w-full h-[5.5rem]   ${
-        isLogin ? '' : 'border-solid border-b border-header-gray'
-      }`}
+      className={`fixed top-0 flex-row-center justify-between pt-[1.5rem] w-full h-[5.5rem]   
+      ${isLogin ? '' : 'border-solid border-b border-header-gray'}`}
     >
       {/*로고 + 글자 (메인페이지로 이동)*/}
       <div className={'flex ml-32'}>
@@ -76,7 +75,9 @@ export default function Header() {
               placeholder={'검색'}
               maxLength={20}
               required
-              className={'w-[8.7rem] h-full font-medium text-gray-dark'}
+              className={`w-[8.7rem] h-full font-medium text-gray-dark ${
+                isChecked ? 'bg-[#292723]' : 'bg-[#ffffff]'
+              }`}
             />
           </div>
           {/*아이콘*/}
