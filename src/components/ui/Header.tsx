@@ -19,6 +19,12 @@ export default function Header() {
     }
   };
 
+  // 다크모드 변경
+  // 현재 사용자의 상태 값에 따른 모드 설정
+  const [colorTheme, setTheme] = useDarkSide();
+  const [darkSide, setDarkSide] = useState(colorTheme === 'light');
+
+  const themeModeHandle = () => {};
   // 로그인 하기 전, border-bottom을 보여주지 않기 위한 로직
   const { pathname } = useLocation();
   const [isLogin, setIsLogin] = useState(pathname === '/login' || pathname === '/signup');
@@ -68,7 +74,10 @@ export default function Header() {
             />
           </div>
           {/*아이콘*/}
-          <BsSunFill className={'text-[2.1rem] fill-gray-dark cursor-pointer'} />
+          <BsSunFill
+            className={'text-[2.1rem] fill-gray-dark cursor-pointer'}
+            onClick={themeModeHandle}
+          />
           <BsBellFill
             className={'text-[2.1rem] fill-gray-dark cursor-pointer'}
             onClick={() => navigate('/')}
