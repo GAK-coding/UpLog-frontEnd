@@ -67,6 +67,7 @@ export default function Header() {
             }
           >
             <BsSearch className={'ml-2 text-base fill-gray-dark '} />
+
             <input
               type="text"
               value={searchTag}
@@ -87,7 +88,6 @@ export default function Header() {
             ) : (
               <BsSunFill className={'fill-gray-dark cursor-pointer'} />
             )}
-            {/*<BsSunFill className={'fill-gray-dark cursor-pointer'} />*/}
           </div>
           <BsBellFill
             className={'text-[2.1rem] fill-gray-dark cursor-pointer'}
@@ -108,10 +108,18 @@ export default function Header() {
           )}
         </div>
       )}
+
       {/*로그인 X */}
       {!isLogin && (
         <div className={'flex mr-12 font-bold'}>
-          <BsSunFill className={'text-[2.1rem] mr-6 fill-gray-dark'} />
+          <div className={'text-[2.1rem] mr-6'} onClick={themeModeHandler}>
+            {isChecked ? (
+              <BsMoonFill className={'fill-gray-dark cursor-pointer'} />
+            ) : (
+              <BsSunFill className={'fill-gray-dark cursor-pointer'} />
+            )}
+          </div>
+
           <span
             className={'flex self-end text-gray-dark text-xl cursor-pointer'}
             onClick={() => navigate('/login')}
