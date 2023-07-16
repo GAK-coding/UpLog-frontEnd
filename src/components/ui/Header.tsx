@@ -8,7 +8,7 @@ export default function Header() {
   // TODO: 실제 userprofile 값으로 변경하기
   const userprofile = '/images/test_userprofile.png';
   const [searchTag, onChageSearchTag, setSearchTag] = useInput('');
-  const [isChecked, setIsChecked] = useState(false);
+  const [isChecked, setIsChecked] = useState(localStorage.theme === 'dark' ? true : false);
   const navigate = useNavigate();
 
   // 검색창에서 엔터를 눌렀을 때, 검색 페이지로 이동
