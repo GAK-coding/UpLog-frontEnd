@@ -8,7 +8,7 @@ export default function Header() {
   // TODO: 실제 userprofile 값으로 변경하기
   const userprofile = '/images/test_userprofile.png';
   const [searchTag, onChageSearchTag, setSearchTag] = useInput('');
-
+  const [isChecked, setIsChecked] = useState(false);
   const navigate = useNavigate();
 
   // 검색창에서 엔터를 눌렀을 때, 검색 페이지로 이동
@@ -19,8 +19,17 @@ export default function Header() {
   };
 
   // 다크모드 변경
-
-  const themeModeHandler = () => {};
+  const themeModeHandler = () => {
+    const checked = !isChecked;
+    if (checked) {
+      document.documentElement.classList.add('dark');
+      localStorage.theme = 'dark';
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.removeItem('theme');
+    }
+    setIsChecked(checked);
+  };
 
   // 로그인 하기 전, border-bottom을 보여주지 않기 위한 로직
   const { pathname } = useLocation();
@@ -72,12 +81,12 @@ export default function Header() {
           </div>
           {/*아이콘*/}
           <div className={'text-[2.1rem] '} onClick={themeModeHandler}>
-            {/*{darkSide ? (*/}
-            {/*  <BsMoonFill className={'fill-gray-dark cursor-pointer'} />*/}
-            {/*) : (*/}
-            {/*  <BsSunFill className={'fill-gray-dark cursor-pointer'} />*/}
-            {/*)}*/}
-            <BsSunFill className={'fill-gray-dark cursor-pointer'} />
+            {isChecked ? (
+              <BsMoonFill className={'fill-gray-dark cursor-pointer'} />
+            ) : (
+              <BsSunFill className={'fill-gray-dark cursor-pointer'} />
+            )}
+            {/*<BsSunFill className={'fill-gray-dark cursor-pointer'} />*/}
           </div>
           <BsBellFill
             className={'text-[2.1rem] fill-gray-dark cursor-pointer'}
