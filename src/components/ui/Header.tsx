@@ -4,10 +4,6 @@ import { BsBellFill, BsMoonFill, BsQuestionCircle, BsSearch, BsSunFill } from 'r
 import { FaUserCircle } from 'react-icons/fa';
 import useInput from '../../hooks/useInput.ts';
 
-interface Theme {
-  colorTheme: string;
-}
-
 export default function Header() {
   // TODO: 실제 userprofile 값으로 변경하기
   const userprofile = '/images/test_userprofile.png';
