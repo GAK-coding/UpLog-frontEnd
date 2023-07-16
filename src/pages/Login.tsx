@@ -4,6 +4,7 @@ import { MdOutlineMailOutline } from 'react-icons/md';
 import useInput from '../hooks/useInput.ts';
 import { AiOutlineLock } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
+import { useGoogleLogin } from '@react-oauth/google';
 
 export default function Login() {
   const { showMessage, contextHolder } = useMessage();
@@ -15,6 +16,11 @@ export default function Login() {
 
     if (!email || !password) showMessage('warning', '이메일과 비밀번호를 입력해주세요.');
   }, []);
+
+  const login = useGoogleLogin({
+    onSuccess: (codeResponse) => console.log(codeResponse),
+    flow: 'auth-code',
+  });
 
   return (
     <section className={'h-full min-h-[55rem] mt-[-1.7rem]'}>
@@ -106,8 +112,9 @@ export default function Login() {
               <span>간편 로그인</span>
             </button>
             <div className={'w-3/5 flex-row-center justify-evenly'}>
-              <button>
+              <button onClick={() => login()}>
                 <img className={'w-14'} src={'google.svg'} alt={'google'} />
+                {/*<Google />*/}
               </button>
               <button>
                 <img className={'w-14'} src={'kakao.svg'} alt={'kakao'} />

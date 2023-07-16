@@ -11,8 +11,10 @@ import SignUp from './pages/SignUp';
 import Post from './pages/Post';
 import { ChakraProvider } from '@chakra-ui/react';
 import PwInquiry from './pages/PwInquiry.tsx';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 const queryClient = new QueryClient();
+const clientId = import.meta.env.VITE_GOOGLE_CLIENTID;
 
 function App() {
   const [showDevtools, setShowDevtools] = useState(true);
@@ -20,23 +22,25 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ChakraProvider>
-        <RecoilRoot>
-          <BrowserRouter>
-            <section className={'h-[5.5rem]'}>
-              <Header />
-            </section>
-            <section className={'h-noneHeader'}>
-              <Routes>
-                <Route path={'/'} element={<Home />} />
-                <Route path={'/login'} element={<Login />} />
-                <Route path={'/signup'} element={<SignUp />} />
-                <Route path={'/post'} element={<Post />} />
-                <Route path={'/pwinquiry'} element={<PwInquiry />} />
-              </Routes>
-            </section>
-          </BrowserRouter>
-        </RecoilRoot>
-        {showDevtools && <ReactQueryDevtools />}
+        <GoogleOAuthProvider clientId={clientId}>
+          <RecoilRoot>
+            <BrowserRouter>
+              <section className={'h-[5.5rem]'}>
+                <Header />
+              </section>
+              <section className={'h-noneHeader'}>
+                <Routes>
+                  <Route path={'/'} element={<Home />} />
+                  <Route path={'/login'} element={<Login />} />
+                  <Route path={'/signup'} element={<SignUp />} />
+                  <Route path={'/post'} element={<Post />} />
+                  <Route path={'/pwinquiry'} element={<PwInquiry />} />
+                </Routes>
+              </section>
+            </BrowserRouter>
+          </RecoilRoot>
+          {showDevtools && <ReactQueryDevtools />}
+        </GoogleOAuthProvider>
       </ChakraProvider>
     </QueryClientProvider>
   );
