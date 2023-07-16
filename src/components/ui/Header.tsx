@@ -4,6 +4,9 @@ import { BsBellFill, BsMoonFill, BsQuestionCircle, BsSearch, BsSunFill } from 'r
 import { FaUserCircle } from 'react-icons/fa';
 import useInput from '../../hooks/useInput.ts';
 import useDarkSide from '../../hooks/useDarkSide.ts';
+import { ThemeEnums } from '../../types/darkmode.ts';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { themeMode } from '../../recoil/darkmode/atom.ts';
 
 export default function Header() {
   // TODO: 실제 userprofile 값으로 변경하기
@@ -22,9 +25,6 @@ export default function Header() {
   // 다크모드 변경
   // 현재 사용자의 상태 값에 따른 모드 설정
   const [colorTheme, setTheme] = useDarkSide();
-  const [darkSide, setDarkSide] = useState(colorTheme === 'light' ? true : false);
-
-  const themeModeHandle = () => {};
   // 로그인 하기 전, border-bottom을 보여주지 않기 위한 로직
   const { pathname } = useLocation();
   const [isLogin, setIsLogin] = useState(pathname === '/login' || pathname === '/signup');
@@ -74,12 +74,16 @@ export default function Header() {
             />
           </div>
           {/*아이콘*/}
-          <div className={'text-[2.1rem] '} onClick={themeModeHandle}>
-            {darkSide ? (
-              <BsMoonFill className={'fill-gray-dark cursor-pointer'} />
-            ) : (
-              <BsSunFill className={'fill-gray-dark cursor-pointer'} />
-            )}
+          <div
+            className={'text-[2.1rem] '}
+            // onClick={themeModeHandle}
+          >
+            {/*{darkSide ? (*/}
+            {/*  <BsMoonFill className={'fill-gray-dark cursor-pointer'} />*/}
+            {/*) : (*/}
+            {/*  <BsSunFill className={'fill-gray-dark cursor-pointer'} />*/}
+            {/*)}*/}
+            <BsSunFill className={'fill-gray-dark cursor-pointer'} />
           </div>
           <BsBellFill
             className={'text-[2.1rem] fill-gray-dark cursor-pointer'}
