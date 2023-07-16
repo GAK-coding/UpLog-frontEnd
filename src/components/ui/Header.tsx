@@ -24,7 +24,16 @@ export default function Header() {
   const [colorTheme, setTheme] = useDarkSide();
   const [darkSide, setDarkSide] = useState(colorTheme === 'light');
 
-  const themeModeHandle = () => {};
+  const themeModeHandle = () => {
+    if (!darkSide) {
+      // setTheme('light');
+      setDarkSide(false);
+    } else {
+      // setTheme('dark');
+      setDarkSide(true);
+    }
+  };
+
   // 로그인 하기 전, border-bottom을 보여주지 않기 위한 로직
   const { pathname } = useLocation();
   const [isLogin, setIsLogin] = useState(pathname === '/login' || pathname === '/signup');
