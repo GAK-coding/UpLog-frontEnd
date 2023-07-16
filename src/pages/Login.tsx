@@ -4,9 +4,7 @@ import { MdOutlineMailOutline } from 'react-icons/md';
 import useInput from '../hooks/useInput.ts';
 import { AiOutlineLock } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
-import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
-
-const clientId = import.meta.env.VITE_GOOGLE_CLIENTID;
+import { useGoogleLogin } from '@react-oauth/google';
 
 export default function Login() {
   const { showMessage, contextHolder } = useMessage();
