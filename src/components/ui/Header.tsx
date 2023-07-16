@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { BsBellFill, BsQuestionCircle, BsSearch, BsSunFill } from 'react-icons/bs';
+import { BsBellFill, BsMoonFill, BsQuestionCircle, BsSearch, BsSunFill } from 'react-icons/bs';
 import { FaUserCircle } from 'react-icons/fa';
 import useInput from '../../hooks/useInput.ts';
 import useDarkSide from '../../hooks/useDarkSide.ts';
@@ -22,18 +22,9 @@ export default function Header() {
   // 다크모드 변경
   // 현재 사용자의 상태 값에 따른 모드 설정
   const [colorTheme, setTheme] = useDarkSide();
-  const [darkSide, setDarkSide] = useState(colorTheme === 'light');
+  const [darkSide, setDarkSide] = useState(colorTheme === 'light' ? true : false);
 
-  const themeModeHandle = () => {
-    if (!darkSide) {
-      // setTheme('light');
-      setDarkSide(false);
-    } else {
-      // setTheme('dark');
-      setDarkSide(true);
-    }
-  };
-
+  const themeModeHandle = () => {};
   // 로그인 하기 전, border-bottom을 보여주지 않기 위한 로직
   const { pathname } = useLocation();
   const [isLogin, setIsLogin] = useState(pathname === '/login' || pathname === '/signup');
@@ -83,10 +74,13 @@ export default function Header() {
             />
           </div>
           {/*아이콘*/}
-          <BsSunFill
-            className={'text-[2.1rem] fill-gray-dark cursor-pointer'}
-            onClick={themeModeHandle}
-          />
+          <div className={'text-[2.1rem] '} onClick={themeModeHandle}>
+            {darkSide ? (
+              <BsMoonFill className={'fill-gray-dark cursor-pointer'} />
+            ) : (
+              <BsSunFill className={'fill-gray-dark cursor-pointer'} />
+            )}
+          </div>
           <BsBellFill
             className={'text-[2.1rem] fill-gray-dark cursor-pointer'}
             onClick={() => navigate('/')}
