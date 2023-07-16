@@ -7,6 +7,15 @@
   --white: #ffffff;
 }
 
+html.dark {
+  --orange: #ffaa2a;
+  --gray-light: #c4c4c4;
+  --gray-dark: #64635e;
+  --gray-spring: #e5e5e5;
+  --black: #ffffff;
+  --white: #292723;
+}
+
 /* http://meyerweb.com/eric/tools/css/reset/
    v2.0 | 20110126
    License: none (public domain)
