@@ -5,8 +5,8 @@
     "lib": ["es5", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
-//    "jsxImportSource": "@emotion/react",
-    "types": ["cypress", "node","@testing-library/cypress"],
+    //    "jsxImportSource": "@emotion/react",
+    "types": ["cypress", "node", "@testing-library/cypress", "jest", "@testing-library/jest-dom"],
 
 
     /* Bundler mode */
@@ -26,7 +26,5 @@
   },
   "include": ["src", "types", "**/*.ts"],
   "references": [{ "path": "./tsconfig.node.json" }],
-  "exclude": [
-    "*/**/*.test.tsx"
-  ]
+  "exclude": ["*/**/*.test.tsx"]
 }
