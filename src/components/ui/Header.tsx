@@ -82,7 +82,7 @@ export default function Header() {
             />
           </div>
           {/*아이콘*/}
-          <div className={'text-[2.1rem] '} onClick={themeModeHandler}>
+          <div className={'text-[1.8rem] '} onClick={themeModeHandler}>
             {isChecked ? (
               <BsMoonFill className={'fill-gray-dark cursor-pointer'} />
             ) : (
@@ -90,11 +90,11 @@ export default function Header() {
             )}
           </div>
           <BsBellFill
-            className={'text-[2.1rem] fill-gray-dark cursor-pointer'}
+            className={'text-[1.8rem] fill-gray-dark cursor-pointer'}
             onClick={() => navigate('/')}
           />
           <BsQuestionCircle
-            className={'text-[2.1rem] fill-gray-dark cursor-pointer'}
+            className={'text-[1.8rem] fill-gray-dark cursor-pointer'}
             onClick={() => navigate('/')}
           />
           {userprofile ? (
@@ -112,7 +112,7 @@ export default function Header() {
       {/*로그인 X */}
       {!isLogin && (
         <div className={'flex mr-12 font-bold'}>
-          <div className={'text-[2.1rem] mr-6'} onClick={themeModeHandler}>
+          <div className={'text-[1.8rem] mr-6'} onClick={themeModeHandler}>
             {isChecked ? (
               <BsMoonFill className={'fill-gray-dark cursor-pointer'} />
             ) : (
