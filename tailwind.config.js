@@ -7,7 +7,9 @@ export default {
       colors: {
         black: 'var(--black)',
         white: 'var(--white)',
+        yellow : '#FFA41B',
         orange: 'var(--orange)',
+        'orange-light' : 'var(--orange-light)',
         'header-gray': 'var(--header-gray)',
         border: 'var(--border-bg)',
         line: 'var(--border-line)',
