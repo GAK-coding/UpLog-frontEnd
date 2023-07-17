@@ -4,14 +4,17 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import React, { useState } from 'react';
-import Home from './pages/Home';
-import Header from './components/ui/Header';
-import Login from './pages/Login';
-import SignUp from './pages/SignUp';
-import Post from './pages/Post';
 import { ChakraProvider } from '@chakra-ui/react';
-import PwInquiry from './pages/PwInquiry.tsx';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import loadable from '@loadable/component';
+
+const Header = loadable(() => import('./components/ui/Header'));
+const Home = loadable(() => import('./pages/Home'));
+const Login = loadable(() => import('./pages/Login'));
+const SignUp = loadable(() => import('./pages/SignUp'));
+const Post = loadable(() => import('./pages/Post'));
+const PwInquiry = loadable(() => import('./pages/PwInquiry'));
+const MyPage = loadable(() => import('./pages/MyPage'));
 
 const queryClient = new QueryClient();
 const clientId = import.meta.env.VITE_GOOGLE_CLIENTID;
@@ -35,6 +38,7 @@ function App() {
                   <Route path={'/signup'} element={<SignUp />} />
                   <Route path={'/post'} element={<Post />} />
                   <Route path={'/pwinquiry'} element={<PwInquiry />} />
+                  <Route path={'/mypage'} element={<MyPage />} />
                 </Routes>
               </section>
             </BrowserRouter>
