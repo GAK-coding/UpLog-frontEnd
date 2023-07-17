@@ -31,11 +31,11 @@ export default function PwInquiry() {
       {contextHolder}
       <div className={'w-h-full flex-col-center'}>
         <article>
-          <img className={'w-[5.7rem] h-[6.7rem]'} src={'logo.svg'} alt={'로고'} />
+          <img className={'w-[5.7rem] h-[6.7rem]'} src={'logo.svg'} alt={'logo'} />
         </article>
         <article
           className={
-            'flex-row-center border-solid border-[0.6px] border-header-gray w-[39rem] h-[28.75rem] min-h-[28.75rem] shadow-sign-up px-20 my-10 mb-[9rem]'
+            'flex-row-center border-solid border-[1px] border-line bg-border w-[39rem] h-[28.75rem] min-h-[28.75rem] shadow-sign-up px-20 my-10 mb-[9rem]'
           }
         >
           <form onSubmit={onSubmit} className={'flex-col-center justify-center w-h-full'}>
@@ -62,13 +62,13 @@ export default function PwInquiry() {
             {!isSend && (
               <div
                 className={
-                  'border-gray-light w-full flex flex-col justify-around rounded-xl shadow-sign-up-info mb-[-1rem]'
+                  'border-solid border-[0.6px] border-gray-border w-full flex flex-col justify-around rounded-xl shadow-sign-up-info mb-[-1rem]'
                 }
               >
                 {/* 이메일 */}
                 <span className={'w-full h-[4.5rem] flex-row-center'}>
                   <label className={'w-h-full flex-row-center'}>
-                    <span className={'w-1/6 h-full flex-row-center text-3xl '}>
+                    <span className={'w-1/6 h-full flex-row-center text-3xl'}>
                       <MdOutlineMailOutline className={'fill-gray-light'} />
                     </span>
                     <input
@@ -86,7 +86,7 @@ export default function PwInquiry() {
 
             <button
               className={
-                'flex-row-center border-base border-header-gray rounded-md w-[29rem] h-12 mt-10 bg-orange text-white font-bold text-xl'
+                'flex-row-center border-solid border-gray rounded-md w-[29rem] h-12 mt-10 bg-orange text-white font-bold text-xl'
               }
             >
               {isSend ? '로그인으로 이동' : '다음'}
