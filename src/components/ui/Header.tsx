@@ -6,6 +6,9 @@ import useInput from '../../hooks/useInput.ts';
 import UserProfile from "../UserProfile.tsx";
 import {useRecoilState} from "recoil";
 import {profileOpen} from "../../recoil/User/atom.tsx";
+import {PiCaretUpDownLight} from "react-icons/pi";
+import {productOpen} from "../../recoil/Product/atom.tsx";
+import ProductList from "../ProductList.tsx";
 
 export default function Header() {
   const navigate = useNavigate();
@@ -20,6 +23,11 @@ export default function Header() {
   const [isLogin, setIsLogin] = useState(pathname === '/login' || pathname === '/signup' || pathname === '/pwinquiry');
   // userProfile click
   const [isProfileClick, setIsProfileClick] = useRecoilState(profileOpen);
+  // 제품 List
+  const productList = ['AllFormU', 'Hello', 'Hi', 'Bye'];
+  // 제품 List click
+  const [isProductClick, setIsProductClick] = useRecoilState(productOpen);
+
 
   // 검색창에서 엔터를 눌렀을 때, 검색 페이지로 이동
   const activeEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -47,26 +55,33 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed top-0 flex-row-center justify-between pt-[1.2rem] w-full h-[5.7rem]   
+      className={`fixed top-0 flex-row-center justify-between pt-[0.5rem] w-full h-[5.7rem]   
       ${isLogin ? '' : 'border-solid border-b border-header-gray'}`}
     >
 
       {/*로고 + 글자 (메인페이지로 이동)*/}
-      <div className={'flex ml-32'}>
-        <nav className={'flex flex-row cursor-pointer'} onClick={() => navigate('/')}>
-          <img className={'mr-4 h-10'} src={'/images/mainLogo.png'} alt={'main-logo'} />
-          <span className={'flex-row-center font-logo text-[2.3rem] font-semibold text-gray-dark'}>
+      <div className={'flex-row-center ml-32'}>
+        <nav className={'flex-row-center cursor-pointer'} onClick={() => navigate('/')}>
+          <img className={'flex mr-4 h-10'} src={'/images/mainLogo.png'} alt={'main-logo'} />
+          <span className={'flex font-logo text-[2.3rem] font-semibold text-gray-dark mt-2'}>
             upLog
           </span>
         </nav>
 
         {/*TODO : 스토리지 값 체크후에 변경하기 (조건으로 렌더링 여부 바꿔야함)*/}
-        <div className={'flex-row-center ml-4 h-9 border-solid border-r border-header-gray'}></div>
+        <div className={'flex-row-center ml-4 h-9 border-solid border-r border-gray-light'}/>
+
+        <div className={'flex-row-center cursor-pointer'} onClick={() => setIsProductClick(!isProductClick)}>
+          <span className={'flex-row-center font-logo text-[2.3rem] font-semibold ml-4 mt-3'}>{productList[0]}</span>
+          <PiCaretUpDownLight className={'flex-row-center text-[1.4rem] fill-gray-light ml-2'} />
+          {isProductClick && <ProductList/>}
+        </div>
       </div>
+
       {/*TODO : 스토리지 값 체크후에 변경하기 (조건으로 렌더링 여부 바꿔야함)*/}
       {/*로그인 상태*/}
       {!isLogin && (
-        <div className={'flex w-[28rem] h-full justify-between mr-12 font-bold items-center '}>
+        <div className={'flex w-[26rem] h-full justify-between mr-12 font-bold items-center '}>
           {/*검색창*/}
           <div
             className={
@@ -89,7 +104,7 @@ export default function Header() {
             />
           </div>
           {/*아이콘*/}
-          <div className={'text-[1.8rem] '} onClick={themeModeHandler}>
+          <div className={'text-[2rem] '} onClick={themeModeHandler}>
             {isChecked ? (
               <BsMoonFill className={'fill-gray-dark cursor-pointer'} />
             ) : (
@@ -97,15 +112,15 @@ export default function Header() {
             )}
           </div>
           <BsBellFill
-            className={'text-[1.8rem] fill-gray-dark cursor-pointer'}
+            className={'text-[2rem] fill-gray-dark cursor-pointer'}
             onClick={() => navigate('/')}
           />
           <BsQuestionCircle
-            className={'text-[1.8rem] fill-gray-dark cursor-pointer'}
+            className={'text-[2rem] fill-gray-dark cursor-pointer'}
             onClick={() => navigate('/')}
           />
-          <div >
 
+          <div>
           {!userprofile ? (
             <FaUserCircle className={'text-[2.1rem] fill-gray-dark cursor-pointer'} onClick={() => setIsProfileClick(!isProfileClick)}/>
           ) : (
@@ -113,7 +128,7 @@ export default function Header() {
               src={userprofile}
               alt="userprofile"
               onClick={() => setIsProfileClick(!isProfileClick)}
-              className={'w-[2.1rem] h-[2.1rem] cursor-pointer'}
+              className={'w-[2.1rem] h-[2.1rem] cursor-pointer ml-3'}
             />
           )}
           {isProfileClick && <UserProfile />}
