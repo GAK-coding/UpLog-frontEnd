@@ -41,19 +41,23 @@ export default function UserProfile () {
             </div>
         </div>
         {/*스크랩 페이지 이동*/}
-        <div className={'w-full h-[8.1rem] cursor-pointer'}>
-            <div className={'flex-row-center justify-between w-full h-[2.7rem] hover:bg-orange-light'}>
+        <div className={'w-full h-[8.1rem] cursor-pointer'} >
+            <div className={'flex-row-center justify-between w-full h-[2.7rem] hover:bg-orange-light'}
+                 onClick={() => {
+                     setIsProfileClick(prevState => !prevState);
+                     navigate('/scrap');}}
+                >
                 <AiFillStar className={'text-4xl ml-4 fill-yellow'} />
-                <span className={'w-full ml-3 text-base font-medium'} onClick={() => {
-                    setIsProfileClick(prevState => !prevState);
-                    navigate('/scrap');}}>스크랩</span>
+                <span className={'w-full ml-3 text-base font-medium  cursor-pointer'} >스크랩</span>
             </div>
             {/*마이페이지 수정 이동*/}
-            <div className={'flex-row-center justify-between w-full h-[2.7rem] hover:bg-orange-light'}>
+            <div className={'flex-row-center justify-between w-full h-[2.7rem] hover:bg-orange-light'}
+                 onClick={() => {
+                     setIsProfileClick(prevState => !prevState);
+                     navigate('/mypage');}}
+            >
                 <BiPencil className={'text-4xl ml-4 fill-gray-light'}/>
-                <span className={'w-full ml-3 text-base font-medium'}  onClick={() => {
-                    setIsProfileClick(prevState => !prevState);
-                    navigate('/mypage');}}>프로필 수정</span>
+                <span className={'w-full ml-3 text-base font-medium'} >프로필 수정</span>
             </div>
             {/*로그아웃*/}
             <div className={'flex-row-center justify-between w-full h-[2.6rem] hover:bg-orange-light'}>
