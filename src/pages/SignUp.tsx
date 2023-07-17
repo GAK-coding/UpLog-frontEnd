@@ -109,7 +109,7 @@ export default function SignUp() {
   }, [password, isCheckPw]);
 
   return (
-    <form onSubmit={onSubmit} className={'h-full flex-col-center min-h-[55rem]'}>
+    <form onSubmit={onSubmit} className={'h-full flex-col-center'}>
       {contextHolder}
       <section
         className={

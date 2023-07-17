@@ -27,9 +27,9 @@ export default function PwInquiry() {
   );
 
   return (
-    <section className={'h-full min-h-[55rem]'}>
+    <section className={'h-full'}>
       {contextHolder}
-      <div className={'w-h-full flex-col-center mt-[-5rem]'}>
+      <div className={'w-h-full flex-col-center'}>
         <article>
           <img className={'w-[6.7rem] h-[7.7rem]'} src={'logo.svg'} alt={'로고'} />
         </article>
@@ -66,11 +66,7 @@ export default function PwInquiry() {
                 }
               >
                 {/* 이메일 */}
-                <span
-                  className={
-                    'w-full h-[4.5rem] flex-row-center border-solid border-b border-gray-light'
-                  }
-                >
+                <span className={'w-full h-[4.5rem] flex-row-center'}>
                   <label className={'w-h-full flex-row-center'}>
                     <span className={'w-1/6 h-full flex-row-center text-3xl '}>
                       <MdOutlineMailOutline className={'fill-gray-light'} />
