@@ -1,11 +1,55 @@
 :root {
+  --bg-dark: #ffffff;
+  --header-bg : #ffffff;
+  --header-gray :#E5E7EB;
+  --text : #292723;
   --orange: #ffaa2a;
   --gray-light: #c4c4c4;
   --gray-dark: #64635e;
+  --gray-spring: #e5e5e5;
   --black: #292723;
   --white: #ffffff;
+  /*
+  border-bg : border 배경 색깔
+  border-gray : input창 border 색깔
+  border-line : border의 테두리 색깔
+  */
+  --border-bg : #ffffff;
+  --border-gray : #c4c4c4;
+  --border-line : #C4C4C4;
+  --input-bg : #ffffff;
+  --shadow: rgba(0, 0, 0, 0.1);
 }
 
+html.dark {
+  --bg-dark: #2E2B27;
+  --header-bg : #292723;
+  --header-gray :rgba(0, 0, 0, 0.0);
+  --text : #ffffff;
+  --orange: #ffaa2a;
+  --gray-light: #c4c4c4;
+  --gray-dark: #ffffff;
+  --gray-spring: #64635E;
+  --black: #ffffff;
+  --white: #2E2B27;
+  /*
+ border-bg : border 배경 색깔
+ border-gray : input, button 창 border 색깔
+ border-line : border의 테두리 색깔
+ */
+  --border-bg : #33302C;
+  --border-gray : #64635E;
+  --border-line : #424242;
+  --input-bg : #33302C;
+  --shadow: rgba(0, 0, 0, 0);
+
+}
+
+#root{
+  background-color: var(--bg-dark);
+  color: var(--text);
+
+}
 /* http://meyerweb.com/eric/tools/css/reset/
    v2.0 | 20110126
    License: none (public domain)
@@ -101,7 +145,7 @@ video {
   font: inherit;
   vertical-align: baseline;
   font-family: 'Noto Sans KR', sans-serif;
-  color: #292723;
+  color: var(--text);
 }
 /* HTML5 display-role reset for older browsers */
 article,
@@ -118,7 +162,7 @@ section {
   display: block;
 }
 header{
-  background-color: white;
+  background-color: var(--header-bg);
 }
 body {
   line-height: 1;
@@ -149,4 +193,8 @@ html input::placeholder{
 
 html input:focus {
   outline: none;
+}
+
+html input {
+  background-color: var(--input-bg);
 }

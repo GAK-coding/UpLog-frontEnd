@@ -1,15 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { BsBellFill, BsQuestionCircle, BsSearch, BsSunFill } from 'react-icons/bs';
+import { BsBellFill, BsMoonFill, BsQuestionCircle, BsSearch, BsSunFill } from 'react-icons/bs';
 import { FaUserCircle } from 'react-icons/fa';
 import useInput from '../../hooks/useInput.ts';
-import useDarkSide from '../../hooks/useDarkSide.ts';
 
 export default function Header() {
   // TODO: 실제 userprofile 값으로 변경하기
   const userprofile = '/images/test_userprofile.png';
   const [searchTag, onChageSearchTag, setSearchTag] = useInput('');
-
+  const [isChecked, setIsChecked] = useState(localStorage.theme === 'dark' ? true : false);
   const navigate = useNavigate();
 
   // 검색창에서 엔터를 눌렀을 때, 검색 페이지로 이동
@@ -17,6 +16,19 @@ export default function Header() {
     if (e.key === 'Enter') {
       navigate(`/search/${e.currentTarget.value}`);
     }
+  };
+
+  // 다크모드 변경
+  const themeModeHandler = () => {
+    const checked = !isChecked;
+    if (checked) {
+      document.documentElement.classList.add('dark');
+      localStorage.theme = 'dark';
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.removeItem('theme');
+    }
+    setIsChecked(checked);
   };
 
   // 로그인 하기 전, border-bottom을 보여주지 않기 위한 로직
@@ -29,9 +41,8 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed top-0 flex-row-center justify-between pt-[1.5rem] w-full h-[5.5rem]   ${
-        isLogin ? '' : 'border-solid border-b border-header-gray'
-      }`}
+      className={`fixed top-0 flex-row-center justify-between pt-[1.5rem] w-full h-[5.5rem]   
+      ${isLogin ? '' : 'border-solid border-b border-header-gray'}`}
     >
       {/*로고 + 글자 (메인페이지로 이동)*/}
       <div className={'flex ml-32'}>
@@ -56,6 +67,7 @@ export default function Header() {
             }
           >
             <BsSearch className={'ml-2 text-base fill-gray-dark '} />
+
             <input
               type="text"
               value={searchTag}
@@ -64,11 +76,19 @@ export default function Header() {
               placeholder={'검색'}
               maxLength={20}
               required
-              className={'w-[8.7rem] h-full font-medium text-gray-dark'}
+              className={`w-[8.7rem] h-full font-medium text-gray-dark ${
+                isChecked ? 'bg-[#292723]' : 'bg-[#ffffff]'
+              }`}
             />
           </div>
           {/*아이콘*/}
-          <BsSunFill className={'text-[2.1rem] fill-gray-dark cursor-pointer'} />
+          <div className={'text-[2.1rem] '} onClick={themeModeHandler}>
+            {isChecked ? (
+              <BsMoonFill className={'fill-gray-dark cursor-pointer'} />
+            ) : (
+              <BsSunFill className={'fill-gray-dark cursor-pointer'} />
+            )}
+          </div>
           <BsBellFill
             className={'text-[2.1rem] fill-gray-dark cursor-pointer'}
             onClick={() => navigate('/')}
@@ -88,10 +108,18 @@ export default function Header() {
           )}
         </div>
       )}
+
       {/*로그인 X */}
       {!isLogin && (
         <div className={'flex mr-12 font-bold'}>
-          <BsSunFill className={'text-[2.1rem] mr-6 fill-gray-dark'} />
+          <div className={'text-[2.1rem] mr-6'} onClick={themeModeHandler}>
+            {isChecked ? (
+              <BsMoonFill className={'fill-gray-dark cursor-pointer'} />
+            ) : (
+              <BsSunFill className={'fill-gray-dark cursor-pointer'} />
+            )}
+          </div>
+
           <span
             className={'flex self-end text-gray-dark text-xl cursor-pointer'}
             onClick={() => navigate('/login')}

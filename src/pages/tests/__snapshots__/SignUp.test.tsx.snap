@@ -1,0 +1,351 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SignUp signup correctly 1`] = `
+<form
+  className="h-full flex-col-center min-h-[55rem]"
+  onSubmit={[Function]}
+>
+  <section
+    className="border-solid border-[0.6px] border-header-gray w-[39rem] h-[42rem] min-h-[42rem] shadow-sign-up px-20"
+  >
+    <article
+      className="h-[18%] text-3xl flex items-center"
+    >
+      <img
+        alt="login logo"
+        className="h-16 mr-6"
+        src="logo.svg"
+      />
+      <h1
+        className="font-bold"
+      >
+        회원가입
+      </h1>
+    </article>
+    <article
+      className="h-[82%] flex-col-center justify-evenly mt-[-1rem]"
+    >
+      <div
+        className="flex-row-center w-full h-2/5"
+      >
+        <div
+          className="border-base border-gray-light rounded-md w-h-full flex flex-col justify-around shadow-sign-up-info"
+        >
+          <div
+            className="w-full h-1/3 flex-row-center border-solid border-b border-gray-light font-bold"
+          >
+            <button
+              className="w-1/2 h-full text-xl border-solid border-r border-gray-light"
+              onClick={[Function]}
+              type="button"
+            >
+              <span
+                className="w-h-full flex-row-center text-black bg-orange rounded-tl"
+              >
+                개인
+              </span>
+            </button>
+            <button
+              className="w-1/2 h-full text-xl text-gray-light"
+              onClick={[Function]}
+              type="button"
+            >
+              <span
+                className="w-h-full flex-row-center text-gray-light"
+              >
+                기업
+              </span>
+            </button>
+          </div>
+          <span
+            className="w-full h-1/3 flex-row-center border-solid border-b border-gray-light"
+          >
+            <label
+              className="w-h-full flex-row-center"
+            >
+              <span
+                className="w-1/6 h-full flex-row-center text-3xl "
+              >
+                <svg
+                  className="stroke-gray-light"
+                  fill="none"
+                  height="1em"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  style={
+                    Object {
+                      "color": undefined,
+                    }
+                  }
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"
+                  />
+                  <circle
+                    cx="12"
+                    cy="7"
+                    r="4"
+                  />
+                </svg>
+              </span>
+              <input
+                className="w-5/6 h-full text-xl"
+                maxLength={10}
+                onChange={[Function]}
+                placeholder="이름"
+                required={true}
+                type="text"
+                value=""
+              />
+            </label>
+          </span>
+          <span
+            className="w-full h-1/3 flex-row-center"
+          >
+            <label
+              className="w-h-full flex-row-center"
+            >
+              <span
+                className="w-1/6 h-full flex-row-center text-3xl"
+              >
+                <svg
+                  className="stroke-gray-light"
+                  fill="none"
+                  height="1em"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  style={
+                    Object {
+                      "color": undefined,
+                    }
+                  }
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"
+                  />
+                  <circle
+                    cx="12"
+                    cy="7"
+                    r="4"
+                  />
+                </svg>
+              </span>
+              <input
+                className="w-5/6 h-full text-xl rounded-br-md"
+                maxLength={10}
+                onChange={[Function]}
+                placeholder="닉네임"
+                required={true}
+                type="text"
+                value=""
+              />
+            </label>
+          </span>
+        </div>
+      </div>
+      <div
+        className="flex-row-center w-full h-2/5"
+      >
+        <div
+          className="border-base border-gray-light rounded-md w-h-full flex flex-col justify-around shadow-sign-up-info"
+        >
+          <span
+            className="w-full h-1/3 flex-row-center border-solid border-b border-gray-light"
+          >
+            <label
+              className="w-h-full flex-row-center "
+            >
+              <span
+                className="w-1/6 h-full flex-row-center text-3xl "
+              >
+                <svg
+                  className="fill-gray-light"
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  strokeWidth="0"
+                  style={
+                    Object {
+                      "color": undefined,
+                    }
+                  }
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0V0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8l8 5 8-5v10zm-8-7L4 6h16l-8 5z"
+                  />
+                </svg>
+              </span>
+              <input
+                className="w-5/6 h-full text-xl rounded-tr-md"
+                maxLength={30}
+                onChange={[Function]}
+                placeholder="이메일"
+                required={true}
+                type="email"
+                value=""
+              />
+            </label>
+          </span>
+          <span
+            className="w-full h-1/3 flex-row-center border-solid border-b border-gray-light"
+          >
+            <label
+              className="w-h-full flex-row-center"
+            >
+              <span
+                className="w-1/6 h-full flex-row-center text-3xl"
+              >
+                <svg
+                  className="fill-gray-light"
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  strokeWidth="0"
+                  style={
+                    Object {
+                      "color": undefined,
+                    }
+                  }
+                  viewBox="0 0 1024 1024"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M699 353h-46.9c-10.2 0-19.9 4.9-25.9 13.3L469 584.3l-71.2-98.8c-6-8.3-15.6-13.3-25.9-13.3H325c-6.5 0-10.3 7.4-6.5 12.7l124.6 172.8a31.8 31.8 0 0 0 51.7 0l210.6-292c3.9-5.3.1-12.7-6.4-12.7z"
+                  />
+                  <path
+                    d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
+                  />
+                </svg>
+              </span>
+              <span
+                className="w-5/6 h-full flex"
+              >
+                <input
+                  className="w-9/12 h-full text-xl disabled:bg-inherit"
+                  disabled={false}
+                  maxLength={10}
+                  onChange={[Function]}
+                  placeholder="인증번호"
+                  required={true}
+                  type="text"
+                  value=""
+                />
+                <span
+                  className="w-3/12 h-full flex-col-center justify-evenly"
+                >
+                  <button
+                    className="w-16 h-9 rounded text-sm font-bold"
+                    onClick={[Function]}
+                    type="button"
+                  >
+                    <span
+                      className="w-h-full bg-orange rounded-md flex-row-center text-white"
+                    >
+                      전송
+                    </span>
+                  </button>
+                </span>
+              </span>
+            </label>
+          </span>
+          <span
+            className="w-full h-1/3 flex-row-center"
+          >
+            <label
+              className="w-h-full flex-row-center"
+            >
+              <span
+                className="w-1/6 h-full flex-row-center text-3xl"
+              >
+                <svg
+                  className="fill-gray-light"
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  strokeWidth="0"
+                  style={
+                    Object {
+                      "color": undefined,
+                    }
+                  }
+                  viewBox="0 0 1024 1024"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M832 464h-68V240c0-70.7-57.3-128-128-128H388c-70.7 0-128 57.3-128 128v224h-68c-17.7 0-32 14.3-32 32v384c0 17.7 14.3 32 32 32h640c17.7 0 32-14.3 32-32V496c0-17.7-14.3-32-32-32zM332 240c0-30.9 25.1-56 56-56h248c30.9 0 56 25.1 56 56v224H332V240zm460 600H232V536h560v304zM484 701v53c0 4.4 3.6 8 8 8h40c4.4 0 8-3.6 8-8v-53a48.01 48.01 0 1 0-56 0z"
+                  />
+                </svg>
+              </span>
+              <span
+                className="w-5/6 h-full flex relative"
+              >
+                <input
+                  className="w-9/12 h-full text-xl "
+                  maxLength={15}
+                  onChange={[Function]}
+                  placeholder="비밀번호"
+                  required={true}
+                  type="password"
+                  value=""
+                />
+                <button
+                  className="w-3/12 h-full flex-col-center justify-evenly text-2xl cursor-pointer"
+                  onClick={[Function]}
+                  type="button"
+                >
+                  <svg
+                    className="fill-gray-light"
+                    fill="currentColor"
+                    height="1em"
+                    stroke="currentColor"
+                    strokeWidth="0"
+                    style={
+                      Object {
+                        "color": undefined,
+                      }
+                    }
+                    viewBox="0 0 1024 1024"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M942.2 486.2C847.4 286.5 704.1 186 512 186c-192.2 0-335.4 100.5-430.2 300.3a60.3 60.3 0 0 0 0 51.5C176.6 737.5 319.9 838 512 838c192.2 0 335.4-100.5 430.2-300.3 7.7-16.2 7.7-35 0-51.5zM512 766c-161.3 0-279.4-81.8-362.7-254C232.6 339.8 350.7 258 512 258c161.3 0 279.4 81.8 362.7 254C791.5 684.2 673.4 766 512 766zm-4-430c-97.2 0-176 78.8-176 176s78.8 176 176 176 176-78.8 176-176-78.8-176-176-176zm0 288c-61.9 0-112-50.1-112-112s50.1-112 112-112 112 50.1 112 112-50.1 112-112 112z"
+                    />
+                  </svg>
+                </button>
+                <span
+                  className="absolute text-[#E06469] text-xs bottom-[2px] left-0"
+                />
+              </span>
+            </label>
+          </span>
+        </div>
+      </div>
+    </article>
+  </section>
+  <button
+    className="flex-row-center border-base border-header-gray rounded-md w-[39rem] h-12 mt-10 py-7 font-bold text-xl bg-orange text-white"
+  >
+    회원가입
+  </button>
+</form>
+`;
