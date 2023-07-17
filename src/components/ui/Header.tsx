@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { BsBellFill, BsMoonFill, BsQuestionCircle, BsSearch, BsSunFill } from 'react-icons/bs';
 import { FaUserCircle } from 'react-icons/fa';
 import useInput from '../../hooks/useInput.ts';
+import UserProfile from "../UserProfile.tsx";
 
 export default function Header() {
   const navigate = useNavigate();
@@ -15,6 +16,8 @@ export default function Header() {
   // 헤더 bottom
   const { pathname } = useLocation();
   const [isLogin, setIsLogin] = useState(pathname === '/login' || pathname === '/signup' || pathname === '/pwinquiry');
+  // userProfile click
+  const [isProfileClick, setIsProfileClick] = useState(false);
 
   // 검색창에서 엔터를 눌렀을 때, 검색 페이지로 이동
   const activeEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -45,6 +48,7 @@ export default function Header() {
       className={`fixed top-0 flex-row-center justify-between pt-[1.2rem] w-full h-[5.7rem]   
       ${isLogin ? '' : 'border-solid border-b border-header-gray'}`}
     >
+
       {/*로고 + 글자 (메인페이지로 이동)*/}
       <div className={'flex ml-32'}>
         <nav className={'flex flex-row cursor-pointer'} onClick={() => navigate('/')}>
@@ -98,8 +102,10 @@ export default function Header() {
             className={'text-[1.8rem] fill-gray-dark cursor-pointer'}
             onClick={() => navigate('/')}
           />
+          <div >
+
           {userprofile ? (
-            <FaUserCircle className={'text-[2.1rem] fill-gray-dark cursor-pointer'} />
+            <FaUserCircle className={'text-[2.1rem] fill-gray-dark cursor-pointer'} onClick={() => setIsProfileClick(!isProfileClick)}/>
           ) : (
             <img
               src={userprofile}
@@ -107,6 +113,9 @@ export default function Header() {
               className={'w-[2.1rem] h-[2.1rem] cursor-pointer'}
             />
           )}
+          {isProfileClick && <UserProfile />}
+          </div>
+
         </div>
       )}
 
