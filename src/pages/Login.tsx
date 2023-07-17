@@ -85,7 +85,7 @@ export default function Login() {
 
             <button
               className={
-                'flex-row-center border-base border-gray-border rounded-md w-[29rem] h-12 mt-10 py-7 font-bold text-xl bg-orange text-white'
+                'flex-row-center border-base rounded-md w-[29rem] h-12 mt-10 py-7 font-bold text-xl bg-orange text-white'
               }
             >
               로그인
