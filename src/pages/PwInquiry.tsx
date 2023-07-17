@@ -31,11 +31,11 @@ export default function PwInquiry() {
       {contextHolder}
       <div className={'w-h-full flex-col-center'}>
         <article>
-          <img className={'w-[6.7rem] h-[7.7rem]'} src={'logo.svg'} alt={'로고'} />
+          <img className={'w-[5.7rem] h-[6.7rem]'} src={'logo.svg'} alt={'로고'} />
         </article>
         <article
           className={
-            'flex-row-center border-solid border-[0.6px] border-header-gray w-[39rem] h-[28.75rem] min-h-[28.75rem] shadow-sign-up px-20 my-10'
+            'flex-row-center border-solid border-[0.6px] border-header-gray w-[39rem] h-[28.75rem] min-h-[28.75rem] shadow-sign-up px-20 my-10 mb-[9rem]'
           }
         >
           <form onSubmit={onSubmit} className={'flex-col-center justify-center w-h-full'}>

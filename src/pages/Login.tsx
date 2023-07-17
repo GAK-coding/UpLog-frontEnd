@@ -27,7 +27,7 @@ export default function Login() {
       {contextHolder}
       <div className={'w-h-full flex-col-center'}>
         <article>
-          <img className={'w-[6.7rem] h-[7.7rem]'} src={'logo.svg'} alt={'로고'} />
+          <img className={'w-[5.7rem] h-[6.7rem]'} src={'logo.svg'} alt={'로고'} />
         </article>
         <article
           className={
