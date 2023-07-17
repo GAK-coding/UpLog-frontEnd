@@ -6595,6 +6595,7 @@ __metadata:
     "@typescript-eslint/parser": ^5.60.1
     "@vitejs/plugin-react": ^4.0.0
     antd: ^5.7.0
+    antd-img-crop: ^4.12.2
     autoprefixer: ^10.4.14
     axios: ^1.4.0
     babel-plugin-macros: ^3.1.0
@@ -6900,6 +6901,21 @@ __metadata:
   version: 6.2.1
   resolution: "ansi-styles@npm:6.2.1"
   checksum: ef940f2f0ced1a6347398da88a91da7930c33ecac3c77b72c5905f8b8fe402c52e6fde304ff5347f616e27a742da3f1dc76de98f6866c69251ad0b07a66776d9
+  languageName: node
+  linkType: hard
+
+"antd-img-crop@npm:^4.12.2":
+  version: 4.12.2
+  resolution: "antd-img-crop@npm:4.12.2"
+  dependencies:
+    compare-versions: 6.0.0-rc.1
+    react-easy-crop: ^4.7.4
+    tslib: ^2.5.0
+  peerDependencies:
+    antd: ">=4.0.0"
+    react: ">=16.8.0"
+    react-dom: ">=16.8.0"
+  checksum: c05e1522b8ec07d2a1274a6172c8eb594a5d2738fcf736645b4689804ad1a8c21802d59a3eab9cbe0f791a1a8331ea927f14ae0424228789c1c077c2b09573f6
   languageName: node
   linkType: hard
 
@@ -8474,6 +8490,13 @@ __metadata:
   version: 1.0.1
   resolution: "commondir@npm:1.0.1"
   checksum: 59715f2fc456a73f68826285718503340b9f0dd89bfffc42749906c5cf3d4277ef11ef1cca0350d0e79204f00f1f6d83851ececc9095dc88512a697ac0b9bdcb
+  languageName: node
+  linkType: hard
+
+"compare-versions@npm:6.0.0-rc.1":
+  version: 6.0.0-rc.1
+  resolution: "compare-versions@npm:6.0.0-rc.1"
+  checksum: ada8d19dab267ef432e7aea91ff7b4422284e3b44245a4d7b4caaf1353d0279e5f17b3767050e06a9cf84670120d19b427b5191b71b7284a125482fcd1eda789
   languageName: node
   linkType: hard
 
@@ -14814,6 +14837,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"normalize-wheel@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "normalize-wheel@npm:1.0.1"
+  checksum: 00b32efa040bad9438e732385a4ca27f8532fa2c8c06b54be43b9f75b2da6642bf41a0b4f81e542639dc8d682cde8b059b0a02ae0723fb8ebc3c8f036c8e51d8
+  languageName: node
+  linkType: hard
+
 "npm-run-path@npm:^4.0.0, npm-run-path@npm:^4.0.1":
   version: 4.0.1
   resolution: "npm-run-path@npm:4.0.1"
@@ -17322,6 +17352,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-easy-crop@npm:^4.7.4":
+  version: 4.7.5
+  resolution: "react-easy-crop@npm:4.7.5"
+  dependencies:
+    normalize-wheel: ^1.0.1
+    tslib: 2.0.1
+  peerDependencies:
+    react: ">=16.4.0"
+    react-dom: ">=16.4.0"
+  checksum: 5f670c18c3e0fe827b5eb4b15d1bf0a1ed4b7c0a8910402abb8c64254f706aa43b0ec885b4cd7b487e06603641471254055da200fc3c60a9ffe9d50923ddaebe
+  languageName: node
+  linkType: hard
+
 "react-error-overlay@npm:^6.0.11":
   version: 6.0.11
   resolution: "react-error-overlay@npm:6.0.11"
@@ -19677,6 +19720,13 @@ __metadata:
     minimist: ^1.2.6
     strip-bom: ^3.0.0
   checksum: a6162eaa1aed680537f93621b82399c7856afd10ec299867b13a0675e981acac4e0ec00896860480efc59fc10fd0b16fdc928c0b885865b52be62cadac692447
+  languageName: node
+  linkType: hard
+
+"tslib@npm:2.0.1":
+  version: 2.0.1
+  resolution: "tslib@npm:2.0.1"
+  checksum: 507f32fc24a614c5097d414b622373b6cbb99e305413517e7fd49bef1e63570c0dd15b417ae68152088c3496218e82a5d8c7cd6b48c7a32dcee1a3f7191fff74
   languageName: node
   linkType: hard
 
