@@ -133,7 +133,7 @@ export default function MyPage() {
         </div>
       </article>
 
-      <Modal isCentered onClose={onClose} size={'xl'} isOpen={true}>
+      <Modal isCentered onClose={onClose} size={'xl'} isOpen={isOpen}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>비밀번호 변경</ModalHeader>
@@ -143,7 +143,7 @@ export default function MyPage() {
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="blue">확인</Button>
+            <Button>확인</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
