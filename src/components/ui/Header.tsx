@@ -5,11 +5,16 @@ import { FaUserCircle } from 'react-icons/fa';
 import useInput from '../../hooks/useInput.ts';
 
 export default function Header() {
+  const navigate = useNavigate();
   // TODO: 실제 userprofile 값으로 변경하기
   const userprofile = '/images/test_userprofile.png';
-  const [searchTag, onChageSearchTag, setSearchTag] = useInput('');
-  const [isChecked, setIsChecked] = useState(localStorage.theme === 'dark' ? true : false);
-  const navigate = useNavigate();
+  // 검색
+  const [searchTag, onChageSearchTag] = useInput('');
+  // 다크모드 localstorage에서 체크
+  const [isChecked, setIsChecked] = useState(localStorage.theme === 'dark');
+  // 헤더 bottom
+  const { pathname } = useLocation();
+  const [isLogin, setIsLogin] = useState(pathname === '/login' || pathname === '/signup' || pathname === '/pwinquiry');
 
   // 검색창에서 엔터를 눌렀을 때, 검색 페이지로 이동
   const activeEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -19,22 +24,18 @@ export default function Header() {
   };
 
   // 다크모드 변경
-  const themeModeHandler = () => {
-    const checked = !isChecked;
-    if (checked) {
+  const themeModeHandler = useCallback(() => {
+    if (!isChecked) {
       document.documentElement.classList.add('dark');
       localStorage.theme = 'dark';
     } else {
       document.documentElement.classList.remove('dark');
       localStorage.removeItem('theme');
     }
-    setIsChecked(checked);
-  };
+    setIsChecked(!isChecked);
+  },[isChecked]);
 
   // 로그인 하기 전, border-bottom을 보여주지 않기 위한 로직
-  const { pathname } = useLocation();
-  const [isLogin, setIsLogin] = useState(pathname === '/login' || pathname === '/signup');
-
   useEffect(() => {
     setIsLogin(pathname === '/login' || pathname === '/signup' || pathname === '/pwinquiry');
   }, [pathname]);
