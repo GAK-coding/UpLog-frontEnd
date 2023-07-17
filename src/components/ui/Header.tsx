@@ -4,6 +4,8 @@ import { BsBellFill, BsMoonFill, BsQuestionCircle, BsSearch, BsSunFill } from 'r
 import { FaUserCircle } from 'react-icons/fa';
 import useInput from '../../hooks/useInput.ts';
 import UserProfile from "../UserProfile.tsx";
+import {useRecoilState} from "recoil";
+import {profileOpen} from "../../recoil/User/atom.tsx";
 
 export default function Header() {
   const navigate = useNavigate();
@@ -17,7 +19,7 @@ export default function Header() {
   const { pathname } = useLocation();
   const [isLogin, setIsLogin] = useState(pathname === '/login' || pathname === '/signup' || pathname === '/pwinquiry');
   // userProfile click
-  const [isProfileClick, setIsProfileClick] = useState(false);
+  const [isProfileClick, setIsProfileClick] = useRecoilState(profileOpen);
 
   // 검색창에서 엔터를 눌렀을 때, 검색 페이지로 이동
   const activeEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -63,7 +65,7 @@ export default function Header() {
       </div>
       {/*TODO : 스토리지 값 체크후에 변경하기 (조건으로 렌더링 여부 바꿔야함)*/}
       {/*로그인 상태*/}
-      {isLogin && (
+      {!isLogin && (
         <div className={'flex w-[28rem] h-full justify-between mr-12 font-bold items-center '}>
           {/*검색창*/}
           <div
@@ -121,7 +123,7 @@ export default function Header() {
       )}
 
       {/*로그인 X */}
-      {!isLogin && (
+      {isLogin && (
         <div className={'flex mr-12 font-bold'}>
           <div className={'text-[1.8rem] mr-6'} onClick={themeModeHandler}>
             {isChecked ? (

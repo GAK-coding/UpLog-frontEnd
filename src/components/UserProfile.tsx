@@ -2,6 +2,9 @@ import {FaUserCircle} from "react-icons/fa";
 import {AiFillStar, AiOutlinePoweroff} from "react-icons/ai";
 import {BiPencil} from "react-icons/bi";
 import {useNavigate} from "react-router-dom";
+import {profileOpen} from "../recoil/User/atom.tsx";
+import {useRecoilState} from "recoil";
+import {useCallback} from "react";
 
 export default function UserProfile () {
     // TODO: 실제 userprofile 값으로 변경하기
@@ -14,9 +17,13 @@ export default function UserProfile () {
 
     const navigate = useNavigate();
 
+    // userProfile click
+    const [isProfileClick, setIsProfileClick] = useRecoilState(profileOpen);
+
     return (
     <section className={'border-solid border-[1px] border-line bg-border w-56 h-[13.6rem] absolute top-[5.5rem] right-[3rem] shadow-sign-up'}>
         <div className={'flex-row-center justify-between border-solid border-b-[1px] border-line w-full h-[5.5rem]'}>
+            {/*유저 정보*/}
             <div className={'flex-row-center w-[4rem] h-full'}>
                 {!userInfo.userprofile ? (
                     <FaUserCircle className={'text-[2.8rem] fill-gray-dark'} />
@@ -33,15 +40,22 @@ export default function UserProfile () {
                 <span className={'flex self-start text-gray-light text-sm font-medium'}>{userInfo.userId}</span>
             </div>
         </div>
+        {/*스크랩 페이지 이동*/}
         <div className={'w-full h-[8.1rem] cursor-pointer'}>
             <div className={'flex-row-center justify-between w-full h-[2.7rem] hover:bg-orange-light'}>
                 <AiFillStar className={'text-4xl ml-4 fill-yellow'} />
-                <span className={'w-full ml-3 text-base font-medium'} onClick={() => navigate('/scrap')}>스크랩</span>
+                <span className={'w-full ml-3 text-base font-medium'} onClick={() => {
+                    setIsProfileClick(prevState => !prevState);
+                    navigate('/scrap');}}>스크랩</span>
             </div>
+            {/*마이페이지 수정 이동*/}
             <div className={'flex-row-center justify-between w-full h-[2.7rem] hover:bg-orange-light'}>
                 <BiPencil className={'text-4xl ml-4 fill-gray-light'}/>
-                <span className={'w-full ml-3 text-base font-medium'}  onClick={() => navigate('/mypage')}>프로필 수정</span>
+                <span className={'w-full ml-3 text-base font-medium'}  onClick={() => {
+                    setIsProfileClick(prevState => !prevState);
+                    navigate('/mypage');}}>프로필 수정</span>
             </div>
+            {/*로그아웃*/}
             <div className={'flex-row-center justify-between w-full h-[2.6rem] hover:bg-orange-light'}>
                 <AiOutlinePoweroff className={'text-4xl ml-4 fill-gray-light'}/>
                 {/*TODO : 로그아웃 로직 추가하기*/}
