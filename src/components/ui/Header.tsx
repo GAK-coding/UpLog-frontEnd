@@ -8,7 +8,7 @@ import UserProfile from "../UserProfile.tsx";
 export default function Header() {
   const navigate = useNavigate();
   // TODO: 실제 userprofile 값으로 변경하기
-  const userprofile = '/images/test_userprofile.png';
+  const userprofile = '';
   // 검색
   const [searchTag, onChageSearchTag] = useInput('');
   // 다크모드 localstorage에서 체크
@@ -104,12 +104,13 @@ export default function Header() {
           />
           <div >
 
-          {userprofile ? (
+          {!userprofile ? (
             <FaUserCircle className={'text-[2.1rem] fill-gray-dark cursor-pointer'} onClick={() => setIsProfileClick(!isProfileClick)}/>
           ) : (
             <img
               src={userprofile}
               alt="userprofile"
+              onClick={() => setIsProfileClick(!isProfileClick)}
               className={'w-[2.1rem] h-[2.1rem] cursor-pointer'}
             />
           )}
