@@ -2,52 +2,47 @@ import React, { useState } from 'react';
 import { RcFile, UploadChangeParam } from 'antd/es/upload';
 import message from 'antd/lib/message';
 import { UploadFile, UploadProps } from 'antd/lib';
-import { Upload } from 'antd';
+import { Button, Upload } from 'antd';
+import {
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  useDisclosure,
+} from '@chakra-ui/react';
+import ImgCrop from 'antd-img-crop';
 
-const getBase64 = (img: RcFile, callback: (url: string) => void) => {
-  const reader = new FileReader();
-  reader.addEventListener('load', () => callback(reader.result as string));
-  reader.readAsDataURL(img);
-};
-
-const beforeUpload = (file: RcFile) => {
-  const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-  if (!isJpgOrPng) {
-    message.error('You can only upload JPG/PNG file!');
-  }
-  const isLt2M = file.size / 1024 / 1024 < 2;
-  if (!isLt2M) {
-    message.error('Image must smaller than 2MB!');
-  }
-  return isJpgOrPng && isLt2M;
-};
 export default function MyPage() {
-  const [loading, setLoading] = useState(false);
-  const [imageUrl, setImageUrl] = useState<string>();
+  // 비밀번호 변경 모달
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const handleChange: UploadProps['onChange'] = (info: UploadChangeParam<UploadFile>) => {
-    if (info.file.status === 'uploading') {
-      setLoading(true);
-      return;
-    }
-    if (info.file.status === 'done') {
-      // Get this url from response in real world.
-      getBase64(info.file.originFileObj as RcFile, (url) => {
-        setLoading(false);
-        setImageUrl(url);
-      });
-    }
+  // 이미지
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
+
+  const onChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
+    setFileList(newFileList);
   };
 
-  const uploadButton = (
-    <div>
-      {loading ? '로딩' : '플러스'}
-      <div style={{ marginTop: 8 }}>Upload</div>
-    </div>
-  );
+  const onPreview = async (file: UploadFile) => {
+    let src = file.url as string;
+    if (!src) {
+      src = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file.originFileObj as RcFile);
+        reader.onload = () => resolve(reader.result as string);
+      });
+    }
+    const image = new Image();
+    image.src = src;
+    const imgWindow = window.open(src);
+    imgWindow?.document.write(image.outerHTML);
+  };
 
   return (
-    <section className={'flex justify-center w-h-full'}>
+    <section className={'flex flex-col items-center w-h-full min-h-[70rem]'}>
       <article className={'w-[43rem] h-[40rem] mt-12'}>
         <h1 className={'h-[10%] text-3xl font-bold'}>프로필 수정</h1>
         <div
@@ -62,7 +57,10 @@ export default function MyPage() {
               <span className={'text-[0.93rem] text-gray-dark'}>qhslsl@gmail.com</span>
             </div>
             <div className={'h-full flex-col-center justify-end '}>
-              <button className={'text-gray-dark text-[0.93rem] font-bold underline'}>
+              <button
+                className={'text-gray-dark text-[0.93rem] font-bold underline'}
+                onClick={onOpen}
+              >
                 비밀번호 변경
               </button>
             </div>
@@ -70,22 +68,16 @@ export default function MyPage() {
           {/* 프로필 정보 수정 */}
           <div className={'w-full h-[79%] flex-col-center border-base'}>
             <div>
-              {' '}
-              <Upload
-                name="avatar"
-                listType="picture-circle"
-                className="avatar-uploader"
-                showUploadList={false}
-                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                beforeUpload={beforeUpload}
-                onChange={handleChange}
-              >
-                {imageUrl ? (
-                  <img src={imageUrl} alt="avatar" style={{ width: '100%' }} />
-                ) : (
-                  uploadButton
-                )}
-              </Upload>
+              <ImgCrop cropShape={'round'}>
+                <Upload
+                  listType="picture-card"
+                  fileList={fileList}
+                  onChange={onChange}
+                  onPreview={onPreview}
+                >
+                  {fileList.length < 1 && '+ Upload'}
+                </Upload>
+              </ImgCrop>
             </div>
             <label className={'w-[22rem] flex-col-center items-start mb-5'}>
               <span className={'text-gray-dark text-[0.93rem] font-bold mb-4'}>이름</span>
@@ -125,6 +117,36 @@ export default function MyPage() {
           </div>
         </div>
       </article>
+      <article className={'w-[43rem] h-48 mt-12'}>
+        <h1 className={'h-16 text-3xl font-bold'}>계정 관리</h1>
+
+        <div className={'w-full h-32 border-line border-bg rounded-xl p-6 shadow-sign-up'}>
+          <span className={'text-xl font-bold'}>계정 삭제</span>
+          <div className={'flex-row-center justify-between px-5 mt-4'}>
+            <span className={'text-gray-dark text-xs'}>
+              계정 삭제 시 프로필 및 참여한 제품의 모든 정보가 삭제 됩니다.
+            </span>
+            <button className={'w-32 h-9 bg-orange text-white font-bold text-sm rounded'}>
+              계정 삭제
+            </button>
+          </div>
+        </div>
+      </article>
+
+      <Modal isCentered onClose={onClose} size={'xl'} isOpen={true}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>비밀번호 변경</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <span>123</span>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme="blue">확인</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </section>
   );
 }
