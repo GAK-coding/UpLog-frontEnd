@@ -8,7 +8,7 @@ export default {
         black: 'var(--black)',
         white: 'var(--white)',
         orange: 'var(--orange)',
-        'header-gray': '#E5E7EB',
+        'header-gray': 'var(--header-gray)',
         border: 'var(--border-bg)',
         line: 'var(--border-line)',
         gray: {
@@ -22,7 +22,7 @@ export default {
         logo: "'Baloo Tammudu 2', cursive",
       },
       height: {
-        noneHeader: 'calc(100vh - 5.5rem)',
+        noneHeader: 'calc(100vh - 5.7rem)',
       },
       boxShadow: {
         'sign-up': '2px 2px 10px 1px rgba(0, 0, 0, 0.15), -2px -2px 10px 0px var(--shadow)',

@@ -1,6 +1,7 @@
 :root {
   --bg-dark: #ffffff;
   --header-bg : #ffffff;
+  --header-gray :#E5E7EB;
   --text : #292723;
   --orange: #ffaa2a;
   --gray-light: #c4c4c4;
@@ -17,22 +18,23 @@
   --border-gray : #c4c4c4;
   --border-line : #C4C4C4;
   --input-bg : #ffffff;
-  --shadow: rgba(0, 0, 0, 0.15);
+  --shadow: rgba(0, 0, 0, 0.1);
 }
 
 html.dark {
   --bg-dark: #2E2B27;
   --header-bg : #292723;
+  --header-gray :rgba(0, 0, 0, 0.0);
   --text : #ffffff;
   --orange: #ffaa2a;
   --gray-light: #c4c4c4;
   --gray-dark: #ffffff;
-  --gray-spring: #e5e5e5;
+  --gray-spring: #64635E;
   --black: #ffffff;
   --white: #2E2B27;
   /*
  border-bg : border 배경 색깔
- border-gray : input창 border 색깔
+ border-gray : input, button 창 border 색깔
  border-line : border의 테두리 색깔
  */
   --border-bg : #33302C;

@@ -28,7 +28,7 @@ function App() {
         <GoogleOAuthProvider clientId={clientId}>
           <RecoilRoot>
             <BrowserRouter>
-              <section className={'h-[5.5rem]'}>
+              <section className={'h-[5.7rem]'}>
                 <Header />
               </section>
               <section className={'h-noneHeader min-h-[53rem]'}>

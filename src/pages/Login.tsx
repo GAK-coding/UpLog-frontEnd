@@ -31,19 +31,19 @@ export default function Login() {
         </article>
         <article
           className={
-            'flex-row-center border-solid border-[0.6px] border-header-gray w-[39rem] h-[23.5rem] min-h-[23.5rem] shadow-sign-up px-20 my-10'
+            'flex-row-center bg-border border-solid border-[1px] border-line w-[39rem] h-[23.5rem] min-h-[23.5rem] shadow-sign-up px-20 my-10'
           }
         >
           <form onSubmit={onSubmit} className={'flex-col-center justify-center w-h-full'}>
             <div
               className={
-                'border-solid border-[0.6px] border-header-gray w-full flex flex-col justify-around rounded-xl shadow-sign-up-info mb-[1rem]'
+                'border-solid border-[0.6px] border-gray-border w-full flex flex-col justify-around rounded-xl shadow-sign-up-info mb-[1rem]'
               }
             >
               {/* 이메일 */}
               <span
                 className={
-                  'w-full h-[4.5rem] flex-row-center border-solid border-b border-gray-light'
+                  'w-full h-[4.5rem] flex-row-center border-solid border-b border-gray-border'
                 }
               >
                 <label className={'w-h-full flex-row-center'}>
@@ -85,7 +85,7 @@ export default function Login() {
 
             <button
               className={
-                'flex-row-center border-base border-header-gray rounded-md w-[29rem] h-12 mt-10 py-7 font-bold text-xl bg-orange text-white'
+                'flex-row-center border-base border-gray-border rounded-md w-[29rem] h-12 mt-10 py-7 font-bold text-xl bg-orange text-white'
               }
             >
               로그인
