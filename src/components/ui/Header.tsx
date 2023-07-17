@@ -36,12 +36,12 @@ export default function Header() {
   const [isLogin, setIsLogin] = useState(pathname === '/login' || pathname === '/signup');
 
   useEffect(() => {
-    setIsLogin(pathname === '/login' || pathname === '/signup');
+    setIsLogin(pathname === '/login' || pathname === '/signup' || pathname === '/pwinquiry');
   }, [pathname]);
 
   return (
     <header
-      className={`fixed top-0 flex-row-center justify-between pt-[1.5rem] w-full h-[5.5rem]   
+      className={`fixed top-0 flex-row-center justify-between pt-[1.2rem] w-full h-[5.7rem]   
       ${isLogin ? '' : 'border-solid border-b border-header-gray'}`}
     >
       {/*로고 + 글자 (메인페이지로 이동)*/}
@@ -63,7 +63,7 @@ export default function Header() {
           {/*검색창*/}
           <div
             className={
-              'flex-row-center justify-between w-48 h-3/5 p-2 mt-1 border-solid border border-gray-light rounded-lg'
+              'flex-row-center justify-between w-48 h-3/5 p-2  border-solid border border-gray-light rounded-lg'
             }
           >
             <BsSearch className={'ml-2 text-base fill-gray-dark '} />
@@ -82,7 +82,7 @@ export default function Header() {
             />
           </div>
           {/*아이콘*/}
-          <div className={'text-[2.1rem] '} onClick={themeModeHandler}>
+          <div className={'text-[1.8rem] '} onClick={themeModeHandler}>
             {isChecked ? (
               <BsMoonFill className={'fill-gray-dark cursor-pointer'} />
             ) : (
@@ -90,11 +90,11 @@ export default function Header() {
             )}
           </div>
           <BsBellFill
-            className={'text-[2.1rem] fill-gray-dark cursor-pointer'}
+            className={'text-[1.8rem] fill-gray-dark cursor-pointer'}
             onClick={() => navigate('/')}
           />
           <BsQuestionCircle
-            className={'text-[2.1rem] fill-gray-dark cursor-pointer'}
+            className={'text-[1.8rem] fill-gray-dark cursor-pointer'}
             onClick={() => navigate('/')}
           />
           {userprofile ? (
@@ -112,7 +112,7 @@ export default function Header() {
       {/*로그인 X */}
       {!isLogin && (
         <div className={'flex mr-12 font-bold'}>
-          <div className={'text-[2.1rem] mr-6'} onClick={themeModeHandler}>
+          <div className={'text-[1.8rem] mr-6'} onClick={themeModeHandler}>
             {isChecked ? (
               <BsMoonFill className={'fill-gray-dark cursor-pointer'} />
             ) : (
