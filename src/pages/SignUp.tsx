@@ -127,18 +127,18 @@ export default function SignUp() {
           <div className={'flex-row-center w-full h-2/5'}>
             <div
               className={
-                'border-base border-gray-light rounded-md w-h-full flex flex-col justify-around shadow-sign-up-info'
+                'border-base border-gray-border rounded-md w-h-full flex flex-col justify-around shadow-sign-up-info'
               }
             >
               {/*개인 기업 선택*/}
               <div
                 className={
-                  'w-full h-1/3 flex-row-center border-solid border-b border-gray-light font-bold'
+                  'w-full h-1/3 flex-row-center border-solid border-b border-gray-border font-bold'
                 }
               >
                 <button
                   type={'button'}
-                  className={'w-1/2 h-full text-xl border-solid border-r border-gray-light'}
+                  className={'w-1/2 h-full text-xl border-solid border-r border-gray-border'}
                   onClick={() => onClickEach(true)}
                 >
                   <span
@@ -167,7 +167,7 @@ export default function SignUp() {
               </div>
               {/* 이름 */}
               <span
-                className={'w-full h-1/3 flex-row-center border-solid border-b border-gray-light'}
+                className={'w-full h-1/3 flex-row-center border-solid border-b border-gray-border'}
               >
                 <label className={'w-h-full flex-row-center'}>
                   <span className={'w-1/6 h-full flex-row-center text-3xl '}>
@@ -207,12 +207,12 @@ export default function SignUp() {
           <div className={'flex-row-center w-full h-2/5'}>
             <div
               className={
-                'border-base border-gray-light rounded-md w-h-full flex flex-col justify-around shadow-sign-up-info'
+                'border-base border-gray-border rounded-md w-h-full flex flex-col justify-around shadow-sign-up-info'
               }
             >
               {/* 이메일 */}
               <span
-                className={'w-full h-1/3 flex-row-center border-solid border-b border-gray-light'}
+                className={'w-full h-1/3 flex-row-center border-solid border-b border-gray-border'}
               >
                 <label className={'w-h-full flex-row-center '}>
                   <span className={'w-1/6 h-full flex-row-center text-3xl '}>
@@ -231,7 +231,7 @@ export default function SignUp() {
               </span>
               {/* 인증번호 */}
               <span
-                className={'w-full h-1/3 flex-row-center border-solid border-b border-gray-light'}
+                className={'w-full h-1/3 flex-row-center border-solid border-b border-gray-border'}
               >
                 <label className={'w-h-full flex-row-center'}>
                   <span className={'w-1/6 h-full flex-row-center text-3xl'}>
@@ -320,7 +320,7 @@ export default function SignUp() {
       {/* button */}
       <button
         className={
-          'flex-row-center border-base border-header-gray rounded-md w-[39rem] h-12 mt-10 py-7 font-bold text-xl bg-orange text-white'
+          'flex-row-center border-base border-gray-border rounded-md w-[39rem] h-12 mt-10 py-7 font-bold text-xl bg-orange text-white'
         }
       >
         회원가입

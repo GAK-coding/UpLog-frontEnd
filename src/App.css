@@ -8,7 +8,8 @@
   --gray-spring: #e5e5e5;
   --black: #292723;
   --white: #ffffff;
-
+  --border-gray : #c4c4c4;
+  --shadow: rgba(0, 0, 0, 0.15);
 }
 
 html.dark {
@@ -21,6 +22,8 @@ html.dark {
   --gray-spring: #e5e5e5;
   --black: #ffffff;
   --white: #292723;
+  --border-gray : #64635E;
+  --shadow: rgba(0, 0, 0, 0.15);
 
 }
 

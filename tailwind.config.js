@@ -13,6 +13,7 @@ export default {
           light: 'var(--gray-light)',
           dark: 'var(--gray-dark)',
           spring: 'var(--gray-spring)',
+          border: 'var(--border-gray)',
         },
       },
       fontFamily: {
