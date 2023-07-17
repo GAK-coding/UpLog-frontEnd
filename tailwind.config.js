@@ -10,7 +10,7 @@ export default {
         orange: 'var(--orange)',
         'header-gray': '#E5E7EB',
         border: 'var(--border-bg)',
-        line: 'var(--border)',
+        line: 'var(--border-line)',
         gray: {
           light: 'var(--gray-light)',
           dark: 'var(--gray-dark)',
