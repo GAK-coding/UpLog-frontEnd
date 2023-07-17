@@ -8,11 +8,15 @@
   --gray-spring: #e5e5e5;
   --black: #292723;
   --white: #ffffff;
-
+  --border : #C4C4C4;
+  --border-gray : #c4c4c4;
+  --border-bg : #ffffff;
+  --input-bg : #ffffff;
+  --shadow: rgba(0, 0, 0, 0.15);
 }
 
 html.dark {
-  --bg-dark: #33302C;
+  --bg-dark: #2E2B27;
   --header-bg : #292723;
   --text : #ffffff;
   --orange: #ffaa2a;
@@ -20,7 +24,12 @@ html.dark {
   --gray-dark: #ffffff;
   --gray-spring: #e5e5e5;
   --black: #ffffff;
-  --white: #292723;
+  --white: #2E2B27;
+  --border : #424242;
+  --border-gray : #64635E;
+  --border-bg : #33302C;
+  --input-bg : #33302C;
+  --shadow: rgba(0, 0, 0, 0);
 
 }
 
@@ -175,5 +184,5 @@ html input:focus {
 }
 
 html input {
-  background-color: var(--bg-dark);
+  background-color: var(--input-bg);
 }
