@@ -23,7 +23,7 @@ export default function Login() {
   });
 
   return (
-    <section className={'h-full min-h-[55rem] mt-[-1.7rem]'}>
+    <section className={'h-full'}>
       {contextHolder}
       <div className={'w-h-full flex-col-center'}>
         <article>
@@ -37,7 +37,7 @@ export default function Login() {
           <form onSubmit={onSubmit} className={'flex-col-center justify-center w-h-full'}>
             <div
               className={
-                'border-gray-light w-full flex flex-col justify-around rounded-xl shadow-sign-up-info mb-[1rem]'
+                'border-solid border-[0.6px] border-header-gray w-full flex flex-col justify-around rounded-xl shadow-sign-up-info mb-[1rem]'
               }
             >
               {/* 이메일 */}
