@@ -4,6 +4,7 @@
   --header-gray :#E5E7EB;
   --text : #292723;
   --orange: #ffaa2a;
+  --orange-light: rgba(255,164,27, 0.2);
   --gray-light: #c4c4c4;
   --gray-dark: #64635e;
   --gray-spring: #e5e5e5;
@@ -27,6 +28,7 @@ html.dark {
   --header-gray :rgba(0, 0, 0, 0.0);
   --text : #ffffff;
   --orange: #ffaa2a;
+  --orange-light: rgba(255,164,27, 0.2);
   --gray-light: #c4c4c4;
   --gray-dark: #ffffff;
   --gray-spring: #64635E;

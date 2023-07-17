@@ -3,13 +3,23 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { BsBellFill, BsMoonFill, BsQuestionCircle, BsSearch, BsSunFill } from 'react-icons/bs';
 import { FaUserCircle } from 'react-icons/fa';
 import useInput from '../../hooks/useInput.ts';
+import UserProfile from "../UserProfile.tsx";
+import {useRecoilState} from "recoil";
+import {profileOpen} from "../../recoil/User/atom.tsx";
 
 export default function Header() {
-  // TODO: 실제 userprofile 값으로 변경하기
-  const userprofile = '/images/test_userprofile.png';
-  const [searchTag, onChageSearchTag, setSearchTag] = useInput('');
-  const [isChecked, setIsChecked] = useState(localStorage.theme === 'dark' ? true : false);
   const navigate = useNavigate();
+  // TODO: 실제 userprofile 값으로 변경하기
+  const userprofile = '';
+  // 검색
+  const [searchTag, onChageSearchTag] = useInput('');
+  // 다크모드 localstorage에서 체크
+  const [isChecked, setIsChecked] = useState(localStorage.theme === 'dark');
+  // 헤더 bottom
+  const { pathname } = useLocation();
+  const [isLogin, setIsLogin] = useState(pathname === '/login' || pathname === '/signup' || pathname === '/pwinquiry');
+  // userProfile click
+  const [isProfileClick, setIsProfileClick] = useRecoilState(profileOpen);
 
   // 검색창에서 엔터를 눌렀을 때, 검색 페이지로 이동
   const activeEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -19,22 +29,18 @@ export default function Header() {
   };
 
   // 다크모드 변경
-  const themeModeHandler = () => {
-    const checked = !isChecked;
-    if (checked) {
+  const themeModeHandler = useCallback(() => {
+    if (!isChecked) {
       document.documentElement.classList.add('dark');
       localStorage.theme = 'dark';
     } else {
       document.documentElement.classList.remove('dark');
       localStorage.removeItem('theme');
     }
-    setIsChecked(checked);
-  };
+    setIsChecked(!isChecked);
+  },[isChecked]);
 
   // 로그인 하기 전, border-bottom을 보여주지 않기 위한 로직
-  const { pathname } = useLocation();
-  const [isLogin, setIsLogin] = useState(pathname === '/login' || pathname === '/signup');
-
   useEffect(() => {
     setIsLogin(pathname === '/login' || pathname === '/signup' || pathname === '/pwinquiry');
   }, [pathname]);
@@ -44,6 +50,7 @@ export default function Header() {
       className={`fixed top-0 flex-row-center justify-between pt-[1.2rem] w-full h-[5.7rem]   
       ${isLogin ? '' : 'border-solid border-b border-header-gray'}`}
     >
+
       {/*로고 + 글자 (메인페이지로 이동)*/}
       <div className={'flex ml-32'}>
         <nav className={'flex flex-row cursor-pointer'} onClick={() => navigate('/')}>
@@ -58,7 +65,7 @@ export default function Header() {
       </div>
       {/*TODO : 스토리지 값 체크후에 변경하기 (조건으로 렌더링 여부 바꿔야함)*/}
       {/*로그인 상태*/}
-      {isLogin && (
+      {!isLogin && (
         <div className={'flex w-[28rem] h-full justify-between mr-12 font-bold items-center '}>
           {/*검색창*/}
           <div
@@ -97,20 +104,26 @@ export default function Header() {
             className={'text-[1.8rem] fill-gray-dark cursor-pointer'}
             onClick={() => navigate('/')}
           />
-          {userprofile ? (
-            <FaUserCircle className={'text-[2.1rem] fill-gray-dark cursor-pointer'} />
+          <div >
+
+          {!userprofile ? (
+            <FaUserCircle className={'text-[2.1rem] fill-gray-dark cursor-pointer'} onClick={() => setIsProfileClick(!isProfileClick)}/>
           ) : (
             <img
               src={userprofile}
               alt="userprofile"
+              onClick={() => setIsProfileClick(!isProfileClick)}
               className={'w-[2.1rem] h-[2.1rem] cursor-pointer'}
             />
           )}
+          {isProfileClick && <UserProfile />}
+          </div>
+
         </div>
       )}
 
       {/*로그인 X */}
-      {!isLogin && (
+      {isLogin && (
         <div className={'flex mr-12 font-bold'}>
           <div className={'text-[1.8rem] mr-6'} onClick={themeModeHandler}>
             {isChecked ? (
