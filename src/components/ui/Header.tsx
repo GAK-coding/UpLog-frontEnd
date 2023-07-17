@@ -71,7 +71,7 @@ export default function Header() {
         {/*TODO : 스토리지 값 체크후에 변경하기 (조건으로 렌더링 여부 바꿔야함)*/}
         <div className={'flex-row-center ml-4 h-9 border-solid border-r border-gray-light'}/>
 
-        <div className={'flex-row-center cursor-pointer'} onClick={() => setIsProductClick(!isProductClick)}>
+        <div className={'flex-row-center cursor-pointer '} onClick={() => setIsProductClick(!isProductClick)}>
           <span className={'flex-row-center font-logo text-[2.3rem] font-semibold ml-4 mt-3'}>{productList[0]}</span>
           <PiCaretUpDownLight className={'flex-row-center text-[1.4rem] fill-gray-light ml-2'} />
           {isProductClick && <ProductList/>}

@@ -113,7 +113,7 @@ export default function SignUp() {
       {contextHolder}
       <section
         className={
-          'border-solid border-[1px] border-line bg-border w-[39rem] h-[42rem] min-h-[42rem] shadow-sign-up px-20'
+          'border-base w-[39rem] h-[42rem] min-h-[42rem] shadow-sign-up px-20'
         }
       >
         {/* logo */}

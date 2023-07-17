@@ -16,7 +16,7 @@
   }
 
   .border-base {
-    @apply border-solid border
+    @apply border-solid border-[1px] border-line bg-border
   }
 }
 
