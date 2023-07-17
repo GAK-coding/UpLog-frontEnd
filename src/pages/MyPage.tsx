@@ -91,6 +91,7 @@ export default function MyPage() {
               <span className={'text-gray-dark text-[0.93rem] font-bold mb-4'}>이름</span>
               <input
                 className={
+                  // TODO: border-gray 뭐임!!!
                   'border-base border-gray w-full h-10 rounded-[0.625rem] text-[0.93rem] font-bold p-2'
                 }
                 type="text"
@@ -102,6 +103,7 @@ export default function MyPage() {
               <span className={'text-gray-dark text-[0.93rem] font-bold mb-4'}>닉네임</span>
               <input
                 className={
+                  // TODO: border-gray 뭐임!!!
                   'border-base border-gray w-full h-10 rounded-[0.625rem] text-[0.93rem] font-bold p-2'
                 }
                 type="text"
