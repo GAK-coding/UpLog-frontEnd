@@ -63,7 +63,6 @@ export default function Header() {
     function handleClickOutside(event: MouseEvent) {
       // 현재 document에서 mousedown 이벤트가 동작하면 호출되는 함수입니다.
       if (clickRef.current && !clickRef.current.contains(event.target as Node)) {
-        console.log(`div 외부 클릭을 감지!`);
         setIsProductClick(false);
       }
     }

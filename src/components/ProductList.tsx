@@ -1,5 +1,5 @@
 import { AiOutlinePlus } from 'react-icons/ai';
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { productOpen } from '../recoil/Product/atom.tsx';
 import { useRecoilState } from 'recoil';
 import { useOutsideAlerter } from '../hooks/useOutsideAlerter.ts';
@@ -21,37 +21,44 @@ export default function ProductList() {
   ];
 
   const [isProductClick, setIsProductClick] = useRecoilState(productOpen);
-  const clickRef = useOutsideAlerter();
 
-  {
-    isProductClick &&
-      useEffect(() => {
-        document.body.style.cssText = `
-    position: fixed; 
+  useEffect(() => {
+    if (!isProductClick) return;
+
+    document.body.style.cssText = `
+    position: fixed;
     top: -${window.scrollY}px;
     overflow-y: scroll;
     width: 100%;`;
-        return () => {
-          const scrollY = document.body.style.top;
-          document.body.style.cssText = '';
-          window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
-          console.log('눌렸음');
-        };
-      }, [isProductClick]);
-  }
+    return () => {
+      const scrollY = document.body.style.top;
+      document.body.style.cssText = '';
+      window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
+    };
+  }, [isProductClick]);
+
+  const onChildClick = () => {
+    useCallback((e: MouseEvent) => {
+      console.log('dfdf');
+      e.stopPropagation();
+    }, []);
+  };
 
   return (
     <section
+      onClick={onChildClick}
       className={
         'border-base w-[20rem] min-h-[3.3rem] max-h-[30rem] block absolute top-[4rem] right-[-8.5rem] shadow-sign-up'
       }
     >
-      <div className={'max-h-[26.7rem] overflow-y-auto'}>
+      <div className={'max-h-[26.7rem] overflow-y-auto'} onClick={onChildClick}>
         {/*제품 list*/}
-        {productList.map((product, key) => {
+        {productList.map((product, index) => {
           return (
             <div
+              key={index}
               className={'flex-row-center justify-between w-full h-[4.5rem] hover:bg-orange-light'}
+              onClick={onChildClick}
             >
               <RxDragHandleDots2
                 className={'flex w-[2.6rem] items-center text-4xl ml-4 fill-gray-light'}
