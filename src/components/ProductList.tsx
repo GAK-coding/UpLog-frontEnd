@@ -6,7 +6,7 @@ export default function ProductList() {
   return (
     <section
       className={
-        'border-base w-[20rem] min-h-[8rem] max-h-[30rem] absolute top-[4rem] right-[-8rem] shadow-sign-up'
+        'border-base w-[20rem] min-h-[8rem] max-h-[30rem] absolute top-[4rem] right-[-8.5rem] shadow-sign-up'
       }
     >
       {/*제품 list*/}
