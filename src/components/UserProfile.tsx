@@ -21,7 +21,7 @@ export default function UserProfile () {
     const [isProfileClick, setIsProfileClick] = useRecoilState(profileOpen);
 
     return (
-    <section className={'border-solid border-[1px] border-line bg-border w-56 h-[13.6rem] absolute top-[5.5rem] right-[3rem] shadow-sign-up'}>
+    <section className={'border-base w-56 h-[13.6rem] absolute top-[5rem] right-[3rem] shadow-sign-up'}>
         <div className={'flex-row-center justify-between border-solid border-b-[1px] border-line w-full h-[5.5rem]'}>
             {/*유저 정보*/}
             <div className={'flex-row-center w-[4rem] h-full'}>

@@ -31,7 +31,7 @@ export default function Login() {
         </article>
         <article
           className={
-            'flex-row-center bg-border border-solid border-[1px] border-line w-[39rem] h-[23.5rem] min-h-[23.5rem] shadow-sign-up px-20 my-10'
+            'flex-row-center border-base w-[39rem] h-[23.5rem] min-h-[23.5rem] shadow-sign-up px-20 my-10'
           }
         >
           <form onSubmit={onSubmit} className={'flex-col-center justify-center w-h-full'}>
