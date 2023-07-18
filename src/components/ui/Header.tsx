@@ -10,6 +10,7 @@ import { PiCaretUpDownLight } from 'react-icons/pi';
 import { productOpen } from '../../recoil/Product/atom.tsx';
 import ProductList from '../ProductList.tsx';
 import { cli } from 'cypress';
+import { useOutsideAlerter } from '../../hooks/useOutsideAlerter.ts';
 
 export default function Header() {
   const navigate = useNavigate();
@@ -57,22 +58,13 @@ export default function Header() {
     setIsLogin(pathname === '/login' || pathname === '/signup' || pathname === '/pwinquiry');
   }, [pathname]);
 
-  const clickRef = useRef<HTMLDivElement>(null);
+  // 제품 list clickRef
+  const productRef = useRef<HTMLDivElement>(null);
+  useOutsideAlerter(productRef, 'product');
 
-  // 바깥 클릭 시
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      // 현재 document에서 mouse Event가 동작하면 호출되는 함수
-      if (clickRef.current && !clickRef.current.contains(event.target as Node)) {
-        setIsProductClick(false);
-      }
-    }
-    document.addEventListener('click', handleClickOutside);
-
-    return () => {
-      document.removeEventListener('click', handleClickOutside);
-    };
-  }, [clickRef]);
+  // 프로필 clickRef
+  const profileRef = useRef<HTMLDivElement>(null);
+  useOutsideAlerter(profileRef, 'profile');
 
   return (
     <header
@@ -90,7 +82,7 @@ export default function Header() {
 
         {/*TODO : 스토리지 값 체크후에 변경하기 (조건으로 렌더링 여부 바꿔야함)*/}
         {productList?.[0] !== '' && (
-          <div className={'flex-row-center'} ref={clickRef}>
+          <div className={'flex-row-center'} ref={productRef}>
             <div className={'flex-row-center ml-4 h-9 border-solid border-r border-gray-light'} />
             <div
               className={'flex-row-center cursor-pointer relative'}
@@ -152,7 +144,7 @@ export default function Header() {
             onClick={() => navigate('/')}
           />
 
-          <div className={'relative'}>
+          <div className={'relative'} ref={profileRef}>
             {!userprofile ? (
               <FaUserCircle
                 className={'text-[2.1rem] fill-gray-dark cursor-pointer'}

@@ -71,11 +71,10 @@ export default function UserProfile() {
         </div>
         {/*로그아웃*/}
         <div className={'flex-row-center justify-between w-full h-[2.6rem] hover:bg-hover'}>
-          <AiOutlinePoweroff className={'text-4xl ml-4 fill-gray-light'} />정
+          <AiOutlinePoweroff className={'text-4xl ml-4 fill-gray-light'} />
           {/*TODO : 로그아웃 로직 추가하기*/}
           <span className={'w-full ml-3 text-base font-medium'}>로그아웃</span>
         </div>
-        정
       </div>
     </section>
   );
