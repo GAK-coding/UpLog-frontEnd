@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
+import React, { RefObject, useCallback, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { BsBellFill, BsMoonFill, BsQuestionCircle, BsSearch, BsSunFill } from 'react-icons/bs';
 import { FaUserCircle } from 'react-icons/fa';
@@ -9,7 +9,7 @@ import { profileOpen } from '../../recoil/User/atom.tsx';
 import { PiCaretUpDownLight } from 'react-icons/pi';
 import { productOpen } from '../../recoil/Product/atom.tsx';
 import ProductList from '../ProductList.tsx';
-import ClickEvent = JQuery.ClickEvent;
+import { cli } from 'cypress';
 
 export default function Header() {
   const navigate = useNavigate();
@@ -52,14 +52,27 @@ export default function Header() {
     setIsChecked(!isChecked);
   }, [isChecked]);
 
-  const openProductList = useCallback((e: ChangeEvent<HTMLHtmlElement>) => {
-    setIsProductClick(!isProductClick);
-  }, []);
-
   // 로그인 하기 전, border-bottom을 보여주지 않기 위한 로직
   useEffect(() => {
     setIsLogin(pathname === '/login' || pathname === '/signup' || pathname === '/pwinquiry');
   }, [pathname]);
+
+  const clickRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      // 현재 document에서 mousedown 이벤트가 동작하면 호출되는 함수입니다.
+      if (clickRef.current && !clickRef.current.contains(event.target as Node)) {
+        console.log(`div 외부 클릭을 감지!`);
+        setIsProductClick(false);
+      }
+    }
+    document.addEventListener('click', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [clickRef]);
 
   return (
     <header
@@ -77,7 +90,7 @@ export default function Header() {
 
         {/*TODO : 스토리지 값 체크후에 변경하기 (조건으로 렌더링 여부 바꿔야함)*/}
         {productList?.[0] !== '' && (
-          <div className={'flex-row-center'}>
+          <div className={'flex-row-center'} ref={clickRef}>
             <div className={'flex-row-center ml-4 h-9 border-solid border-r border-gray-light'} />
             <div
               className={'flex-row-center cursor-pointer relative'}

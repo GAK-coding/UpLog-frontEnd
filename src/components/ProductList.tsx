@@ -53,7 +53,9 @@ export default function ProductList() {
             <div
               className={'flex-row-center justify-between w-full h-[4.5rem] hover:bg-orange-light'}
             >
-              <RxDragHandleDots2 className={'flex items-center text-4xl ml-4 fill-gray-light'} />
+              <RxDragHandleDots2
+                className={'flex w-[2.6rem] items-center text-4xl ml-4 fill-gray-light'}
+              />
               <img src={product.img} alt="userprofile" className={'ml-2 w-[2rem] h-[2rem]'} />
               <span className={'ml-3 text-xl font-bold w-full'}>{product.name}</span>
               <BiPencil className={'w-20 text-xl mr-4 fill-gray-light'} />
