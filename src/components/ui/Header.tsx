@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { BsBellFill, BsMoonFill, BsQuestionCircle, BsSearch, BsSunFill } from 'react-icons/bs';
 import { FaUserCircle } from 'react-icons/fa';
@@ -23,6 +23,10 @@ export default function Header() {
   const [isLogin, setIsLogin] = useState(
     pathname === '/login' || pathname === '/signup' || pathname === '/pwinquiry'
   );
+
+  // 외부클릭 감지
+  const clickRef = useRef<HTMLDivElement>(null);
+
   // userProfile click
   const [isProfileClick, setIsProfileClick] = useRecoilState(profileOpen);
   // 제품 List
@@ -54,14 +58,26 @@ export default function Header() {
     setIsLogin(pathname === '/login' || pathname === '/signup' || pathname === '/pwinquiry');
   }, [pathname]);
 
-  // absolute top-[5rem] right-[84.5rem]
+  // 외부 클릭시 창 닫기
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (clickRef.current && !clickRef.current.contains(e.target as Node)) {
+        setIsProfileClick(false);
+        setIsProductClick(false);
+        console.log('클릭')
+      }
+    };
+    window.addEventListener('mousedown', handleClick);
+    return () => window.removeEventListener('mousedown', handleClick);
+  }, [clickRef]);
+
   return (
-    <header
+    <header ref={clickRef}
       className={`fixed top-0 flex-row-center justify-between pt-[0.5rem] w-full h-[5.7rem]
       ${isLogin ? '' : 'border-solid border-b border-header-gray'}`}
     >
       {/*로고 + 글자 (메인페이지로 이동)*/}
-      <div className={'flex-row-center ml-32 relative'}>
+      <div className={'flex-row-center ml-32'}>
         <nav className={'flex-row-center cursor-pointer'} onClick={() => navigate('/')}>
           <img className={'flex mr-4 h-10'} src={'/images/mainLogo.png'} alt={'main-logo'} />
           <span className={'flex font-logo text-[2.3rem] font-semibold text-gray-dark mt-2'}>
@@ -73,7 +89,7 @@ export default function Header() {
         <div className={'flex-row-center ml-4 h-9 border-solid border-r border-gray-light'} />
 
         <div
-          className={'flex-row-center cursor-pointer '}
+          className={'flex-row-center cursor-pointer relative'}
           onClick={() => setIsProductClick(!isProductClick)}
         >
           <span className={'flex-row-center font-logo text-[2.3rem] font-semibold ml-4 mt-3'}>
@@ -126,7 +142,7 @@ export default function Header() {
             onClick={() => navigate('/')}
           />
 
-          <div>
+          <div className={'relative'}>
             {!userprofile ? (
               <FaUserCircle
                 className={'text-[2.1rem] fill-gray-dark cursor-pointer'}
