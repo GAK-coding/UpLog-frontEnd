@@ -1,19 +1,10 @@
 import React, { useState } from 'react';
-import { RcFile, UploadChangeParam } from 'antd/es/upload';
-import message from 'antd/lib/message';
+import { RcFile } from 'antd/es/upload';
 import { UploadFile, UploadProps } from 'antd/lib';
-import { Button, Upload } from 'antd';
-import {
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  useDisclosure,
-} from '@chakra-ui/react';
+import { Upload } from 'antd';
 import ImgCrop from 'antd-img-crop';
+import { useDisclosure } from '@chakra-ui/react';
+import ChangePwModal from '../components/MyPage/ChangePwModal.tsx';
 
 export default function MyPage() {
   // 비밀번호 변경 모달
@@ -22,9 +13,10 @@ export default function MyPage() {
   // 이미지
   const [fileList, setFileList] = useState<UploadFile[]>([]);
 
-  const onChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
-    setFileList(newFileList);
+  const onChange: UploadProps['onChange'] = async ({ fileList: newFileList }) => {
+    await setFileList(newFileList);
   };
+  console.log(fileList);
 
   const onPreview = async (file: UploadFile) => {
     let src = file.url as string;
@@ -42,7 +34,7 @@ export default function MyPage() {
   };
 
   return (
-    <section className={'flex flex-col items-center w-h-full min-h-[70rem]'}>
+    <section className={'flex flex-col items-center w-h-full min-h-[68rem]'}>
       <article className={'w-[43rem] h-[40rem] mt-12'}>
         <h1 className={'h-[10%] text-3xl font-bold'}>프로필 수정</h1>
         <div
@@ -68,23 +60,27 @@ export default function MyPage() {
           {/* 프로필 정보 수정 */}
           <div className={'w-full h-[79%] flex-col-center border-base'}>
             <div>
-              <ImgCrop cropShape={'round'}>
-                <Upload
-                  listType="picture-card"
-                  fileList={fileList}
-                  onChange={onChange}
-                  onPreview={onPreview}
-                >
-                  {fileList.length < 1 && '+ Upload'}
-                </Upload>
-              </ImgCrop>
+              {!fileList?.[0] && (
+                <ImgCrop rotationSlider cropShape={'round'}>
+                  <Upload
+                    listType="picture-circle"
+                    fileList={fileList}
+                    onChange={onChange}
+                    onPreview={onPreview}
+                  >
+                    {fileList.length < 1 && '+ Upload'}
+                  </Upload>
+                </ImgCrop>
+              )}
+              {fileList?.[0] && (
+                <img src={URL.createObjectURL(fileList[0].originFileObj as Blob)} alt="" />
+              )}
             </div>
             <label className={'w-[22rem] flex-col-center items-start mb-5'}>
               <span className={'text-gray-dark text-[0.93rem] font-bold mb-4'}>이름</span>
               <input
                 className={
-                  // TODO: border-gray 뭐임!!!
-                  'border-base border-gray w-full h-10 rounded-[0.625rem] text-[0.93rem] font-bold p-2'
+                  'border-base border-gray-border w-full h-10 rounded-[0.625rem] text-[0.93rem] font-bold p-2'
                 }
                 type="text"
                 maxLength={10}
@@ -95,8 +91,7 @@ export default function MyPage() {
               <span className={'text-gray-dark text-[0.93rem] font-bold mb-4'}>닉네임</span>
               <input
                 className={
-                  // TODO: border-gray 뭐임!!!
-                  'border-base border-gray w-full h-10 rounded-[0.625rem] text-[0.93rem] font-bold p-2'
+                  'border-base border-gray-border w-full h-10 rounded-[0.625rem] text-[0.93rem] font-bold p-2'
                 }
                 type="text"
                 maxLength={10}
@@ -117,7 +112,7 @@ export default function MyPage() {
           </div>
         </div>
       </article>
-      <article className={'w-[43rem] h-48 mt-12'}>
+      <article className={'w-[43rem] h-48 mt-16'}>
         <h1 className={'h-16 text-3xl font-bold'}>계정 관리</h1>
 
         <div className={'w-full h-32 border-line border-bg rounded-xl p-6 shadow-sign-up'}>
@@ -132,21 +127,7 @@ export default function MyPage() {
           </div>
         </div>
       </article>
-
-      <Modal isCentered onClose={onClose} size={'xl'} isOpen={isOpen}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>비밀번호 변경</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <span>123</span>
-          </ModalBody>
-
-          <ModalFooter>
-            <Button>확인</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      <ChangePwModal isOpen={isOpen} onClose={onClose} />
     </section>
   );
 }

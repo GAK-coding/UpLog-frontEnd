@@ -2720,7 +2720,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@chakra-ui/styled-system@npm:2.9.1":
+"@chakra-ui/styled-system@npm:2.9.1, @chakra-ui/styled-system@npm:^2.9.1":
   version: 2.9.1
   resolution: "@chakra-ui/styled-system@npm:2.9.1"
   dependencies:
@@ -2848,7 +2848,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@chakra-ui/theme@npm:3.1.2":
+"@chakra-ui/theme@npm:3.1.2, @chakra-ui/theme@npm:^3.1.2":
   version: 3.1.2
   resolution: "@chakra-ui/theme@npm:3.1.2"
   dependencies:
@@ -6559,6 +6559,8 @@ __metadata:
     "@babel/plugin-transform-react-jsx": ^7.22.5
     "@babel/preset-typescript": ^7.22.5
     "@chakra-ui/react": ^2.7.1
+    "@chakra-ui/styled-system": ^2.9.1
+    "@chakra-ui/theme": ^3.1.2
     "@ckeditor/ckeditor5-basic-styles": ^38.1.0
     "@ckeditor/ckeditor5-build-classic": ^38.1.0
     "@ckeditor/ckeditor5-editor-classic": ^38.1.0
