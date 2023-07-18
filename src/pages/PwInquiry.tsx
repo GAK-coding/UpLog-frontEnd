@@ -35,7 +35,7 @@ export default function PwInquiry() {
         </article>
         <article
           className={
-            'flex-row-center border-solid border-[1px] border-line bg-border w-[39rem] h-[28.75rem] min-h-[28.75rem] shadow-sign-up px-20 my-10 mb-[9rem]'
+            'flex-row-center border-base w-[39rem] h-[28.75rem] min-h-[28.75rem] shadow-sign-up px-20 my-10 mb-[9rem]'
           }
         >
           <form onSubmit={onSubmit} className={'flex-col-center justify-center w-h-full'}>
