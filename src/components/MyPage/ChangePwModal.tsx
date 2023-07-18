@@ -51,8 +51,14 @@ export default function ChangePwModal({ isOpen, onClose }: Props) {
         shadow={'boxShadow-sign-up'}
         rounded={'none'}
         p={'1.2rem'}
+        bg={'var(--white)'}
       >
-        <ModalHeader fontSize={'1.8rem'} fontWeight={700}>
+        <ModalHeader
+          fontSize={'1.8rem'}
+          fontWeight={700}
+          bg={'var(--white)'}
+          color={'var(--black)'}
+        >
           비밀번호 변경
         </ModalHeader>
         <ModalCloseButton
