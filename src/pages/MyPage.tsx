@@ -34,8 +34,8 @@ export default function MyPage() {
   };
 
   return (
-    <section className={'flex flex-col items-center w-full h-[68rem] border-base'}>
-      <article className={'w-[43rem] h-[40rem] mt-12 border-base'}>
+    <section className={'flex flex-col items-center w-full h-[68rem]'}>
+      <article className={'w-[43rem] h-[40rem] mt-12'}>
         <h1 className={'h-[10%] text-3xl font-bold'}>프로필 수정</h1>
         <div
           className={
