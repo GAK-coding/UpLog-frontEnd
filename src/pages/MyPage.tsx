@@ -34,7 +34,7 @@ export default function MyPage() {
   };
 
   return (
-    <section className={'flex flex-col items-center w-h-full'}>
+    <section className={'flex flex-col items-center w-full h-[68rem]'}>
       <article className={'w-[43rem] h-[40rem] mt-12'}>
         <h1 className={'h-[10%] text-3xl font-bold'}>프로필 수정</h1>
         <div
@@ -48,7 +48,7 @@ export default function MyPage() {
               <span className={'text-xl font-bold'}>오현 프로필 관리</span>
               <span className={'text-[0.93rem] text-gray-dark'}>qhslsl@gmail.com</span>
             </div>
-            <div className={'h-full flex-col-center justify-end '}>
+            <div className={'h-full flex-col-center justify-end'}>
               <button
                 className={'text-gray-dark text-[0.93rem] font-bold underline'}
                 onClick={onOpen}
@@ -115,7 +115,7 @@ export default function MyPage() {
       <article className={'w-[43rem] h-48 mt-16'}>
         <h1 className={'h-16 text-3xl font-bold'}>계정 관리</h1>
 
-        <div className={'w-full h-32 border-line border-bg rounded-xl p-6 shadow-sign-up'}>
+        <div className={'w-full h-32 border-base rounded-xl p-6 shadow-sign-up'}>
           <span className={'text-xl font-bold'}>계정 삭제</span>
           <div className={'flex-row-center justify-between px-5 mt-4'}>
             <span className={'text-gray-dark text-xs'}>
@@ -127,6 +127,7 @@ export default function MyPage() {
           </div>
         </div>
       </article>
+
       <ChangePwModal isOpen={isOpen} onClose={onClose} />
     </section>
   );

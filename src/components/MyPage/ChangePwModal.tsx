@@ -51,8 +51,14 @@ export default function ChangePwModal({ isOpen, onClose }: Props) {
         shadow={'boxShadow-sign-up'}
         rounded={'none'}
         p={'1.2rem'}
+        bg={'var(--white)'}
       >
-        <ModalHeader fontSize={'1.8rem'} fontWeight={700}>
+        <ModalHeader
+          fontSize={'1.8rem'}
+          fontWeight={700}
+          bg={'var(--white)'}
+          color={'var(--black)'}
+        >
           비밀번호 변경
         </ModalHeader>
         <ModalCloseButton
@@ -64,7 +70,7 @@ export default function ChangePwModal({ isOpen, onClose }: Props) {
         <ModalBody>
           <Flex justifyContent={'center'} h={'100%'}>
             <section className={'flex-col-center justify-evenly w-[22.5rem] h-full'}>
-              <span className={'z-[9999999999999999999999]]'}>{contextHolder}</span>
+              {contextHolder}
 
               {/* 현재 비밀번호 */}
               <div className={'w-full text-[0.93rem] mb-4'}>
