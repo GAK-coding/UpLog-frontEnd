@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { BsBellFill, BsMoonFill, BsQuestionCircle, BsSearch, BsSunFill } from 'react-icons/bs';
 import { FaUserCircle } from 'react-icons/fa';
@@ -23,9 +23,6 @@ export default function Header() {
   const [isLogin, setIsLogin] = useState(
     pathname === '/login' || pathname === '/signup' || pathname === '/pwinquiry'
   );
-
-  // 외부클릭 감지
-  const clickRef = useRef<HTMLDivElement>(null);
 
   // userProfile click
   const [isProfileClick, setIsProfileClick] = useRecoilState(profileOpen);
@@ -58,21 +55,8 @@ export default function Header() {
     setIsLogin(pathname === '/login' || pathname === '/signup' || pathname === '/pwinquiry');
   }, [pathname]);
 
-  // 외부 클릭시 창 닫기
-  useEffect(() => {
-    const handleClick = (e: MouseEvent) => {
-      if (clickRef.current && !clickRef.current.contains(e.target as Node)) {
-        setIsProfileClick(false);
-        setIsProductClick(false);
-        console.log('클릭')
-      }
-    };
-    window.addEventListener('mousedown', handleClick);
-    return () => window.removeEventListener('mousedown', handleClick);
-  }, [clickRef]);
-
   return (
-    <header ref={clickRef}
+    <header
       className={`fixed top-0 flex-row-center justify-between pt-[0.5rem] w-full h-[5.7rem]
       ${isLogin ? '' : 'border-solid border-b border-header-gray'}`}
     >
