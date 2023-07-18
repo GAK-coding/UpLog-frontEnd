@@ -4,6 +4,7 @@ import message from 'antd/lib/message';
 import { UploadFile, UploadProps } from 'antd/lib';
 import { Button, Upload } from 'antd';
 import {
+  Flex,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -14,6 +15,8 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import ImgCrop from 'antd-img-crop';
+import { theme } from 'twin.macro';
+import { Link } from 'react-router-dom';
 
 export default function MyPage() {
   // 비밀번호 변경 모달
@@ -139,17 +142,47 @@ export default function MyPage() {
         </div>
       </article>
 
-      <Modal isCentered onClose={onClose} size={'xl'} isOpen={isOpen}>
+      <Modal isCentered onClose={onClose} isOpen={true}>
         <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>비밀번호 변경</ModalHeader>
-          <ModalCloseButton />
+        <ModalContent
+          maxW="37.5rem"
+          h={'27rem'}
+          shadow={'boxShadow-sign-up'}
+          rounded={'none'}
+          p={'1.2rem'}
+        >
+          <ModalHeader fontSize={'1.8rem'} fontWeight={700}>
+            비밀번호 변경
+          </ModalHeader>
+          <ModalCloseButton
+            fontSize={'1rem'}
+            color={'var(--gray-light)'}
+            mt={'0.6rem'}
+            mr={'0.8rem'}
+          />
           <ModalBody>
-            <span>123</span>
+            <Flex justifyContent={'center'} h={'100%'}>
+              <section className={'border-base flex-row-center justify-start w-[22.5rem] h-full'}>
+                {/* 현재 비밀번호 */}
+                <div>
+                  <span className={'text-[0.93rem] text-gray-dark'}>현재 비밀번호</span>
+                  <input type="password" className={'text-xl tracking-[-0.3rem] border-gray'} />
+                  <div>
+                    <span>비밀번호를 잊으셨나요?</span>
+                    <Link to={'/pwinquiry'}>비밀번호 찾기</Link>
+                  </div>
+                </div>
+
+                {/* 새로운 비밀번호 */}
+                <div></div>
+              </section>
+            </Flex>
           </ModalBody>
 
           <ModalFooter>
-            <Button>확인</Button>
+            <button className={'bg-orange w-[4.5rem] h-9 rounded font-bold text-xs text-white'}>
+              확인
+            </button>
           </ModalFooter>
         </ModalContent>
       </Modal>
