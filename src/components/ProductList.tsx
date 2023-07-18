@@ -6,6 +6,7 @@ import { useOutsideAlerter } from '../hooks/useOutsideAlerter.ts';
 import { PiDotsSixVertical } from 'react-icons/pi';
 import { RxDragHandleDots2 } from 'react-icons/rx';
 import { BiPencil } from 'react-icons/bi';
+import { Mouse } from '@testing-library/user-event/dist/types/system/pointer/mouse';
 
 export default function ProductList() {
   const productList = [
@@ -37,11 +38,9 @@ export default function ProductList() {
     };
   }, [isProductClick]);
 
-  const onChildClick = () => {
-    useCallback((e: MouseEvent) => {
-      console.log('dfdf');
-      e.stopPropagation();
-    }, []);
+  // 제품 list 클릭해도 꺼지지않게함
+  const onChildClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
   };
 
   return (
@@ -50,24 +49,28 @@ export default function ProductList() {
         'border-base w-[20rem] min-h-[3.3rem] max-h-[30rem] block absolute top-[4rem] right-[-8.5rem] shadow-sign-up'
       }
     >
-      <div className={'max-h-[26.7rem] overflow-y-auto'}>
-        {/*제품 list*/}
-        {productList.map((product, index) => {
-          return (
-            <div
-              key={index}
-              className={'flex-row-center justify-between w-full h-[4.5rem] hover:bg-orange-light'}
-            >
-              <RxDragHandleDots2
-                className={'flex w-[2.6rem] items-center text-4xl ml-4 fill-gray-light'}
-              />
-              <img src={product.img} alt="userprofile" className={'ml-2 w-[2rem] h-[2rem]'} />
-              <span className={'ml-3 text-xl font-bold w-full'}>{product.name}</span>
-              <BiPencil className={'w-20 text-xl mr-4 fill-gray-light'} />
-            </div>
-          );
-        })}
-      </div>
+      <section onClick={onChildClick}>
+        <div className={'max-h-[26.7rem] overflow-y-auto'}>
+          {/*제품 list*/}
+          {productList.map((product, index) => {
+            return (
+              <div
+                key={index}
+                className={
+                  'flex-row-center justify-between w-full h-[4.5rem] hover:bg-orange-light'
+                }
+              >
+                <RxDragHandleDots2
+                  className={'flex w-[2.6rem] items-center text-4xl ml-4 fill-gray-light'}
+                />
+                <img src={product.img} alt="userprofile" className={'ml-2 w-[2rem] h-[2rem]'} />
+                <span className={'ml-3 text-xl font-bold w-full'}>{product.name}</span>
+                <BiPencil className={'w-20 text-xl mr-4 fill-gray-light'} />
+              </div>
+            );
+          })}
+        </div>
+      </section>
 
       {/*제품 추가하기*/}
       <div
