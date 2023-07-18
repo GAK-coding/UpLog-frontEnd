@@ -3,12 +3,12 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { BsBellFill, BsMoonFill, BsQuestionCircle, BsSearch, BsSunFill } from 'react-icons/bs';
 import { FaUserCircle } from 'react-icons/fa';
 import useInput from '../../hooks/useInput.ts';
-import UserProfile from "../UserProfile.tsx";
-import {useRecoilState} from "recoil";
-import {profileOpen} from "../../recoil/User/atom.tsx";
-import {PiCaretUpDownLight} from "react-icons/pi";
-import {productOpen} from "../../recoil/Product/atom.tsx";
-import ProductList from "../ProductList.tsx";
+import UserProfile from '../UserProfile.tsx';
+import { useRecoilState } from 'recoil';
+import { profileOpen } from '../../recoil/User/atom.tsx';
+import { PiCaretUpDownLight } from 'react-icons/pi';
+import { productOpen } from '../../recoil/Product/atom.tsx';
+import ProductList from '../ProductList.tsx';
 
 export default function Header() {
   const navigate = useNavigate();
@@ -20,14 +20,15 @@ export default function Header() {
   const [isChecked, setIsChecked] = useState(localStorage.theme === 'dark');
   // 헤더 bottom
   const { pathname } = useLocation();
-  const [isLogin, setIsLogin] = useState(pathname === '/login' || pathname === '/signup' || pathname === '/pwinquiry');
+  const [isLogin, setIsLogin] = useState(
+    pathname === '/login' || pathname === '/signup' || pathname === '/pwinquiry'
+  );
   // userProfile click
   const [isProfileClick, setIsProfileClick] = useRecoilState(profileOpen);
   // 제품 List
   const productList = ['AllFormU', 'Hello', 'Hi', 'Bye'];
   // 제품 List click
   const [isProductClick, setIsProductClick] = useRecoilState(productOpen);
-
 
   // 검색창에서 엔터를 눌렀을 때, 검색 페이지로 이동
   const activeEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -46,21 +47,21 @@ export default function Header() {
       localStorage.removeItem('theme');
     }
     setIsChecked(!isChecked);
-  },[isChecked]);
+  }, [isChecked]);
 
   // 로그인 하기 전, border-bottom을 보여주지 않기 위한 로직
   useEffect(() => {
     setIsLogin(pathname === '/login' || pathname === '/signup' || pathname === '/pwinquiry');
   }, [pathname]);
 
+  // absolute top-[5rem] right-[84.5rem]
   return (
     <header
-      className={`fixed top-0 flex-row-center justify-between pt-[0.5rem] w-full h-[5.7rem]   
+      className={`fixed top-0 flex-row-center justify-between pt-[0.5rem] w-full h-[5.7rem]
       ${isLogin ? '' : 'border-solid border-b border-header-gray'}`}
     >
-
       {/*로고 + 글자 (메인페이지로 이동)*/}
-      <div className={'flex-row-center ml-32'}>
+      <div className={'flex-row-center ml-32 relative'}>
         <nav className={'flex-row-center cursor-pointer'} onClick={() => navigate('/')}>
           <img className={'flex mr-4 h-10'} src={'/images/mainLogo.png'} alt={'main-logo'} />
           <span className={'flex font-logo text-[2.3rem] font-semibold text-gray-dark mt-2'}>
@@ -69,12 +70,17 @@ export default function Header() {
         </nav>
 
         {/*TODO : 스토리지 값 체크후에 변경하기 (조건으로 렌더링 여부 바꿔야함)*/}
-        <div className={'flex-row-center ml-4 h-9 border-solid border-r border-gray-light'}/>
+        <div className={'flex-row-center ml-4 h-9 border-solid border-r border-gray-light'} />
 
-        <div className={'flex-row-center cursor-pointer '} onClick={() => setIsProductClick(!isProductClick)}>
-          <span className={'flex-row-center font-logo text-[2.3rem] font-semibold ml-4 mt-3'}>{productList[0]}</span>
+        <div
+          className={'flex-row-center cursor-pointer '}
+          onClick={() => setIsProductClick(!isProductClick)}
+        >
+          <span className={'flex-row-center font-logo text-[2.3rem] font-semibold ml-4 mt-3'}>
+            {productList[0]}
+          </span>
           <PiCaretUpDownLight className={'flex-row-center text-[1.4rem] fill-gray-light ml-2'} />
-          {isProductClick && <ProductList/>}
+          {isProductClick && <ProductList />}
         </div>
       </div>
 
@@ -121,19 +127,21 @@ export default function Header() {
           />
 
           <div>
-          {!userprofile ? (
-            <FaUserCircle className={'text-[2.1rem] fill-gray-dark cursor-pointer'} onClick={() => setIsProfileClick(!isProfileClick)}/>
-          ) : (
-            <img
-              src={userprofile}
-              alt="userprofile"
-              onClick={() => setIsProfileClick(!isProfileClick)}
-              className={'w-[2.1rem] h-[2.1rem] cursor-pointer ml-3'}
-            />
-          )}
-          {isProfileClick && <UserProfile />}
+            {!userprofile ? (
+              <FaUserCircle
+                className={'text-[2.1rem] fill-gray-dark cursor-pointer'}
+                onClick={() => setIsProfileClick(!isProfileClick)}
+              />
+            ) : (
+              <img
+                src={userprofile}
+                alt="userprofile"
+                onClick={() => setIsProfileClick(!isProfileClick)}
+                className={'w-[2.1rem] h-[2.1rem] cursor-pointer ml-3'}
+              />
+            )}
+            {isProfileClick && <UserProfile />}
           </div>
-
         </div>
       )}
 
