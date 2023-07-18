@@ -59,9 +59,10 @@ export default function Header() {
 
   const clickRef = useRef<HTMLDivElement>(null);
 
+  // 바깥 클릭 시
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      // 현재 document에서 mousedown 이벤트가 동작하면 호출되는 함수입니다.
+      // 현재 document에서 mouse Event가 동작하면 호출되는 함수
       if (clickRef.current && !clickRef.current.contains(event.target as Node)) {
         setIsProductClick(false);
       }
