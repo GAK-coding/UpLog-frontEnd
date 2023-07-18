@@ -4,7 +4,8 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import React, { useState } from 'react';
-import { ChakraProvider } from '@chakra-ui/react';
+import { ChakraProvider, extendBaseTheme, extendTheme } from '@chakra-ui/react';
+import chakraTheme from '@chakra-ui/theme';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import loadable from '@loadable/component';
 
