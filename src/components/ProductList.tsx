@@ -46,19 +46,17 @@ export default function ProductList() {
 
   return (
     <section
-      onClick={onChildClick}
       className={
         'border-base w-[20rem] min-h-[3.3rem] max-h-[30rem] block absolute top-[4rem] right-[-8.5rem] shadow-sign-up'
       }
     >
-      <div className={'max-h-[26.7rem] overflow-y-auto'} onClick={onChildClick}>
+      <div className={'max-h-[26.7rem] overflow-y-auto'}>
         {/*제품 list*/}
         {productList.map((product, index) => {
           return (
             <div
               key={index}
               className={'flex-row-center justify-between w-full h-[4.5rem] hover:bg-orange-light'}
-              onClick={onChildClick}
             >
               <RxDragHandleDots2
                 className={'flex w-[2.6rem] items-center text-4xl ml-4 fill-gray-light'}
