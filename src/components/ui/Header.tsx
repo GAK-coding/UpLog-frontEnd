@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { BsBellFill, BsMoonFill, BsQuestionCircle, BsSearch, BsSunFill } from 'react-icons/bs';
 import { FaUserCircle } from 'react-icons/fa';
@@ -9,6 +9,7 @@ import { profileOpen } from '../../recoil/User/atom.tsx';
 import { PiCaretUpDownLight } from 'react-icons/pi';
 import { productOpen } from '../../recoil/Product/atom.tsx';
 import ProductList from '../ProductList.tsx';
+import ClickEvent = JQuery.ClickEvent;
 
 export default function Header() {
   const navigate = useNavigate();
@@ -33,6 +34,7 @@ export default function Header() {
 
   // 검색창에서 엔터를 눌렀을 때, 검색 페이지로 이동
   const activeEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    e.preventDefault();
     if (e.key === 'Enter') {
       navigate(`/search/${e.currentTarget.value}`);
     }
@@ -49,6 +51,10 @@ export default function Header() {
     }
     setIsChecked(!isChecked);
   }, [isChecked]);
+
+  const openProductList = useCallback((e: ChangeEvent<HTMLHtmlElement>) => {
+    setIsProductClick(!isProductClick);
+  }, []);
 
   // 로그인 하기 전, border-bottom을 보여주지 않기 위한 로직
   useEffect(() => {
@@ -75,7 +81,9 @@ export default function Header() {
             <div className={'flex-row-center ml-4 h-9 border-solid border-r border-gray-light'} />
             <div
               className={'flex-row-center cursor-pointer relative'}
-              onClick={() => setIsProductClick(!isProductClick)}
+              onClick={() => {
+                setIsProductClick(!isProductClick);
+              }}
             >
               <span className={'flex-row-center font-logo text-[2.3rem] font-semibold ml-4 mt-3'}>
                 {productList[0]}
