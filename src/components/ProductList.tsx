@@ -48,29 +48,26 @@ export default function ProductList() {
       className={
         'border-base w-[20rem] min-h-[3.3rem] max-h-[30rem] block absolute top-[4rem] right-[-8.5rem] shadow-sign-up'
       }
+      onClick={onChildClick}
     >
-      <section onClick={onChildClick}>
-        <div className={'max-h-[26.7rem] overflow-y-auto'}>
-          {/*제품 list*/}
-          {productList.map((product, index) => {
-            return (
-              <div
-                key={index}
-                className={
-                  'flex-row-center justify-between w-full h-[4.5rem] hover:bg-orange-light'
-                }
-              >
-                <RxDragHandleDots2
-                  className={'flex w-[2.6rem] items-center text-4xl ml-4 fill-gray-light'}
-                />
-                <img src={product.img} alt="userprofile" className={'ml-2 w-[2rem] h-[2rem]'} />
-                <span className={'ml-3 text-xl font-bold w-full'}>{product.name}</span>
-                <BiPencil className={'w-20 text-xl mr-4 fill-gray-light'} />
-              </div>
-            );
-          })}
-        </div>
-      </section>
+      <div className={'max-h-[26.7rem] overflow-y-auto'}>
+        {/*제품 list*/}
+        {productList.map((product, index) => {
+          return (
+            <div
+              key={index}
+              className={'flex-row-center justify-between w-full h-[4.5rem] hover:bg-hover'}
+            >
+              <RxDragHandleDots2
+                className={'flex w-[2.6rem] items-center text-4xl ml-4 fill-gray-light'}
+              />
+              <img src={product.img} alt="userprofile" className={'ml-2 w-[2rem] h-[2rem]'} />
+              <span className={'ml-3 text-xl font-bold w-full'}>{product.name}</span>
+              <BiPencil className={'w-20 text-xl mr-4 fill-gray-light'} />
+            </div>
+          );
+        })}
+      </div>
 
       {/*제품 추가하기*/}
       <div

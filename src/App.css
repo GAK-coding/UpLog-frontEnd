@@ -19,6 +19,7 @@
   --border-gray : #c4c4c4;
   --border-line : #C4C4C4;
   --input-bg : #ffffff;
+  --hover : #E9ECEF;
   --shadow: rgba(0, 0, 0, 0.1);
 }
 
@@ -43,6 +44,7 @@ html.dark {
   --border-gray : #64635E;
   --border-line : #424242;
   --input-bg : #33302C;
+  --hover : #3e3e3b;
   --shadow: rgba(0, 0, 0, 0);
 
 }
@@ -71,7 +73,7 @@ html.dark {
 */
 
 html,
-body
+body,
 div,
 span,
 applet,
