@@ -31,7 +31,7 @@ export default function Login() {
         </article>
         <article
           className={
-            'flex-row-center bg-border border-solid border-[1px] border-line w-[39rem] h-[23.5rem] min-h-[23.5rem] shadow-sign-up px-20 my-10'
+            'flex-row-center border-base w-[39rem] h-[23.5rem] min-h-[23.5rem] shadow-sign-up px-20 my-10'
           }
         >
           <form onSubmit={onSubmit} className={'flex-col-center justify-center w-h-full'}>
@@ -48,7 +48,9 @@ export default function Login() {
               >
                 <label className={'w-h-full flex-row-center'}>
                   <span className={'w-1/6 h-full flex-row-center text-3xl '}>
-                    <MdOutlineMailOutline className={'fill-gray-light'} />
+                    <MdOutlineMailOutline
+                      className={`${email ? 'fill-orange' : 'fill-gray-light'}`}
+                    />
                   </span>
                   <input
                     type="email"
@@ -66,7 +68,7 @@ export default function Login() {
               <span className={'w-full h-[4.5rem] flex-row-center'}>
                 <label className={'w-h-full flex-row-center'}>
                   <span className={'w-1/6 h-full flex-row-center text-3xl'}>
-                    <AiOutlineLock className={'fill-gray-light'} />
+                    <AiOutlineLock className={`${password ? 'fill-orange' : 'fill-gray-light'}`} />
                   </span>
                   <span className={'w-5/6 h-full flex'}>
                     <input
@@ -85,7 +87,7 @@ export default function Login() {
 
             <button
               className={
-                'flex-row-center border-base border-gray-border rounded-md w-[29rem] h-12 mt-10 py-7 font-bold text-xl bg-orange text-white'
+                'flex-row-center rounded-md w-[29rem] h-12 mt-10 py-7 font-bold text-xl bg-orange text-white'
               }
             >
               로그인
@@ -108,13 +110,10 @@ export default function Login() {
             </Link>
           </nav>
           <div className={'flex-col-center w-full'}>
-            <button className={'mb-7'}>
-              <span>간편 로그인</span>
-            </button>
+            <span className={'mb-7 text-xl font-bold'}>간편 로그인</span>
             <div className={'w-3/5 flex-row-center justify-evenly'}>
               <button onClick={() => login()}>
                 <img className={'w-14'} src={'google.svg'} alt={'google'} />
-                {/*<Google />*/}
               </button>
               <button>
                 <img className={'w-14'} src={'kakao.svg'} alt={'kakao'} />

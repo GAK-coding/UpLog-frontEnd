@@ -35,13 +35,13 @@ export default function PwInquiry() {
         </article>
         <article
           className={
-            'flex-row-center border-solid border-[1px] border-line bg-border w-[39rem] h-[28.75rem] min-h-[28.75rem] shadow-sign-up px-20 my-10 mb-[9rem]'
+            'flex-row-center border-base w-[39rem] h-[28.75rem] min-h-[28.75rem] shadow-sign-up px-20 my-10 mb-[9rem]'
           }
         >
           <form onSubmit={onSubmit} className={'flex-col-center justify-center w-h-full'}>
             <div
-              className={`w-full h-2/5 pb-12 flex flex-col justify-between ${
-                isSend && 'mt-[-0rem] mb-[3.5rem]  pb-0'
+              className={`w-full h-2/5 flex flex-col justify-between ${
+                isSend ? 'mb-[3.5rem] pb-0': "pb-12"
               }`}
             >
               <h1 className={'text-gray-dark font-bold text-3xl'}>
@@ -86,7 +86,7 @@ export default function PwInquiry() {
 
             <button
               className={
-                'flex-row-center border-solid border-gray rounded-md w-[29rem] h-12 mt-10 bg-orange text-white font-bold text-xl'
+                'flex-row-center border-solid rounded-md w-[29rem] h-12 mt-10 py-7 bg-orange text-white font-bold text-xl'
               }
             >
               {isSend ? '로그인으로 이동' : '다음'}

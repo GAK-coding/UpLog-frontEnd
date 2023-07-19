@@ -4,9 +4,10 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import React, { useState } from 'react';
-import { ChakraProvider } from '@chakra-ui/react';
+import { ChakraProvider, extendBaseTheme, extendTheme } from '@chakra-ui/react';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import loadable from '@loadable/component';
+import { Scrollbars } from 'rc-scrollbars';
 
 const Header = loadable(() => import('./components/ui/Header'));
 const Home = loadable(() => import('./pages/Home'));
@@ -27,21 +28,30 @@ function App() {
       <ChakraProvider>
         <GoogleOAuthProvider clientId={clientId}>
           <RecoilRoot>
-            <BrowserRouter>
-              <section className={'h-[5.7rem]'}>
-                <Header />
-              </section>
-              <section className={'h-noneHeader min-h-[53rem]'}>
-                <Routes>
-                  <Route path={'/'} element={<Home />} />
-                  <Route path={'/login'} element={<Login />} />
-                  <Route path={'/signup'} element={<SignUp />} />
-                  <Route path={'/post'} element={<Post />} />
-                  <Route path={'/pwinquiry'} element={<PwInquiry />} />
-                  <Route path={'/mypage'} element={<MyPage />} />
-                </Routes>
-              </section>
-            </BrowserRouter>
+            <Scrollbars
+              style={{ width: '100vw', height: '100vh' }}
+              autoHide
+              autoHideTimeout={1000}
+              // Duration for hide animation in ms.
+              autoHideDuration={200}
+            >
+              <BrowserRouter>
+                <section className={'h-[5.7rem]'}>
+                  <Header />
+                </section>
+                {/*<section className={'min-h-[54rem] h-auto'}>*/}
+                <section className={'h-auto'}>
+                  <Routes>
+                    <Route path={'/'} element={<Home />} />
+                    <Route path={'/login'} element={<Login />} />
+                    <Route path={'/signup'} element={<SignUp />} />
+                    <Route path={'/post'} element={<Post />} />
+                    <Route path={'/pwinquiry'} element={<PwInquiry />} />
+                    <Route path={'/mypage'} element={<MyPage />} />
+                  </Routes>
+                </section>
+              </BrowserRouter>
+            </Scrollbars>
           </RecoilRoot>
           {showDevtools && <ReactQueryDevtools />}
         </GoogleOAuthProvider>

@@ -113,7 +113,7 @@ export default function SignUp() {
       {contextHolder}
       <section
         className={
-          'border-solid border-[1px] border-line bg-border w-[39rem] h-[42rem] min-h-[42rem] shadow-sign-up px-20'
+          'border-base w-[39rem] h-[42rem] min-h-[42rem] shadow-sign-up px-20'
         }
       >
         {/* logo */}
@@ -320,7 +320,7 @@ export default function SignUp() {
       {/* button */}
       <button
         className={
-          'flex-row-center border-base border-gray-border rounded-md w-[39rem] h-12 mt-10 py-7 font-bold text-xl bg-orange text-white'
+          'flex-row-center rounded-md w-[39rem] h-12 mt-10 py-7 font-bold text-xl bg-orange text-white'
         }
       >
         회원가입
