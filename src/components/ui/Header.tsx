@@ -22,9 +22,14 @@ export default function Header() {
   const [isChecked, setIsChecked] = useState(localStorage.theme === 'dark');
   // 헤더 bottom
   const { pathname } = useLocation();
-  const [isLogin, setIsLogin] = useState(
+  // 빈 헤더 페이지 경로
+  const [isNoneHeader, setIsNoneHeader] = useState(
     pathname === '/login' || pathname === '/signup' || pathname === '/pwinquiry'
   );
+
+  // 로그인 여부
+  //TODO : 섹션 storage 값으로 변경하기
+  const [isLogin, setIsLogin] = useState(true);
 
   // userProfile click
   const [isProfileClick, setIsProfileClick] = useRecoilState(profileOpen);
@@ -37,9 +42,7 @@ export default function Header() {
   const activeEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.nativeEvent.isComposing) return;
     if (e.key === 'Enter') {
-      console.log('전:', searchTag);
       navigate(`/search/${searchTag}`);
-      console.log(searchTag);
     }
   };
 
@@ -55,10 +58,6 @@ export default function Header() {
     setIsChecked(!isChecked);
   }, [isChecked]);
 
-  const onChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    setSearchTag(e.target.value);
-  }, []);
-
   // 제품 list clickRef
   const productRef = useRef<HTMLDivElement>(null);
   useOutsideAlerter(productRef, 'product');
@@ -69,13 +68,13 @@ export default function Header() {
 
   // 로그인 하기 전, border-bottom을 보여주지 않기 위한 로직
   useEffect(() => {
-    setIsLogin(pathname === '/login' || pathname === '/signup' || pathname === '/pwinquiry');
+    setIsNoneHeader(pathname === '/login' || pathname === '/signup' || pathname === '/pwinquiry');
   }, [pathname]);
 
   return (
     <header
-      className={`fixed top-0 flex-row-center justify-between pt-[0.5rem] w-full h-[5.7rem]
-      ${isLogin ? '' : 'border-solid border-b border-header-gray'}`}
+      className={`fixed top-0 flex-row-center justify-between pt-[0.5rem] w-full h-[5.7rem] bg-
+      ${isNoneHeader ? 'bg-none-header' : 'border-solid border-b border-header-gray'}`}
     >
       {/*로고 + 글자 (메인페이지로 이동)*/}
       <div className={'flex-row-center ml-32'}>
@@ -86,8 +85,7 @@ export default function Header() {
           </span>
         </nav>
 
-        {/*TODO : 스토리지 값 체크후에 변경하기 (조건으로 렌더링 여부 바꿔야함)*/}
-        {productList?.[0] !== '' && (
+        {isLogin && productList?.[0] !== '' && (
           <div className={'flex-row-center'} ref={productRef}>
             <div className={'flex-row-center ml-4 h-9 border-solid border-r border-gray-light'} />
             <div
@@ -110,7 +108,7 @@ export default function Header() {
 
       {/*TODO : 스토리지 값 체크후에 변경하기 (조건으로 렌더링 여부 바꿔야함)*/}
       {/*로그인 상태*/}
-      {!isLogin && (
+      {isLogin && (
         <div className={'flex w-[26rem] h-full justify-between mr-12 font-bold items-center '}>
           {/*검색창*/}
           <div
@@ -170,7 +168,7 @@ export default function Header() {
       )}
 
       {/*로그인 X */}
-      {isLogin && (
+      {!isLogin && (
         <div className={'flex mr-12 font-bold'}>
           <div className={'text-[1.8rem] mr-6'} onClick={themeModeHandler}>
             {isChecked ? (
