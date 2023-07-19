@@ -2,11 +2,11 @@
 
 exports[`SignUp signup correctly 1`] = `
 <form
-  className="h-full flex-col-center min-h-[55rem]"
+  className="h-full flex-col-center"
   onSubmit={[Function]}
 >
   <section
-    className="border-solid border-[0.6px] border-header-gray w-[39rem] h-[42rem] min-h-[42rem] shadow-sign-up px-20"
+    className="border-base w-[39rem] h-[42rem] min-h-[42rem] shadow-sign-up px-20"
   >
     <article
       className="h-[18%] text-3xl flex items-center"
@@ -29,13 +29,13 @@ exports[`SignUp signup correctly 1`] = `
         className="flex-row-center w-full h-2/5"
       >
         <div
-          className="border-base border-gray-light rounded-md w-h-full flex flex-col justify-around shadow-sign-up-info"
+          className="border-base border-gray-border rounded-md w-h-full flex flex-col justify-around shadow-sign-up-info"
         >
           <div
-            className="w-full h-1/3 flex-row-center border-solid border-b border-gray-light font-bold"
+            className="w-full h-1/3 flex-row-center border-solid border-b border-gray-border font-bold"
           >
             <button
-              className="w-1/2 h-full text-xl border-solid border-r border-gray-light"
+              className="w-1/2 h-full text-xl border-solid border-r border-gray-border"
               onClick={[Function]}
               type="button"
             >
@@ -58,7 +58,7 @@ exports[`SignUp signup correctly 1`] = `
             </button>
           </div>
           <span
-            className="w-full h-1/3 flex-row-center border-solid border-b border-gray-light"
+            className="w-full h-1/3 flex-row-center border-solid border-b border-gray-border"
           >
             <label
               className="w-h-full flex-row-center"
@@ -157,10 +157,10 @@ exports[`SignUp signup correctly 1`] = `
         className="flex-row-center w-full h-2/5"
       >
         <div
-          className="border-base border-gray-light rounded-md w-h-full flex flex-col justify-around shadow-sign-up-info"
+          className="border-base border-gray-border rounded-md w-h-full flex flex-col justify-around shadow-sign-up-info"
         >
           <span
-            className="w-full h-1/3 flex-row-center border-solid border-b border-gray-light"
+            className="w-full h-1/3 flex-row-center border-solid border-b border-gray-border"
           >
             <label
               className="w-h-full flex-row-center "
@@ -204,7 +204,7 @@ exports[`SignUp signup correctly 1`] = `
             </label>
           </span>
           <span
-            className="w-full h-1/3 flex-row-center border-solid border-b border-gray-light"
+            className="w-full h-1/3 flex-row-center border-solid border-b border-gray-border"
           >
             <label
               className="w-h-full flex-row-center"
@@ -343,7 +343,7 @@ exports[`SignUp signup correctly 1`] = `
     </article>
   </section>
   <button
-    className="flex-row-center border-base border-header-gray rounded-md w-[39rem] h-12 mt-10 py-7 font-bold text-xl bg-orange text-white"
+    className="flex-row-center rounded-md w-[39rem] h-12 mt-10 py-7 font-bold text-xl bg-orange text-white"
   >
     회원가입
   </button>
