@@ -3,6 +3,8 @@ import { productOpen } from '../recoil/Product/atom.tsx';
 import { useRecoilState } from 'recoil';
 import { profileOpen } from '../recoil/User/atom.tsx';
 
+/** useOutsideAlertert는 header click 모달창 클릭 이벤트를 처리하는 훅이다. **/
+
 export function useOutsideAlerter(clickRef: RefObject<HTMLElement>, title: string) {
   const [isProductClick, setIsProductClick] = useRecoilState(productOpen);
   const [isProfileClick, setIsProfileClick] = useRecoilState(profileOpen);
