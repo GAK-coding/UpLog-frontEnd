@@ -1,4 +1,4 @@
-import React, { RefObject, useCallback, useEffect, useRef, useState } from 'react';
+import React, { ChangeEvent, RefObject, useCallback, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { BsBellFill, BsMoonFill, BsQuestionCircle, BsSearch, BsSunFill } from 'react-icons/bs';
 import { FaUserCircle } from 'react-icons/fa';
@@ -9,15 +9,15 @@ import { profileOpen } from '../../recoil/User/atom.tsx';
 import { PiCaretUpDownLight } from 'react-icons/pi';
 import { productOpen } from '../../recoil/Product/atom.tsx';
 import ProductList from '../ProductList.tsx';
-import { cli } from 'cypress';
 import { useOutsideAlerter } from '../../hooks/useOutsideAlerter.ts';
 
 export default function Header() {
   const navigate = useNavigate();
+
   // TODO: 실제 userprofile 값으로 변경하기
   const userprofile = '';
   // 검색
-  const [searchTag, onChageSearchTag] = useInput('');
+  const [searchTag, onChangeSearchTag, setSearchTag] = useInput('');
   // 다크모드 localstorage에서 체크
   const [isChecked, setIsChecked] = useState(localStorage.theme === 'dark');
   // 헤더 bottom
@@ -35,9 +35,11 @@ export default function Header() {
 
   // 검색창에서 엔터를 눌렀을 때, 검색 페이지로 이동
   const activeEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    e.preventDefault();
+    if (e.nativeEvent.isComposing) return;
     if (e.key === 'Enter') {
-      navigate(`/search/${e.currentTarget.value}`);
+      console.log('전:', searchTag);
+      navigate(`/search/${searchTag}`);
+      console.log(searchTag);
     }
   };
 
@@ -53,10 +55,9 @@ export default function Header() {
     setIsChecked(!isChecked);
   }, [isChecked]);
 
-  // 로그인 하기 전, border-bottom을 보여주지 않기 위한 로직
-  useEffect(() => {
-    setIsLogin(pathname === '/login' || pathname === '/signup' || pathname === '/pwinquiry');
-  }, [pathname]);
+  const onChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    setSearchTag(e.target.value);
+  }, []);
 
   // 제품 list clickRef
   const productRef = useRef<HTMLDivElement>(null);
@@ -65,6 +66,11 @@ export default function Header() {
   // 프로필 clickRef
   const profileRef = useRef<HTMLDivElement>(null);
   useOutsideAlerter(profileRef, 'profile');
+
+  // 로그인 하기 전, border-bottom을 보여주지 않기 위한 로직
+  useEffect(() => {
+    setIsLogin(pathname === '/login' || pathname === '/signup' || pathname === '/pwinquiry');
+  }, [pathname]);
 
   return (
     <header
@@ -117,7 +123,7 @@ export default function Header() {
             <input
               type="text"
               value={searchTag}
-              onChange={onChageSearchTag}
+              onChange={onChangeSearchTag}
               onKeyDown={(e) => activeEnter(e)}
               placeholder={'검색'}
               maxLength={20}
