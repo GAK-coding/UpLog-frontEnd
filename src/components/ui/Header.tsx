@@ -37,9 +37,7 @@ export default function Header() {
   const activeEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.nativeEvent.isComposing) return;
     if (e.key === 'Enter') {
-      console.log('전:', searchTag);
       navigate(`/search/${searchTag}`);
-      console.log(searchTag);
     }
   };
 
@@ -54,10 +52,6 @@ export default function Header() {
     }
     setIsChecked(!isChecked);
   }, [isChecked]);
-
-  const onChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    setSearchTag(e.target.value);
-  }, []);
 
   // 제품 list clickRef
   const productRef = useRef<HTMLDivElement>(null);
@@ -74,8 +68,8 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed top-0 flex-row-center justify-between pt-[0.5rem] w-full h-[5.7rem]
-      ${isLogin ? '' : 'border-solid border-b border-header-gray'}`}
+      className={`fixed top-0 flex-row-center justify-between pt-[0.5rem] w-full h-[5.7rem] bg-
+      ${isLogin ? 'bg-none-header' : 'border-solid border-b border-header-gray'}`}
     >
       {/*로고 + 글자 (메인페이지로 이동)*/}
       <div className={'flex-row-center ml-32'}>
