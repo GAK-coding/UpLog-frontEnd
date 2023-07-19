@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { RcFile } from 'antd/es/upload';
 import { UploadFile, UploadProps } from 'antd/lib';
 import { Upload } from 'antd';
@@ -9,6 +9,11 @@ import ChangePwModal from '../components/MyPage/ChangePwModal.tsx';
 export default function MyPage() {
   // 비밀번호 변경 모달
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isClickPwChange, setIsClickPwChange] = useState(false);
+
+  const onChangeIsClickPw = useCallback((chk: boolean) => {
+    setIsClickPwChange(chk);
+  }, []);
 
   // 이미지
   const [fileList, setFileList] = useState<UploadFile[]>([]);
@@ -16,7 +21,6 @@ export default function MyPage() {
   const onChange: UploadProps['onChange'] = async ({ fileList: newFileList }) => {
     await setFileList(newFileList);
   };
-  console.log(fileList);
 
   const onPreview = async (file: UploadFile) => {
     let src = file.url as string;
@@ -51,7 +55,10 @@ export default function MyPage() {
             <div className={'h-full flex-col-center justify-end'}>
               <button
                 className={'text-gray-dark text-[0.93rem] font-bold underline'}
-                onClick={onOpen}
+                onClick={() => {
+                  onOpen();
+                  onChangeIsClickPw(true);
+                }}
               >
                 비밀번호 변경
               </button>
@@ -119,16 +126,22 @@ export default function MyPage() {
           <span className={'text-xl font-bold'}>계정 삭제</span>
           <div className={'flex-row-center justify-between px-5 mt-4'}>
             <span className={'text-gray-dark text-xs'}>
-              계정 삭제 시 프로필 및 참여한 제품의 모든 정보가 삭제 됩니다.
+              계정 삭제 시 프로필 및 참여한 제품의 모든 정보가 삭제됩니다.
             </span>
-            <button className={'w-32 h-9 bg-orange text-white font-bold text-sm rounded'}>
+            <button
+              onClick={() => {
+                onOpen();
+                onChangeIsClickPw(false);
+              }}
+              className={'w-32 h-9 bg-orange text-white font-bold text-sm rounded'}
+            >
               계정 삭제
             </button>
           </div>
         </div>
       </article>
 
-      <ChangePwModal isOpen={isOpen} onClose={onClose} />
+      <ChangePwModal isOpen={isOpen} onClose={onClose} isClickPwChange={isClickPwChange} />
     </section>
   );
 }
