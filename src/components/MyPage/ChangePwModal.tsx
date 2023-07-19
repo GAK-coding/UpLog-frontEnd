@@ -13,7 +13,6 @@ import { Link } from 'react-router-dom';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import useInput from '../../hooks/useInput.ts';
 import { useMessage } from '../../hooks/useMessage.ts';
-import show = Mocha.reporters.Base.cursor.show;
 
 interface Props {
   isOpen: boolean;
