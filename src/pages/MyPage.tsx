@@ -65,7 +65,7 @@ export default function MyPage() {
           </div>
           {/* 프로필 정보 수정 */}
           <div className={'w-full h-[79%] flex-col-center justify-end mt-[-1rem]'}>
-            <div className={'relative h-[40%] flex-col-center justify-end mb-[1rem]'}>
+            <div className={'h-[40%] flex-col-center justify-end mb-[1rem]'}>
               <ImageCrop
                 fileList={fileList}
                 onImageChange={onImageChange}
@@ -73,19 +73,18 @@ export default function MyPage() {
                 listType={'picture-circle'}
               >
                 {fileList.length < 1 && (
-                  <FaUserCircle className={'w-[10rem] h-[10rem] fill-gray-dark'} />
+                  <div className={'relative'}>
+                    <FaUserCircle className={'w-[10rem] h-[10rem] fill-gray-dark'} />
+                    <span
+                      className={
+                        'flex-row-center absolute bottom-[0.8rem] right-[0.8rem] w-7 h-7 rounded-[50%] bg-gray-light'
+                      }
+                    >
+                      <BsFillCameraFill className={'fill-[#292723]'} />
+                    </span>
+                  </div>
                 )}
               </ImageCrop>
-
-              {fileList.length < 1 && (
-                <span
-                  className={
-                    'flex-row-center absolute bottom-[0.8rem] right-[0.8rem] w-7 h-7 rounded-[50%] bg-gray-light'
-                  }
-                >
-                  <BsFillCameraFill className={'fill-[#292723]'} />
-                </span>
-              )}
             </div>
 
             <label className={'w-[22rem] flex-col-center justify-start items-start h-[25%]'}>
