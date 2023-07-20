@@ -6,6 +6,14 @@ import ImgCrop from 'antd-img-crop';
 import { useDisclosure } from '@chakra-ui/react';
 import ChangePwModal from '../components/MyPage/ChangePwModal.tsx';
 
+const getSrcFromFile = (file: any) => {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file.originFileObj);
+    reader.onload = () => resolve(reader.result);
+  });
+};
+
 export default function MyPage() {
   // 비밀번호 변경 모달
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -24,18 +32,18 @@ export default function MyPage() {
 
   const onPreview = async (file: UploadFile) => {
     let src = file.url as string;
-    if (!src) {
-      src = await new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file.originFileObj as RcFile);
-        reader.onload = () => resolve(reader.result as string);
-      });
-    }
-    const image = new Image();
-    image.src = src;
     const imgWindow = window.open(src);
-    imgWindow?.document.write(image.outerHTML);
+
+    if (imgWindow) {
+      const image = new Image();
+      image.src = src;
+      imgWindow.document.write(image.outerHTML);
+    } else {
+      window.location.href = src;
+    }
   };
+
+  console.log(fileList);
 
   return (
     <section className={'flex flex-col items-center w-full h-[68rem]'}>
@@ -67,21 +75,19 @@ export default function MyPage() {
           {/* 프로필 정보 수정 */}
           <div className={'w-full h-[79%] flex-col-center border-base'}>
             <div>
-              {!fileList?.[0] && (
-                <ImgCrop rotationSlider cropShape={'round'}>
-                  <Upload
-                    listType="picture-circle"
-                    fileList={fileList}
-                    onChange={onChange}
-                    onPreview={onPreview}
-                  >
-                    {fileList.length < 1 && '+ Upload'}
-                  </Upload>
-                </ImgCrop>
-              )}
-              {fileList?.[0] && (
-                <img src={URL.createObjectURL(fileList[0].originFileObj as Blob)} alt="" />
-              )}
+              <ImgCrop showGrid rotationSlider aspectSlider showReset cropShape={'round'}>
+                <Upload
+                  // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                  listType="picture-circle"
+                  fileList={fileList}
+                  onChange={onChange}
+                  onPreview={onPreview}
+                >
+                  {fileList.length < 1 && '+ Upload'}
+                </Upload>
+              </ImgCrop>
+
+              {fileList?.[0] && <img src={fileList[0]?.originFileObj} alt="" />}
             </div>
             <label className={'w-[22rem] flex-col-center items-start mb-5'}>
               <span className={'text-gray-dark text-[0.93rem] font-bold mb-4'}>이름</span>
