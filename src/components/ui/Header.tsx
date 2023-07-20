@@ -29,7 +29,7 @@ export default function Header() {
 
   // 로그인 여부
   //TODO : 섹션 storage 값으로 변경하기
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
 
   // userProfile click
   const [isProfileClick, setIsProfileClick] = useRecoilState(profileOpen);
