@@ -1,10 +1,11 @@
 import React, { useCallback, useState } from 'react';
-import { RcFile } from 'antd/es/upload';
 import { UploadFile, UploadProps } from 'antd/lib';
-import { Upload } from 'antd';
-import ImgCrop from 'antd-img-crop';
 import { useDisclosure } from '@chakra-ui/react';
 import ChangePwModal from '../components/MyPage/ChangePwModal.tsx';
+import { FaUserCircle } from 'react-icons/fa';
+import { BsFillCameraFill } from 'react-icons/bs';
+import ImageCrop from '../components/MyPage/ImageCrop..tsx';
+import { RcFile } from 'antd/es/upload';
 
 export default function MyPage() {
   // 비밀번호 변경 모달
@@ -17,28 +18,26 @@ export default function MyPage() {
 
   // 이미지
   const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const [imageSrc, setImageSrc] = useState('');
 
-  const onChange: UploadProps['onChange'] = async ({ fileList: newFileList }) => {
-    await setFileList(newFileList);
+  const encodeFileToBase64 = (fileBlob: RcFile): Promise<void> => {
+    const reader: FileReader = new FileReader();
+    reader.readAsDataURL(fileBlob);
+    return new Promise((resolve) => {
+      reader.onload = () => {
+        setImageSrc(reader.result as string);
+        resolve();
+      };
+    });
   };
 
-  const onPreview = async (file: UploadFile) => {
-    let src = file.url as string;
-    if (!src) {
-      src = await new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file.originFileObj as RcFile);
-        reader.onload = () => resolve(reader.result as string);
-      });
-    }
-    const image = new Image();
-    image.src = src;
-    const imgWindow = window.open(src);
-    imgWindow?.document.write(image.outerHTML);
+  const onImageChange: UploadProps['onChange'] = async ({ fileList: newFileList }) => {
+    await setFileList(newFileList);
+    if (newFileList.length > 0) await encodeFileToBase64(newFileList?.[0]?.originFileObj!);
   };
 
   return (
-    <section className={'flex flex-col items-center w-full h-[68rem]'}>
+    <section className={'mypage flex flex-col items-center w-full h-[68rem]'}>
       <article className={'w-[43rem] h-[40rem] mt-12'}>
         <h1 className={'h-[10%] text-3xl font-bold'}>프로필 수정</h1>
         <div
@@ -47,7 +46,7 @@ export default function MyPage() {
           }
         >
           {/* 상단 */}
-          <div className={'flex-row-center justify-between w-full h-[13%] border-base'}>
+          <div className={'flex-row-center justify-between w-full h-[13%]'}>
             <div className={'flex-col-center items-start'}>
               <span className={'text-xl font-bold'}>오현 프로필 관리</span>
               <span className={'text-[0.93rem] text-gray-dark'}>qhslsl@gmail.com</span>
@@ -65,25 +64,30 @@ export default function MyPage() {
             </div>
           </div>
           {/* 프로필 정보 수정 */}
-          <div className={'w-full h-[79%] flex-col-center border-base'}>
-            <div>
-              {!fileList?.[0] && (
-                <ImgCrop rotationSlider cropShape={'round'}>
-                  <Upload
-                    listType="picture-circle"
-                    fileList={fileList}
-                    onChange={onChange}
-                    onPreview={onPreview}
-                  >
-                    {fileList.length < 1 && '+ Upload'}
-                  </Upload>
-                </ImgCrop>
-              )}
-              {fileList?.[0] && (
-                <img src={URL.createObjectURL(fileList[0].originFileObj as Blob)} alt="" />
-              )}
+          <div className={'w-full h-[79%] flex-col-center justify-end mt-[-1rem]'}>
+            <div className={'h-[40%] flex-col-center justify-end mb-[1rem]'}>
+              <ImageCrop
+                fileList={fileList}
+                onImageChange={onImageChange}
+                cropShape={'round'}
+                listType={'picture-circle'}
+              >
+                {fileList.length < 1 && (
+                  <div className={'relative'}>
+                    <FaUserCircle className={'w-[10rem] h-[10rem] fill-gray-dark'} />
+                    <span
+                      className={
+                        'flex-row-center absolute bottom-[0.8rem] right-[0.8rem] w-7 h-7 rounded-[50%] bg-gray-light'
+                      }
+                    >
+                      <BsFillCameraFill className={'fill-[#292723]'} />
+                    </span>
+                  </div>
+                )}
+              </ImageCrop>
             </div>
-            <label className={'w-[22rem] flex-col-center items-start mb-5'}>
+
+            <label className={'w-[22rem] flex-col-center justify-start items-start h-[25%]'}>
               <span className={'text-gray-dark text-[0.93rem] font-bold mb-4'}>이름</span>
               <input
                 className={
@@ -94,7 +98,8 @@ export default function MyPage() {
                 placeholder={'이름'}
               />
             </label>
-            <label className={'w-[22rem] flex-col-center items-start'}>
+
+            <label className={'w-[22rem] flex-col-center justify-start items-start h-[25%]'}>
               <span className={'text-gray-dark text-[0.93rem] font-bold mb-4'}>닉네임</span>
               <input
                 className={
@@ -107,7 +112,7 @@ export default function MyPage() {
             </label>
           </div>
           {/*  확인 취소 버튼  */}
-          <div className={'w-full h-[8%] border-base flex-row-center justify-end px-11'}>
+          <div className={'w-full h-[8%] flex-row-center justify-end px-11 mt-[1rem]'}>
             <button className={'w-16 h-9 rounded-[0.3rem] bg-orange text-white text-xs font-bold'}>
               취소
             </button>

@@ -39,8 +39,8 @@ function App() {
                 <section className={'h-[5.7rem]'}>
                   <Header />
                 </section>
-                {/*<section className={'min-h-[54rem] h-auto'}>*/}
-                <section className={'h-auto'}>
+                <section className={'h-noneHeader'}>
+                  {/*<section className={'h-auto'}>*/}
                   <Routes>
                     <Route path={'/'} element={<Home />} />
                     <Route path={'/login'} element={<Login />} />
