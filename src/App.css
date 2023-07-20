@@ -1,10 +1,10 @@
 :root {
   --bg-dark: #ffffff;
-  --header-bg : #ffffff;
-  --header-gray :#E5E7EB;
-  --text : #292723;
+  --header-bg: #ffffff;
+  --header-gray: #e5e7eb;
+  --text: #292723;
   --orange: #ffaa2a;
-  --orange-light: rgba(255,164,27, 0.2);
+  --orange-light: rgba(255, 164, 27, 0.2);
   --gray-light: #c4c4c4;
   --gray-dark: #64635e;
   --gray-spring: #e5e5e5;
@@ -15,41 +15,40 @@
   border-gray : input창 border 색깔
   border-line : border의 테두리 색깔
   */
-  --border-bg : #ffffff;
-  --border-gray : #c4c4c4;
-  --border-line : #C4C4C4;
-  --input-bg : #ffffff;
-  --hover : #E9ECEF;
+  --border-bg: #ffffff;
+  --border-gray: #c4c4c4;
+  --border-line: #c4c4c4;
+  --input-bg: #ffffff;
+  --hover: #e9ecef;
   --shadow: rgba(0, 0, 0, 0.1);
 }
 
 html.dark {
-  --bg-dark: #2E2B27;
-  --header-bg : #292723;
-  --header-gray :rgba(0, 0, 0, 0.0);
-  --text : #ffffff;
+  --bg-dark: #2e2b27;
+  --header-bg: #292723;
+  --header-gray: rgba(0, 0, 0, 0);
+  --text: #ffffff;
   --orange: #ffaa2a;
-  --orange-light: rgba(255,164,27, 0.2);
+  --orange-light: rgba(255, 164, 27, 0.2);
   --gray-light: #c4c4c4;
   --gray-dark: #ffffff;
-  --gray-spring: #64635E;
+  --gray-spring: #64635e;
   --black: #ffffff;
-  --white: #2E2B27;
+  --white: #2e2b27;
   /*
  border-bg : border 배경 색깔
  border-gray : input, button 창 border 색깔
  border-line : border의 테두리 색깔
  */
-  --border-bg : #33302C;
-  --border-gray : #64635E;
-  --border-line : #424242;
-  --input-bg : #33302C;
-  --hover : #3e3e3b;
+  --border-bg: #33302c;
+  --border-gray: #64635e;
+  --border-line: #424242;
+  --input-bg: #33302c;
+  --hover: #3e3e3b;
   --shadow: rgba(0, 0, 0, 0);
-
 }
 
-#root{
+#root {
   background-color: var(--bg-dark);
   color: var(--text);
 
@@ -167,7 +166,7 @@ nav,
 section {
   display: block;
 }
-header{
+header {
   background-color: var(--header-bg);
 }
 body {
@@ -193,7 +192,7 @@ table {
   border-spacing: 0;
 }
 
-html input::placeholder{
+html input::placeholder {
   color: var(--gray-light);
 }
 
@@ -203,4 +202,26 @@ html input:focus {
 
 html input {
   background-color: var(--input-bg);
+}
+
+/* mypage 프로필 사진 */
+.mypage .ant-upload-wrapper.ant-upload-picture-circle-wrapper .ant-upload.ant-upload-select {
+  border: none;
+}
+
+.mypage :where(.css-dev-only-do-not-override-1m62vyb).ant-upload-wrapper
+  .ant-upload-list.ant-upload-list-picture-circle
+  .ant-upload-list-item-error {
+  border: none;
+
+  width: 10rem;
+  height: 10rem;
+}
+
+.mypage .ant-tooltip {
+  display: none;
+}
+
+:where(.css-dev-only-do-not-override-1m62vyb).ant-upload-wrapper.ant-upload-picture-circle-wrapper .ant-upload-list.ant-upload-list-picture-circle .ant-upload-list-item-actions a{
+display: none;
 }
