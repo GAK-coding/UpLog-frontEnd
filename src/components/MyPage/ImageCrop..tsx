@@ -19,7 +19,18 @@ export default function ImageCrop({
   listType,
 }: Props) {
   return (
-    <ImgCrop showGrid rotationSlider aspectSlider showReset cropShape={cropShape}>
+    <ImgCrop
+      showGrid
+      rotationSlider
+      aspectSlider
+      showReset
+      cropShape={cropShape}
+      modalTitle={'사진 입력'}
+      modalOk={'완료'}
+      modalCancel={'취소'}
+      resetText={'초기화'}
+      modalClassName={'text-white'}
+    >
       <Upload listType={listType} fileList={fileList} onChange={onImageChange}>
         {children}
       </Upload>

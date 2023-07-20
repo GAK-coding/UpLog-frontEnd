@@ -209,7 +209,8 @@ html input {
   border: none;
 }
 
-.mypage :where(.css-dev-only-do-not-override-1m62vyb).ant-upload-wrapper
+.mypage
+  :where(.css-dev-only-do-not-override-1m62vyb).ant-upload-wrapper
   .ant-upload-list.ant-upload-list-picture-circle
   .ant-upload-list-item-error {
   border: none;
@@ -222,6 +223,47 @@ html input {
   display: none;
 }
 
-:where(.css-dev-only-do-not-override-1m62vyb).ant-upload-wrapper.ant-upload-picture-circle-wrapper .ant-upload-list.ant-upload-list-picture-circle .ant-upload-list-item-actions a{
-display: none;
+.mypage
+  :where(.css-dev-only-do-not-override-1m62vyb).ant-upload-wrapper.ant-upload-picture-circle-wrapper
+  .ant-upload-list.ant-upload-list-picture-circle
+  .ant-upload-list-item-actions
+  a {
+  display: none;
 }
+
+/* image cropper modal style */
+:where(.css-dev-only-do-not-override-1m62vyb).ant-modal .ant-modal-title {
+  background: var(--white);
+  color: var(--black);
+}
+
+:where(.css-dev-only-do-not-override-1m62vyb).ant-modal .ant-modal-close-x {
+  color: var(--gray-light);
+}
+
+:where(.css-dev-only-do-not-override-1m62vyb).ant-modal .ant-modal-content {
+  background: var(--white);
+  color: var(--black);
+}
+
+/*:where(.css-dev-only-do-not-override-1m62vyb).ant-modal .ant-modal-footer .ant-btn,*/
+:where(.css-dev-only-do-not-override-1m62vyb).ant-modal .ant-modal-footer .ant-btn:hover,
+:where(.css-dev-only-do-not-override-1m62vyb).ant-modal .ant-modal-body .ant-btn:hover,
+:where(.css-dev-only-do-not-override-1m62vyb) .ant-modal button {
+  background: var(--orange);
+  color: var(--white);
+  border: none;
+}
+
+:where(.css-dev-only-do-not-override-1m62vyb) .img-crop-control button {
+  background: inherit;
+  color: inherit;
+}
+
+/*:where(.css-dev-only-do-not-override-1m62vyb).ant-modal .ant-modal-footer .ant-btn,*/
+/*:where(.css-dev-only-do-not-override-1m62vyb).ant-modal .ant-modal-footer .ant-btn:hover,*/
+/*:where(.css-dev-only-do-not-override-1m62vyb) .ant-modal button {*/
+/*  background: var(--orange);*/
+/*  color: var(--white);*/
+/*  border: none;*/
+/*}*/
