@@ -11,6 +11,7 @@ export default {
         orange: 'var(--orange)',
         'orange-light': 'var(--orange-light)',
         'header-gray': 'var(--header-gray)',
+        'none-header': 'var(--bg-dark)',
         border: 'var(--border-bg)',
         line: 'var(--border-line)',
         gray: {
