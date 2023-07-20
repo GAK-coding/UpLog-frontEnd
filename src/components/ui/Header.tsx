@@ -29,7 +29,7 @@ export default function Header() {
 
   // 로그인 여부
   //TODO : 섹션 storage 값으로 변경하기
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(false);
 
   // userProfile click
   const [isProfileClick, setIsProfileClick] = useRecoilState(profileOpen);
@@ -168,7 +168,7 @@ export default function Header() {
       )}
 
       {/*로그인 X */}
-      {!isLogin && (
+      {!isLogin && !isNoneHeader && (
         <div className={'flex mr-12 font-bold'}>
           <div className={'text-[1.8rem] mr-6'} onClick={themeModeHandler}>
             {isChecked ? (
