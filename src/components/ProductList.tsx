@@ -5,18 +5,50 @@ import { useRecoilState } from 'recoil';
 import { RxDragHandleDots2 } from 'react-icons/rx';
 import { BiPencil } from 'react-icons/bi';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
+import { ProductInfo } from '../types/product.ts';
 
 export default function ProductList() {
-  const productList = [
-    { name: 'AllformU', img: '/images/test_userprofile.png' },
-    { name: 'hello', img: '/images/test_userprofile.png' },
-    { name: 'hi', img: '/images/test_userprofile.png' },
-    { name: 'hi', img: '/images/test_userprofile.png' },
-    { name: 'hi', img: '/images/test_userprofile.png' },
-    { name: 'hi', img: '/images/test_userprofile.png' },
-    { name: 'hi', img: '/images/test_userprofile.png' },
-    { name: 'hi', img: '/images/test_userprofile.png' },
-    { name: 'hi', img: '/images/test_userprofile.png' },
+  const productList: ProductInfo[] = [
+    {
+      id: 1,
+      draggableId: '1',
+      name: 'Product1',
+      image: '/images/test_userprofile.png',
+      master: 'master',
+      client: 'client',
+    },
+    {
+      id: 2,
+      draggableId: '2',
+      name: 'Product2',
+      image: '/images/test_userprofile.png',
+      master: 'master',
+      client: 'client',
+    },
+    {
+      id: 3,
+      draggableId: '3',
+      name: 'Product3',
+      image: '/images/test_userprofile.png',
+      master: 'master',
+      client: 'client',
+    },
+    {
+      id: 4,
+      draggableId: '4',
+      name: 'Product4',
+      image: '/images/test_userprofile.png',
+      master: 'master',
+      client: 'client',
+    },
+    {
+      id: 5,
+      draggableId: '5',
+      name: 'Product5',
+      image: '/images/test_userprofile.png',
+      master: 'master',
+      client: 'client',
+    },
   ];
 
   const [isProductClick, setIsProductClick] = useRecoilState(productOpen);
@@ -54,9 +86,9 @@ export default function ProductList() {
     >
       <div className={'max-h-[26.7rem] overflow-y-auto'}>
         {/*제품 list*/}
-        <DragDropContext onDragEnd={onDragEnd}>
-          {productList.map((product, index) => {
-            return (
+        {productList.map((product, index) => {
+          return (
+            <DragDropContext onDragEnd={onDragEnd}>
               <Droppable droppableId="inbox-column">
                 {(provided) => (
                   <div
@@ -77,7 +109,7 @@ export default function ProductList() {
                             className={'flex w-[2.6rem] items-center text-4xl ml-4 fill-gray-light'}
                           />
                           <img
-                            src={product.img}
+                            src={product.image}
                             alt="userprofile"
                             className={'ml-2 w-[2rem] h-[2rem]'}
                           />
@@ -90,9 +122,9 @@ export default function ProductList() {
                   </div>
                 )}
               </Droppable>
-            );
-          })}
-        </DragDropContext>
+            </DragDropContext>
+          );
+        })}
       </div>
 
       {/*제품 추가하기*/}
