@@ -17,6 +17,9 @@ const Post = loadable(() => import('./pages/Post'));
 const PwInquiry = loadable(() => import('./pages/PwInquiry'));
 const MyPage = loadable(() => import('./pages/MyPage'));
 
+const { MODE: ENVIRONMENT } = import.meta.env;
+export { ENVIRONMENT };
+
 const queryClient = new QueryClient();
 const clientId = import.meta.env.VITE_GOOGLE_CLIENTID;
 
