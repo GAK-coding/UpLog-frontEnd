@@ -73,7 +73,7 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed top-0 flex-row-center justify-between pt-[0.5rem] w-full h-[5.7rem] bg-
+      className={`fixed top-0 flex-row-center justify-between pt-[0.5rem] w-full h-[5.7rem] z-1000
       ${isNoneHeader ? 'bg-none-header' : 'border-solid border-b border-header-gray'}`}
     >
       {/*로고 + 글자 (메인페이지로 이동)*/}
