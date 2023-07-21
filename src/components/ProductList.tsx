@@ -1,14 +1,14 @@
 import { AiOutlinePlus } from 'react-icons/ai';
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { productOpen } from '../recoil/Product/atom.tsx';
 import { useRecoilState } from 'recoil';
 import { RxDragHandleDots2 } from 'react-icons/rx';
 import { BiPencil } from 'react-icons/bi';
-import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
+import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
 import { ProductInfo } from '../types/product.ts';
 
 export default function ProductList() {
-  const productList: ProductInfo[] = [
+  const product: ProductInfo[] = [
     {
       id: 1,
       draggableId: '1',
@@ -50,6 +50,11 @@ export default function ProductList() {
       client: 'client',
     },
   ];
+  const getItemStyle = (isDragging: any, draggableStyle: any) => ({
+    ...draggableStyle,
+  });
+
+  const [productList, setProductList] = useState<ProductInfo[]>(product);
 
   const [isProductClick, setIsProductClick] = useRecoilState(productOpen);
 
@@ -73,8 +78,18 @@ export default function ProductList() {
     e.stopPropagation();
   };
 
-  const onDragEnd = useCallback((result: any) => {
-    // TODO: 작성필요
+  const onDragEnd = useCallback((result: DropResult) => {
+    console.log(result);
+    const { destination, draggableId, source } = result;
+
+    // 이상한 곳에 드래그하면 return
+    if (!destination) return;
+
+    // 출발지와 도착지가 같으면 return
+    if (destination.droppableId === source.droppableId && source.index === destination.index)
+      return;
+
+    // 출발지와 도착지가 다르면 재정렬
   }, []);
 
   return (
@@ -88,8 +103,8 @@ export default function ProductList() {
         {/*제품 list*/}
         {productList.map((product, index) => {
           return (
-            <DragDropContext onDragEnd={onDragEnd}>
-              <Droppable droppableId="inbox-column">
+            <DragDropContext onDragEnd={(result) => onDragEnd(result)} key={index}>
+              <Droppable droppableId="droppable">
                 {(provided) => (
                   <div
                     ref={provided.innerRef}
@@ -97,12 +112,13 @@ export default function ProductList() {
                     key={index}
                     className={'flex-row-center justify-between w-full h-[4.5rem] hover:bg-hover'}
                   >
-                    <Draggable draggableId={productList[0].name} index={index}>
-                      {(provided) => (
+                    <Draggable draggableId={product.draggableId} index={index}>
+                      {(provided, snapshot) => (
                         <div
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
+                          // style={getItemStyle(snapshot.isDragging, provided.draggableProps.style)}
                           className={'flex-row-center justify-between w-full h-[4.5rem]'}
                         >
                           <RxDragHandleDots2
