@@ -34,9 +34,10 @@
       "@recoil/*": ["src/recoil/*"],
       "@types/*": ["src/types/*"],
       "@utils/*": ["src/utils/*"],
+      "@tests/*": ["src/tests/*"]
     }
   },
-  "include": ["src", "types", "**/*.ts"],
+  "include": ["lib", "src", "types", "**/*.ts", "test/**/**.ts"],
   "references": [{ "path": "./tsconfig.node.json" }],
   "exclude": ["*/**/*.test.tsx"]
 }
