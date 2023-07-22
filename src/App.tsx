@@ -4,19 +4,20 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import React, { useState } from 'react';
-import { ChakraProvider, extendBaseTheme, extendTheme } from '@chakra-ui/react';
+import { ChakraProvider } from '@chakra-ui/react';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import loadable from '@loadable/component';
 import { Scrollbars } from 'rc-scrollbars';
 
-const Header = loadable(() => import('./components/ui/Header'));
-const Home = loadable(() => import('./pages/Home'));
-const Login = loadable(() => import('./pages/Login'));
-const SignUp = loadable(() => import('./pages/SignUp'));
-const Post = loadable(() => import('./pages/Post'));
-const PwInquiry = loadable(() => import('./pages/PwInquiry'));
-const MyPage = loadable(() => import('./pages/MyPage'));
+const Header = loadable(() => import('@components/ui/Header'));
+const Home = loadable(() => import('@pages/Home'));
+const Login = loadable(() => import('@pages/Login'));
+const SignUp = loadable(() => import('@pages/SignUp'));
+const Post = loadable(() => import('@pages/Post'));
+const PwInquiry = loadable(() => import('@pages/PwInquiry'));
+const MyPage = loadable(() => import('@pages/MyPage'));
 
+// jest에서 .env 이용하려고 넣은 코드
 const { MODE: ENVIRONMENT } = import.meta.env;
 export { ENVIRONMENT };
 

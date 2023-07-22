@@ -46,4 +46,16 @@ export default defineConfig({
       usePolling: true,
     },
   },
+  resolve: {
+    alias: [
+      { find: '@components', replacement: '/src/components' },
+      { find: '@pages', replacement: '/src/pages' },
+      { find: '@hooks', replacement: '/src/hooks' },
+      { find: '@layouts', replacement: '/src/layouts' },
+      { find: '@recoil', replacement: '/src/recoil' },
+      { find: '@types', replacement: '/src/types' },
+      { find: '@utils', replacement: '/src/utils' },
+      { find: '@', replacement: '/src' },
+    ],
+  },
 });
