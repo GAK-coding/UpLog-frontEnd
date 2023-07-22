@@ -48,6 +48,7 @@ export default defineConfig({
   },
   resolve: {
     alias: [
+      { find: '@api', replacement: '/src/api' },
       { find: '@components', replacement: '/src/components' },
       { find: '@pages', replacement: '/src/pages' },
       { find: '@hooks', replacement: '/src/hooks' },
