@@ -1,8 +1,8 @@
 import { describe, expect, test } from '@jest/globals';
 import { fireEvent, render, screen } from '@testing-library/react';
-import Login from '../Login';
+import Login from '@pages/Login';
 import '@testing-library/jest-dom';
-import { withRouter } from '../../tests/utils';
+import { withRouter } from '@tests/utils';
 import { Route } from 'react-router-dom';
 import '@testing-library/jest-dom/extend-expect';
 import renderer from 'react-test-renderer';

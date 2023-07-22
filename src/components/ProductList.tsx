@@ -1,8 +1,8 @@
 import { AiOutlinePlus } from 'react-icons/ai';
 import React, { useCallback, useEffect, useRef } from 'react';
-import { productOpen } from '../recoil/Product/atom.tsx';
+import { productOpen } from '@recoil/Product/atom.tsx';
 import { useRecoilState } from 'recoil';
-import { useOutsideAlerter } from '../hooks/useOutsideAlerter.ts';
+import { useOutsideAlerter } from '@hooks/useOutsideAlerter.ts';
 import { PiDotsSixVertical } from 'react-icons/pi';
 import { RxDragHandleDots2 } from 'react-icons/rx';
 import { BiPencil } from 'react-icons/bi';

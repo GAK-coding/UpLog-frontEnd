@@ -8,7 +8,6 @@
     //    "jsxImportSource": "@emotion/react",
     "types": ["cypress", "node", "@testing-library/cypress", "jest", "@testing-library/jest-dom"],
 
-
     /* Bundler mode */
     "moduleResolution": "node",
     "allowImportingTsExtensions": true,
@@ -22,9 +21,24 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+
+    /* Paths */
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"],
+      "@components/*": ["src/components/*"],
+      "@pages/*": ["src/pages/*"],
+      "@hooks/*": ["src/hooks/*"],
+      "@layouts/*": ["src/layouts/*"],
+      "@recoil/*": ["src/recoil/*"],
+      "@types/*": ["src/types/*"],
+      "@utils/*": ["src/utils/*"],
+      "@tests/*": ["src/tests/*"],
+      "@api/*": ["src/api/*"],
+    }
   },
-  "include": ["src", "types", "**/*.ts"],
+  "include": ["lib", "src", "types", "**/*.ts", "test/**/**.ts"],
   "references": [{ "path": "./tsconfig.node.json" }],
   "exclude": ["*/**/*.test.tsx"]
 }

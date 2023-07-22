@@ -2,14 +2,14 @@ import React, { ChangeEvent, RefObject, useCallback, useEffect, useRef, useState
 import { useLocation, useNavigate } from 'react-router-dom';
 import { BsBellFill, BsMoonFill, BsQuestionCircle, BsSearch, BsSunFill } from 'react-icons/bs';
 import { FaUserCircle } from 'react-icons/fa';
-import useInput from '../../hooks/useInput.ts';
-import UserProfile from '../UserProfile.tsx';
+import useInput from '@hooks/useInput.ts';
 import { useRecoilState } from 'recoil';
-import { profileOpen } from '../../recoil/User/atom.tsx';
+import { profileOpen } from '@recoil/User/atom.tsx';
 import { PiCaretUpDownLight } from 'react-icons/pi';
-import { productOpen } from '../../recoil/Product/atom.tsx';
-import ProductList from '../ProductList.tsx';
-import { useOutsideAlerter } from '../../hooks/useOutsideAlerter.ts';
+import { productOpen } from '@recoil/Product/atom.tsx';
+import { useOutsideAlerter } from '@hooks/useOutsideAlerter.ts';
+import ProductList from '@components/ProductList.tsx';
+import UserProfile from '@components/UserProfile.tsx';
 
 export default function Header() {
   const navigate = useNavigate();
