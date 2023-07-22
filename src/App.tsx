@@ -11,11 +11,11 @@ import { Scrollbars } from 'rc-scrollbars';
 
 const Header = loadable(() => import('@components/ui/Header'));
 const Home = loadable(() => import('@pages/Home'));
-const Login = loadable(() => import('@pages/Login'));
-const SignUp = loadable(() => import('@pages/SignUp'));
+const Login = loadable(() => import('@pages/Member/Login'));
+const SignUp = loadable(() => import('@pages/Member/SignUp'));
 const Post = loadable(() => import('@pages/Post'));
-const PwInquiry = loadable(() => import('@pages/PwInquiry'));
-const MyPage = loadable(() => import('@pages/MyPage'));
+const PwInquiry = loadable(() => import('@pages/Member/PwInquiry'));
+const MyPage = loadable(() => import('@pages/Member/MyPage'));
 
 // jest에서 .env 이용하려고 넣은 코드
 const { MODE: ENVIRONMENT } = import.meta.env;
