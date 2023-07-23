@@ -78,19 +78,31 @@ export default function ProductList() {
     e.stopPropagation();
   };
 
-  const onDragEnd = useCallback((result: DropResult) => {
-    console.log(result);
-    const { destination, draggableId, source } = result;
+  const onDragEnd = useCallback(
+    (result: DropResult) => {
+      console.log(result);
+      const { destination, draggableId, source } = result;
+      console.log('des', destination);
+      console.log('drag', draggableId);
 
-    // 이상한 곳에 드래그하면 return
-    if (!destination) return;
+      // 이상한 곳에 드래그하면 return
+      if (!destination) return;
 
-    // 출발지와 도착지가 같으면 return
-    if (destination.droppableId === source.droppableId && source.index === destination.index)
-      return;
+      // 출발지와 도착지가 같으면 return
+      if (destination.droppableId === source.droppableId && source.index === destination.index)
+        return;
 
-    // 출발지와 도착지가 다르면 재정렬
-  }, []);
+      // 출발지와 도착지가 다르면 재정렬
+      const updatedProduct = Array.from(product);
+      const [movedItem] = updatedProduct.splice(source.index, 1);
+      updatedProduct.splice(destination.index, 0, movedItem);
+
+      // 이제 'updatedProduct'에는 항목이 새 인덱스로 이동한 배열이 들어 있습니다.
+      console.log('재정렬된 물품:', updatedProduct);
+      setProductList(updatedProduct);
+    },
+    [product]
+  );
 
   return (
     <section
@@ -101,17 +113,16 @@ export default function ProductList() {
     >
       <div className={'max-h-[26.7rem] overflow-y-auto'}>
         {/*제품 list*/}
-        {productList.map((product, index) => {
-          return (
-            <DragDropContext onDragEnd={(result) => onDragEnd(result)} key={index}>
-              <Droppable droppableId="droppable">
-                {(provided) => (
-                  <div
-                    ref={provided.innerRef}
-                    {...provided.droppableProps}
-                    key={index}
-                    className={'flex-row-center justify-between w-full h-[4.5rem] hover:bg-hover'}
-                  >
+        <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
+          <Droppable droppableId="droppable" direction="vertical">
+            {(provided) => (
+              <div
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+                className={'flex-col-center justify-between w-full h-[4.5ㅎrem] hover:bg-hover'}
+              >
+                {productList.map((product, index) => {
+                  return (
                     <Draggable draggableId={product.draggableId} index={index}>
                       {(provided, snapshot) => (
                         <div
@@ -134,13 +145,13 @@ export default function ProductList() {
                         </div>
                       )}
                     </Draggable>
-                    {provided.placeholder}
-                  </div>
-                )}
-              </Droppable>
-            </DragDropContext>
-          );
-        })}
+                  );
+                })}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
       </div>
 
       {/*제품 추가하기*/}
