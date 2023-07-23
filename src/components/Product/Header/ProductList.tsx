@@ -1,11 +1,11 @@
 import { AiOutlinePlus } from 'react-icons/ai';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { productOpen } from '../recoil/Product/atom.tsx';
+import { productOpen } from '@recoil/Product/atom.tsx';
 import { useRecoilState } from 'recoil';
 import { RxDragHandleDots2 } from 'react-icons/rx';
 import { BiPencil } from 'react-icons/bi';
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
-import { ProductInfo } from '../types/product.ts';
+import { ProductInfo } from '@types/product.ts';
 
 export default function ProductList() {
   const product: ProductInfo[] = [

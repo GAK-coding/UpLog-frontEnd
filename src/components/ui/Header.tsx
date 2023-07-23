@@ -8,8 +8,8 @@ import { profileOpen } from '@recoil/User/atom.tsx';
 import { PiCaretUpDownLight } from 'react-icons/pi';
 import { productOpen } from '@recoil/Product/atom.tsx';
 import { useOutsideAlerter } from '@hooks/useOutsideAlerter.ts';
-import ProductList from '@components/ProductList.tsx';
-import UserProfile from '@components/UserProfile.tsx';
+import ProductList from '@components/Product/Header/ProductList.tsx';
+import UserProfile from '@components/Member/Header/UserProfile.tsx';
 
 export default function Header() {
   const navigate = useNavigate();
