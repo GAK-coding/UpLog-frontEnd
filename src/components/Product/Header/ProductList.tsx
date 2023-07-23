@@ -119,7 +119,7 @@ export default function ProductList() {
               <div
                 ref={provided.innerRef}
                 {...provided.droppableProps}
-                className={'flex-col-center justify-between w-full h-[4.5rem] hover:bg-hover'}
+                className={'flex-col-center justify-between w-full'}
               >
                 {productList.map((product, index) => {
                   return (
@@ -133,7 +133,9 @@ export default function ProductList() {
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
-                          className={'flex-row-center justify-between w-full h-[4.5rem]'}
+                          className={
+                            'flex-row-center justify-between w-full h-[4.5rem] hover:bg-hover'
+                          }
                         >
                           <RxDragHandleDots2
                             className={'flex w-[2.6rem] items-center text-4xl ml-4 fill-gray-light'}
