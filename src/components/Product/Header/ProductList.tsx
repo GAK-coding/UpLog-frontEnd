@@ -1,62 +1,15 @@
 import { AiOutlinePlus } from 'react-icons/ai';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { productOpen } from '@recoil/Product/atom.tsx';
+import React, { useCallback, useEffect } from 'react';
+import { product, productOpen } from '@recoil/Product/atom.tsx';
 import { useRecoilState } from 'recoil';
 import { RxDragHandleDots2 } from 'react-icons/rx';
 import { BiPencil } from 'react-icons/bi';
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
-import { ProductInfo } from '@typings/product.ts';
 
 export default function ProductList() {
-  const product: ProductInfo[] = [
-    {
-      id: 1,
-      draggableId: '1',
-      name: 'Product1',
-      image: '/images/test_userprofile.png',
-      master: 'master',
-      client: 'client',
-    },
-    {
-      id: 2,
-      draggableId: '2',
-      name: 'Product2',
-      image: '/images/test_userprofile.png',
-      master: 'master',
-      client: 'client',
-    },
-    {
-      id: 3,
-      draggableId: '3',
-      name: 'Product3',
-      image: '/images/test_userprofile.png',
-      master: 'master',
-      client: 'client',
-    },
-    {
-      id: 4,
-      draggableId: '4',
-      name: 'Product4',
-      image: '/images/test_userprofile.png',
-      master: 'master',
-      client: 'client',
-    },
-    {
-      id: 5,
-      draggableId: '5',
-      name: 'Product5',
-      image: '/images/test_userprofile.png',
-      master: 'master',
-      client: 'client',
-    },
-  ];
-  const getItemStyle = (isDragging: any, draggableStyle: any) => ({
-    ...draggableStyle,
-  });
+  const [productList, setProductList] = useRecoilState(product);
 
-  const [productList, setProductList] = useState<ProductInfo[]>(product);
-
-  const [isProductClick, setIsProductClick] = useRecoilState(productOpen);
+  const [isProductClick] = useRecoilState(productOpen);
 
   useEffect(() => {
     if (!isProductClick) return;
@@ -78,59 +31,62 @@ export default function ProductList() {
     e.stopPropagation();
   };
 
+  // dnd - 드래그 끝나면 실행되는 함수
   const onDragEnd = useCallback(
     (result: DropResult) => {
-      console.log(result);
-      const { destination, draggableId, source } = result;
-      console.log('des', destination);
-      console.log('drag', draggableId);
+      const { destination, source } = result;
 
       // 이상한 곳에 드래그하면 return
       if (!destination) return;
 
-      // 출발지와 도착지가 같으면 return
-      if (destination.droppableId === source.droppableId && source.index === destination.index)
-        return;
-
       // 출발지와 도착지가 다르면 재정렬
-      const updatedProduct = Array.from(product);
-      const [movedItem] = updatedProduct.splice(source.index, 1);
-      updatedProduct.splice(destination.index, 0, movedItem);
+      // 깊은 복사
+      if (Array.isArray(productList)) {
+        const updatedProduct = JSON.parse(JSON.stringify(productList)) as typeof productList;
+        // 기존 아이템 뽑아내기
+        const [movedItem] = updatedProduct.splice(source.index, 1);
+        // 기존 아이템을 새로운 위치에 삽입하기
+        updatedProduct.splice(destination.index, 0, movedItem);
 
-      // 이제 'updatedProduct'에는 항목이 새 인덱스로 이동한 배열이 들어 있습니다.
-      console.log('재정렬된 물품:', updatedProduct);
-      setProductList(updatedProduct);
+        // 상태 변경
+        setProductList(updatedProduct);
+      }
     },
-    [product]
+    [productList]
   );
 
   return (
     <section
       className={
-        'border-base w-[20rem] min-h-[3.3rem] max-h-[30rem] block absolute top-[4rem] right-[-8.5rem] shadow-sign-up'
+        'border-base w-[20rem] min-h-[3.3rem] max-h-[27.3rem] block absolute top-[4rem] right-[-8.5rem] shadow-sign-up'
       }
       onClick={onChildClick}
     >
-      <div className={'max-h-[26.7rem] overflow-y-auto'}>
-        {/*제품 list*/}
-        <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
-          <Droppable droppableId="droppable" direction="vertical">
+      <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
+        <div className={'max-h-[23.7rem] overflow-y-auto'}>
+          {/*제품 list*/}
+          <Droppable droppableId="droppable">
             {(provided) => (
               <div
                 ref={provided.innerRef}
                 {...provided.droppableProps}
-                className={'flex-col-center justify-between w-full h-[4.5ㅎrem] hover:bg-hover'}
+                className={'flex-col-center justify-between w-full'}
               >
                 {productList.map((product, index) => {
                   return (
-                    <Draggable draggableId={product.draggableId} index={index}>
+                    <Draggable
+                      draggableId={product.draggableId}
+                      key={product.draggableId}
+                      index={index}
+                    >
                       {(provided, snapshot) => (
                         <div
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
-                          // style={getItemStyle(snapshot.isDragging, provided.draggableProps.style)}
-                          className={'flex-row-center justify-between w-full h-[4.5rem]'}
+                          className={`flex-row-center justify-between w-full h-[4.5rem] hover:bg-hover ${
+                            snapshot.isDragging ? 'shadow-2xl shadow-gray-400' : ''
+                          }`}
                         >
                           <RxDragHandleDots2
                             className={'flex w-[2.6rem] items-center text-4xl ml-4 fill-gray-light'}
@@ -151,8 +107,8 @@ export default function ProductList() {
               </div>
             )}
           </Droppable>
-        </DragDropContext>
-      </div>
+        </div>
+      </DragDropContext>
 
       {/*제품 추가하기*/}
       <div
