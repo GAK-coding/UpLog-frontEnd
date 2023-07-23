@@ -8,8 +8,8 @@ import { profileOpen } from '@recoil/User/atom.tsx';
 import { PiCaretUpDownLight } from 'react-icons/pi';
 import { productOpen } from '@recoil/Product/atom.tsx';
 import { useOutsideAlerter } from '@hooks/useOutsideAlerter.ts';
-import ProductList from '@components/ProductList.tsx';
-import UserProfile from '@components/UserProfile.tsx';
+import ProductList from '@components/Product/Header/ProductList.tsx';
+import UserProfile from '@components/Member/Header/UserProfile.tsx';
 
 export default function Header() {
   const navigate = useNavigate();
@@ -29,7 +29,7 @@ export default function Header() {
 
   // 로그인 여부
   //TODO : 섹션 storage 값으로 변경하기
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
 
   // userProfile click
   const [isProfileClick, setIsProfileClick] = useRecoilState(profileOpen);
