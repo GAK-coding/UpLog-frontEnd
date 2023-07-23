@@ -34,7 +34,7 @@
       "@recoil/*": ["src/recoil/*"],
       "@types/*": ["src/types/*"],
       "@utils/*": ["src/utils/*"],
-      "@tests/*": ["src/tests/*"],
+      "@typings/*": ["src/typings/*"],
       "@api/*": ["src/api/*"],
     }
   },
