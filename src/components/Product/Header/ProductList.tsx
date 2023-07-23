@@ -5,7 +5,7 @@ import { useRecoilState } from 'recoil';
 import { RxDragHandleDots2 } from 'react-icons/rx';
 import { BiPencil } from 'react-icons/bi';
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
-import { ProductInfo } from '@types/product.ts';
+import { ProductInfo } from '@typings/product.ts';
 
 export default function ProductList() {
   const product: ProductInfo[] = [
