@@ -119,7 +119,7 @@ export default function ProductList() {
               <div
                 ref={provided.innerRef}
                 {...provided.droppableProps}
-                className={'flex-col-center justify-between w-full h-[4.5ㅎrem] hover:bg-hover'}
+                className={'flex-col-center justify-between w-full h-[4.5rem] hover:bg-hover'}
               >
                 {productList.map((product, index) => {
                   return (
