@@ -1,5 +1,5 @@
 import { AiOutlinePlus } from 'react-icons/ai';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { productOpen } from '@recoil/Product/atom.tsx';
 import { useRecoilState } from 'recoil';
 import { RxDragHandleDots2 } from 'react-icons/rx';
@@ -50,13 +50,10 @@ export default function ProductList() {
       client: 'client',
     },
   ];
-  const getItemStyle = (isDragging: any, draggableStyle: any) => ({
-    ...draggableStyle,
-  });
 
   const [productList, setProductList] = useState<ProductInfo[]>(product);
 
-  const [isProductClick, setIsProductClick] = useRecoilState(productOpen);
+  const [isProductClick] = useRecoilState(productOpen);
 
   useEffect(() => {
     if (!isProductClick) return;
@@ -93,12 +90,15 @@ export default function ProductList() {
         return;
 
       // 출발지와 도착지가 다르면 재정렬
-      const updatedProduct = Array.from(product);
+      // 깊은 복사
+      const updatedProduct = JSON.parse(JSON.stringify(product)) as typeof product;
+      // 기존 아이템 뽑아내기
       const [movedItem] = updatedProduct.splice(source.index, 1);
+      // 기존 아이템을 새로운 위치에 삽입하기
       updatedProduct.splice(destination.index, 0, movedItem);
 
-      // 이제 'updatedProduct'에는 항목이 새 인덱스로 이동한 배열이 들어 있습니다.
-      console.log('재정렬된 물품:', updatedProduct);
+      // 상태 변경
+      console.log('updateList', updatedProduct);
       setProductList(updatedProduct);
     },
     [product]
@@ -111,10 +111,10 @@ export default function ProductList() {
       }
       onClick={onChildClick}
     >
-      <div className={'max-h-[26.7rem] overflow-y-auto'}>
-        {/*제품 list*/}
-        <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
-          <Droppable droppableId="droppable" direction="vertical">
+      <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
+        <div className={'max-h-[26.7rem] overflow-y-auto'}>
+          {/*제품 list*/}
+          <Droppable droppableId="droppable">
             {(provided) => (
               <div
                 ref={provided.innerRef}
@@ -123,13 +123,16 @@ export default function ProductList() {
               >
                 {productList.map((product, index) => {
                   return (
-                    <Draggable draggableId={product.draggableId} index={index}>
-                      {(provided, snapshot) => (
+                    <Draggable
+                      draggableId={product.draggableId}
+                      key={product.draggableId}
+                      index={index}
+                    >
+                      {(provided) => (
                         <div
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
-                          // style={getItemStyle(snapshot.isDragging, provided.draggableProps.style)}
                           className={'flex-row-center justify-between w-full h-[4.5rem]'}
                         >
                           <RxDragHandleDots2
@@ -151,8 +154,8 @@ export default function ProductList() {
               </div>
             )}
           </Droppable>
-        </DragDropContext>
-      </div>
+        </div>
+      </DragDropContext>
 
       {/*제품 추가하기*/}
       <div
