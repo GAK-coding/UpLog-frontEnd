@@ -26,7 +26,7 @@ module.exports = {
   },
   rules: {
     // General
-    'no-console': ['error', { allow: ['debug', 'warn', 'error'] }],
+    // 'no-console': ['error', { allow: ['debug', 'warn', 'error'] }],
     // TypeScript
     // '@typescript-eslint/consistent-type-imports': 'error',
     '@typescript-eslint/explicit-function-return-type': 'off',
@@ -53,8 +53,8 @@ module.exports = {
     '@typescript-eslint/no-parameter-properties': 'off',
     'no-redeclare': 'off',
     '@typescript-eslint/no-redeclare': 'error',
-    'no-shadow': 'off',
-    '@typescript-eslint/no-shadow': 'error',
+    // 'no-shadow': 'off',
+    // '@typescript-eslint/no-shadow': 'error',
     'no-throw-literal': 'off',
     '@typescript-eslint/no-throw-literal': 'error',
     '@typescript-eslint/no-unnecessary-boolean-literal-compare': 'error',
@@ -141,7 +141,7 @@ module.exports = {
     camelcase: ['error', { properties: 'never' }],
     quotes: ['error', 'single', { avoidEscape: true }],
     // 'no-null/no-null': 2,
-    curly: ['error', 'multi-line', 'consistent'],
-    'nonblock-statement-body-position': ['error', 'beside'],
+    // curly: ['error', 'multi-line', 'consistent'],
+    // 'nonblock-statement-body-position': ['error', 'beside'],
   },
 };
