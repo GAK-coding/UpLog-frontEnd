@@ -6,8 +6,14 @@
     "module": "ESNext",
     "skipLibCheck": true,
     //    "jsxImportSource": "@emotion/react",
-    "types": ["cypress", "node", "@testing-library/cypress", "jest", "@testing-library/jest-dom"],
-
+    "types": [
+      "cypress",
+      "node",
+      "@testing-library/cypress",
+      "jest",
+      "@jest/types",
+      "@testing-library/jest-dom"
+    ],
 
     /* Bundler mode */
     "moduleResolution": "node",
@@ -22,9 +28,24 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+
+    /* Paths */
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"],
+      "@components/*": ["src/components/*"],
+      "@pages/*": ["src/pages/*"],
+      "@hooks/*": ["src/hooks/*"],
+      "@layouts/*": ["src/layouts/*"],
+      "@recoil/*": ["src/recoil/*"],
+      "@types/*": ["src/types/*"],
+      "@utils/*": ["src/utils/*"],
+      "@typings/*": ["src/typings/*"],
+      "@api/*": ["src/api/*"]
+    }
   },
-  "include": ["src", "types", "**/*.ts"],
+  "include": ["lib", "src", "types", "**/*.ts", "test/**/**.ts"],
   "references": [{ "path": "./tsconfig.node.json" }],
   "exclude": ["*/**/*.test.tsx"]
 }

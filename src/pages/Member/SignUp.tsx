@@ -1,5 +1,5 @@
 import React, { FormEvent, useCallback, useEffect, useState } from 'react';
-import useInput from '../hooks/useInput';
+import useInput from '@hooks/useInput';
 import { FiUser } from 'react-icons/fi';
 import { MdOutlineMailOutline } from 'react-icons/md';
 import {
@@ -8,8 +8,8 @@ import {
   AiOutlineEyeInvisible,
   AiOutlineLock,
 } from 'react-icons/ai';
-import { convertMinutes } from '../utils/convertMinutes.ts';
-import { useMessage } from '../hooks/useMessage.ts';
+import { convertMinutes } from '@utils/convertMinutes.ts';
+import { useMessage } from '@hooks/useMessage.ts';
 const time = 300;
 export default function SignUp() {
   const [name, onChangeName, setName] = useInput('');
@@ -111,11 +111,7 @@ export default function SignUp() {
   return (
     <form onSubmit={onSubmit} className={'h-full flex-col-center'}>
       {contextHolder}
-      <section
-        className={
-          'border-base w-[39rem] h-[42rem] min-h-[42rem] shadow-sign-up px-20'
-        }
-      >
+      <section className={'border-base w-[39rem] h-[42rem] min-h-[42rem] shadow-sign-up px-20'}>
         {/* logo */}
         <article className={'h-[18%] text-3xl flex items-center'}>
           <img className={'h-16 mr-6'} src={'logo.svg'} alt={'login logo'} />
@@ -263,7 +259,7 @@ export default function SignUp() {
                         </span>
                       </button>
                       {isAuthClick && !isAuth && (
-                        <span className={'text-xs text-gray-dark box-border'}>
+                        <span className={'text-xs text-gray-dark box-border flex-row-center'}>
                           <span className={'text-gray-dark'}>{convertMinutes(timer)}</span>
                           <span className={'text-xs text-gray-dark px-1'}>|</span>
                           <button type={'button'} onClick={sendAuth}>

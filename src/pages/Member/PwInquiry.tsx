@@ -1,7 +1,7 @@
 import React, { FormEvent, useCallback, useState } from 'react';
-import { useMessage } from '../hooks/useMessage.ts';
+import { useMessage } from '@hooks/useMessage.ts';
 import { MdOutlineMailOutline } from 'react-icons/md';
-import useInput from '../hooks/useInput.ts';
+import useInput from '@hooks/useInput.ts';
 import { useNavigate } from 'react-router-dom';
 
 export default function PwInquiry() {
@@ -41,7 +41,7 @@ export default function PwInquiry() {
           <form onSubmit={onSubmit} className={'flex-col-center justify-center w-h-full'}>
             <div
               className={`w-full h-2/5 flex flex-col justify-between ${
-                isSend ? 'mb-[3.5rem] pb-0': "pb-12"
+                isSend ? 'mb-[3.5rem] pb-0' : 'pb-12'
               }`}
             >
               <h1 className={'text-gray-dark font-bold text-3xl'}>
