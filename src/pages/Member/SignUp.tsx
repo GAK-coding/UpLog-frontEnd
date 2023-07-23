@@ -259,7 +259,7 @@ export default function SignUp() {
                         </span>
                       </button>
                       {isAuthClick && !isAuth && (
-                        <span className={'text-xs text-gray-dark box-border'}>
+                        <span className={'text-xs text-gray-dark box-border flex-row-center'}>
                           <span className={'text-gray-dark'}>{convertMinutes(timer)}</span>
                           <span className={'text-xs text-gray-dark px-1'}>|</span>
                           <button type={'button'} onClick={sendAuth}>
