@@ -1,7 +1,7 @@
 import React, { FormEvent, useCallback } from 'react';
-import { useMessage } from '../hooks/useMessage.ts';
+import { useMessage } from '@hooks/useMessage.ts';
 import { MdOutlineMailOutline } from 'react-icons/md';
-import useInput from '../hooks/useInput.ts';
+import useInput from '@hooks/useInput.ts';
 import { AiOutlineLock } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
 import { useGoogleLogin } from '@react-oauth/google';

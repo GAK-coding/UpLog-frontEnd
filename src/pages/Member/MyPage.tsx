@@ -1,11 +1,11 @@
 import React, { useCallback, useState } from 'react';
+import ImageCrop from '@components/Member/MyPage/ImageCrop.tsx';
 import { UploadFile, UploadProps } from 'antd/lib';
 import { useDisclosure } from '@chakra-ui/react';
-import ChangePwModal from '../components/MyPage/ChangePwModal.tsx';
 import { FaUserCircle } from 'react-icons/fa';
 import { BsFillCameraFill } from 'react-icons/bs';
-import ImageCrop from '../components/MyPage/ImageCrop..tsx';
 import { RcFile } from 'antd/es/upload';
+import ChangePwModal from '@components/Member/MyPage/ChangePwModal.tsx';
 
 export default function MyPage() {
   // 비밀번호 변경 모달
