@@ -103,7 +103,9 @@ export default function MakeProduct({ isOpen, onClose }: Props) {
                     value={masterEmail}
                     onChange={onChangeMasterEmail}
                     placeholder={'이메일을 입력해주세요.'}
-                    className={'w-[20.7rem] h-9 p-4 text-[1rem] text-black'}
+                    className={
+                      'self-center w-[20.7rem] h-9 p-4 bg-transparent text-[1rem] text-black'
+                    }
                   />
                   <button
                     className={
@@ -126,7 +128,9 @@ export default function MakeProduct({ isOpen, onClose }: Props) {
                     value={clientEmail}
                     onChange={onChangeClientEmail}
                     placeholder={'이메일은 쉼표(,)로 구분해 주세요.'}
-                    className={'w-[20.7rem] h-9 p-4 text-[1rem] text-black'}
+                    className={
+                      'self-center w-[20.7rem] h-9 bg-transparent p-4 text-[1rem] text-black'
+                    }
                   />
                   <button
                     className={
