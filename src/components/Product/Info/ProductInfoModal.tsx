@@ -15,9 +15,10 @@ import { useMessage } from '@hooks/useMessage.ts';
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+  isCreateProduct: boolean;
 }
 
-export default function MakeProduct({ isOpen, onClose }: Props) {
+export default function ProductInfoModal({ isOpen, onClose, isCreateProduct }: Props) {
   const [productName, onChangeProductName, setProductName] = useInput('');
   const [masterEmail, onChangeMasterEmail, setMasterEmail] = useInput('');
   const [clientEmail, onChangeClientEmail, setClientEmail] = useInput('');
@@ -40,12 +41,13 @@ export default function MakeProduct({ isOpen, onClose }: Props) {
   const checkEmail = useCallback(() => {
     // TODO : 유효한 이메일인지 확인하기 (가입이 되어있는 이메일만 입력하는걸로 할지?)
   }, [clientEmail, masterEmail]);
+
   return (
     <Modal isCentered onClose={onClose} isOpen={isOpen}>
       <ModalOverlay />
       <ModalContent
         maxW="39.5rem"
-        h={'46rem'}
+        h={isCreateProduct ? '48rem' : '42rem'}
         shadow={'boxShadow-sign-up'}
         rounded={'none'}
         p={'1.2rem'}
@@ -57,7 +59,7 @@ export default function MakeProduct({ isOpen, onClose }: Props) {
           bg={'var(--white)'}
           color={'var(--black)'}
         >
-          제품 추가
+          {isCreateProduct ? '제품 추가' : '제품 정보 수정'}
         </ModalHeader>
         <ModalCloseButton
           fontSize={'1rem'}
@@ -96,36 +98,48 @@ export default function MakeProduct({ isOpen, onClose }: Props) {
               </div>
 
               {/*마스터 설정*/}
-              <div className={'w-full mb-5 text-[1.1rem]'}>
-                <div className={'flex'}>
-                  <span className={'text-gray-dark font-bold mb-[0.93rem]'}>마스터 설정</span>
-                  <span className={'text-gray-light font-semibold text-[0.62rem] ml-[0.3rem]'}>
-                    (필수)
-                  </span>
-                </div>
-                <div
-                  className={'flex w-full h-11 border-base border-gray-border rounded-xl relative'}
-                >
-                  <input
-                    type="text"
-                    value={masterEmail}
-                    onChange={onChangeMasterEmail}
-                    placeholder={'이메일을 입력해주세요.'}
+              {isCreateProduct && (
+                <div className={'w-full mb-5 text-[1.1rem]'}>
+                  <div className={'flex'}>
+                    <span className={'text-gray-dark font-bold mb-[0.93rem]'}>마스터 설정</span>
+                    <span
+                      className={
+                        'text-gray-light self-center font-semibold text-[0.62rem] ml-[0.3rem]'
+                      }
+                    >
+                      (필수)
+                    </span>
+                  </div>
+                  <div
                     className={
-                      'self-center w-[20.7rem] h-9 p-4 bg-transparent text-[1rem] text-black'
+                      'flex w-full h-11 border-base border-gray-border rounded-xl relative'
                     }
-                  />
-                  <button
-                    type={'button'}
-                    className={
-                      'self-center bg-orange rounded font-bold text-xs text-white h-7 mr-2 w-[3.5rem]'
-                    }
-                    onClick={checkEmail}
                   >
-                    확인
-                  </button>
+                    <input
+                      type="text"
+                      value={masterEmail}
+                      onChange={onChangeMasterEmail}
+                      placeholder={'이메일을 입력해주세요.'}
+                      className={
+                        'self-center w-[20.7rem] h-9 p-4 bg-transparent text-[1rem] text-black'
+                      }
+                    />
+                    <span
+                      className={
+                        'self-center bg-orange rounded font-bold text-xs text-white h-7 mr-2 w-[3.5rem]'
+                      }
+                    >
+                      <button
+                        type={'button'}
+                        className={'self-center font-bold text-xs text-white h-7 mr-2 w-[3.5rem]'}
+                        onClick={checkEmail}
+                      >
+                        확인
+                      </button>
+                    </span>
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/*의뢰인 초대*/}
               <div className={'w-full mb-3 text-[1.1rem]'}>
@@ -142,15 +156,19 @@ export default function MakeProduct({ isOpen, onClose }: Props) {
                       'self-center w-[20.7rem] h-9 bg-transparent p-4 text-[1rem] text-black'
                     }
                   />
-                  <button
-                    type={'button'}
+                  <span
                     className={
                       'self-center bg-orange rounded font-bold text-xs text-white h-7 mr-2 w-[3.5rem]'
                     }
-                    onClick={checkEmail}
                   >
-                    확인
-                  </button>
+                    <button
+                      type={'button'}
+                      className={'self-center font-bold text-xs text-white h-7 mr-2 w-[3.5rem]'}
+                      onClick={checkEmail}
+                    >
+                      확인
+                    </button>
+                  </span>
                 </div>
               </div>
             </section>

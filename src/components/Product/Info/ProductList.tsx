@@ -1,40 +1,31 @@
 import { AiOutlinePlus } from 'react-icons/ai';
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { product, productOpen } from '@recoil/Product/atom.tsx';
 import { useRecoilState } from 'recoil';
 import { RxDragHandleDots2 } from 'react-icons/rx';
 import { BiPencil } from 'react-icons/bi';
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
 import { useDisclosure } from '@chakra-ui/react';
-import MakeProduct from '@components/Product/ProductInfo/MakeProduct.tsx';
+import ProductInfoModal from '@components/Product/Info/ProductInfoModal.tsx';
 
 export default function ProductList() {
   // ProductList 정보
   const [productList, setProductList] = useRecoilState(product);
   // ProductList 모달창
   const [isProductClick] = useRecoilState(productOpen);
-  // 제품추가 모달창
+  // 제품추가&정보수정 모달창
   const { isOpen, onOpen, onClose } = useDisclosure();
-
-  useEffect(() => {
-    if (!isProductClick) return;
-
-    document.body.style.cssText = `
-    position: fixed;
-    top: -${window.scrollY}px;
-    overflow-y: scroll;
-    width: 100%;`;
-    return () => {
-      const scrollY = document.body.style.top;
-      document.body.style.cssText = '';
-      window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
-    };
-  }, [isProductClick]);
+  const [isCreateProduct, setIsCreateProduct] = useState(true);
 
   // 제품 list 클릭해도 꺼지지않게함
   const onChildClick = (e: React.MouseEvent) => {
     e.stopPropagation();
   };
+
+  // 제품 추가인지 수정인지 체크 여부
+  const onChangeIsCreateProduct = useCallback((check: boolean) => {
+    setIsCreateProduct(check);
+  }, []);
 
   // dnd - 드래그 끝나면 실행되는 함수
   const onDragEnd = useCallback(
@@ -60,10 +51,26 @@ export default function ProductList() {
     [productList]
   );
 
+  // body 스크롤 막기
+  useEffect(() => {
+    if (!isProductClick) return;
+
+    document.body.style.cssText = `
+    position: fixed;
+    top: -${window.scrollY}px;
+    overflow-y: scroll;
+    width: 100%;`;
+    return () => {
+      const scrollY = document.body.style.top;
+      document.body.style.cssText = '';
+      window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
+    };
+  }, [isProductClick]);
+
   return (
     <section
       className={
-        'border-base w-[20rem] min-h-[3.3rem] max-h-[27.3rem] block absolute top-[4rem] right-[-8.5rem] shadow-sign-up'
+        'border-base w-[20rem] min-h-[3.3rem] max-h-[27.3rem] block absolute top-[4rem] right-[-8.5rem] shadow-sign-up z-40'
       }
       onClick={onChildClick}
     >
@@ -102,7 +109,15 @@ export default function ProductList() {
                             className={'ml-2 w-[2rem] h-[2rem]'}
                           />
                           <span className={'ml-3 text-xl font-bold w-full'}>{product.name}</span>
-                          <BiPencil className={'w-20 text-xl mr-4 fill-gray-light'} />
+                          <BiPencil
+                            className={
+                              'flex-row-center w-20 text-xl mr-4 fill-gray-light cursor-pointer'
+                            }
+                            onClick={() => {
+                              onOpen();
+                              onChangeIsCreateProduct(false);
+                            }}
+                          />
                         </div>
                       )}
                     </Draggable>
@@ -120,7 +135,10 @@ export default function ProductList() {
         className={
           'flex-row-center justify-between w-full h-[3.3rem] border-solid border-t border-gray-border'
         }
-        onClick={() => onOpen()}
+        onClick={() => {
+          onOpen();
+          onChangeIsCreateProduct(true);
+        }}
       >
         <AiOutlinePlus className={'flex items-center text-2xl ml-4 fill-gray-light'} />
         <span className={'flex items-center w-full text-base ml-3 text-gray-light font-medium'}>
@@ -128,7 +146,7 @@ export default function ProductList() {
         </span>
       </div>
 
-      <MakeProduct isOpen={isOpen} onClose={onClose} />
+      <ProductInfoModal isOpen={isOpen} onClose={onClose} isCreateProduct={isCreateProduct} />
     </section>
   );
 }
