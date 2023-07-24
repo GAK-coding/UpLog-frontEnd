@@ -27,11 +27,11 @@ export default function Login() {
       {contextHolder}
       <div className={'w-h-full flex-col-center'}>
         <article>
-          <img className={'w-[5.7rem] h-[6.7rem]'} src={'logo.svg'} alt={'로고'} />
+          <img className={'w-[5.7rem] h-[6.7rem]'} src={'logo.svg'} alt={'logo'} />
         </article>
         <article
           className={
-            'flex-row-center border-base w-[39rem] h-[23.5rem] min-h-[23.5rem] shadow-sign-up px-20 my-10'
+            'flex-row-center border-base w-[37rem] h-[23.5rem] min-h-[23.5rem] shadow-sign-up px-[4.5rem] py-4 my-10'
           }
         >
           <form onSubmit={onSubmit} className={'flex-col-center justify-center w-h-full'}>
@@ -47,7 +47,7 @@ export default function Login() {
                 }
               >
                 <label className={'w-h-full flex-row-center'}>
-                  <span className={'w-1/6 h-full flex-row-center text-3xl '}>
+                  <span className={'w-1/6 h-full flex-row-center text-2xl '}>
                     <MdOutlineMailOutline
                       className={`${email ? 'fill-orange' : 'fill-gray-light'}`}
                     />
@@ -59,7 +59,7 @@ export default function Login() {
                     placeholder={'이메일'}
                     required
                     maxLength={30}
-                    className={'w-5/6 h-full text-xl rounded-xl'}
+                    className={'w-5/6 h-full text-lg rounded-xl'}
                   />
                 </label>
               </span>
@@ -67,7 +67,7 @@ export default function Login() {
               {/*비밀번호*/}
               <span className={'w-full h-[4.5rem] flex-row-center'}>
                 <label className={'w-h-full flex-row-center'}>
-                  <span className={'w-1/6 h-full flex-row-center text-3xl'}>
+                  <span className={'w-1/6 h-full flex-row-center text-2xl'}>
                     <AiOutlineLock className={`${password ? 'fill-orange' : 'fill-gray-light'}`} />
                   </span>
                   <span className={'w-5/6 h-full flex'}>
@@ -78,7 +78,7 @@ export default function Login() {
                       placeholder={'비밀번호'}
                       maxLength={15}
                       required
-                      className={`w-h-full text-xl rounded-xl ${password && 'tracking-[-0.3rem]'}`}
+                      className={`w-h-full text-lg rounded-xl ${password && 'tracking-[-0.3rem]'}`}
                     />
                   </span>
                 </label>
@@ -87,7 +87,7 @@ export default function Login() {
 
             <button
               className={
-                'flex-row-center rounded-md w-[29rem] h-12 mt-10 py-7 font-bold text-xl bg-orange text-white'
+                'flex-row-center rounded-md w-[28rem] h-12 mt-10 py-7 font-bold text-xl bg-orange text-white'
               }
             >
               로그인
@@ -95,7 +95,7 @@ export default function Login() {
           </form>
         </article>
 
-        <article className={'w-[39rem] flex-col-center text-xl font-bold'}>
+        <article className={'w-[37rem] flex-col-center text-lg font-bold'}>
           <nav
             className={'flex-row-center w-full border-solid border-b border-gray-spring pb-7 mb-5'}
           >
@@ -110,13 +110,13 @@ export default function Login() {
             </Link>
           </nav>
           <div className={'flex-col-center w-full'}>
-            <span className={'mb-7 text-xl font-bold'}>간편 로그인</span>
+            <span className={'mb-7 text-lg font-bold'}>간편 로그인</span>
             <div className={'w-3/5 flex-row-center justify-evenly'}>
               <button onClick={() => login()}>
-                <img className={'w-14'} src={'google.svg'} alt={'google'} />
+                <img className={'w-12'} src={'google.svg'} alt={'google'} />
               </button>
               <button>
-                <img className={'w-14'} src={'kakao.svg'} alt={'kakao'} />
+                <img className={'w-12'} src={'kakao.svg'} alt={'kakao'} />
               </button>
             </div>
           </div>

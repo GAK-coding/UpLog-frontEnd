@@ -7,7 +7,7 @@ import { BsFillCameraFill } from 'react-icons/bs';
 import { RcFile } from 'antd/es/upload';
 import UserManageModal from '@components/Member/MyPage/UserManageModal.tsx';
 
-export default function MyPage(게) {
+export default function MyPage() {
   // 비밀번호 변경 모달
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isClickPwChange, setIsClickPwChange] = useState(false);
