@@ -111,7 +111,9 @@ export default function SignUp() {
   return (
     <form onSubmit={onSubmit} className={'h-full flex-col-center'}>
       {contextHolder}
-      <section className={'border-base w-[39rem] h-[42rem] min-h-[42rem] shadow-sign-up px-20'}>
+      <section
+        className={'border-base w-[37rem] h-[42rem] min-h-[42rem] shadow-sign-up px-[4.5rem] py-4'}
+      >
         {/* logo */}
         <article className={'h-[18%] text-3xl flex items-center'}>
           <img className={'h-16 mr-6'} src={'logo.svg'} alt={'login logo'} />
@@ -166,7 +168,7 @@ export default function SignUp() {
                 className={'w-full h-1/3 flex-row-center border-solid border-b border-gray-border'}
               >
                 <label className={'w-h-full flex-row-center'}>
-                  <span className={'w-1/6 h-full flex-row-center text-3xl '}>
+                  <span className={'w-1/6 h-full flex-row-center text-[1.7rem] '}>
                     <FiUser className={name ? 'stroke-orange' : 'stroke-gray-light'} />
                   </span>
                   <input
@@ -176,14 +178,14 @@ export default function SignUp() {
                     placeholder={'이름'}
                     maxLength={10}
                     required
-                    className={'w-5/6 h-full text-xl'}
+                    className={'w-5/6 h-full text-lg'}
                   />
                 </label>
               </span>
               {/*닉네임*/}
               <span className={'w-full h-1/3 flex-row-center'}>
                 <label className={'w-h-full flex-row-center'}>
-                  <span className={'w-1/6 h-full flex-row-center text-3xl'}>
+                  <span className={'w-1/6 h-full flex-row-center text-[1.7rem]'}>
                     <FiUser className={nickName ? 'stroke-orange' : 'stroke-gray-light'} />
                   </span>
                   <input
@@ -193,7 +195,7 @@ export default function SignUp() {
                     placeholder={'닉네임'}
                     maxLength={10}
                     required
-                    className={'w-5/6 h-full text-xl rounded-br-md'}
+                    className={'w-5/6 h-full text-lg rounded-br-md'}
                   />
                 </label>
               </span>
@@ -211,7 +213,7 @@ export default function SignUp() {
                 className={'w-full h-1/3 flex-row-center border-solid border-b border-gray-border'}
               >
                 <label className={'w-h-full flex-row-center '}>
-                  <span className={'w-1/6 h-full flex-row-center text-3xl '}>
+                  <span className={'w-1/6 h-full flex-row-center text-[1.7rem]'}>
                     <MdOutlineMailOutline className={email ? 'fill-orange' : 'fill-gray-light'} />
                   </span>
                   <input
@@ -221,7 +223,7 @@ export default function SignUp() {
                     placeholder={'이메일'}
                     required
                     maxLength={30}
-                    className={'w-5/6 h-full text-xl rounded-tr-md'}
+                    className={'w-5/6 h-full text-lg rounded-tr-md'}
                   />
                 </label>
               </span>
@@ -230,7 +232,7 @@ export default function SignUp() {
                 className={'w-full h-1/3 flex-row-center border-solid border-b border-gray-border'}
               >
                 <label className={'w-h-full flex-row-center'}>
-                  <span className={'w-1/6 h-full flex-row-center text-3xl'}>
+                  <span className={'w-1/6 h-full flex-row-center text-[1.7rem]'}>
                     <AiOutlineCheckCircle
                       className={`${isAuth ? 'fill-orange' : 'fill-gray-light'}`}
                     />
@@ -244,7 +246,7 @@ export default function SignUp() {
                       required
                       disabled={isAuth}
                       maxLength={10}
-                      className={'w-9/12 h-full text-xl disabled:bg-inherit'}
+                      className={'w-9/12 h-full text-lg disabled:bg-inherit'}
                     />
                     <span className={'w-3/12 h-full flex-col-center justify-evenly'}>
                       <button
@@ -274,7 +276,7 @@ export default function SignUp() {
               {/*비밀번호*/}
               <span className={'w-full h-1/3 flex-row-center'}>
                 <label className={'w-h-full flex-row-center'}>
-                  <span className={'w-1/6 h-full flex-row-center text-3xl'}>
+                  <span className={'w-1/6 h-full flex-row-center text-[1.7rem]'}>
                     <AiOutlineLock className={`${isCheckPw ? 'fill-orange' : 'fill-gray-light'}`} />
                   </span>
                   <span className={'w-5/6 h-full flex relative'}>
@@ -285,7 +287,7 @@ export default function SignUp() {
                       placeholder={'비밀번호'}
                       maxLength={15}
                       required
-                      className={`w-9/12 h-full text-xl ${
+                      className={`w-9/12 h-full text-lg ${
                         password && !isPwVisible && 'tracking-[-0.3rem]'
                       }`}
                     />
@@ -316,7 +318,7 @@ export default function SignUp() {
       {/* button */}
       <button
         className={
-          'flex-row-center rounded-md w-[39rem] h-12 mt-10 py-7 font-bold text-xl bg-orange text-white'
+          'flex-row-center rounded-md w-[37rem] h-12 mt-10 py-7 font-bold text-xl bg-orange text-white'
         }
       >
         회원가입
