@@ -8,7 +8,7 @@ import { profileOpen } from '@recoil/User/atom.tsx';
 import { PiCaretUpDownLight } from 'react-icons/pi';
 import { productOpen } from '@recoil/Product/atom.tsx';
 import { useOutsideAlerter } from '@hooks/useOutsideAlerter.ts';
-import ProductList from '@components/Product/Header/ProductList.tsx';
+import ProductList from '@components/Product/Info/ProductList.tsx';
 import UserProfile from '@components/Member/Header/UserProfile.tsx';
 
 export default function Header() {
@@ -73,7 +73,7 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed top-0 flex-row-center justify-between pt-[0.5rem] w-full h-[5.7rem] z-1000
+      className={`fixed top-0 flex-row-center justify-between pt-[0.5rem] w-full h-[5.7rem] z-50
       ${isNoneHeader ? 'bg-none-header' : 'border-solid border-b border-header-gray'}`}
     >
       {/*로고 + 글자 (메인페이지로 이동)*/}
