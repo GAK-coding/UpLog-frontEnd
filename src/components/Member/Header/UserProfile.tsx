@@ -2,7 +2,7 @@ import { FaUserCircle } from 'react-icons/fa';
 import { AiFillStar, AiOutlinePoweroff } from 'react-icons/ai';
 import { BiPencil } from 'react-icons/bi';
 import { useNavigate } from 'react-router-dom';
-import { profileOpen } from '@recoil/User/atom.tsx';
+import { profileOpen } from '@/recoil/User/atom.tsx';
 import { useRecoilState } from 'recoil';
 import { useCallback } from 'react';
 

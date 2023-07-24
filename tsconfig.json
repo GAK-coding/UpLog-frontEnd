@@ -34,15 +34,15 @@
     "baseUrl": "./",
     "paths": {
       "@/*": ["src/*"],
-      "@components/*": ["src/components/*"],
-      "@pages/*": ["src/pages/*"],
-      "@hooks/*": ["src/hooks/*"],
-      "@layouts/*": ["src/layouts/*"],
-      "@recoil/*": ["src/recoil/*"],
-      "@types/*": ["src/types/*"],
-      "@utils/*": ["src/utils/*"],
-      "@typings/*": ["src/typings/*"],
-      "@api/*": ["src/api/*"]
+      "@/components/*": ["src/components/*"],
+      "@/pages/*": ["src/pages/*"],
+      "@/hooks/*": ["src/hooks/*"],
+      "@/layouts/*": ["src/layouts/*"],
+      "@/recoil/*": ["src/recoil/*"],
+      "@/types/*": ["src/types/*"],
+      "@/utils/*": ["src/utils/*"],
+      "@/typings/*": ["src/typings/*"],
+      "@/api/*": ["src/api/*"]
     }
   },
   "include": ["lib", "src", "types", "**/*.ts", "test/**/**.ts"],

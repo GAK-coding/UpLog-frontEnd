@@ -1,14 +1,14 @@
 import { describe, expect, test } from '@jest/globals';
 import { fireEvent, getByText, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { withRouter } from '@tests/utils';
+import { withRouter } from '@/tests/utils';
 import { Route } from 'react-router-dom';
 import '@testing-library/jest-dom/extend-expect';
 import renderer from 'react-test-renderer';
-import ChangePwModal from '@components/Member/MyPage/ChangePwModal';
+import UserManageModal from '@/components/Member/MyPage/UserManageModal';
 import userEvent from '@testing-library/user-event';
 
-describe('ChangePwModal', () => {
+describe('UserManageModal', () => {
   const misPw = 'qwer234';
   const goodPw = 'qwer234!';
 
@@ -31,7 +31,7 @@ describe('ChangePwModal', () => {
   // 비밀번호 변경 모달
   test('password change modal correctly', () => {
     const component = renderer.create(
-      withRouter(<Route path={'/'} element={<ChangePwModal {...props_pwChange} />} />, '/mypage')
+      withRouter(<Route path={'/'} element={<UserManageModal {...props_pwChange} />} />, '/mypage')
     );
 
     expect(component.toJSON()).toMatchSnapshot();
@@ -40,7 +40,7 @@ describe('ChangePwModal', () => {
   test('password change modal, test password', () => {
     render(
       withRouter(
-        <Route path={'/mypage'} element={<ChangePwModal {...props_pwChange} />} />,
+        <Route path={'/mypage'} element={<UserManageModal {...props_pwChange} />} />,
         '/mypage'
       )
     );
@@ -60,7 +60,7 @@ describe('ChangePwModal', () => {
     render(
       withRouter(
         <>
-          <Route path={'/mypage'} element={<ChangePwModal {...props_pwChange} />} />
+          <Route path={'/mypage'} element={<UserManageModal {...props_pwChange} />} />
           <Route path={'/pwinquiry'} element={<p>비밀번호 찾기 페이지</p>} />
         </>,
         '/mypage'
@@ -76,7 +76,7 @@ describe('ChangePwModal', () => {
   test('Member Withdrawal modal correctly', () => {
     const component = renderer.create(
       withRouter(
-        <Route path={'/mypage'} element={<ChangePwModal {...props_memberWithdrawal} />} />,
+        <Route path={'/mypage'} element={<UserManageModal {...props_memberWithdrawal} />} />,
         'mypage'
       )
     );
@@ -87,7 +87,7 @@ describe('ChangePwModal', () => {
   test('check Withdrawal modal screen', () => {
     render(
       withRouter(
-        <Route path={'/mypage'} element={<ChangePwModal {...props_memberWithdrawal} />} />,
+        <Route path={'/mypage'} element={<UserManageModal {...props_memberWithdrawal} />} />,
         '/mypage'
       )
     );
