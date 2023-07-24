@@ -46,7 +46,7 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct }: P
     <Modal isCentered onClose={onClose} isOpen={isOpen}>
       <ModalOverlay />
       <ModalContent
-        maxW="39.5rem"
+        maxW="40.5rem"
         h={isCreateProduct ? '48rem' : '42rem'}
         shadow={'boxShadow-sign-up'}
         rounded={'none'}
