@@ -8,6 +8,8 @@ import { ChakraProvider } from '@chakra-ui/react';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import loadable from '@loadable/component';
 import { Scrollbars } from 'rc-scrollbars';
+import Product from '@pages/Product/Product.tsx';
+import Goods from '@pages/Product/Goods.tsx';
 
 const Header = loadable(() => import('@components/ui/Header'));
 const Home = loadable(() => import('@pages/Home'));
@@ -52,6 +54,11 @@ function App() {
                     <Route path={'/post'} element={<Post />} />
                     <Route path={'/pwinquiry'} element={<PwInquiry />} />
                     <Route path={'/mypage'} element={<MyPage />} />
+                    <Route path={'/product/:productName'} element={<Product />} />
+                    <Route path={'/product/:productName/:projectName'} element={<Product />} />
+
+                    {/*<Route path={'/product/:productName'} element={<Goods />} />*/}
+                    {/*<Route path={'/product/:project/:projectName'} element={<Project />} />*/}
                   </Routes>
                 </section>
               </BrowserRouter>
