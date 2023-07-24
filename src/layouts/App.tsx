@@ -1,4 +1,4 @@
-import './App.css';
+import './../App.css';
 import { RecoilRoot } from 'recoil';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -8,8 +8,6 @@ import { ChakraProvider } from '@chakra-ui/react';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import loadable from '@loadable/component';
 import { Scrollbars } from 'rc-scrollbars';
-import Product from '@pages/Product/Product.tsx';
-import Goods from '@pages/Product/Goods.tsx';
 
 const Header = loadable(() => import('@components/ui/Header'));
 const Home = loadable(() => import('@pages/Home'));
@@ -18,6 +16,9 @@ const SignUp = loadable(() => import('@pages/Member/SignUp'));
 const Post = loadable(() => import('@pages/Post'));
 const PwInquiry = loadable(() => import('@pages/Member/PwInquiry'));
 const MyPage = loadable(() => import('@pages/Member/MyPage'));
+const Workspace = loadable(() => import('@layouts/Workspace.tsx'));
+const Project = loadable(() => import('@pages/Project/Project.tsx'));
+const Product = loadable(() => import('@pages/Product/Product.tsx'));
 
 // jest에서 .env 이용하려고 넣은 코드
 const { MODE: ENVIRONMENT } = import.meta.env;
@@ -54,11 +55,10 @@ function App() {
                     <Route path={'/post'} element={<Post />} />
                     <Route path={'/pwinquiry'} element={<PwInquiry />} />
                     <Route path={'/mypage'} element={<MyPage />} />
-                    <Route path={'/product/:productName'} element={<Product />} />
-                    <Route path={'/product/:productName/:projectName'} element={<Product />} />
-
-                    {/*<Route path={'/product/:productName'} element={<Goods />} />*/}
-                    {/*<Route path={'/product/:project/:projectName'} element={<Project />} />*/}
+                    <Route path={'/workspace'} element={<Workspace />}>
+                      <Route path={':product'} element={<Product />} />
+                      <Route path={':product/:project'} element={<Project />} />
+                    </Route>
                   </Routes>
                 </section>
               </BrowserRouter>
