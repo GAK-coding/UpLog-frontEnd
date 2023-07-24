@@ -145,7 +145,6 @@ export default function ProductList() {
           제품 추가하기
         </span>
       </div>
-
       <ProductInfoModal isOpen={isOpen} onClose={onClose} isCreateProduct={isCreateProduct} />
     </section>
   );
