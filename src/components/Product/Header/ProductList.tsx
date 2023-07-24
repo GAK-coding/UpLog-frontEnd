@@ -5,11 +5,16 @@ import { useRecoilState } from 'recoil';
 import { RxDragHandleDots2 } from 'react-icons/rx';
 import { BiPencil } from 'react-icons/bi';
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
+import { useDisclosure } from '@chakra-ui/react';
+import MakeProduct from '@components/Product/ProductInfo/MakeProduct.tsx';
 
 export default function ProductList() {
+  // ProductList 정보
   const [productList, setProductList] = useRecoilState(product);
-
+  // ProductList 모달창
   const [isProductClick] = useRecoilState(productOpen);
+  // 제품추가 모달창
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
     if (!isProductClick) return;
@@ -40,8 +45,8 @@ export default function ProductList() {
       if (!destination) return;
 
       // 출발지와 도착지가 다르면 재정렬
-      // 깊은 복사
       if (Array.isArray(productList)) {
+        // 깊은 복사
         const updatedProduct = JSON.parse(JSON.stringify(productList)) as typeof productList;
         // 기존 아이템 뽑아내기
         const [movedItem] = updatedProduct.splice(source.index, 1);
@@ -117,10 +122,15 @@ export default function ProductList() {
         }
       >
         <AiOutlinePlus className={'flex items-center text-2xl ml-4 fill-gray-light'} />
-        <span className={'flex items-center w-full text-base ml-3 text-gray-light font-medium'}>
+        <span
+          className={'flex items-center w-full text-base ml-3 text-gray-light font-medium'}
+          onClick={() => onOpen()}
+        >
           제품 추가하기
         </span>
       </div>
+
+      <MakeProduct isOpen={isOpen} onClose={onClose} />
     </section>
   );
 }
