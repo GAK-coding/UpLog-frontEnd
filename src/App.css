@@ -10,6 +10,7 @@
   --gray-spring: #e5e5e5;
   --black: #292723;
   --white: #ffffff;
+  --board-gray: #c4c4c4;
   /*
   border-bg : border 배경 색깔
   border-gray : input창 border 색깔
@@ -35,6 +36,7 @@ html.dark {
   --gray-spring: #64635e;
   --black: #ffffff;
   --white: #2e2b27;
+  --board-gray: #4c4643;
   /*
  border-bg : border 배경 색깔
  border-gray : input, button 창 border 색깔
