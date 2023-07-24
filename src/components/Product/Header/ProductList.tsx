@@ -120,12 +120,10 @@ export default function ProductList() {
         className={
           'flex-row-center justify-between w-full h-[3.3rem] border-solid border-t border-gray-border'
         }
+        onClick={() => onOpen()}
       >
         <AiOutlinePlus className={'flex items-center text-2xl ml-4 fill-gray-light'} />
-        <span
-          className={'flex items-center w-full text-base ml-3 text-gray-light font-medium'}
-          onClick={() => onOpen()}
-        >
+        <span className={'flex items-center w-full text-base ml-3 text-gray-light font-medium'}>
           제품 추가하기
         </span>
       </div>
