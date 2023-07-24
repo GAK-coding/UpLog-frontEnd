@@ -11,7 +11,6 @@ import {
 import useInput from '@hooks/useInput.ts';
 import { useCallback } from 'react';
 import { useMessage } from '@hooks/useMessage.ts';
-import { product } from '@recoil/Product/atom.tsx';
 
 interface Props {
   isOpen: boolean;
@@ -64,7 +63,7 @@ export default function MakeProduct({ isOpen, onClose }: Props) {
               {contextHolder}
 
               {/*제품 이름*/}
-              <div className={'w-full mt-4 mb-6 text-[0.93rem]'}>
+              <div className={'w-full mt-4 mb-5 text-[1.1rem]'}>
                 <div className={'flex'}>
                   <span className={'text-gray-dark font-bold mb-[0.93rem]'}>제품 이름</span>
                   <span className={'text-gray-light font-semibold text-[0.62rem] ml-[0.3rem]'}>
@@ -78,43 +77,65 @@ export default function MakeProduct({ isOpen, onClose }: Props) {
                   placeholder={'제품 이름을 입력해주세요. (최대 10자)'}
                   maxLength={10}
                   className={
-                    'w-full h-10 border-base border-gray-border rounded-xl mb-2 p-4 text-black'
+                    'w-full h-11 border-base border-gray-border text-[1rem] rounded-xl mb-2 p-4 text-black'
                   }
                 />
               </div>
               {/*제품 이미지*/}
-              <div className={'w-full mb-6 text-[0.93rem]'}>
+              <div className={'w-full mb-5 text-[1.1rem]'}>
                 <span className={'text-gray-dark font-bold mb-[0.93rem]'}>제품 이미지</span>
                 <div className={'border-base w-[9.3rem] h-[9.3rem]'}></div>
               </div>
 
               {/*마스터 설정*/}
-              <div className={'w-full mb-4 text-[0.93rem]'}>
+              <div className={'w-full mb-5 text-[1.1rem]'}>
                 <div className={'flex'}>
                   <span className={'text-gray-dark font-bold mb-[0.93rem]'}>마스터 설정</span>
                   <span className={'text-gray-light font-semibold text-[0.62rem] ml-[0.3rem]'}>
                     (필수)
                   </span>
                 </div>
-                <input
-                  type="text"
-                  value={masterEmail}
-                  onChange={onChangeMasterEmail}
-                  placeholder={'이메일을 입력해주세요.'}
-                  className={'w-full h-10 border-base border-gray-border rounded-xl p-4 text-black'}
-                />
+                <div
+                  className={'flex w-full h-11 border-base border-gray-border rounded-xl relative'}
+                >
+                  <input
+                    type="text"
+                    value={masterEmail}
+                    onChange={onChangeMasterEmail}
+                    placeholder={'이메일을 입력해주세요.'}
+                    className={'w-[20.7rem] h-9 p-4 text-[1rem] text-black'}
+                  />
+                  <button
+                    className={
+                      'self-center bg-orange rounded font-bold text-xs text-white h-7 mr-2 w-[3.5rem]'
+                    }
+                  >
+                    확인
+                  </button>
+                </div>
               </div>
 
               {/*의뢰인 초대*/}
-              <div className={'w-full mb-4 text-[0.93rem]'}>
+              <div className={'w-full mb-3 text-[1.1rem]'}>
                 <span className={'text-gray-dark font-bold mb-[0.93rem]'}>의뢰인 초대</span>
-                <input
-                  type="text"
-                  value={clientEmail}
-                  onChange={onChangeClientEmail}
-                  placeholder={'이메일은 쉼표(,)로 구분해 주세요.'}
-                  className={'w-full h-10 border-base border-gray-border rounded-xl p-4 text-black'}
-                />
+                <div
+                  className={'flex w-full h-11 border-base border-gray-border rounded-xl relative'}
+                >
+                  <input
+                    type="text"
+                    value={clientEmail}
+                    onChange={onChangeClientEmail}
+                    placeholder={'이메일은 쉼표(,)로 구분해 주세요.'}
+                    className={'w-[20.7rem] h-9 p-4 text-[1rem] text-black'}
+                  />
+                  <button
+                    className={
+                      'self-center bg-orange rounded font-bold text-xs text-white h-7 mr-2 w-[3.5rem]'
+                    }
+                  >
+                    확인
+                  </button>
+                </div>
               </div>
             </section>
           </Flex>
@@ -122,7 +143,7 @@ export default function MakeProduct({ isOpen, onClose }: Props) {
 
         <ModalFooter>
           <button
-            className={'bg-orange rounded font-bold text-xs text-white h-9 w-[4.5rem]'}
+            className={'bg-orange rounded font-bold text-sm text-white h-9 w-[4.5rem]'}
             onClick={onClickMakeProduct}
           >
             완료
