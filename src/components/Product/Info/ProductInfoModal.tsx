@@ -8,10 +8,10 @@ import {
   ModalHeader,
   ModalOverlay,
 } from '@chakra-ui/react';
-import useInput from '@hooks/useInput.ts';
+import useInput from '@/hooks/useInput.ts';
 import { useCallback, useState } from 'react';
-import { useMessage } from '@hooks/useMessage.ts';
-import ImageCrop from '@components/Member/MyPage/ImageCrop.tsx';
+import { useMessage } from '@/hooks/useMessage.ts';
+import ImageCrop from '@/components/Member/MyPage/ImageCrop.tsx';
 import { UploadFile, UploadProps } from 'antd/lib';
 import { RcFile } from 'antd/es/upload';
 import { FiUpload } from 'react-icons/fi';

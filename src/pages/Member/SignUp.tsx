@@ -1,5 +1,5 @@
 import React, { FormEvent, useCallback, useEffect, useState } from 'react';
-import useInput from '@hooks/useInput';
+import useInput from '@/hooks/useInput';
 import { FiUser } from 'react-icons/fi';
 import { MdOutlineMailOutline } from 'react-icons/md';
 import {
@@ -8,8 +8,8 @@ import {
   AiOutlineEyeInvisible,
   AiOutlineLock,
 } from 'react-icons/ai';
-import { convertMinutes } from '@utils/convertMinutes.ts';
-import { useMessage } from '@hooks/useMessage.ts';
+import { convertMinutes } from '@/utils/convertMinutes.ts';
+import { useMessage } from '@/hooks/useMessage.ts';
 const time = 300;
 export default function SignUp() {
   const [name, onChangeName, setName] = useInput('');

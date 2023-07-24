@@ -1,12 +1,12 @@
 import { AiOutlinePlus } from 'react-icons/ai';
 import React, { useCallback, useEffect, useState } from 'react';
-import { product, productOpen } from '@recoil/Product/atom.tsx';
+import { product, productOpen } from '@/recoil/Product/atom.tsx';
 import { useRecoilState } from 'recoil';
 import { RxDragHandleDots2 } from 'react-icons/rx';
 import { BiPencil } from 'react-icons/bi';
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
 import { useDisclosure } from '@chakra-ui/react';
-import ProductInfoModal from '@components/Product/Info/ProductInfoModal.tsx';
+import ProductInfoModal from '@/components/Product/Info/ProductInfoModal.tsx';
 
 export default function ProductList() {
   // ProductList 정보

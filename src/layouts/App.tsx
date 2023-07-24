@@ -9,16 +9,16 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import loadable from '@loadable/component';
 import { Scrollbars } from 'rc-scrollbars';
 
-const Header = loadable(() => import('@components/ui/Header'));
-const Home = loadable(() => import('@pages/Home'));
-const Login = loadable(() => import('@pages/Member/Login'));
-const SignUp = loadable(() => import('@pages/Member/SignUp'));
-const Post = loadable(() => import('@pages/Post'));
-const PwInquiry = loadable(() => import('@pages/Member/PwInquiry'));
-const MyPage = loadable(() => import('@pages/Member/MyPage'));
-const Workspace = loadable(() => import('@layouts/Workspace.tsx'));
-const Project = loadable(() => import('@pages/Project/Project.tsx'));
-const Product = loadable(() => import('@pages/Product/Product.tsx'));
+const Header = loadable(() => import('@/components/UI/Header'));
+const Home = loadable(() => import('@/pages/Home'));
+const Login = loadable(() => import('@/pages/Member/Login'));
+const SignUp = loadable(() => import('@/pages/Member/SignUp'));
+const Post = loadable(() => import('@/pages/Post'));
+const PwInquiry = loadable(() => import('@/pages/Member/PwInquiry'));
+const MyPage = loadable(() => import('@/pages/Member/MyPage'));
+const Workspace = loadable(() => import('@/layouts/Workspace.tsx'));
+const Project = loadable(() => import('@/pages/Project/Project.tsx'));
+const Product = loadable(() => import('@/pages/Product/Product.tsx'));
 
 // jest에서 .env 이용하려고 넣은 코드
 const { MODE: ENVIRONMENT } = import.meta.env;
