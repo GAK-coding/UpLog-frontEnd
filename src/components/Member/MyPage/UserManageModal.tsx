@@ -11,8 +11,9 @@ import {
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
-import useInput from '@hooks/useInput.ts';
-import { useMessage } from '@hooks/useMessage.ts';
+import useInput from '@/hooks/useInput.ts';
+
+import { useMessage } from '@/hooks/useMessage.ts';
 
 interface Props {
   isOpen: boolean;
