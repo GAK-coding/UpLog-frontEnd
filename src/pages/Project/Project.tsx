@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Menu, Select } from '@chakra-ui/react';
 import CustomSelect from '@/components/UI/CustomSelect.tsx';
+import { BsChevronCompactDown } from 'react-icons/bs';
 
 export default function Project() {
   // const { project } = useParams();
@@ -11,7 +11,6 @@ export default function Project() {
     { label: '마케팅팀', value: 'marketing' },
     { label: '홍보팀', value: 'promotion' },
   ];
-  const [groupValue, setGroupValue] = useState(items[0].label);
   const [isKanban, setIsKanban] = useState(true);
 
   const onClickKanban = useCallback((check: boolean) => {
@@ -21,30 +20,22 @@ export default function Project() {
   return (
     <section className={'flex-col-center justify-start w-full h-full'}>
       <section
-        className={'flex-row-center justify-start w-full h-[3.5rem] px-2 border border-red-400'}
+        className={'flex-row-center justify-start w-full h-[3.5rem] px-12 border border-red-400'}
       >
-        <div className={'border-red-400 border flex-row w-[30rem] justify-between'}>
-          {/*<Select placeholder="그룹">*/}
-          {/*  <option value="option1">Option 1</option>*/}
-          {/*  <option value="option2">Option 2</option>*/}
-          {/*  <option value="option3">Option 3</option>*/}
-          {/*</Select>*/}
-          {/*<div className={'flex-row w-[5rem]'}>*/}
-          <CustomSelect
-            items={items}
-            value={groupValue}
-            placeholder={'그룹'}
-            onChange={(newValue) => setGroupValue(newValue)}
-          />
-          <CustomSelect
-            items={items}
-            value={groupValue}
-            placeholder={'그룹'}
-            onChange={(newValue) => setGroupValue(newValue)}
-          />
-          {/*</div>*/}
+        {/*그룹 필터링*/}
+        <div className={'fixed border-red-400 border flex-row-center w-[13.5rem] justify-between'}>
+          {/*TODO : select 이쁘게 바꾸기*/}
+          <select className={'w-[6.25rem] border-base'}>
+            <option value="group">그룹</option>
+            <option value="group1">그룹1</option>
+          </select>
+          <select className={'w-[6.25rem] border-base'}>
+            <option value="subGroup">하위그룹</option>
+            <option value="subGroup1">하위그룹1</option>
+          </select>
         </div>
       </section>
+      {/*칸반, 스크럼 선택*/}
       <section className={'w-full h-[4rem] border border-red-400'}>
         <div className={'flex-row-center justify-center w-full h-full px-2'}>
           <button type={'button'} onClick={() => onClickKanban(true)}>
@@ -70,8 +61,26 @@ export default function Project() {
           </button>
         </div>
       </section>
-      <section className={'w-full h-[4.3rem] border border-red-400'}></section>
-      <section className={'w-full h-[40rem] border border-red-400'}></section>
+      {/*진행률*/}
+      <section
+        className={
+          'flex-row-center justify-end w-full h-[4.3rem] pr-[4.5rem] border border-red-400'
+        }
+      >
+        <div>진행률</div>
+      </section>
+      {/*보드*/}
+      <section className={'flex-row-center w-full h-[40rem] border border-red-400'}>
+        <div className={'flex-row-center justify-between w-[76rem]'}>
+          <section className={'w-[23rem] h-[37rem] border border-t-amber-200'}>보드 1</section>
+          <section className={'w-[23rem] h-[37rem] border border-t-amber-200'}>보드 2</section>
+          <section className={'w-[23rem] h-[37rem] border border-t-amber-200'}>보드 3</section>
+        </div>
+      </section>
+      {/*하단페이지로 이동*/}
+      <section className={'flex-row-center w-full h-[4rem]'}>
+        <BsChevronCompactDown className={'text-[4rem] text-gray-light'} />
+      </section>
     </section>
   );
 }
