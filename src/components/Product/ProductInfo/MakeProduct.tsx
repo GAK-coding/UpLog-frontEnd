@@ -23,15 +23,23 @@ export default function MakeProduct({ isOpen, onClose }: Props) {
   const [clientEmail, onChangeClientEmail, setClientEmail] = useInput('');
   const { showMessage, contextHolder } = useMessage();
 
+  // 제품 추가 완료 버튼
   const onClickMakeProduct = useCallback(() => {
+    // 필수 정보를 입력하지 않았을 때
     if (!productName || !masterEmail) {
       showMessage('warning', '필수 정보를 입력해주세요.');
       console.log(productName, masterEmail);
       return;
     }
+
+    // TODO : 제품 정보 생성 + 이메일로 초대하기
     onClose();
   }, [productName, masterEmail]);
 
+  // 마스터, 의뢰인 설정 시 유효한 이메일인지 확인
+  const checkEmail = useCallback(() => {
+    // TODO : 유효한 이메일인지 확인하기 (가입이 되어있는 이메일만 입력하는걸로 할지?)
+  }, [clientEmail, masterEmail]);
   return (
     <Modal isCentered onClose={onClose} isOpen={isOpen}>
       <ModalOverlay />
@@ -108,9 +116,11 @@ export default function MakeProduct({ isOpen, onClose }: Props) {
                     }
                   />
                   <button
+                    type={'button'}
                     className={
                       'self-center bg-orange rounded font-bold text-xs text-white h-7 mr-2 w-[3.5rem]'
                     }
+                    onClick={checkEmail}
                   >
                     확인
                   </button>
@@ -133,9 +143,11 @@ export default function MakeProduct({ isOpen, onClose }: Props) {
                     }
                   />
                   <button
+                    type={'button'}
                     className={
                       'self-center bg-orange rounded font-bold text-xs text-white h-7 mr-2 w-[3.5rem]'
                     }
+                    onClick={checkEmail}
                   >
                     확인
                   </button>
