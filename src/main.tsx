@@ -1,8 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App.tsx';
 import './index.css';
 import GlobalStyles from './styles/GlobalStyles';
+import loadable from '@loadable/component';
+
+const App = loadable(() => import('@layouts/App.tsx'));
 
 if (localStorage.theme === 'dark') {
   document.documentElement.classList.add('dark');
