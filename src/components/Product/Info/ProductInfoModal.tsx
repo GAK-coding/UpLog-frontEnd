@@ -74,9 +74,13 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct }: P
 
               {/*제품 이름*/}
               <div className={'w-full mt-4 mb-5 text-[1.1rem]'}>
-                <div className={'flex'}>
-                  <span className={'text-gray-dark font-bold mb-[0.93rem]'}>제품 이름</span>
-                  <span className={'text-gray-light font-semibold text-[0.62rem] ml-[0.3rem]'}>
+                <div className={'flex mb-[0.93rem]'}>
+                  <span className={'text-gray-dark font-bold'}>제품 이름</span>
+                  <span
+                    className={
+                      'text-gray-light self-center font-semibold text-[0.62rem] ml-[0.3rem]'
+                    }
+                  >
                     (필수)
                   </span>
                 </div>
@@ -100,8 +104,8 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct }: P
               {/*마스터 설정*/}
               {isCreateProduct && (
                 <div className={'w-full mb-5 text-[1.1rem]'}>
-                  <div className={'flex'}>
-                    <span className={'text-gray-dark font-bold mb-[0.93rem]'}>마스터 설정</span>
+                  <div className={'flex mb-[0.93rem]'}>
+                    <span className={'text-gray-dark font-bold'}>마스터 설정</span>
                     <span
                       className={
                         'text-gray-light self-center font-semibold text-[0.62rem] ml-[0.3rem]'
@@ -177,7 +181,7 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct }: P
 
         <ModalFooter>
           <button
-            className={'bg-orange rounded font-bold text-sm text-white h-9 w-[4.5rem]'}
+            className={'bg-orange rounded font-bold text-base text-white h-10 w-[5rem]'}
             onClick={onClickMakeProduct}
           >
             완료
