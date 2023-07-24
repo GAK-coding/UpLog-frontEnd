@@ -9,6 +9,9 @@ import {
   ModalOverlay,
 } from '@chakra-ui/react';
 import useInput from '@hooks/useInput.ts';
+import { useCallback } from 'react';
+import { useMessage } from '@hooks/useMessage.ts';
+import { product } from '@recoil/Product/atom.tsx';
 
 interface Props {
   isOpen: boolean;
@@ -17,6 +20,19 @@ interface Props {
 
 export default function MakeProduct({ isOpen, onClose }: Props) {
   const [productName, onChangeProductName, setProductName] = useInput('');
+  const [masterEmail, onChangeMasterEmail, setMasterEmail] = useInput('');
+  const [clientEmail, onChangeClientEmail, setClientEmail] = useInput('');
+  const { showMessage, contextHolder } = useMessage();
+
+  const onClickMakeProduct = useCallback(() => {
+    if (!productName || !masterEmail) {
+      showMessage('warning', '필수 정보를 입력해주세요.');
+      console.log(productName, masterEmail);
+      return;
+    }
+    onClose();
+  }, [productName, masterEmail]);
+
   return (
     <Modal isCentered onClose={onClose} isOpen={isOpen}>
       <ModalOverlay />
@@ -45,6 +61,8 @@ export default function MakeProduct({ isOpen, onClose }: Props) {
         <ModalBody>
           <Flex justifyContent={'center'} h={'100%'}>
             <section className={'flex-col-center justify-evenly w-[25rem] h-full'}>
+              {contextHolder}
+
               {/*제품 이름*/}
               <div className={'w-full mt-4 mb-6 text-[0.93rem]'}>
                 <div className={'flex'}>
@@ -80,10 +98,9 @@ export default function MakeProduct({ isOpen, onClose }: Props) {
                 </div>
                 <input
                   type="text"
-                  value={productName}
-                  onChange={onChangeProductName}
+                  value={masterEmail}
+                  onChange={onChangeMasterEmail}
                   placeholder={'이메일을 입력해주세요.'}
-                  maxLength={10}
                   className={'w-full h-10 border-base border-gray-border rounded-xl p-4 text-black'}
                 />
               </div>
@@ -93,10 +110,9 @@ export default function MakeProduct({ isOpen, onClose }: Props) {
                 <span className={'text-gray-dark font-bold mb-[0.93rem]'}>의뢰인 초대</span>
                 <input
                   type="text"
-                  value={productName}
-                  onChange={onChangeProductName}
+                  value={clientEmail}
+                  onChange={onChangeClientEmail}
                   placeholder={'이메일은 쉼표(,)로 구분해 주세요.'}
-                  maxLength={10}
                   className={'w-full h-10 border-base border-gray-border rounded-xl p-4 text-black'}
                 />
               </div>
@@ -107,7 +123,7 @@ export default function MakeProduct({ isOpen, onClose }: Props) {
         <ModalFooter>
           <button
             className={'bg-orange rounded font-bold text-xs text-white h-9 w-[4.5rem]'}
-            // onClick={onClickChangePw}
+            onClick={onClickMakeProduct}
           >
             완료
           </button>
