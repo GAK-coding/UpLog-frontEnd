@@ -1,7 +1,7 @@
 import React, { FormEvent, useCallback, useState } from 'react';
-import { useMessage } from '@hooks/useMessage.ts';
+import { useMessage } from '@/hooks/useMessage.ts';
 import { MdOutlineMailOutline } from 'react-icons/md';
-import useInput from '@hooks/useInput.ts';
+import useInput from '@/hooks/useInput.ts';
 import { useNavigate } from 'react-router-dom';
 
 export default function PwInquiry() {
