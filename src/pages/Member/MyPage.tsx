@@ -5,7 +5,7 @@ import { useDisclosure } from '@chakra-ui/react';
 import { FaUserCircle } from 'react-icons/fa';
 import { BsFillCameraFill } from 'react-icons/bs';
 import { RcFile } from 'antd/es/upload';
-import ChangePwModal from '@components/Member/MyPage/ChangePwModal.tsx';
+import UserManageModal from '@components/Member/MyPage/UserManageModal.tsx';
 
 export default function MyPage() {
   // 비밀번호 변경 모달
@@ -38,7 +38,7 @@ export default function MyPage() {
 
   return (
     <section className={'mypage flex flex-col items-center w-full h-[68rem]'}>
-      <article className={'w-[43rem] h-[40rem] mt-12'}>
+      <article className={'w-[46rem] h-[44rem] mt-12'}>
         <h1 className={'h-[10%] text-3xl font-bold'}>프로필 수정</h1>
         <div
           className={
@@ -48,12 +48,12 @@ export default function MyPage() {
           {/* 상단 */}
           <div className={'flex-row-center justify-between w-full h-[13%]'}>
             <div className={'flex-col-center items-start'}>
-              <span className={'text-xl font-bold'}>오현 프로필 관리</span>
-              <span className={'text-[0.93rem] text-gray-dark'}>qhslsl@gmail.com</span>
+              <span className={'text-[1.4rem] font-bold'}>오현 프로필 관리</span>
+              <span className={'text-[1.1rem] text-gray-dark'}>qhslsl@gmail.com</span>
             </div>
             <div className={'h-full flex-col-center justify-end'}>
               <button
-                className={'text-gray-dark text-[0.93rem] font-bold underline'}
+                className={'text-gray-dark text-[1rem] font-bold underline'}
                 onClick={() => {
                   onOpen();
                   onChangeIsClickPw(true);
@@ -64,7 +64,7 @@ export default function MyPage() {
             </div>
           </div>
           {/* 프로필 정보 수정 */}
-          <div className={'w-full h-[79%] flex-col-center justify-end mt-[-1rem]'}>
+          <div className={'w-full h-[79%] flex-col-center justify-end '}>
             <div className={'h-[40%] flex-col-center justify-end mb-[1rem]'}>
               <ImageCrop
                 fileList={fileList}
@@ -74,7 +74,7 @@ export default function MyPage() {
               >
                 {fileList.length < 1 && (
                   <div className={'relative'}>
-                    <FaUserCircle className={'w-[10rem] h-[10rem] fill-gray-dark'} />
+                    <FaUserCircle className={'w-[10rem] h-[10rem] fill-gray-dark mt-[-1rem]'} />
                     <span
                       className={
                         'flex-row-center absolute bottom-[0.8rem] right-[0.8rem] w-7 h-7 rounded-[50%] bg-gray-light'
@@ -87,11 +87,11 @@ export default function MyPage() {
               </ImageCrop>
             </div>
 
-            <label className={'w-[22rem] flex-col-center justify-start items-start h-[25%]'}>
-              <span className={'text-gray-dark text-[0.93rem] font-bold mb-4'}>이름</span>
+            <label className={'w-[25rem] flex-col-center justify-start items-start h-[25%]'}>
+              <span className={'text-gray-dark text-[1rem] font-bold mb-4'}>이름</span>
               <input
                 className={
-                  'border-base border-gray-border w-full h-10 rounded-[0.625rem] text-[0.93rem] font-bold p-2'
+                  'border-base border-gray-border w-full h-11 rounded-[0.625rem] text-[0.93rem] font-semibold p-2'
                 }
                 type="text"
                 maxLength={10}
@@ -99,11 +99,11 @@ export default function MyPage() {
               />
             </label>
 
-            <label className={'w-[22rem] flex-col-center justify-start items-start h-[25%]'}>
-              <span className={'text-gray-dark text-[0.93rem] font-bold mb-4'}>닉네임</span>
+            <label className={'w-[25rem] flex-col-center justify-start items-start h-[25%]'}>
+              <span className={'text-gray-dark text-[1rem] font-bold mb-4'}>닉네임</span>
               <input
                 className={
-                  'border-base border-gray-border w-full h-10 rounded-[0.625rem] text-[0.93rem] font-bold p-2'
+                  'border-base border-gray-border w-full h-11 rounded-[0.625rem] text-[0.93rem] font-semibold p-2'
                 }
                 type="text"
                 maxLength={10}
@@ -112,25 +112,29 @@ export default function MyPage() {
             </label>
           </div>
           {/*  확인 취소 버튼  */}
-          <div className={'w-full h-[8%] flex-row-center justify-end px-11 mt-[1rem]'}>
-            <button className={'w-16 h-9 rounded-[0.3rem] bg-orange text-white text-xs font-bold'}>
+          <div className={'w-full h-[8%] flex-row-center justify-end px-9'}>
+            <button
+              className={'w-[4.5rem] h-10 rounded-[0.3rem] bg-orange text-white text-xs font-bold'}
+            >
               취소
             </button>
             <button
-              className={'w-16 h-9 rounded-[0.3rem] bg-orange text-white text-xs font-bold ml-4'}
+              className={
+                'w-[4.5rem] h-10 rounded-[0.3rem] bg-orange text-white text-xs font-bold ml-4'
+              }
             >
               저장
             </button>
           </div>
         </div>
       </article>
-      <article className={'w-[43rem] h-48 mt-16'}>
+      <article className={'w-[46rem] h-48 mt-16'}>
         <h1 className={'h-16 text-3xl font-bold'}>계정 관리</h1>
 
-        <div className={'w-full h-32 border-base rounded-xl p-6 shadow-sign-up'}>
-          <span className={'text-xl font-bold'}>계정 삭제</span>
-          <div className={'flex-row-center justify-between px-5 mt-4'}>
-            <span className={'text-gray-dark text-xs'}>
+        <div className={'w-full h-40 border-base rounded-xl p-6 shadow-sign-up'}>
+          <span className={'text-[1.4rem] font-bold'}>계정 삭제</span>
+          <div className={'flex-row-center justify-between px-9 mt-6'}>
+            <span className={'flex-row-center text-gray-dark font-semibold text-[1rem]'}>
               계정 삭제 시 프로필 및 참여한 제품의 모든 정보가 삭제됩니다.
             </span>
             <button
@@ -138,7 +142,7 @@ export default function MyPage() {
                 onOpen();
                 onChangeIsClickPw(false);
               }}
-              className={'w-32 h-9 bg-orange text-white font-bold text-sm rounded'}
+              className={'w-32 h-10 bg-orange text-white font-semibold text-[0.93rem] rounded'}
             >
               계정 삭제
             </button>
@@ -146,7 +150,7 @@ export default function MyPage() {
         </div>
       </article>
 
-      <ChangePwModal isOpen={isOpen} onClose={onClose} isClickPwChange={isClickPwChange} />
+      <UserManageModal isOpen={isOpen} onClose={onClose} isClickPwChange={isClickPwChange} />
     </section>
   );
 }

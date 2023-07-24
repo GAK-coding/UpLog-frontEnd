@@ -9,8 +9,12 @@ import {
   ModalOverlay,
 } from '@chakra-ui/react';
 import useInput from '@hooks/useInput.ts';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useMessage } from '@hooks/useMessage.ts';
+import ImageCrop from '@components/Member/MyPage/ImageCrop.tsx';
+import { UploadFile, UploadProps } from 'antd/lib';
+import { RcFile } from 'antd/es/upload';
+import { FiUpload } from 'react-icons/fi';
 
 interface Props {
   isOpen: boolean;
@@ -24,6 +28,25 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct }: P
   const [clientEmail, onChangeClientEmail, setClientEmail] = useInput('');
   const { showMessage, contextHolder } = useMessage();
 
+  // 제품 이미지 업로드
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const [imageSrc, setImageSrc] = useState('');
+
+  const encodeFileToBase64 = (fileBlob: RcFile): Promise<void> => {
+    const reader: FileReader = new FileReader();
+    reader.readAsDataURL(fileBlob);
+    return new Promise((resolve) => {
+      reader.onload = () => {
+        setImageSrc(reader.result as string);
+        resolve();
+      };
+    });
+  };
+
+  const onImageChange: UploadProps['onChange'] = async ({ fileList: newFileList }) => {
+    await setFileList(newFileList);
+    if (newFileList.length > 0) await encodeFileToBase64(newFileList?.[0]?.originFileObj!);
+  };
   // 제품 추가 완료 버튼
   const onClickMakeProduct = useCallback(() => {
     // 필수 정보를 입력하지 않았을 때
@@ -73,7 +96,7 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct }: P
               {contextHolder}
 
               {/*제품 이름*/}
-              <div className={'w-full mt-4 mb-5 text-[1.1rem]'}>
+              <div className={'w-full mt-4 mb-5 text-[1rem]'}>
                 <div className={'flex mb-[0.93rem]'}>
                   <span className={'text-gray-dark font-bold'}>제품 이름</span>
                   <span
@@ -96,14 +119,28 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct }: P
                 />
               </div>
               {/*제품 이미지*/}
-              <div className={'w-full mb-5 text-[1.1rem]'}>
+              <div className={'w-full mb-5 text-[1rem]'}>
                 <span className={'text-gray-dark font-bold mb-[0.93rem]'}>제품 이미지</span>
-                <div className={'border-base w-[9.3rem] h-[9.3rem]'}></div>
+                <div className={'flex-row-center border-base w-[9.3rem] h-[9.3rem] z-40'}>
+                  <ImageCrop
+                    fileList={fileList}
+                    onImageChange={onImageChange}
+                    cropShape={'rect'}
+                    listType={'picture-card'}
+                  >
+                    {fileList.length < 1 && (
+                      <div className={'flex-col-center'}>
+                        <FiUpload className={'flex w-[5rem] h-[5rem] stroke-gray-light'} />
+                        <span className={'flex text-gray-light'}>Image</span>
+                      </div>
+                    )}
+                  </ImageCrop>
+                </div>
               </div>
 
               {/*마스터 설정*/}
               {isCreateProduct && (
-                <div className={'w-full mb-5 text-[1.1rem]'}>
+                <div className={'w-full mb-5 text-[1rem]'}>
                   <div className={'flex mb-[0.93rem]'}>
                     <span className={'text-gray-dark font-bold'}>마스터 설정</span>
                     <span
@@ -146,7 +183,7 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct }: P
               )}
 
               {/*의뢰인 초대*/}
-              <div className={'w-full mb-3 text-[1.1rem]'}>
+              <div className={'w-full mb-3 text-[1rem]'}>
                 <span className={'text-gray-dark font-bold mb-[0.93rem]'}>의뢰인 초대</span>
                 <div
                   className={'flex w-full h-11 border-base border-gray-border rounded-xl relative'}
@@ -181,7 +218,7 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct }: P
 
         <ModalFooter>
           <button
-            className={'bg-orange rounded font-bold text-base text-white h-10 w-[5rem]'}
+            className={'bg-orange rounded font-bold text-xs text-white h-9 w-[4.5rem]'}
             onClick={onClickMakeProduct}
           >
             완료
