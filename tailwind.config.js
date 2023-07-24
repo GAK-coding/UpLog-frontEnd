@@ -25,6 +25,9 @@ export default {
       fontFamily: {
         logo: "'Baloo Tammudu 2', cursive",
       },
+      width: {
+        noneSideBar: 'calc(100vw - 18.6rem)',
+      },
       height: {
         noneHeader: 'calc(100vh - 5.7rem)',
       },

@@ -11,15 +11,16 @@ import {
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
-import useInput from '@hooks/useInput.ts';
-import { useMessage } from '@hooks/useMessage.ts';
+import useInput from '@/hooks/useInput.ts';
+
+import { useMessage } from '@/hooks/useMessage.ts';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
   isClickPwChange: boolean;
 }
-export default function ChangePwModal({ isOpen, onClose, isClickPwChange }: Props) {
+export default function UserManageModal({ isOpen, onClose, isClickPwChange }: Props) {
   const [nowPw, onChangeNowPw, setNowPw] = useInput('');
   const [newPw, onChangeNewPw, setPassword] = useInput('');
   const [isCheckPw, setIsCheckPw] = useState(false);
@@ -53,7 +54,7 @@ export default function ChangePwModal({ isOpen, onClose, isClickPwChange }: Prop
       <ModalOverlay />
       <ModalContent
         maxW="37.5rem"
-        h={isClickPwChange ? '27rem' : '20rem'}
+        h={isClickPwChange ? '29rem' : '20rem'}
         shadow={'boxShadow-sign-up'}
         rounded={'none'}
         p={'1.2rem'}
@@ -75,11 +76,11 @@ export default function ChangePwModal({ isOpen, onClose, isClickPwChange }: Prop
         />
         <ModalBody>
           <Flex justifyContent={'center'} h={'100%'}>
-            <section className={'flex-col-center justify-evenly w-[22.5rem] h-full'}>
+            <section className={'flex-col-center justify-evenly w-[24rem] h-full'}>
               {contextHolder}
 
               {/* 현재 비밀번호 */}
-              <div className={'w-full text-[0.93rem] mb-4'}>
+              <div className={'w-full text-[1rem] mb-4'}>
                 <span className={'text-gray-dark font-bold mb-[0.93rem]'}>현재 비밀번호</span>
                 <input
                   type="password"
@@ -88,7 +89,7 @@ export default function ChangePwModal({ isOpen, onClose, isClickPwChange }: Prop
                   placeholder={'현재 비밀번호를 입력하세요.'}
                   maxLength={15}
                   className={
-                    'tracking-[-0.1rem] w-full h-10 border-base border-gray-border rounded-xl mb-2 p-4 text-black'
+                    'w-full h-11 border-base border-gray-border text-[0.93rem] rounded-xl mb-2 p-4 text-black'
                   }
                 />
                 {isClickPwChange && (
@@ -102,11 +103,11 @@ export default function ChangePwModal({ isOpen, onClose, isClickPwChange }: Prop
               </div>
               {/* 새로운 비밀번호 */}
               {isClickPwChange && (
-                <div className={'w-full text-[0.93rem]'}>
+                <div className={'w-full text-[1rem]'}>
                   <span className={'text-gray-dark font-bold mb-[0.93rem]'}>새로운 비밀번호</span>
                   <span
                     className={
-                      'flex-row-center border-base border-gray-border rounded-xl h-10 pl-4 mb-2 bg-border'
+                      'flex-row-center border-base border-gray-border rounded-xl h-11 pl-4 mb-2 bg-border'
                     }
                   >
                     <input
@@ -115,9 +116,7 @@ export default function ChangePwModal({ isOpen, onClose, isClickPwChange }: Prop
                       onChange={onChangeNewPw}
                       placeholder={'새로운 비밀번호를 입력하세요.'}
                       maxLength={15}
-                      className={`w-[90%] h-full text-black
-                    ${newPw && !isPwVisible && 'tracking-[-0.1rem]'}
-                    `}
+                      className={'w-[90%] h-full text-[0.93rem] text-black'}
                     />
                     <span className={'w-[10%] text-2xl cursor-pointer'} onClick={onClickPwVisible}>
                       {isPwVisible ? (
@@ -128,7 +127,7 @@ export default function ChangePwModal({ isOpen, onClose, isClickPwChange }: Prop
                     </span>
                   </span>
                   {!isCheckPw && newPw && (
-                    <span className={'flex-row-center justify-start text-sm text-[#E06469]'}>
+                    <span className={'flex-row-center justify-start text-sm text-[#E06469] pl-4'}>
                       영문/숫자/특수문자 포함, 8~15자로 입력해주세요.
                     </span>
                   )}

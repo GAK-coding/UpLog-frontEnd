@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UserManageModal Member Withdrawal modal correctly 1`] = `null`;
+
+exports[`UserManageModal password change modal correctly 1`] = `null`;

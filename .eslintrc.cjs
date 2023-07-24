@@ -139,7 +139,7 @@ module.exports = {
     'linebreak-style': ['error', 'unix'],
     eqeqeq: ['error', 'always', { null: 'ignore' }],
     camelcase: ['error', { properties: 'never' }],
-    quotes: ['error', 'single', { avoidEscape: true }],
+    // quotes: ['error', 'single', { avoidEscape: true }],
     // 'no-null/no-null': 2,
     // curly: ['error', 'multi-line', 'consistent'],
     // 'nonblock-statement-body-position': ['error', 'beside'],
