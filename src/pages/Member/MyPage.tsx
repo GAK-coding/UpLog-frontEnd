@@ -5,9 +5,9 @@ import { useDisclosure } from '@chakra-ui/react';
 import { FaUserCircle } from 'react-icons/fa';
 import { BsFillCameraFill } from 'react-icons/bs';
 import { RcFile } from 'antd/es/upload';
-import ChangePwModal from '@components/Member/MyPage/ChangePwModal.tsx';
+import UserManageModal from '@components/Member/MyPage/UserManageModal.tsx';
 
-export default function MyPage() {
+export default function MyPage(게) {
   // 비밀번호 변경 모달
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isClickPwChange, setIsClickPwChange] = useState(false);
@@ -133,8 +133,8 @@ export default function MyPage() {
 
         <div className={'w-full h-40 border-base rounded-xl p-6 shadow-sign-up'}>
           <span className={'text-[1.4rem] font-bold'}>계정 삭제</span>
-          <div className={'flex-row-center justify-between px-5 mt-6'}>
-            <span className={'flex-row-center text-gray-dark font-semibold text-[1.1rem]'}>
+          <div className={'flex-row-center justify-between px-9 mt-6'}>
+            <span className={'flex-row-center text-gray-dark font-semibold text-[1rem]'}>
               계정 삭제 시 프로필 및 참여한 제품의 모든 정보가 삭제됩니다.
             </span>
             <button
@@ -142,7 +142,7 @@ export default function MyPage() {
                 onOpen();
                 onChangeIsClickPw(false);
               }}
-              className={'w-36 h-10 bg-orange text-white font-semibold text-[0.93rem] rounded'}
+              className={'w-32 h-10 bg-orange text-white font-semibold text-[0.93rem] rounded'}
             >
               계정 삭제
             </button>
@@ -150,7 +150,7 @@ export default function MyPage() {
         </div>
       </article>
 
-      <ChangePwModal isOpen={isOpen} onClose={onClose} isClickPwChange={isClickPwChange} />
+      <UserManageModal isOpen={isOpen} onClose={onClose} isClickPwChange={isClickPwChange} />
     </section>
   );
 }
