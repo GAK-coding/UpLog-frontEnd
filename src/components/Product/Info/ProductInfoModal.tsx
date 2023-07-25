@@ -121,7 +121,7 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct }: P
               {/*제품 이미지*/}
               <div className={'w-full mb-5 text-[1rem]'}>
                 <span className={'text-gray-dark font-bold mb-[0.93rem]'}>제품 이미지</span>
-                <div className={'flex-row-center border-base w-[9.3rem] h-[9.3rem] z-40'}>
+                <div className={'flex-row-center w-[9.3rem] h-[9.3rem] z-40'}>
                   <ImageCrop
                     fileList={fileList}
                     onImageChange={onImageChange}
@@ -129,7 +129,7 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct }: P
                     listType={'picture-card'}
                   >
                     {fileList.length < 1 && (
-                      <div className={'flex-col-center'}>
+                      <div className={'flex-col-center border-base w-h-full'}>
                         <FiUpload className={'flex w-[5rem] h-[5rem] stroke-gray-light'} />
                         <span className={'flex text-gray-light'}>Image</span>
                       </div>
