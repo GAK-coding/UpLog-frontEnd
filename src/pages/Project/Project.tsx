@@ -1,15 +1,17 @@
 import React, { useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import CustomSelect from '@/components/UI/CustomSelect.tsx';
 import { BsChevronCompactDown } from 'react-icons/bs';
+import { ProjectGroupFilter } from '@/typings/project.ts';
+import { Select } from 'antd';
 
 export default function Project() {
   // const { project } = useParams();
-  const items = [
-    { label: '그룹', value: 'group' },
-    { label: '개발팀', value: 'develop' },
-    { label: '마케팅팀', value: 'marketing' },
-    { label: '홍보팀', value: 'promotion' },
+
+  const items: ProjectGroupFilter[] = [
+    { value: 'all', label: '그룹' },
+    { value: 'develop', label: '개발팀' },
+    { value: 'marketing', label: '마케팅' },
+    { value: 'promotion', label: '홍보' },
   ];
   const [isKanban, setIsKanban] = useState(true);
 
@@ -17,22 +19,25 @@ export default function Project() {
     setIsKanban(check);
   }, []);
 
+  const handleChange = (value: { value: string; label: React.ReactNode }) => {
+    console.log(value); // { value: "lucy", key: "lucy", label: "Lucy (101)" }
+  };
   return (
     <section className={'flex-col-center justify-start w-full h-full'}>
       <section
         className={'flex-row-center justify-start w-full h-[3.5rem] px-12 border border-red-400'}
       >
         {/*그룹 필터링*/}
-        <div className={'fixed border-red-400 border flex-row-center w-[13.5rem] justify-between'}>
-          {/*TODO : select 이쁘게 바꾸기*/}
-          <select className={'w-[6.25rem] border-base'}>
-            <option value="group">그룹</option>
-            <option value="group1">그룹1</option>
-          </select>
-          <select className={'w-[6.25rem] border-base'}>
-            <option value="subGroup">하위그룹</option>
-            <option value="subGroup1">하위그룹1</option>
-          </select>
+        <div className={'fixed flex-row-center w-[13.5rem] justify-between'}>
+          <Select
+            labelInValue
+            defaultValue={{ value: 'lucy', label: 'Lucy (101)' }}
+            style={{ width: 100 }}
+            onChange={handleChange}
+            options={items}
+            popupClassName={'project-group-filter'}
+            dropdownStyle={{ background: 'var(--white)', color: 'var(--black)' }}
+          ></Select>
         </div>
       </section>
       {/*칸반, 스크럼 선택*/}

@@ -1,14 +1,21 @@
+import { Select } from 'antd';
+
 interface Props {
-  width: string;
+  width: number;
   items: {
     value: string;
     label: string;
   }[];
+  onChange: () => void;
 }
-export default function CustomSelect(props: Props) {
+export default function CSelect(props: Props) {
   return (
-    <div>
-      <div>CustomSelect</div>
-    </div>
+    <Select
+      labelInValue
+      defaultValue={{ value: props.items[0].value, label: props.items[0].label }}
+      style={{ width: props.width }}
+      onChange={() => props.onChange}
+      options={props.items}
+    />
   );
 }
