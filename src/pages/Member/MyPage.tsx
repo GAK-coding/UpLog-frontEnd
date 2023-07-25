@@ -33,7 +33,7 @@ export default function MyPage() {
 
   const onImageChange: UploadProps['onChange'] = async ({ fileList: newFileList }) => {
     await setFileList(newFileList);
-    if (newFileList.length > 0) await encodeFileToBase64(newFileList?.[0]?.originFileObj!);
+    if (newFileList.length > 0) await encodeFileToBase64(newFileList[0]!.originFileObj!);
   };
 
   return (
