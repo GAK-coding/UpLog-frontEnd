@@ -1,0 +1,47 @@
+/* image cropper modal style */
+.ant-modal .ant-modal-title {
+  background: var(--white);
+  color: var(--black);
+}
+
+.ant-modal .ant-modal-close-x {
+  color: var(--gray-light);
+}
+
+.ant-modal .ant-modal-content {
+  background: var(--white);
+  color: var(--black);
+}
+
+.ant-modal .ant-modal-footer .ant-btn:hover,
+.ant-modal .ant-modal-body .ant-btn:hover,
+.ant-modal button {
+  background: var(--orange);
+  color: var(--white);
+  border: none;
+}
+
+.img-crop-control button {
+  background: inherit;
+  color: inherit;
+}
+
+.ant-modal-root .ant-modal-wrap {
+  z-index: 1450;
+}
+
+
+.ant-upload-wrapper.ant-upload-picture-card-wrapper
+  .ant-upload-list.ant-upload-list-picture-card
+  .ant-upload-list-item-actions
+  a {
+  display: none;
+}
+
+.ant-upload-wrapper.ant-upload-picture-card-wrapper .ant-upload.ant-upload-select {
+  border: none;
+}
+
+:where(.css-dev-only-do-not-override-1m62vyb).ant-upload-wrapper.ant-upload-picture-card-wrapper .ant-upload-list.ant-upload-list-picture-card .ant-upload-list-item {
+  border: none;
+}

@@ -19,6 +19,7 @@ export default {
           dark: 'var(--gray-dark)',
           spring: 'var(--gray-spring)',
           border: 'var(--border-gray)',
+          board: 'var(--board-gray)',
         },
         hover: 'var(--hover)',
       },

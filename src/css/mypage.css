@@ -1,0 +1,26 @@
+/* mypage 프로필 사진 */
+.mypage .ant-upload-wrapper.ant-upload-picture-circle-wrapper .ant-upload.ant-upload-select {
+  border: none;
+}
+
+.mypage
+  :where(.css-dev-only-do-not-override-1m62vyb).ant-upload-wrapper
+  .ant-upload-list.ant-upload-list-picture-circle
+  .ant-upload-list-item-error {
+  border: none;
+
+  width: 10rem;
+  height: 10rem;
+}
+
+.ant-tooltip {
+  display: none;
+}
+
+.mypage
+  :where(.css-dev-only-do-not-override-1m62vyb).ant-upload-wrapper.ant-upload-picture-circle-wrapper
+  .ant-upload-list.ant-upload-list-picture-circle
+  .ant-upload-list-item-actions
+  a {
+  display: none;
+}
