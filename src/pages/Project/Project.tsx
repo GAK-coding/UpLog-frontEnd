@@ -7,7 +7,14 @@ import { Select } from 'antd';
 export default function Project() {
   // const { project } = useParams();
 
-  const items: ProjectGroupFilter[] = [
+  const pGroup: ProjectGroupFilter[] = [
+    { value: 'all', label: '그룹' },
+    { value: 'develop', label: '개발팀' },
+    { value: 'marketing', label: '마케팅' },
+    { value: 'promotion', label: '홍보' },
+  ];
+
+  const cGroup: ProjectGroupFilter[] = [
     { value: 'all', label: '그룹' },
     { value: 'develop', label: '개발팀' },
     { value: 'marketing', label: '마케팅' },
@@ -28,15 +35,21 @@ export default function Project() {
         className={'flex-row-center justify-start w-full h-[3.5rem] px-12 border border-red-400'}
       >
         {/*그룹 필터링*/}
-        <div className={'fixed flex-row-center w-[13.5rem] justify-between'}>
+        <div className={'fixed flex-row-center w-[18rem] justify-between'}>
           <Select
             labelInValue
-            defaultValue={{ value: 'lucy', label: 'Lucy (101)' }}
+            defaultValue={{ value: pGroup[0].value, label: pGroup[0].label }}
             style={{ width: 100 }}
             onChange={handleChange}
-            options={items}
-            popupClassName={'project-group-filter'}
-            dropdownStyle={{ background: 'var(--white)', color: 'var(--black)' }}
+            options={pGroup}
+          ></Select>
+
+          <Select
+            labelInValue
+            defaultValue={{ value: pGroup[0].value, label: pGroup[0].label }}
+            style={{ width: 100 }}
+            onChange={handleChange}
+            options={pGroup}
           ></Select>
         </div>
       </section>
