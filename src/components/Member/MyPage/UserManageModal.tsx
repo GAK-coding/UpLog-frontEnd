@@ -51,7 +51,9 @@ export default function UserManageModal({ isOpen, onClose, isClickPwChange }: Pr
 
   return (
     <Modal isCentered onClose={resetPw} isOpen={isOpen}>
+      {contextHolder}
       <ModalOverlay />
+
       <ModalContent
         maxW="37.5rem"
         h={isClickPwChange ? '29rem' : '20rem'}
@@ -77,8 +79,6 @@ export default function UserManageModal({ isOpen, onClose, isClickPwChange }: Pr
         <ModalBody>
           <Flex justifyContent={'center'} h={'100%'}>
             <section className={'flex-col-center justify-evenly w-[24rem] h-full'}>
-              {contextHolder}
-
               {/* 현재 비밀번호 */}
               <div className={'w-full text-[1rem] mb-4'}>
                 <span className={'text-gray-dark font-bold mb-[0.93rem]'}>현재 비밀번호</span>
