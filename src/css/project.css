@@ -48,3 +48,25 @@
     font-weight: 700;
     color: var(--gray-dark);
 }
+
+:where(.css-dev-only-do-not-override-1m62vyb).ant-progress .ant-progress-success-bg, :where(.css-dev-only-do-not-override-1m62vyb).ant-progress .ant-progress-bg {
+    background-color: var(--orange);
+}
+
+:where(.css-dev-only-do-not-override-1m62vyb).ant-progress .ant-progress-text {
+    color : var(--gray-dark);
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+:where(.css-dev-only-do-not-override-1m62vyb).ant-progress .ant-progress-inner {
+    background-color: var(--progress);
+}
+
+:where(.css-dev-only-do-not-override-1m62vyb).ant-progress.ant-progress-status-success .ant-progress-bg {
+    background-color: #B1D7AE;
+}
+
+.progress .anticon svg {
+    color: #86c583;
+}

@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { BsChevronCompactDown } from 'react-icons/bs';
 import { ProjectGroupFilter } from '@/typings/project.ts';
-import { Select } from 'antd';
+import { Progress, Select } from 'antd';
 
 export default function Project() {
   // const { project } = useParams();
@@ -15,11 +15,13 @@ export default function Project() {
   ];
 
   const cGroup: ProjectGroupFilter[] = [
-    { value: 'all', label: '그룹' },
+    { value: 'all', label: '하위그룹' },
     { value: 'develop', label: '개발팀' },
     { value: 'marketing', label: '마케팅' },
     { value: 'promotion', label: '홍보' },
   ];
+
+  const progress = 77;
   const [isKanban, setIsKanban] = useState(true);
 
   const onClickKanban = useCallback((check: boolean) => {
@@ -27,7 +29,7 @@ export default function Project() {
   }, []);
 
   const handleChange = (value: { value: string; label: React.ReactNode }) => {
-    console.log(value); // { value: "lucy", key: "lucy", label: "Lucy (101)" }
+    console.log(value);
   };
   return (
     <section className={'flex-col-center justify-start w-full h-full'}>
@@ -36,6 +38,7 @@ export default function Project() {
       >
         {/*그룹 필터링*/}
         <div className={'fixed flex-row-center w-[18rem] justify-between'}>
+          {/*그룹 -> 하위로 바꾸기*/}
           <Select
             labelInValue
             defaultValue={{ value: pGroup[0].value, label: pGroup[0].label }}
@@ -46,10 +49,10 @@ export default function Project() {
 
           <Select
             labelInValue
-            defaultValue={{ value: pGroup[0].value, label: pGroup[0].label }}
+            defaultValue={{ value: cGroup[0].value, label: cGroup[0].label }}
             style={{ width: 100 }}
             onChange={handleChange}
-            options={pGroup}
+            options={cGroup}
           ></Select>
         </div>
       </section>
@@ -85,7 +88,12 @@ export default function Project() {
           'flex-row-center justify-end w-full h-[4.3rem] pr-[4.5rem] border border-red-400'
         }
       >
-        <div>진행률</div>
+        <span className={'flex-row-center self-center text-xs font-bold mr-4 text-gray-dark'}>
+          진행률
+        </span>
+        <div className={'mt-2 self-center w-[15.6rem]'}>
+          <Progress className={'progress'} percent={progress} />
+        </div>
       </section>
       {/*보드*/}
       <section className={'flex-row-center w-full h-[40rem] border border-red-400'}>
