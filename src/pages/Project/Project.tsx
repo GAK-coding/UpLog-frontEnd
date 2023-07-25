@@ -88,7 +88,9 @@ export default function Project() {
           'flex-row-center justify-end w-full h-[4.3rem] pr-[4.5rem] border border-red-400'
         }
       >
-        <span className={'flex-row-center self-center text-xs font-bold mr-4 text-gray-dark'}>
+        <span
+          className={'flex-row-center self-center text-[0.93rem] font-bold mr-4 text-gray-dark'}
+        >
           진행률
         </span>
         <div className={'mt-2 self-center w-[15.6rem]'}>
