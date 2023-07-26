@@ -94,7 +94,18 @@ export default function Project() {
       {/*보드*/}
       <section className={'flex-row-center w-full h-board'}>
         <div className={'flex-row-center justify-between w-[80rem] h-full py-8'}>
-          <section className={'w-[24rem] h-full border border-t-amber-200'}>보드 1</section>
+          <section className={'w-[24rem] h-full border border-t-amber-200'}>
+            {/*제목, 개수*/}
+            <div className={'h-[3.8rem] border-red-400 border'}></div>
+            {/*태스크*/}
+            <div className={'h-[90%] overflow-y-auto border border-red-400'}>
+              <img src={'/logo.svg'} className={'w-32'} />
+              <img src={'/logo.svg'} className={'w-32'} />
+              {/*<img src={'/logo.svg'} className={'w-32'} />*/}
+              {/*<img src={'/logo.svg'} className={'w-32'} />*/}
+              <img src={'/logo.svg'} className={'w-32'} />
+            </div>
+          </section>
           <section className={'w-[24rem] h-full border border-t-amber-200'}>보드 2</section>
           <section className={'w-[24rem] h-full border border-t-amber-200'}>보드 3</section>
         </div>

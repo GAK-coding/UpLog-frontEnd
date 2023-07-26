@@ -35,6 +35,7 @@ export default {
       height: {
         noneHeader: 'calc(100vh - 5.7rem)',
         board: 'calc(100vh - 13.8rem)',
+        'board-task': 'calc(100vh - 17.8rem)',
       },
       boxShadow: {
         'sign-up': '2px 2px 10px 1px rgba(0, 0, 0, 0.15), -2px -2px 10px 0px var(--shadow)',
