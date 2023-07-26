@@ -33,9 +33,7 @@ export default function Project() {
   };
   return (
     <section className={'flex-col-center justify-start w-full h-full'}>
-      <section
-        className={'flex-row-center justify-start w-full h-[3.5rem] px-12 border border-red-400'}
-      >
+      <section className={'flex-row-center justify-start w-full h-[3.5rem] px-12 pt-4'}>
         {/*그룹 필터링*/}
         <div className={'fixed flex-row-center w-[18rem] justify-between'}>
           {/*그룹 -> 하위로 바꾸기*/}
@@ -57,8 +55,8 @@ export default function Project() {
         </div>
       </section>
       {/*칸반, 스크럼 선택*/}
-      <section className={'w-full h-[4rem] border border-red-400'}>
-        <div className={'flex-row-center justify-center w-full h-full px-2'}>
+      <section className={'w-full h-[6rem]'}>
+        <div className={'flex-row-center justify-center w-full h-full px-2 '}>
           <button type={'button'} onClick={() => onClickKanban(true)}>
             <span
               className={`text-3xl  ${
@@ -83,11 +81,7 @@ export default function Project() {
         </div>
       </section>
       {/*진행률*/}
-      <section
-        className={
-          'flex-row-center justify-end w-full h-[4.3rem] pr-[4.5rem] border border-red-400'
-        }
-      >
+      <section className={'flex-row-center justify-end w-full h-[4.3rem] pr-[4.5rem]'}>
         <span
           className={'flex-row-center self-center text-[0.93rem] font-bold mr-4 text-gray-dark'}
         >
@@ -98,10 +92,8 @@ export default function Project() {
         </div>
       </section>
       {/*보드*/}
-      <section className={'flex-row-center w-full h-board border border-red-400'}>
-        <div
-          className={'flex-row-center justify-between w-[80rem] h-full py-12 border border-red-400'}
-        >
+      <section className={'flex-row-center w-full h-board'}>
+        <div className={'flex-row-center justify-between w-[80rem] h-full py-8'}>
           <section className={'w-[24rem] h-full border border-t-amber-200'}>보드 1</section>
           <section className={'w-[24rem] h-full border border-t-amber-200'}>보드 2</section>
           <section className={'w-[24rem] h-full border border-t-amber-200'}>보드 3</section>
