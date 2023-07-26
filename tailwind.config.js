@@ -10,6 +10,7 @@ export default {
         yellow: '#FFA41B',
         orange: 'var(--orange)',
         'orange-light': 'var(--orange-light)',
+        'orange-light-sideBar': 'var(--orange-light-sideBar)',
         'header-gray': 'var(--header-gray)',
         'none-header': 'var(--bg-dark)',
         border: 'var(--border-bg)',
