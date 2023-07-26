@@ -1,10 +1,12 @@
 @import 'css/color.css';
 @import 'css/mypage.css';
 @import 'css/image-cropper.css';
-@import "css/antd.css";
+@import 'css/antd.css';
 @import 'css/project.css';
+@import 'css/collapse.css';
 
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
+@import
+  url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Baloo+Tammudu+2:wght@500&display=swap');
 
 #root {
