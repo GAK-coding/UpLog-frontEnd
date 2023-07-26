@@ -53,7 +53,6 @@ function App() {
                   <Header />
                 </section>
                 <section className={'h-noneHeader'}>
-                  {/*<section className={'h-auto'}>*/}
                   <Routes>
                     <Route path={'/'} element={<Home />} />
                     <Route path={'/login'} element={<Login />} />
