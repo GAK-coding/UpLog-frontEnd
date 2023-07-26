@@ -8,6 +8,12 @@ import { ChakraProvider } from '@chakra-ui/react';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import loadable from '@loadable/component';
 import { Scrollbars } from 'rc-scrollbars';
+import Members from '@/pages/Product/Members.tsx';
+import Chats from '@/pages/Product/Chats.tsx';
+import Calendar from '@/pages/Product/Calendar.tsx';
+import ParentGroups from '@/pages/Project/ParentGroups.tsx';
+import ChildGroups from '@/pages/Project/ChildGroups.tsx';
+import ReleaseNote from '@/pages/Product/ReleaseNote.tsx';
 
 const Header = loadable(() => import('@/components/UI/Header'));
 const Home = loadable(() => import('@/pages/Home'));
@@ -56,8 +62,17 @@ function App() {
                     <Route path={'/pwinquiry'} element={<PwInquiry />} />
                     <Route path={'/mypage'} element={<MyPage />} />
                     <Route path={'/workspace'} element={<Workspace />}>
-                      <Route path={':product'} element={<Product />} />
+                      <Route path={':product'} element={<ReleaseNote />} />
+                      <Route path={':product/members'} element={<Members />} />
+                      <Route path={':product/chats'} element={<Chats />} />
+                      <Route path={':product/calendar'} element={<Calendar />} />
+                      {/* group의 그룹들 */}
                       <Route path={':product/:project'} element={<Project />} />
+                      <Route path={':product/:project/group/:parentgroup'} element={<Project />} />
+                      <Route
+                        path={':product/:project/group/:parentgroup/:childgroup'}
+                        element={<Project />}
+                      />
                     </Route>
                   </Routes>
                 </section>
