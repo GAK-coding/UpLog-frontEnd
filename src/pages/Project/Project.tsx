@@ -98,11 +98,13 @@ export default function Project() {
         </div>
       </section>
       {/*보드*/}
-      <section className={'flex-row-center w-full h-[40rem] border border-red-400'}>
-        <div className={'flex-row-center justify-between w-[76rem]'}>
-          <section className={'w-[23rem] h-[37rem] border border-t-amber-200'}>보드 1</section>
-          <section className={'w-[23rem] h-[37rem] border border-t-amber-200'}>보드 2</section>
-          <section className={'w-[23rem] h-[37rem] border border-t-amber-200'}>보드 3</section>
+      <section className={'flex-row-center w-full h-board border border-red-400'}>
+        <div
+          className={'flex-row-center justify-between w-[80rem] h-full py-12 border border-red-400'}
+        >
+          <section className={'w-[24rem] h-full border border-t-amber-200'}>보드 1</section>
+          <section className={'w-[24rem] h-full border border-t-amber-200'}>보드 2</section>
+          <section className={'w-[24rem] h-full border border-t-amber-200'}>보드 3</section>
         </div>
       </section>
       {/*하단페이지로 이동*/}
