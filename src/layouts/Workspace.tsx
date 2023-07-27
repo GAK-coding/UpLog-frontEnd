@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink, Outlet, useLocation, useParams } from 'react-router-dom';
+import { Link, NavLink, Outlet, useLocation, useParams } from 'react-router-dom';
 import { FiUser } from 'react-icons/fi';
 import { BsChatDots } from 'react-icons/bs';
 import { SlCalender } from 'react-icons/sl';
@@ -8,16 +8,18 @@ import Groups from '@/components/Product/SideBar/Groups.tsx';
 import { Scrollbars } from 'rc-scrollbars';
 
 export default function Workspace() {
-  const { product } = useParams();
+  const { product, project } = useParams();
   const { pathname } = useLocation();
 
   return (
     <section className={'w-h-full flex '}>
       <nav className={'w-[18.6rem] h-full border-r border-gray-sideBar]'}>
         <div className={'h-[34%] border-b'}>
-          <div className={'h-1/4 flex-row-center'}>
-            <span className={'text-3xl font-bold mr-4'}>AllFromU</span>
-            <span className={'text-gray-dark text-xl font-bold'}>v.1.0.0</span>
+          <div className={'h-1/4 flex-row-center justify-between px-10'}>
+            <Link to={`/workspace/${product}`} className={'text-3xl font-bold mr-4'}>
+              AllFromU
+            </Link>
+            {project && <span className={'text-gray-dark text-xl font-bold'}> v.1.0.0</span>}
           </div>
           <div className={'h-3/4 flex flex-col justify-evenly'}>
             <NavLink
@@ -53,8 +55,16 @@ export default function Workspace() {
         </div>
       </nav>
       <article className={'w-noneSideBar h-full'}>
-        {/* 중첩 라우터 */}
-        <Outlet />
+        <Scrollbars
+          style={{ width: '100%', height: '100%' }}
+          autoHide
+          autoHideTimeout={1000}
+          // Duration for hide animation in ms.
+          autoHideDuration={200}
+        >
+          {/* 중첩 라우터 */}
+          <Outlet />
+        </Scrollbars>
       </article>
     </section>
   );
