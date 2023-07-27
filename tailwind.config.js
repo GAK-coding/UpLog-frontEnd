@@ -10,6 +10,8 @@ export default {
         yellow: '#FFA41B',
         orange: 'var(--orange)',
         'orange-light': 'var(--orange-light)',
+        'orange-light-sideBar': 'var(--orange-light-sideBar)',
+        'orange-sideBar': 'var(--orange-sideBar)',
         'header-gray': 'var(--header-gray)',
         'none-header': 'var(--bg-dark)',
         border: 'var(--border-bg)',
@@ -20,6 +22,7 @@ export default {
           spring: 'var(--gray-spring)',
           border: 'var(--border-gray)',
           board: 'var(--board-gray)',
+          sideBar: 'var(--sideBar-gray)',
         },
         hover: 'var(--hover)',
       },
@@ -31,6 +34,7 @@ export default {
       },
       height: {
         noneHeader: 'calc(100vh - 5.7rem)',
+        board: 'calc(100vh - 11.8rem)',
       },
       boxShadow: {
         'sign-up': '2px 2px 10px 1px rgba(0, 0, 0, 0.15), -2px -2px 10px 0px var(--shadow)',

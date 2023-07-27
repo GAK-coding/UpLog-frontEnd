@@ -5,9 +5,12 @@
   --text: #292723;
   --orange: #ffaa2a;
   --orange-light: rgba(255, 164, 27, 0.2);
+  --orange-light-sideBar: rgba(255, 164, 27, 0.2);
+  --orange-sideBar: #ffa41b;
   --gray-light: #c4c4c4;
   --gray-dark: #64635e;
   --gray-spring: #e5e5e5;
+  --gray-sideBar: #E5E7EB;
   --black: #292723;
   --white: #ffffff;
   --board-gray: #c4c4c4;
@@ -32,9 +35,11 @@ html.dark {
   --text: #ffffff;
   --orange: #ffaa2a;
   --orange-light: rgba(255, 164, 27, 0.2);
+  --orange-light-sideBar: rgba(255, 164, 27, 0.7);
   --gray-light: #c4c4c4;
   --gray-dark: #ffffff;
   --gray-spring: #64635e;
+  --gray-sideBar: #64635E;
   --black: #ffffff;
   --white: #2e2b27;
   --board-gray: #4c4643;

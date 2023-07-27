@@ -18,6 +18,15 @@
   .border-base {
     @apply border-solid border-[1px] border-line bg-border
   }
+
+/* workspace.tsx */
+  .base-menu {
+    @apply text-[1.4rem] flex items-center font-bold text-gray-dark w-56 h-12 mx-auto
+  }
+
+  .base-menu-selected{
+    @apply border-solid border-[0.5px] border-orange-light-sideBar bg-orange-light rounded-[0.31rem]
+  }
 }
 
 html {
