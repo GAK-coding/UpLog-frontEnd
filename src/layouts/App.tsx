@@ -8,12 +8,6 @@ import { ChakraProvider } from '@chakra-ui/react';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import loadable from '@loadable/component';
 import { Scrollbars } from 'rc-scrollbars';
-import Members from '@/pages/Product/Members.tsx';
-import Chats from '@/pages/Product/Chats.tsx';
-import Calendar from '@/pages/Product/Calendar.tsx';
-import ParentGroups from '@/pages/Project/ParentGroups.tsx';
-import ChildGroups from '@/pages/Project/ChildGroups.tsx';
-import ReleaseNote from '@/pages/Product/ReleaseNote.tsx';
 
 const Header = loadable(() => import('@/components/UI/Header'));
 const Home = loadable(() => import('@/pages/Home'));
@@ -24,7 +18,10 @@ const PwInquiry = loadable(() => import('@/pages/Member/PwInquiry'));
 const MyPage = loadable(() => import('@/pages/Member/MyPage'));
 const Workspace = loadable(() => import('@/layouts/Workspace.tsx'));
 const Project = loadable(() => import('@/pages/Project/Project.tsx'));
-const Product = loadable(() => import('@/pages/Product/Product.tsx'));
+const ReleaseNote = loadable(() => import('@/pages/Product/ReleaseNote.tsx'));
+const Calendar = loadable(() => import('@/pages/Product/Calendar.tsx'));
+const Chats = loadable(() => import('@/pages/Product/Chats.tsx'));
+const Members = loadable(() => import('@/pages/Product/Members.tsx'));
 
 // jest에서 .env 이용하려고 넣은 코드
 const { MODE: ENVIRONMENT } = import.meta.env;
