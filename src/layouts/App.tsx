@@ -11,8 +11,6 @@ import { Scrollbars } from 'rc-scrollbars';
 import Members from '@/pages/Product/Members.tsx';
 import Chats from '@/pages/Product/Chats.tsx';
 import Calendar from '@/pages/Product/Calendar.tsx';
-import ParentGroups from '@/pages/Project/ParentGroups.tsx';
-import ChildGroups from '@/pages/Project/ChildGroups.tsx';
 import ReleaseNote from '@/pages/Product/ReleaseNote.tsx';
 
 const Header = loadable(() => import('@/components/UI/Header'));
