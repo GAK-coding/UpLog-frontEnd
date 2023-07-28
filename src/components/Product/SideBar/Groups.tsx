@@ -57,11 +57,10 @@ export default function Groups() {
           <BsDot /> 전체
         </NavLink>
         {parentGroups.map((parent, index) => (
-          <>
+          <div key={`${parent.name}-${index}`}>
             <div className={'flex items-center mb-4'}>
               <NavLink
                 to={`/workspace/${product}/${project}/group/${parent.name}`}
-                key={index}
                 className={({ isActive }) =>
                   `w-[90%] flex justify-between items-center font-bold text-[1.1rem] ${
                     isActive && 'text-orange-sideBar'
@@ -88,7 +87,7 @@ export default function Groups() {
                   {childGroups[index].map((child, idx) => (
                     <NavLink
                       to={`/workspace/${product}/${project}/group/${parent.name}/${child}}`}
-                      key={idx}
+                      key={`${parent.name}-${child}-${idx}`}
                       className={({ isActive }) =>
                         `w-[90%] flex justify-between items-center font-bold text-[1.1rem] ml-4 mb-4 ${
                           isActive && 'text-orange-sideBar'
@@ -103,7 +102,7 @@ export default function Groups() {
                 </Collapse>
               </div>
             )}
-          </>
+          </div>
         ))}
       </div>
     </section>
