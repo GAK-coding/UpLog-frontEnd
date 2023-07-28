@@ -10,12 +10,12 @@
   --gray-light: #c4c4c4;
   --gray-dark: #64635e;
   --gray-spring: #e5e5e5;
-  --gray-sideBar: #E5E7EB;
+  --gray-sideBar: #e5e7eb;
   --gray-table: #e5e5e5;
   --black: #292723;
   --white: #ffffff;
   --board-gray: #c4c4c4;
-  --progress : #F4F5F7;
+  --progress: #f4f5f7;
   /*
     border-bg : border 배경 색깔
     border-gray : input창 border 색깔
@@ -28,11 +28,11 @@
   --hover: #e9ecef;
   --shadow: rgba(0, 0, 0, 0.1);
 
-  --feature: #DEECDC;
-  --changed: #FAEDCC;
-  --deprecated: #F7E1DC;
-  --new: #D6E4EE;
-  --fixed: #E3E2E0;
+  --feature: #deecdc;
+  --changed: #faedcc;
+  --deprecated: #f7e1dc;
+  --new: #d6e4ee;
+  --fixed: #e3e2e0;
 }
 
 html.dark {
@@ -46,11 +46,11 @@ html.dark {
   --gray-light: #c4c4c4;
   --gray-dark: #ffffff;
   --gray-spring: #64635e;
-  --gray-sideBar: #64635E;
+  --gray-sideBar: #64635e;
   --black: #ffffff;
   --white: #2e2b27;
   --board-gray: #4c4643;
-  --progress: #403D39;
+  --progress: #403d39;
   /*
    border-bg : border 배경 색깔
    border-gray : input, button 창 border 색깔
