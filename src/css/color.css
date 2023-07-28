@@ -11,6 +11,7 @@
   --gray-dark: #64635e;
   --gray-spring: #e5e5e5;
   --gray-sideBar: #E5E7EB;
+  --gray-table: #e5e5e5;
   --black: #292723;
   --white: #ffffff;
   --board-gray: #c4c4c4;
@@ -26,6 +27,12 @@
   --input-bg: #ffffff;
   --hover: #e9ecef;
   --shadow: rgba(0, 0, 0, 0.1);
+
+  --feature: #DEECDC;
+  --changed: #FAEDCC;
+  --deprecated: #F7E1DC;
+  --new: #D6E4EE;
+  --fixed: #E3E2E0;
 }
 
 html.dark {

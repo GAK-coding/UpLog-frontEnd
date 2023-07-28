@@ -23,8 +23,16 @@ export default {
           border: 'var(--border-gray)',
           board: 'var(--board-gray)',
           sideBar: 'var(--sideBar-gray)',
+          table: 'var(--table-gray)',
         },
         hover: 'var(--hover)',
+        type: {
+          feature: 'var(--feature)',
+          changed: 'var(--changed)',
+          deprecated: 'var(--deprecated)',
+          new: 'var(--new)',
+          fixed: 'var(--fixed)',
+        },
       },
       fontFamily: {
         logo: "'Baloo Tammudu 2', cursive",
@@ -39,6 +47,7 @@ export default {
       boxShadow: {
         'sign-up': '2px 2px 10px 1px rgba(0, 0, 0, 0.15), -2px -2px 10px 0px var(--shadow)',
         'sign-up-info': '-2px 2px 8px 0px rgba(0, 0, 0, 0.15), 2px 2px 8px 1px var(--shadow)',
+        release: '2px 2px 5px 1px rgba(0, 0, 0, 0.05), -2px -2px 5px 0px rgba(0, 0, 0, 0.05)',
       },
     },
   },
