@@ -16,28 +16,34 @@ export default function Tables() {
   const dummy: Release[] = [
     {
       status: 'going',
-      version: 'v.1.1.3(임시)',
+      version: 'v.1.1.4(임시)',
       date: '진행중',
-      contents: [
-        { type: 'Feature', content: '채널 통신 응답 중 발생할 수 있는 오류 코드 추가' },
-        {
-          type: 'Changed',
-          content: '공통 Request Protocol',
-        },
-        {
-          type: 'Fixed',
-          content: '고침',
-        },
-        {
-          type: 'New',
-          content: '새거',
-        },
-        {
-          type: 'Deprecated',
-          content: '이제 못 씀',
-        },
-      ],
+      contents: [],
     },
+    // {
+    //   status: 'going',
+    //   version: 'v.1.1.3',
+    //   date: '2023.06.15',
+    //   contents: [
+    //     { type: 'Feature', content: '채널 통신 응답 중 발생할 수 있는 오류 코드 추가' },
+    //     {
+    //       type: 'Changed',
+    //       content: '공통 Request Protocol',
+    //     },
+    //     {
+    //       type: 'Fixed',
+    //       content: '고침',
+    //     },
+    //     {
+    //       type: 'New',
+    //       content: '새거',
+    //     },
+    //     {
+    //       type: 'Deprecated',
+    //       content: '이제 못 씀',
+    //     },
+    //   ],
+    // },
     // {
     //   status: 'done',
     //   version: 'v.1.1.2',
@@ -62,15 +68,15 @@ export default function Tables() {
     //   date: '2023.03.25',
     //   contents: [{ type: 'Feature', content: 'Service Argent 채널 연결과 통신 관련 설명' }],
     // },
-    {
-      status: 'done',
-      version: 'v.1.0.0',
-      date: '2023.02.18',
-      contents: [
-        { type: 'New', content: 'AI Service 기술 상세 설명' },
-        { type: 'Fixed', content: '채널 통신 응답 기능 수정' },
-      ],
-    },
+    // {
+    //   status: 'done',
+    //   version: 'v.1.0.0',
+    //   date: '2023.02.18',
+    //   contents: [
+    //     { type: 'New', content: 'AI Service 기술 상세 설명' },
+    //     { type: 'Fixed', content: '채널 통신 응답 기능 수정' },
+    //   ],
+    // },
   ];
 
   const [isClick, setIsClick] = useState(false);
@@ -166,7 +172,7 @@ export default function Tables() {
                     }
                   >
                     <button
-                      className={'h-1/2 hover:bg-orange-light'}
+                      className={'h-1/2 hover:bg-orange-light-sideBar'}
                       onClick={() => {
                         console.log('클릭');
                       }}
@@ -174,7 +180,7 @@ export default function Tables() {
                       변경이력 추가
                     </button>
                     <button
-                      className={'h-1/2 hover:bg-orange-light'}
+                      className={'h-1/2 hover:bg-orange-light-sideBar'}
                       onClick={() => {
                         console.log('완료');
                       }}
