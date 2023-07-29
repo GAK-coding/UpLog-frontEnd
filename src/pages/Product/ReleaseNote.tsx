@@ -1,9 +1,9 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { Release } from '@/typings/product.ts';
 import { Table, TableContainer, Th, Thead, Tr, useDisclosure } from '@chakra-ui/react';
 import { AiOutlinePlus } from 'react-icons/ai';
 import Tables from '@/components/Product/ReleaseNote/Tables.tsx';
-import AddModal from '@/components/Product/ReleaseNote/AddModal.tsx';
+import ProjectModal from '@/components/Product/ReleaseNote/ProjectModal.tsx';
 export default function ReleaseNote() {
   // TODO: 리코일에서 받아 올 값
   const dummy: Release[] = [
@@ -13,30 +13,30 @@ export default function ReleaseNote() {
       date: '진행중',
       contents: [],
     },
-    // {
-    //   status: 'going',
-    //   version: 'v.1.1.3',
-    //   date: '2023.06.15',
-    //   contents: [
-    //     { type: 'Feature', content: '채널 통신 응답 중 발생할 수 있는 오류 코드 추가' },
-    //     {
-    //       type: 'Changed',
-    //       content: '공통 Request Protocol',
-    //     },
-    //     {
-    //       type: 'Fixed',
-    //       content: '고침',
-    //     },
-    //     {
-    //       type: 'New',
-    //       content: '새거',
-    //     },
-    //     {
-    //       type: 'Deprecated',
-    //       content: '이제 못 씀',
-    //     },
-    //   ],
-    // },
+    {
+      status: 'done',
+      version: 'v.1.1.3',
+      date: '2023.06.15',
+      contents: [
+        { type: 'Feature', content: '채널 통신 응답 중 발생할 수 있는 오류 코드 추가' },
+        {
+          type: 'Changed',
+          content: '공통 Request Protocol',
+        },
+        {
+          type: 'Fixed',
+          content: '고침',
+        },
+        {
+          type: 'New',
+          content: '새거',
+        },
+        {
+          type: 'Deprecated',
+          content: '이제 못 씀',
+        },
+      ],
+    },
     // {
     //   status: 'done',
     //   version: 'v.1.1.2',
@@ -73,15 +73,43 @@ export default function ReleaseNote() {
   ];
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+  // 모달 프로젝트 추가로 띄울건지, 프로젝트 완료로 띄울건지
+  const [isAdd, setIsAdd] = useState(true);
+  const [isClickKebab, setIsClickKebab] = useState(false);
+  // 프로젝트 완료에서 임시 이름 저장하는 state
+  const [tempVersion, setTempVersion] = useState('');
+
+  /** 케밥 버튼 모달*/
+  const onClickKebab = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+
+    setIsClickKebab((prev) => !prev);
+  }, []);
+
+  const onCloseKebab = useCallback(() => {
+    setIsClickKebab(false);
+  }, []);
+
+  // 프로젝트 모달
+  const onClickProjectModal = useCallback((modalType: 'add' | 'complete') => {
+    setIsAdd(modalType === 'add');
+    onOpen();
+  }, []);
 
   return (
-    <section className={'w-full py-32 px-56'}>
+    <section className={'w-h-full py-32 px-56'} onClick={onCloseKebab}>
       <div className={'flex justify-between mb-4'}>
         <span className={'flex items-center'}>
           <img src="/images/test.jpeg" alt={'제품 사진'} className={'w-14 h-14 mr-4'} />
           <span className={'text-[2.6rem] font-bold'}>AllFormU</span>
         </span>
-        <button className={'mr-2 text-gray-dark font-bold underline self-end'} onClick={onOpen}>
+        <button
+          className={'mr-2 text-gray-dark font-bold underline self-end'}
+          onClick={() => {
+            setTempVersion('');
+            onClickProjectModal('add');
+          }}
+        >
           프로젝트 추가하기
         </button>
       </div>
@@ -126,7 +154,14 @@ export default function ReleaseNote() {
                 </Th>
               </Tr>
             </Thead>
-            {dummy.length > 0 && <Tables />}
+            {dummy.length > 0 && (
+              <Tables
+                isClickKebab={isClickKebab}
+                onClickKebab={onClickKebab}
+                onClickComplete={onClickProjectModal}
+                setTempVersion={setTempVersion}
+              />
+            )}
           </Table>
           {dummy.length === 0 && (
             <div
@@ -139,7 +174,8 @@ export default function ReleaseNote() {
         </TableContainer>
       </div>
 
-      <AddModal isOpen={isOpen} onClose={onClose} />
+      {/* 프로젝트 추가 모달 */}
+      <ProjectModal isOpen={isOpen} onClose={onClose} isAdd={isAdd} versionName={tempVersion} />
     </section>
   );
 }
