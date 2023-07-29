@@ -5,8 +5,7 @@
 @import 'css/project.css';
 @import 'css/collapse.css';
 
-@import
-  url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Baloo+Tammudu+2:wght@500&display=swap');
 
 #root {
@@ -153,4 +152,8 @@ html input:focus {
 
 html input {
   background-color: var(--input-bg);
+}
+
+* {
+  font-weight: 600;
 }
