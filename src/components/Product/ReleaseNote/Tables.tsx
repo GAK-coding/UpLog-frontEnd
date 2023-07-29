@@ -2,8 +2,21 @@ import React, { useCallback, useState } from 'react';
 import { Tbody, Td, Tr } from '@chakra-ui/react';
 import { changeType, Release } from '@/typings/product.ts';
 import { GoKebabHorizontal } from 'react-icons/go';
+import { AiOutlinePlus } from 'react-icons/ai';
 
-export default function Tables() {
+interface Props {
+  isClickKebab: boolean;
+  onClickKebab: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  onClickComplete: (modalType: 'add' | 'complete') => void;
+  setTempVersion: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export default function Tables({
+  isClickKebab,
+  onClickKebab,
+  onClickComplete,
+  setTempVersion,
+}: Props) {
   const bgColor: Record<changeType, string> = {
     Feature: 'bg-type-feature',
     Changed: 'bg-type-changed',
@@ -20,30 +33,30 @@ export default function Tables() {
       date: '진행중',
       contents: [],
     },
-    // {
-    //   status: 'going',
-    //   version: 'v.1.1.3',
-    //   date: '2023.06.15',
-    //   contents: [
-    //     { type: 'Feature', content: '채널 통신 응답 중 발생할 수 있는 오류 코드 추가' },
-    //     {
-    //       type: 'Changed',
-    //       content: '공통 Request Protocol',
-    //     },
-    //     {
-    //       type: 'Fixed',
-    //       content: '고침',
-    //     },
-    //     {
-    //       type: 'New',
-    //       content: '새거',
-    //     },
-    //     {
-    //       type: 'Deprecated',
-    //       content: '이제 못 씀',
-    //     },
-    //   ],
-    // },
+    {
+      status: 'done',
+      version: 'v.1.1.3',
+      date: '2023.06.15',
+      contents: [
+        { type: 'Feature', content: '채널 통신 응답 중 발생할 수 있는 오류 코드 추가' },
+        {
+          type: 'Changed',
+          content: '공통 Request Protocol',
+        },
+        {
+          type: 'Fixed',
+          content: '고침',
+        },
+        {
+          type: 'New',
+          content: '새거',
+        },
+        {
+          type: 'Deprecated',
+          content: '이제 못 씀',
+        },
+      ],
+    },
     // {
     //   status: 'done',
     //   version: 'v.1.1.2',
@@ -79,26 +92,11 @@ export default function Tables() {
     // },
   ];
 
-  const [isClick, setIsClick] = useState(false);
+  // 마우스 올렸을 때, kebab 버튼 나타남
   const [isHovering, setIsHovering] = useState(false);
-
-  const onClickModal = useCallback((e: React.MouseEvent<HTMLElement>) => {
-    e.stopPropagation();
-
-    setIsClick((prev) => !prev);
-  }, []);
-
-  const onCloseModal = useCallback(() => {
-    setIsClick(false);
-  }, []);
 
   const handleMouseEnter = useCallback((status: string) => {
     if (status === 'going') setIsHovering(true);
-  }, []);
-
-  const handleMouseLeave = useCallback((status: string) => {
-    if (status === 'going') setIsHovering(false);
-    setIsClick(false);
   }, []);
 
   return (
@@ -110,8 +108,7 @@ export default function Tables() {
             color={version.status === 'going' ? 'var(--gray-dark)' : ''}
             position={'relative'}
             onMouseEnter={() => handleMouseEnter(version.status)}
-            onMouseLeave={() => handleMouseLeave(version.status)}
-            onClick={onCloseModal}
+            // onMouseLeave={() => handleMouseLeave(version.status)}
           >
             <Td
               borderTop={'1px solid var(--gray-table)'}
@@ -133,24 +130,35 @@ export default function Tables() {
               borderBottom={'1px solid var(--gray-table)'}
               marginY={'auto'}
             >
-              {/* Contents of the table row */}
-              {version.contents.map((content, idx) => {
-                return (
-                  <div
-                    key={idx}
-                    className={`${version.contents.length - 1 !== idx && 'mb-5'} flex items-center`}
-                  >
-                    <span
+              {version.contents.length > 0 ? (
+                version.contents.map((content, idx) => {
+                  return (
+                    <div
+                      key={idx}
                       className={`${
-                        bgColor[content.type]
-                      } text-[#292723] mr-4 p-2 rounded-[0.31rem]`}
+                        version.contents.length - 1 !== idx && 'mb-5'
+                      } flex items-center`}
                     >
-                      {content.type}
-                    </span>
-                    {content.content}
-                  </div>
-                );
-              })}
+                      <span
+                        className={`${
+                          bgColor[content.type]
+                        } text-[#292723] mr-4 p-2 rounded-[0.31rem]`}
+                      >
+                        {content.type}
+                      </span>
+                      {content.content}
+                    </div>
+                  );
+                })
+              ) : (
+                <button
+                  className={
+                    'flex items-center text-[1.2rem] text-gray-light font-bold cursor-pointer'
+                  }
+                >
+                  <AiOutlinePlus className={'text-[1.6rem] mr-3'} /> 변경이력 추가
+                </button>
+              )}
             </Td>
 
             {/* Buttons for the "going" status */}
@@ -162,13 +170,13 @@ export default function Tables() {
                 backgroundColor={'inherit'}
                 border={'none'}
               >
-                <button onClick={(e) => onClickModal(e)}>
+                <button onClick={onClickKebab}>
                   <GoKebabHorizontal className={'fill-gray-dark text-2xl cursor-pointer'} />
                 </button>
-                {isClick && (
+                {isClickKebab && (
                   <div
                     className={
-                      'absolute top-10 right-6 flex flex-col w-[7.5rem] h-20 border-solid border-[0.5px] border-gray-spring rounded text-xs shadow-release bg-white'
+                      'absolute top-10 right-6 flex flex-col w-[7.5rem] h-20 border-solid border-[0.5px] border-gray-spring rounded text-xs shadow-release bg-white z-50'
                     }
                   >
                     <button
@@ -182,7 +190,8 @@ export default function Tables() {
                     <button
                       className={'h-1/2 hover:bg-orange-light-sideBar'}
                       onClick={() => {
-                        console.log('완료');
+                        onClickComplete('complete');
+                        setTempVersion(version.version);
                       }}
                     >
                       완료
