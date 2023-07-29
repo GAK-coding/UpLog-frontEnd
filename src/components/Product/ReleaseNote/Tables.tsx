@@ -3,6 +3,7 @@ import { Tbody, Td, Tr } from '@chakra-ui/react';
 import { changeType, Release } from '@/typings/product.ts';
 import { GoKebabHorizontal } from 'react-icons/go';
 import { AiOutlinePlus } from 'react-icons/ai';
+import { useNavigate, useParams } from 'react-router-dom';
 
 interface Props {
   isClickKebab: boolean;
@@ -92,6 +93,9 @@ export default function Tables({
     // },
   ];
 
+  const navigate = useNavigate();
+  const { product, projectId } = useParams();
+
   // 마우스 올렸을 때, kebab 버튼 나타남
   const [isHovering, setIsHovering] = useState(false);
 
@@ -155,6 +159,7 @@ export default function Tables({
                   className={
                     'flex items-center text-[1.2rem] text-gray-light font-bold cursor-pointer'
                   }
+                  onClick={() => navigate(`/workspace/${product}/newchange`)}
                 >
                   <AiOutlinePlus className={'text-[1.6rem] mr-3'} /> 변경이력 추가
                 </button>
@@ -181,9 +186,7 @@ export default function Tables({
                   >
                     <button
                       className={'h-1/2 hover:bg-orange-light-sideBar'}
-                      onClick={() => {
-                        console.log('클릭');
-                      }}
+                      onClick={() => navigate(`/workspace/${product}/newchange`)}
                     >
                       변경이력 추가
                     </button>

@@ -22,6 +22,7 @@ const ReleaseNote = loadable(() => import('@/pages/Product/ReleaseNote.tsx'));
 const Calendar = loadable(() => import('@/pages/Product/Calendar.tsx'));
 const Chats = loadable(() => import('@/pages/Product/Chats.tsx'));
 const Members = loadable(() => import('@/pages/Product/Members.tsx'));
+const NewChangeLog = loadable(() => import('@/pages/Product/NewChangeLog.tsx'));
 
 // jest에서 .env 이용하려고 넣은 코드
 const { MODE: ENVIRONMENT } = import.meta.env;
@@ -62,6 +63,8 @@ function App() {
                       <Route path={':product/members'} element={<Members />} />
                       <Route path={':product/chats'} element={<Chats />} />
                       <Route path={':product/calendar'} element={<Calendar />} />
+                      <Route path={':product/newchange'} element={<NewChangeLog />} />
+
                       {/* group의 그룹들 */}
                       <Route path={':product/:project'} element={<Project />} />
                       <Route path={':product/:project/group/:parentgroup'} element={<Project />} />
