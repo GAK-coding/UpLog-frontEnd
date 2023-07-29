@@ -7,6 +7,7 @@ import { BiPencil } from 'react-icons/bi';
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
 import { useDisclosure } from '@chakra-ui/react';
 import ProductInfoModal from '@/components/Product/Info/ProductInfoModal.tsx';
+import { Scrollbars } from 'rc-scrollbars';
 
 export default function ProductList() {
   // ProductList 정보
@@ -51,21 +52,21 @@ export default function ProductList() {
     [productList]
   );
 
-  // body 스크롤 막기
-  useEffect(() => {
-    if (!isProductClick) return;
-
-    document.body.style.cssText = `
-    position: fixed;
-    top: -${window.scrollY}px;
-    overflow-y: scroll;
-    width: 100%;`;
-    return () => {
-      const scrollY = document.body.style.top;
-      document.body.style.cssText = '';
-      window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
-    };
-  }, [isProductClick]);
+  // body 스크롤 막기 => 이거 때메 스크롤 바 생김
+  // useEffect(() => {
+  //   if (!isProductClick) return;
+  //
+  //   document.body.style.cssText = `
+  //   position: fixed;
+  //   top: -${window.scrollY}px;
+  //   overflow-y: scroll;
+  //   width: 100%;`;
+  //   return () => {
+  //     const scrollY = document.body.style.top;
+  //     document.body.style.cssText = '';
+  //     window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
+  //   };
+  // }, [isProductClick]);
 
   return (
     <section
@@ -75,7 +76,14 @@ export default function ProductList() {
       onClick={onChildClick}
     >
       <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
-        <div className={'max-h-[23.7rem] overflow-y-auto'}>
+        <Scrollbars
+          autoHeight
+          autoHeightMax={'23.7rem'}
+          autoHide
+          autoHideTimeout={1000}
+          // Duration for hide animation in ms.
+          autoHideDuration={200}
+        >
           {/*제품 list*/}
           <Droppable droppableId="droppable">
             {(provided) => (
@@ -127,7 +135,7 @@ export default function ProductList() {
               </div>
             )}
           </Droppable>
-        </div>
+        </Scrollbars>
       </DragDropContext>
 
       {/*제품 추가하기*/}
