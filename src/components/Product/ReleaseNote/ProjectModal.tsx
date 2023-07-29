@@ -27,10 +27,10 @@ export default function ProjectModal({ isOpen, onClose, isAdd, versionName }: Pr
   const [text, onChangeText, setText] = useInput('');
 
   useEffect(() => {
-    if (versionName) {
+    if (versionName && !isAdd) {
       setText(versionName.replace('(임시)', ''));
-    }
-  }, [versionName]);
+    } else setText('');
+  }, [isAdd]);
 
   return (
     <Modal isCentered onClose={onClose} isOpen={isOpen}>

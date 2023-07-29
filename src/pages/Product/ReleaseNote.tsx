@@ -106,8 +106,8 @@ export default function ReleaseNote() {
         <button
           className={'mr-2 text-gray-dark font-bold underline self-end'}
           onClick={() => {
-            onClickProjectModal('add');
             setTempVersion('');
+            onClickProjectModal('add');
           }}
         >
           프로젝트 추가하기
