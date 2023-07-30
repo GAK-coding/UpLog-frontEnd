@@ -16,6 +16,8 @@ export default {
         'none-header': 'var(--bg-dark)',
         border: 'var(--border-bg)',
         line: 'var(--border-line)',
+        'task-bg': 'var(--task-board)',
+        'task-line': 'var(--task-line)',
         gray: {
           light: 'var(--gray-light)',
           dark: 'var(--gray-dark)',

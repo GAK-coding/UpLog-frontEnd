@@ -21,6 +21,8 @@ export default function Project() {
     { value: 'promotion', label: '홍보' },
   ];
 
+  const statusCount = [1, 2, 3];
+
   const progress = 77;
   const [isKanban, setIsKanban] = useState(true);
 
@@ -98,9 +100,16 @@ export default function Project() {
       <div className={'w-noneSideBar h-board flex-col border border-red-400'}>
         <section className={'flex-col-center w-noneSideBar h-[90%]'}>
           <div className={'flex-row-center justify-between w-[80rem] h-full pt-8 '}>
-            <section className={'w-[24rem] h-full border border-t-amber-200'}>
+            <section className={'w-[24rem] h-full task-border'}>
               {/*제목, 개수*/}
-              <div className={'h-[3.8rem] border-red-400 border'}></div>
+              <div
+                className={
+                  'flex-row-center justify-between h-[3.8rem] px-[2.3rem] text-gray-dark text-[0.93rem] border-red-400 border'
+                }
+              >
+                <span>진행 전</span>
+                <span>{statusCount[0]}개</span>
+              </div>
               {/*태스크*/}
               <div className={'border border-red-400'}>
                 <img src={'/logo.svg'} className={'w-32'} />
@@ -110,8 +119,8 @@ export default function Project() {
                 <img src={'/logo.svg'} className={'w-32'} />
               </div>
             </section>
-            <section className={'w-[24rem] h-full border border-t-amber-200'}>보드 2</section>
-            <section className={'w-[24rem] h-full border border-t-amber-200'}>보드 3</section>
+            <section className={'w-[24rem] h-full task-border'}>보드 2</section>
+            <section className={'w-[24rem] h-full task-border'}>보드 3</section>
           </div>
         </section>
         {/*하단페이지로 이동*/}
