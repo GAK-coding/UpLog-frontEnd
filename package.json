@@ -43,6 +43,7 @@
     "cosmiconfig": "^8.2.0",
     "esbuild": "^0.18.11",
     "framer-motion": "^10.12.20",
+    "prosemirror-transform": "^1.7.4",
     "rc-scrollbars": "^1.1.6",
     "react": "^18.2.0",
     "react-beautiful-dnd": "^13.1.1",
@@ -52,7 +53,8 @@
     "react-scripts": "^5.0.1",
     "react-test-renderer": "^18.2.0",
     "recoil": "^0.7.7",
-    "resolve": "^1.22.2"
+    "resolve": "^1.22.2",
+    "tui-color-picker": "^2.2.8"
   },
   "devDependencies": {
     "@babel/core": "^7.22.5",
@@ -69,6 +71,10 @@
     "@jest/globals": "^29.5.0",
     "@testing-library/cypress": "^9.0.0",
     "@testing-library/jest-dom": "^5.17.0",
+    "@toast-ui/editor": "^3.2.2",
+    "@toast-ui/editor-plugin-code-syntax-highlight": "^3.1.0",
+    "@toast-ui/editor-plugin-color-syntax": "^3.1.0",
+    "@toast-ui/react-editor": "^3.1.1",
     "@types/babel__core": "^7.20.1",
     "@types/jest": "^29.5.3",
     "@types/node": "^20.4.1",

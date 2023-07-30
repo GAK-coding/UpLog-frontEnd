@@ -139,7 +139,7 @@ export default function UserManageModal({ isOpen, onClose, isClickPwChange }: Pr
 
         <ModalFooter>
           <button
-            className={`bg-orange rounded font-bold text-ms text-white
+            className={`bg-orange rounded font-bold text-sm text-white
             ${isClickPwChange ? 'w-[4.5rem] h-9' : 'w-[6rem] h-9'}`}
             onClick={onClickChangePw}
           >
