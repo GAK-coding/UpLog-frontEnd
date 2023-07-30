@@ -4,6 +4,8 @@ import { changeType, Release } from '@/typings/product.ts';
 import { GoKebabHorizontal } from 'react-icons/go';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { typeBgColors } from '@/recoil/Product/ReleaseNote.tsx';
 
 interface Props {
   isClickKebab: boolean;
@@ -18,13 +20,7 @@ export default function Tables({
   onClickComplete,
   setTempVersion,
 }: Props) {
-  const bgColor: Record<changeType, string> = {
-    Feature: 'bg-type-feature',
-    Changed: 'bg-type-changed',
-    Fixed: 'bg-type-fixed',
-    New: 'bg-type-new',
-    Deprecated: 'bg-type-deprecated',
-  };
+  const bgColor = useRecoilValue(typeBgColors);
 
   // TODO: 리코일에서 받아 올 값
   const dummy: Release[] = [

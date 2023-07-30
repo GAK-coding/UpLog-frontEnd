@@ -27,11 +27,11 @@ export default {
         },
         hover: 'var(--hover)',
         type: {
-          feature: 'var(--feature)',
-          changed: 'var(--changed)',
-          deprecated: 'var(--deprecated)',
-          new: 'var(--new)',
-          fixed: 'var(--fixed)',
+          feature: 'var(--Feature)',
+          changed: 'var(--Changed)',
+          deprecated: 'var(--Deprecated)',
+          new: 'var(--New)',
+          fixed: 'var(--Fixed)',
         },
       },
       fontFamily: {
