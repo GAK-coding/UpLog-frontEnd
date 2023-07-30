@@ -50,7 +50,7 @@ export default function UserProfile() {
         <div
           className={'flex-row-center justify-between w-full h-1/3 hover:bg-hover'}
           onClick={() => {
-            setIsProfileClick((prevState) => !prevState);
+            setIsProfileClick(!isProfileClick);
             navigate('/scrap');
           }}
         >

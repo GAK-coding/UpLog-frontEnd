@@ -7,7 +7,8 @@ import { GoKebabHorizontal } from 'react-icons/go';
 import { FaUserCircle } from 'react-icons/fa';
 
 export default function Project() {
-  // const { project } = useParams();
+  const { project } = useParams();
+
   const userprofile = '';
 
   const pGroup: ProjectGroupFilter[] = [
@@ -28,6 +29,8 @@ export default function Project() {
 
   const progress = 77;
   const [isKanban, setIsKanban] = useState(true);
+
+  const [isClickTaskDetail, setIsClickTaskDetail] = useState(false);
 
   const onClickKanban = useCallback((check: boolean) => {
     setIsKanban(check);
@@ -125,14 +128,48 @@ export default function Project() {
                   }
                 >
                   {/*케밥 버튼*/}
-                  <div className={'flex justify-end h-[0.7rem]'}>
-                    <GoKebabHorizontal className={'fill-gray-dark cursor-pointer'} />
+                  <div className={'flex justify-end h-[0.7rem] relative'}>
+                    <GoKebabHorizontal
+                      className={'fill-gray-dark cursor-pointer'}
+                      onClick={() => setIsClickTaskDetail(!isClickTaskDetail)}
+                    />
+                    {
+                      /*케밥 버튼 클릭시*/
+                      isClickTaskDetail && (
+                        <section
+                          className={
+                            'absolute flex-col-center w-[4.5rem] h-[5rem] top-[1rem] task-detail-border cursor-pointer'
+                          }
+                        >
+                          <div
+                            className={
+                              'flex justify-center w-full h-1/3 text-[0.5rem] text-gray-dark hover:bg-orange-light-sideBar'
+                            }
+                          >
+                            링크복사
+                          </div>
+                          <div
+                            className={
+                              'flex justify-center w-full h-1/3 text-[0.5rem] text-gray-dark hover:bg-orange-light-sideBar'
+                            }
+                          >
+                            수정
+                          </div>
+                          <div
+                            className={
+                              'flex justify-center w-full h-1/3 text-[0.5rem] text-gray-dark hover:bg-orange-light-sideBar'
+                            }
+                          >
+                            삭제
+                          </div>
+                        </section>
+                      )
+                    }
                   </div>
                   {/*task제목*/}
                   <div className={'flex justify-start h-[2.5rem]'}>
                     <span className={'text-[1rem]'}>task 제목</span>
                   </div>
-                  {/*<div className={'flex-col justify-between h-[3rem]'}>*/}
                   {/*그룹정보*/}
                   <div className={'flex justify-start items-center mb-2'}>
                     <span className={'text-gray-dark text-[0.65rem]'}>Group1</span>
