@@ -60,7 +60,7 @@
 }
 
 :where(.css-dev-only-do-not-override-1m62vyb).ant-progress .ant-progress-inner {
-    background-color: var(--progress);
+    background-color: var(--task-board);
 }
 
 :where(.css-dev-only-do-not-override-1m62vyb).ant-progress.ant-progress-status-success .ant-progress-bg {
