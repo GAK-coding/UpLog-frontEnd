@@ -42,7 +42,7 @@ export default {
       },
       height: {
         noneHeader: 'calc(100vh - 5.7rem)',
-        board: 'calc(100vh - 13.8rem)',
+        board: 'calc(100vh - 19.5rem)',
         'board-task': 'calc(100vh - 17.8rem)',
       },
       boxShadow: {

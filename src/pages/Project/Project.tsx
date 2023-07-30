@@ -33,10 +33,10 @@ export default function Project() {
   };
   return (
     <section className={'flex-col justify-start w-noneSideBar h-full relative'}>
-      <div className={'w-noneSideBar h-full flex-col fixed'}>
+      <div className={'w-noneSideBar h-[13.8rem] flex-col'}>
         <section className={'flex-row-center justify-start w-full h-[3.5rem] px-12 pt-4'}>
           {/*그룹 필터링*/}
-          <div className={'fixed flex-row-center w-[18rem] justify-between'}>
+          <div className={'flex-row-center w-[18rem] justify-between'}>
             {/*그룹 -> 하위로 바꾸기*/}
             <Select
               labelInValue
@@ -56,7 +56,7 @@ export default function Project() {
           </div>
         </section>
         {/*칸반, 스크럼 선택*/}
-        <section className={'w-full h-[6rem] border border-red-400'}>
+        <section className={'w-full h-[6rem]'}>
           <div className={'flex-row-center justify-center w-full h-full px-2 '}>
             <button type={'button'} onClick={() => onClickKanban(true)}>
               <span
@@ -93,14 +93,11 @@ export default function Project() {
           </div>
         </section>
       </div>
+
       {/*보드*/}
-      <div className={'w-noneSideBar h-board flex-col'}>
-        <section className={'flex-col-center w-noneSideBar h-board '}>
-          <div
-            className={
-              'flex-row-center justify-between w-[80rem] h-full mt-[19.5rem] py-8 border border-red-400'
-            }
-          >
+      <div className={'w-noneSideBar h-board flex-col border border-red-400'}>
+        <section className={'flex-col-center w-noneSideBar h-[90%]'}>
+          <div className={'flex-row-center justify-between w-[80rem] h-full pt-8 '}>
             <section className={'w-[24rem] h-full border border-t-amber-200'}>
               {/*제목, 개수*/}
               <div className={'h-[3.8rem] border-red-400 border'}></div>
@@ -116,10 +113,10 @@ export default function Project() {
             <section className={'w-[24rem] h-full border border-t-amber-200'}>보드 2</section>
             <section className={'w-[24rem] h-full border border-t-amber-200'}>보드 3</section>
           </div>
-          {/*하단페이지로 이동*/}
-          <section className={'flex-row-center w-full h-[4rem]'}>
-            <BsChevronCompactDown className={'text-[4rem] text-gray-light'} />
-          </section>
+        </section>
+        {/*하단페이지로 이동*/}
+        <section className={'flex-row-center w-full h-[10%]'}>
+          <BsChevronCompactDown className={'text-[4rem] text-gray-light'} />
         </section>
       </div>
     </section>
