@@ -39,6 +39,7 @@ export default function StatusBoard({ status, tasks }: Props) {
         <span className={'font-bold'}>{statusInfo}</span>
         <span>{`${filteredTasks.length}개`}</span>
       </div>
+
       {/*태스크들*/}
       <div className={'flex-col max-h-[90%] px-[1.8rem] overflow-y-auto'}>
         {filteredTasks.map((task) => (
@@ -96,7 +97,6 @@ export default function StatusBoard({ status, tasks }: Props) {
             </div>
           </section>
         ))}
-        {/*태스크 한개*/}
       </div>
     </section>
   );

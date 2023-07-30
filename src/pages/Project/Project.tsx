@@ -4,6 +4,7 @@ import { BsChevronCompactDown } from 'react-icons/bs';
 import { ProjectGroupFilter, Task } from '@/typings/project.ts';
 import { Progress, Select } from 'antd';
 import StatusBoard from '@/components/Project/Board/StatusBoard.tsx';
+import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 
 export default function Project() {
   const { project } = useParams();
@@ -158,16 +159,40 @@ export default function Project() {
           </div>
         </section>
         {/*진행률*/}
-        <section className={'flex-row-center justify-end w-full h-[4.3rem] pr-[4.5rem]'}>
-          <span
-            className={'flex-row-center self-center text-[0.93rem] font-bold mr-4 text-gray-dark'}
-          >
-            진행률
-          </span>
-          <div className={'mt-2 self-center w-[15.6rem]'}>
-            <Progress className={'progress'} percent={progress} />
-          </div>
-        </section>
+        {isKanban ? (
+          <section className={'flex-row-center justify-end w-full h-[4.3rem] pr-[4.5rem]'}>
+            <span
+              className={'flex-row-center self-center text-[0.93rem] font-bold mr-4 text-gray-dark'}
+            >
+              진행률
+            </span>
+            <div className={'mt-2 self-center w-[15.6rem]'}>
+              <Progress className={'progress'} percent={progress} />
+            </div>
+          </section>
+        ) : (
+          <section className={'flex-row-center justify-between w-full h-[4.3rem] pr-[4.5rem]'}>
+            <div className={'flex w-[22.5%] border border-red-400'} />
+            <div className={'flex-row-center justify-between w-[7rem] border border-amber-200'}>
+              <IoIosArrowBack className={'text-[2rem] text-gray-dark'} />
+              <span className={'text-[1rem] text-gray-dark'}>0주차</span>
+              <IoIosArrowForward className={'text-[2rem] text-gray-dark'} />
+            </div>
+
+            <div className={'flex-row-center'}>
+              <span
+                className={
+                  'flex-row-center self-center text-[0.93rem] font-bold mr-4 text-gray-dark'
+                }
+              >
+                진행률
+              </span>
+              <div className={'mt-2 self-center w-[15.6rem]'}>
+                <Progress className={'progress'} percent={progress} />
+              </div>
+            </div>
+          </section>
+        )}
       </div>
 
       {/*보드*/}
