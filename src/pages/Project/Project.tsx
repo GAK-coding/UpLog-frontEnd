@@ -159,8 +159,24 @@ export default function Project() {
           </div>
         </section>
         {/*진행률*/}
-        {isKanban ? (
-          <section className={'flex-row-center justify-end w-full h-[4.3rem] pr-[4.5rem]'}>
+
+        <section
+          className={`flex-row-center ${
+            isKanban ? 'justify-end' : 'justify-between'
+          } w-full h-[4.3rem] pr-[4.5rem]`}
+        >
+          {!isKanban && (
+            <div className={'flex w-[58%]'}>
+              <div className={'flex w-[7rem]'} />
+              <div className={'flex-row-center justify-end w-[49rem]'}>
+                <IoIosArrowBack className={'text-[1.5rem] text-gray-dark mr-2'} />
+                <span className={'text-[1rem] text-gray-dark'}>1주차</span>
+                <IoIosArrowForward className={'text-[1.5rem] text-gray-dark ml-2'} />
+              </div>
+            </div>
+          )}
+
+          <div className={'flex-row-center'}>
             <span
               className={'flex-row-center self-center text-[0.93rem] font-bold mr-4 text-gray-dark'}
             >
@@ -169,30 +185,8 @@ export default function Project() {
             <div className={'mt-2 self-center w-[15.6rem]'}>
               <Progress className={'progress'} percent={progress} />
             </div>
-          </section>
-        ) : (
-          <section className={'flex-row-center justify-between w-full h-[4.3rem] pr-[4.5rem]'}>
-            <div className={'flex w-[22.5%] border border-red-400'} />
-            <div className={'flex-row-center justify-between w-[7rem] border border-amber-200'}>
-              <IoIosArrowBack className={'text-[2rem] text-gray-dark'} />
-              <span className={'text-[1rem] text-gray-dark'}>0주차</span>
-              <IoIosArrowForward className={'text-[2rem] text-gray-dark'} />
-            </div>
-
-            <div className={'flex-row-center'}>
-              <span
-                className={
-                  'flex-row-center self-center text-[0.93rem] font-bold mr-4 text-gray-dark'
-                }
-              >
-                진행률
-              </span>
-              <div className={'mt-2 self-center w-[15.6rem]'}>
-                <Progress className={'progress'} percent={progress} />
-              </div>
-            </div>
-          </section>
-        )}
+          </div>
+        </section>
       </div>
 
       {/*보드*/}
