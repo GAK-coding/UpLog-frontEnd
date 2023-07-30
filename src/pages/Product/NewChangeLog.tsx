@@ -102,7 +102,9 @@ export default function NewChangeLog() {
 
             <div className={'border-b border-gray-spring'} />
 
-            <div>{/*<PostEditor />*/}</div>
+            <div>
+              <PostEditor />
+            </div>
           </article>
         </Col>
         <Col span={4} />
