@@ -165,6 +165,7 @@ export default function Project() {
             isKanban ? 'justify-end' : 'justify-between'
           } w-full h-[4.3rem] pr-[4.5rem]`}
         >
+          {/*TODO : 스크럼 주차 정보 데이터로 처리 + 화살표 기능 추가*/}
           {!isKanban && (
             <div className={'flex w-[58%]'}>
               <div className={'flex w-[7rem]'} />
