@@ -1,16 +1,12 @@
 import React, { useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { BsChevronCompactDown } from 'react-icons/bs';
-import { ProjectGroupFilter } from '@/typings/project.ts';
+import { ProjectGroupFilter, Task } from '@/typings/project.ts';
 import { Progress, Select } from 'antd';
-import { GoKebabHorizontal } from 'react-icons/go';
-import { FaUserCircle } from 'react-icons/fa';
-import BoardTaskDetail from '@/components/Project/Board/BoardTaskDetail.tsx';
+import StatusBoard from '@/components/Project/Board/StatusBoard.tsx';
 
 export default function Project() {
   const { project } = useParams();
-
-  const userprofile = '';
 
   const pGroup: ProjectGroupFilter[] = [
     { value: 'all', label: '그룹' },
@@ -26,12 +22,67 @@ export default function Project() {
     { value: 'promotion', label: '홍보' },
   ];
 
-  const statusCount = [1, 2, 3];
+  const taskList: Task[] = [
+    {
+      id: 0,
+      name: 'task1',
+      status: 'before',
+      group: 'develop',
+      menu: '요구사항',
+      targetMember: 'OCI(오채영)',
+    },
+    {
+      id: 1,
+      name: 'task2',
+      status: 'before',
+      group: 'develop',
+      menu: '요구사항',
+      targetMember: 'OCI(오채영)',
+    },
+    {
+      id: 2,
+      name: 'task3',
+      status: 'before',
+      group: 'develop',
+      menu: '요구사항',
+      targetMember: 'OCI(오채영)',
+    },
+    {
+      id: 3,
+      name: 'task4',
+      status: 'going',
+      group: 'develop',
+      menu: '테스트',
+      targetMember: 'OCI(오채영)',
+    },
+    {
+      id: 4,
+      name: 'task5',
+      status: 'going',
+      group: 'develop',
+      menu: '테스트',
+      targetMember: 'OCI(오채영)',
+    },
+    {
+      id: 5,
+      name: 'task6',
+      status: 'going',
+      group: 'develop',
+      menu: '요구사항',
+      targetMember: 'OCI(오채영)',
+    },
+    {
+      id: 6,
+      name: 'task7',
+      status: 'done',
+      group: 'develop',
+      menu: '요구사항',
+      targetMember: 'OCI(오채영)',
+    },
+  ];
 
   const progress = 77;
   const [isKanban, setIsKanban] = useState(true);
-
-  const [isClickTaskDetail, setIsClickTaskDetail] = useState(false);
 
   const onClickKanban = useCallback((check: boolean) => {
     setIsKanban(check);
@@ -106,78 +157,10 @@ export default function Project() {
       {/*보드*/}
       <div className={'w-noneSideBar h-board flex-col'}>
         <section className={'flex-col-center w-noneSideBar h-[90%]'}>
-          <div className={'flex-row-center justify-between w-[80rem] h-full pt-8 '}>
-            {/*진행 전 보드*/}
-            <section className={'w-[24rem] h-full task-border'}>
-              {/*제목, 개수*/}
-              <div
-                className={
-                  'flex-row-center justify-between h-[3.5rem] px-[2.3rem] text-gray-dark text-[0.93rem]'
-                }
-              >
-                <span>진행 전</span>
-                <span>{statusCount[0]}개</span>
-              </div>
-              {/*태스크들*/}
-              <div
-                className={'flex-col max-h-[90%] px-[1.8rem] overflow-y-auto border border-red-400'}
-              >
-                {/*태스크 한개*/}
-                <section
-                  className={
-                    'flex-col w-[19.5rem] h-[8rem] bg-white rounded-[10px] mt-[0.6rem] px-[1.12rem] py-[0.5rem]'
-                  }
-                >
-                  {/*케밥 버튼*/}
-                  <div className={'flex justify-end h-[0.7rem] relative'}>
-                    <GoKebabHorizontal
-                      className={'fill-gray-dark cursor-pointer'}
-                      onClick={() => setIsClickTaskDetail(!isClickTaskDetail)}
-                    />
-                    {
-                      /*케밥 버튼 클릭시*/
-                      isClickTaskDetail && <BoardTaskDetail />
-                    }
-                  </div>
-                  {/*task제목*/}
-                  <div className={'flex justify-start h-[2.5rem]'}>
-                    <span className={'text-[1rem]'}>task 제목</span>
-                  </div>
-                  {/*그룹정보*/}
-                  <div className={'flex justify-start items-center mb-2'}>
-                    <span className={'text-gray-dark text-[0.65rem]'}>Group1</span>
-                  </div>
-                  {/*menu, 할당자 정보 */}
-                  <div className={'flex-row-center justify-between text-[0.65rem] text-gray-dark'}>
-                    <span
-                      className={
-                        'flex items-center px-2 h-[1.5rem] rounded-[0.31rem] bg-orange-light-sideBar '
-                      }
-                    >
-                      요구사항
-                    </span>
-                    <div className={'flex-row-center justify-between items-center'}>
-                      <span className={'px-2 text-[0.65rem] text-gray-dark'}>OCI(오채영)</span>
-                      {!userprofile ? (
-                        <FaUserCircle className={'flex-row text-[1.7rem] fill-gray-dark'} />
-                      ) : (
-                        <img
-                          src={userprofile}
-                          alt="userprofile"
-                          className={'flex w-[1.7rem] h-[1.7rem]'}
-                        />
-                      )}
-                    </div>
-                  </div>
-                  {/*</div>*/}
-                </section>
-                <section
-                  className={'w-[19.5rem] h-[8rem] bg-white rounded-[10px] mt-[0.6rem]'}
-                ></section>
-              </div>
-            </section>
-            <section className={'w-[24rem] h-full task-border'}>보드 2</section>
-            <section className={'w-[24rem] h-full task-border'}>보드 3</section>
+          <div className={'flex-row-center justify-between w-[80rem] h-full pt-8'}>
+            <StatusBoard status={'before'} tasks={taskList} />
+            <StatusBoard status={'going'} tasks={taskList} />
+            <StatusBoard status={'done'} tasks={taskList} />
           </div>
         </section>
         {/*하단페이지로 이동*/}
