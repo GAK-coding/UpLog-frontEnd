@@ -90,9 +90,7 @@ export default function ProjectModal({ isOpen, onClose, isAdd, versionName }: Pr
                     }
                     borderRadius={'0.31rem'}
                   >
-                    <span
-                      className={'flex-col-center mt-3 ml-4 text-ms text-gray-dark cursor-pointer '}
-                    >
+                    <span className={'flex-col-center mt-3 ml-4 text-gray-dark cursor-pointer '}>
                       <BsQuestionCircle className={'text-3xl mb-1'} />
                       버전
                     </span>
@@ -110,7 +108,7 @@ export default function ProjectModal({ isOpen, onClose, isAdd, versionName }: Pr
 
         <ModalFooter>
           <button
-            className={'bg-orange rounded font-bold text-ms text-white w-[4.5rem] h-9'}
+            className={'bg-orange rounded font-bold text-sm text-white w-[4.5rem] h-9'}
             onClick={() => {}}
           >
             완료

@@ -30,11 +30,11 @@
   --hover: #e9ecef;
   --shadow: rgba(0, 0, 0, 0.1);
 
-  --feature: #deecdc;
-  --changed: #faedcc;
-  --deprecated: #f7e1dc;
-  --new: #d6e4ee;
-  --fixed: #e3e2e0;
+  --Feature: #deecdc;
+  --Changed: #faedcc;
+  --Deprecated: #f7e1dc;
+  --New: #d6e4ee;
+  --Fixed: #e3e2e0;
 }
 
 html.dark {
