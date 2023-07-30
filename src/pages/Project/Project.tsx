@@ -34,7 +34,7 @@ export default function Project() {
     console.log(value);
   };
   return (
-    <section className={'flex-col justify-start w-noneSideBar h-full relative'}>
+    <section className={'flex-col justify-start w-noneSideBar h-full relative overflow-x-hidden'}>
       <div className={'w-noneSideBar h-[13.8rem] flex-col'}>
         <section className={'flex-row-center justify-start w-full h-[3.5rem] px-12 pt-4'}>
           {/*그룹 필터링*/}
@@ -97,26 +97,39 @@ export default function Project() {
       </div>
 
       {/*보드*/}
-      <div className={'w-noneSideBar h-board flex-col border border-red-400'}>
+      <div className={'w-noneSideBar h-board flex-col'}>
         <section className={'flex-col-center w-noneSideBar h-[90%]'}>
           <div className={'flex-row-center justify-between w-[80rem] h-full pt-8 '}>
+            {/*진행 전 보드*/}
             <section className={'w-[24rem] h-full task-border'}>
               {/*제목, 개수*/}
               <div
                 className={
-                  'flex-row-center justify-between h-[3.8rem] px-[2.3rem] text-gray-dark text-[0.93rem] border-red-400 border'
+                  'flex-row-center justify-between h-[3.5rem] px-[2.3rem] text-gray-dark text-[0.93rem]'
                 }
               >
                 <span>진행 전</span>
                 <span>{statusCount[0]}개</span>
               </div>
-              {/*태스크*/}
-              <div className={'border border-red-400'}>
-                <img src={'/logo.svg'} className={'w-32'} />
-                <img src={'/logo.svg'} className={'w-32'} />
-                {/*<img src={'/logo.svg'} className={'w-32'} />*/}
-                {/*<img src={'/logo.svg'} className={'w-32'} />*/}
-                <img src={'/logo.svg'} className={'w-32'} />
+              {/*태스크들*/}
+              <div
+                className={'flex-col max-h-[90%] px-[1.8rem] overflow-y-auto border border-red-400'}
+              >
+                <section
+                  className={'w-[19.5rem] h-[7.5rem] bg-white rounded-[10px] mt-[0.6rem]'}
+                ></section>
+                <section
+                  className={'w-[19.5rem] h-[7.5rem] bg-white rounded-[10px] mt-[0.6rem]'}
+                ></section>
+                <section
+                  className={'w-[19.5rem] h-[7.5rem] bg-white rounded-[10px] mt-[0.6rem]'}
+                ></section>
+                <section
+                  className={'w-[19.5rem] h-[7.5rem] bg-white rounded-[10px] mt-[0.6rem]'}
+                ></section>
+                <section
+                  className={'w-[19.5rem] h-[7.5rem] bg-white rounded-[10px] mt-[0.6rem]'}
+                ></section>
               </div>
             </section>
             <section className={'w-[24rem] h-full task-border'}>보드 2</section>

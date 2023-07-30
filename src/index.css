@@ -30,7 +30,7 @@
 
 /*project-board  */
   .task-border{
-    @apply border-solid border-[1px] border-task-line bg-task-bg
+    @apply border-solid border-[1px] border-task-line bg-task-bg rounded-[10px]
   }
 }
 
