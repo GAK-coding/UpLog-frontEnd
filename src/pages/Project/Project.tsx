@@ -3,9 +3,12 @@ import { useParams } from 'react-router-dom';
 import { BsChevronCompactDown } from 'react-icons/bs';
 import { ProjectGroupFilter } from '@/typings/project.ts';
 import { Progress, Select } from 'antd';
+import { GoKebabHorizontal } from 'react-icons/go';
+import { FaUserCircle } from 'react-icons/fa';
 
 export default function Project() {
   // const { project } = useParams();
+  const userprofile = '';
 
   const pGroup: ProjectGroupFilter[] = [
     { value: 'all', label: '그룹' },
@@ -115,20 +118,51 @@ export default function Project() {
               <div
                 className={'flex-col max-h-[90%] px-[1.8rem] overflow-y-auto border border-red-400'}
               >
+                {/*태스크 한개*/}
                 <section
-                  className={'w-[19.5rem] h-[7.5rem] bg-white rounded-[10px] mt-[0.6rem]'}
-                ></section>
+                  className={
+                    'flex-col w-[19.5rem] h-[8rem] bg-white rounded-[10px] mt-[0.6rem] px-[1.12rem] py-[0.5rem]'
+                  }
+                >
+                  {/*케밥 버튼*/}
+                  <div className={'flex justify-end h-[0.7rem]'}>
+                    <GoKebabHorizontal className={'fill-gray-dark cursor-pointer'} />
+                  </div>
+                  {/*task제목*/}
+                  <div className={'flex justify-start h-[2.5rem]'}>
+                    <span className={'text-[1rem]'}>task 제목</span>
+                  </div>
+                  {/*<div className={'flex-col justify-between h-[3rem]'}>*/}
+                  {/*그룹정보*/}
+                  <div className={'flex justify-start items-center mb-2'}>
+                    <span className={'text-gray-dark text-[0.65rem]'}>Group1</span>
+                  </div>
+                  {/*menu, 할당자 정보 */}
+                  <div className={'flex-row-center justify-between text-[0.65rem] text-gray-dark'}>
+                    <span
+                      className={
+                        'flex items-center px-2 h-[1.5rem] rounded-[0.31rem] bg-orange-light-sideBar '
+                      }
+                    >
+                      요구사항
+                    </span>
+                    <div className={'flex-row-center justify-between items-center'}>
+                      <span className={'px-2 text-[0.65rem] text-gray-dark'}>OCI(오채영)</span>
+                      {!userprofile ? (
+                        <FaUserCircle className={'flex-row text-[1.7rem] fill-gray-dark'} />
+                      ) : (
+                        <img
+                          src={userprofile}
+                          alt="userprofile"
+                          className={'flex w-[1.7rem] h-[1.7rem]'}
+                        />
+                      )}
+                    </div>
+                  </div>
+                  {/*</div>*/}
+                </section>
                 <section
-                  className={'w-[19.5rem] h-[7.5rem] bg-white rounded-[10px] mt-[0.6rem]'}
-                ></section>
-                <section
-                  className={'w-[19.5rem] h-[7.5rem] bg-white rounded-[10px] mt-[0.6rem]'}
-                ></section>
-                <section
-                  className={'w-[19.5rem] h-[7.5rem] bg-white rounded-[10px] mt-[0.6rem]'}
-                ></section>
-                <section
-                  className={'w-[19.5rem] h-[7.5rem] bg-white rounded-[10px] mt-[0.6rem]'}
+                  className={'w-[19.5rem] h-[8rem] bg-white rounded-[10px] mt-[0.6rem]'}
                 ></section>
               </div>
             </section>
