@@ -79,6 +79,22 @@ export default function Project() {
       menu: '요구사항',
       targetMember: 'OCI(오채영)',
     },
+    {
+      id: 7,
+      name: 'task8',
+      status: 'before',
+      group: 'develop',
+      menu: '요구사항',
+      targetMember: 'OCI(오채영)',
+    },
+    {
+      id: 8,
+      name: 'task9',
+      status: 'before',
+      group: 'develop',
+      menu: '테스트',
+      targetMember: 'OCI(오채영)',
+    },
   ];
 
   const progress = 77;
