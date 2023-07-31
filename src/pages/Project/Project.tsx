@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { BsChevronCompactDown } from 'react-icons/bs';
 import { ProjectGroupFilter, Task } from '@/typings/project.ts';
@@ -7,7 +7,7 @@ import StatusBoard from '@/components/Project/Board/StatusBoard.tsx';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 
 export default function Project() {
-  const { project } = useParams();
+  const { product, project, parentgroup, childgroup } = useParams();
 
   const pGroup: ProjectGroupFilter[] = [
     { value: 'all', label: '그룹' },
@@ -108,6 +108,14 @@ export default function Project() {
   const handleChange = (value: { value: string; label: React.ReactNode }) => {
     console.log(value);
   };
+
+  useEffect(() => {
+    console.log('product', product);
+    console.log('project', project);
+    console.log('parentgroup', parentgroup);
+    console.log('childgroup', childgroup);
+  }, []);
+
   return (
     <section className={'flex-col justify-start w-noneSideBar h-full relative overflow-x-hidden'}>
       <div className={'w-noneSideBar h-[13.8rem] flex-col'}>
@@ -187,7 +195,11 @@ export default function Project() {
       {/*보드*/}
       <div className={'w-noneSideBar h-board flex-col'}>
         <section className={'flex-col-center w-noneSideBar h-[90%]'}>
-          <div className={'flex-row-center justify-between w-[90%] h-full pt-8 px-[8rem]'}>
+          <div
+            className={
+              'flex-row-center justify-between w-full h-full pt-8 px-[12rem] border border-red-400'
+            }
+          >
             <StatusBoard status={'before'} tasks={taskList} />
             <StatusBoard status={'going'} tasks={taskList} />
             <StatusBoard status={'done'} tasks={taskList} />

@@ -31,7 +31,9 @@ export default function StatusBoard({ status, tasks }: Props) {
 
   return (
     //TODO : 보드 max-w 적용시키기
-    <section className={'min-w-[24rem] max-w-[40rem] w-auto h-full task-border'}>
+    <section
+      className={'min-w-[24rem] max-w-[40rem] w-auto h-full mx-6 task-border border-red-400 border'}
+    >
       {/*제목, 개수*/}
       <div
         className={
@@ -43,11 +45,11 @@ export default function StatusBoard({ status, tasks }: Props) {
       </div>
 
       {/*태스크들*/}
-      <div className={'flex-col items-center max-h-[90%] overflow-y-auto'}>
+      <div className={'flex-col items-center max-h-[85%] overflow-y-auto'}>
         {filteredTasks.map((task) => (
           <section
             className={
-              'flex-col min-w-[19.5rem] w-[85%]  h-[8rem] bg-white rounded-[10px] mx-auto my-[0.5rem] px-[1.12rem] py-[0.5rem]'
+              'flex-col min-w-[19.5rem] w-[85%] h-[8rem] bg-white rounded-[10px] mx-auto my-[0.5rem] px-[1.12rem] py-[0.5rem]'
             }
             key={task.id}
           >
