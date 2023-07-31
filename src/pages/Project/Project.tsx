@@ -167,8 +167,8 @@ export default function Project() {
         >
           {/*TODO : 스크럼 주차 정보 데이터로 처리 + 화살표 기능 추가*/}
           {!isKanban && (
-            <div className={'flex w-[58%]'}>
-              <div className={'flex w-[7rem]'} />
+            <div className={'flex w-[58%] border border-red-400'}>
+              <div className={'flex w-[7rem] border border-amber-200'} />
               <div className={'flex-row-center justify-end w-[49rem]'}>
                 <IoIosArrowBack className={'text-[1.5rem] text-gray-dark mr-2'} />
                 <span className={'text-[1rem] text-gray-dark'}>1주차</span>
@@ -193,7 +193,11 @@ export default function Project() {
       {/*보드*/}
       <div className={'w-noneSideBar h-board flex-col'}>
         <section className={'flex-col-center w-noneSideBar h-[90%]'}>
-          <div className={'flex-row-center justify-between w-[80rem] h-full pt-8'}>
+          <div
+            className={
+              'flex-row-center justify-between w-[90%] h-full pt-8 px-[8rem] border border-red-400'
+            }
+          >
             <StatusBoard status={'before'} tasks={taskList} />
             <StatusBoard status={'going'} tasks={taskList} />
             <StatusBoard status={'done'} tasks={taskList} />
