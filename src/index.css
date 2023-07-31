@@ -25,7 +25,7 @@
   }
 
   .base-menu-selected{
-    @apply border-solid border-[0.5px] border-orange-light-sideBar bg-orange-light rounded-[0.31rem]
+    @apply border-solid border-[0.5px] border-orange bg-orange-light-sideBar rounded-[0.31rem]
   }
 
 /*project-board  */

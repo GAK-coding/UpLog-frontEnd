@@ -100,8 +100,8 @@ export default function ReleaseNote() {
     <section className={'w-h-full min-w-[50em] py-32 px-14 xl:px-56'} onClick={onCloseKebab}>
       <div className={'min-w-[30em] flex justify-between mb-4'}>
         <span className={'flex items-center'}>
-          <img src="/images/test.jpeg" alt={'제품 사진'} className={'w-14 h-14 mr-4'} />
-          <span className={'text-[2.6rem] font-bold'}>AllFormU</span>
+          <img src="/images/test.jpeg" alt={'제품 사진'} className={'w-12 h-12 mr-4'} />
+          <span className={'text-[2.4rem] font-bold'}>AllFormU</span>
         </span>
         <button
           className={'mr-2 text-gray-dark font-bold underline self-end'}
