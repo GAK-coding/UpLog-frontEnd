@@ -10,7 +10,7 @@ export default function PostEditor() {
   const editorRef = useRef<Editor>(null);
 
   const onChange = () => {
-    const data = editorRef!.current.getInstance().getHTML();
+    const data = editorRef!.current!.getInstance().getHTML();
     console.log(data);
   };
 

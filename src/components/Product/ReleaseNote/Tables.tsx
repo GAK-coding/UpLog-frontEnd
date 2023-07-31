@@ -129,6 +129,7 @@ export default function Tables({
               borderTop={'1px solid var(--gray-table)'}
               borderBottom={'1px solid var(--gray-table)'}
               marginY={'auto'}
+              fontSize={'1.1rem'}
             >
               {version.contents.length > 0 ? (
                 version.contents.map((content, idx) => {
