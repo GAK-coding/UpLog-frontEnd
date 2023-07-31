@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { BsChevronCompactDown } from 'react-icons/bs';
 import { ProjectGroupFilter, Task } from '@/typings/project.ts';
@@ -7,7 +7,7 @@ import StatusBoard from '@/components/Project/Board/StatusBoard.tsx';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 
 export default function Project() {
-  const { project } = useParams();
+  const { product, project, parentgroup, childgroup } = useParams();
 
   const pGroup: ProjectGroupFilter[] = [
     { value: 'all', label: '그룹' },
@@ -108,6 +108,14 @@ export default function Project() {
   const handleChange = (value: { value: string; label: React.ReactNode }) => {
     console.log(value);
   };
+
+  useEffect(() => {
+    console.log('product', product);
+    console.log('project', project);
+    console.log('parentgroup', parentgroup);
+    console.log('childgroup', childgroup);
+  }, []);
+
   return (
     <section className={'flex-col justify-start w-noneSideBar h-full relative overflow-x-hidden'}>
       <div className={'w-noneSideBar h-[13.8rem] flex-col'}>
@@ -160,27 +168,21 @@ export default function Project() {
         </section>
         {/*진행률*/}
 
-        <section
-          className={`flex-row-center ${
-            isKanban ? 'justify-end' : 'justify-between'
-          } w-full h-[4.3rem] pr-[4.5rem]`}
-        >
+        <section className={'flex-row-center justify-between w-noneSideBar h-[4.3rem]'}>
           {/*TODO : 스크럼 주차 정보 데이터로 처리 + 화살표 기능 추가*/}
-          {!isKanban && (
-            <div className={'flex w-[58%]'}>
-              <div className={'flex w-[7rem]'} />
-              <div className={'flex-row-center justify-end w-[49rem]'}>
+          <div className={'flex w-1/3 h-full'} />
+          <div className={'flex-row-center w-1/3 h-full'}>
+            {!isKanban && (
+              <div className={'flex-row-center w-full'}>
                 <IoIosArrowBack className={'text-[1.5rem] text-gray-dark mr-2'} />
                 <span className={'text-[1rem] text-gray-dark'}>1주차</span>
                 <IoIosArrowForward className={'text-[1.5rem] text-gray-dark ml-2'} />
               </div>
-            </div>
-          )}
+            )}
+          </div>
 
-          <div className={'flex-row-center'}>
-            <span
-              className={'flex-row-center self-center text-[0.93rem] font-bold mr-4 text-gray-dark'}
-            >
+          <div className={'flex-row-center justify-end w-1/3 h-full pr-12'}>
+            <span className={'flex-row-center text-[0.93rem] font-bold mr-4 text-gray-dark'}>
               진행률
             </span>
             <div className={'mt-2 self-center w-[15.6rem]'}>
@@ -193,7 +195,11 @@ export default function Project() {
       {/*보드*/}
       <div className={'w-noneSideBar h-board flex-col'}>
         <section className={'flex-col-center w-noneSideBar h-[90%]'}>
-          <div className={'flex-row-center justify-between w-[80rem] h-full pt-8'}>
+          <div
+            className={
+              'flex-row-center justify-between w-full h-full pt-8 px-[12rem] border border-red-400'
+            }
+          >
             <StatusBoard status={'before'} tasks={taskList} />
             <StatusBoard status={'going'} tasks={taskList} />
             <StatusBoard status={'done'} tasks={taskList} />

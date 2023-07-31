@@ -18,6 +18,7 @@ export default function StatusBoard({ status, tasks }: Props) {
   // task detail 클릭 여부
   const [isClickTaskDetail, setIsClickTaskDetail] = useState<{ [key: number]: boolean }>({});
 
+  // TODO : utils 함수로 빼기
   useEffect(() => {
     if (status === 'before') {
       setStatusInfo('진행 전');
@@ -29,7 +30,10 @@ export default function StatusBoard({ status, tasks }: Props) {
   }, []);
 
   return (
-    <section className={'w-[24rem] h-full task-border'}>
+    //TODO : 보드 max-w 적용시키기
+    <section
+      className={'min-w-[24rem] max-w-[40rem] w-auto h-full mx-6 task-border border-red-400 border'}
+    >
       {/*제목, 개수*/}
       <div
         className={
@@ -41,11 +45,11 @@ export default function StatusBoard({ status, tasks }: Props) {
       </div>
 
       {/*태스크들*/}
-      <div className={'flex-col max-h-[90%] px-[1.8rem] overflow-y-auto'}>
+      <div className={'flex-col items-center max-h-[85%] overflow-y-auto'}>
         {filteredTasks.map((task) => (
           <section
             className={
-              'flex-col w-[19.5rem] h-[8rem] bg-white rounded-[10px] my-[0.5rem] px-[1.12rem] py-[0.5rem]'
+              'flex-col min-w-[19.5rem] w-[85%] h-[8rem] bg-white rounded-[10px] mx-auto my-[0.5rem] px-[1.12rem] py-[0.5rem]'
             }
             key={task.id}
           >
@@ -85,7 +89,7 @@ export default function StatusBoard({ status, tasks }: Props) {
               <div className={'flex-row-center justify-between items-center'}>
                 <span className={'px-2 text-[0.65rem] text-gray-dark'}>{task.targetMember}</span>
                 {!userprofile ? (
-                  <FaUserCircle className={'flex-row text-[1.7rem] fill-gray-dark'} />
+                  <FaUserCircle className={'flex text-[1.7rem] fill-gray-dark'} />
                 ) : (
                   <img
                     src={userprofile}
