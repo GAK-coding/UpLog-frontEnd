@@ -160,27 +160,21 @@ export default function Project() {
         </section>
         {/*진행률*/}
 
-        <section
-          className={`flex-row-center ${
-            isKanban ? 'justify-end' : 'justify-between'
-          } w-full h-[4.3rem] pr-[4.5rem]`}
-        >
+        <section className={'flex-row-center justify-between w-noneSideBar h-[4.3rem]'}>
           {/*TODO : 스크럼 주차 정보 데이터로 처리 + 화살표 기능 추가*/}
-          {!isKanban && (
-            <div className={'flex w-[58%] border border-red-400'}>
-              <div className={'flex w-[7rem] border border-amber-200'} />
-              <div className={'flex-row-center justify-end w-[49rem]'}>
+          <div className={'flex w-1/3 h-full'} />
+          <div className={'flex-row-center w-1/3 h-full'}>
+            {!isKanban && (
+              <div className={'flex-row-center w-full'}>
                 <IoIosArrowBack className={'text-[1.5rem] text-gray-dark mr-2'} />
                 <span className={'text-[1rem] text-gray-dark'}>1주차</span>
                 <IoIosArrowForward className={'text-[1.5rem] text-gray-dark ml-2'} />
               </div>
-            </div>
-          )}
+            )}
+          </div>
 
-          <div className={'flex-row-center'}>
-            <span
-              className={'flex-row-center self-center text-[0.93rem] font-bold mr-4 text-gray-dark'}
-            >
+          <div className={'flex-row-center justify-end w-1/3 h-full pr-12'}>
+            <span className={'flex-row-center text-[0.93rem] font-bold mr-4 text-gray-dark'}>
               진행률
             </span>
             <div className={'mt-2 self-center w-[15.6rem]'}>
@@ -193,11 +187,7 @@ export default function Project() {
       {/*보드*/}
       <div className={'w-noneSideBar h-board flex-col'}>
         <section className={'flex-col-center w-noneSideBar h-[90%]'}>
-          <div
-            className={
-              'flex-row-center justify-between w-[90%] h-full pt-8 px-[8rem] border border-red-400'
-            }
-          >
+          <div className={'flex-row-center justify-between w-[90%] h-full pt-8 px-[8rem]'}>
             <StatusBoard status={'before'} tasks={taskList} />
             <StatusBoard status={'going'} tasks={taskList} />
             <StatusBoard status={'done'} tasks={taskList} />
