@@ -1,13 +1,18 @@
-import React, { useCallback, useState } from 'react';
-// import { useParams } from 'react-router-dom';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { BsChevronCompactDown } from 'react-icons/bs';
 import { Task } from '@/typings/project.ts';
 import { Progress, Select, Space } from 'antd';
 import StatusBoard from '@/components/Project/Board/StatusBoard.tsx';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
+import type = Mocha.utils.type;
+import { useNavigate } from 'react-router-dom';
+import { product } from '@/recoil/Product/atom.tsx';
 
 export default function Project() {
-  // const { product, project, parentgroup, childgroup } = useParams();
+  const { product, project, parentgroup, childgroup } = useParams();
+
+  const navigate = useNavigate();
 
   const taskList: Task[] = [
     {
@@ -91,11 +96,12 @@ export default function Project() {
     setIsKanban(check);
   }, []);
 
-  const pGroup = ['개발팀', '마케팅', '홍보팀'];
+  const pGroup = ['그룹', '개발팀', '마케팅', '홍보팀'];
   const cGroup = {
-    개발팀: ['하위개발1', '하위개발2'],
-    마케팅: ['하위마케팅1', '하위마케팅2'],
-    홍보팀: ['하위홍보1', '하위홍보2'],
+    그룹: ['하위그룹'],
+    개발팀: ['전체', '하위개발1', '하위개발2'],
+    마케팅: ['전체', '하위마케팅1', '하위마케팅2'],
+    홍보팀: ['전체', '하위홍보1', '하위홍보2'],
   };
 
   type ChildGroup = keyof typeof cGroup;
@@ -103,33 +109,50 @@ export default function Project() {
   const [parentGroup, setParentGroup] = useState(cGroup[pGroup[0] as ChildGroup]);
   const [childGroup, setChildGroup] = useState(cGroup[pGroup[0] as ChildGroup][0]);
 
-  const handleProvinceChange = (value: ChildGroup) => {
+  const [filterGroup, setFilterGroup] = useState(pGroup[0]);
+
+  const handleParentGroupChange = (value: ChildGroup) => {
+    // 선택한 상위그룹내용으로 하위 그룹 option으로 변경
     setParentGroup(cGroup[value]);
     setChildGroup(cGroup[value][0]);
+
+    // 선택한 상위 그룹으로 필터링된 페이지로 이동
+    setFilterGroup(value);
   };
 
-  const onSecondCityChange = (value: ChildGroup) => {
+  const onChildGroupChange = (value: ChildGroup) => {
+    // 선택한 하위 그룹으로 필터링된 페이지로 이동
     setChildGroup(value);
   };
+
+  useEffect(() => {
+    if (filterGroup === '그룹') {
+      navigate(`/workspace/${product}/${project}`);
+    } else {
+      childGroup === '전체'
+        ? navigate(`/workspace/${product}/${project}/group/${filterGroup}`)
+        : navigate(`/workspace/${product}/${project}/group/${filterGroup}/${childGroup}`);
+    }
+  }, [filterGroup, childGroup]);
 
   return (
     <section className={'flex-col justify-start w-noneSideBar h-full relative overflow-x-hidden'}>
       <div className={'w-noneSideBar h-[13.8rem] flex-col'}>
         <section className={'flex-row-center justify-start w-full h-[3.5rem] px-12 pt-4'}>
           {/*그룹 필터링*/}
-          <div className={'flex-row-center w-[18rem] justify-between'}>
+          <div className={'flex-row-center w-[25rem] justify-between'}>
             {/*그룹 -> 하위로 바꾸기*/}
             <Space wrap>
               <Select
                 defaultValue={pGroup[0]}
-                style={{ width: 100 }}
-                onChange={handleProvinceChange}
+                style={{ width: 110 }}
+                onChange={handleParentGroupChange}
                 options={pGroup.map((group) => ({ label: group, value: group }))}
               />
               <Select
-                style={{ width: 100 }}
+                style={{ width: 110 }}
                 value={childGroup}
-                onChange={onSecondCityChange}
+                onChange={onChildGroupChange}
                 options={parentGroup.map((group) => ({ label: group, value: group }))}
               />
             </Space>
