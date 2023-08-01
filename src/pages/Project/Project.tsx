@@ -1,34 +1,24 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { BsChevronCompactDown } from 'react-icons/bs';
-import { ProjectGroupFilter, Task } from '@/typings/project.ts';
-import { Progress, Select } from 'antd';
+import { Task } from '@/typings/project.ts';
+import { Progress, Select, Space } from 'antd';
 import StatusBoard from '@/components/Project/Board/StatusBoard.tsx';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
+import { useNavigate } from 'react-router-dom';
 
 export default function Project() {
-  const { product, project, parentgroup, childgroup } = useParams();
+  const { product, project, group, subGroup } = useParams();
 
-  const pGroup: ProjectGroupFilter[] = [
-    { value: 'all', label: '그룹' },
-    { value: 'develop', label: '개발팀' },
-    { value: 'marketing', label: '마케팅' },
-    { value: 'promotion', label: '홍보' },
-  ];
+  const navigate = useNavigate();
 
-  const cGroup: ProjectGroupFilter[] = [
-    { value: 'all', label: '하위그룹' },
-    { value: 'develop', label: '개발팀' },
-    { value: 'marketing', label: '마케팅' },
-    { value: 'promotion', label: '홍보' },
-  ];
-
+  // recoil에서 받아올 값
   const taskList: Task[] = [
     {
       id: 0,
       name: 'task1',
       status: 'before',
-      group: 'develop',
+      group: '개발팀',
       menu: '요구사항',
       targetMember: 'OCI(오채영)',
     },
@@ -36,7 +26,7 @@ export default function Project() {
       id: 1,
       name: 'task2',
       status: 'before',
-      group: 'develop',
+      group: '개발팀',
       menu: '요구사항',
       targetMember: 'OCI(오채영)',
     },
@@ -44,7 +34,7 @@ export default function Project() {
       id: 2,
       name: 'task3',
       status: 'before',
-      group: 'develop',
+      group: '마케팅팀',
       menu: '요구사항',
       targetMember: 'OCI(오채영)',
     },
@@ -52,7 +42,7 @@ export default function Project() {
       id: 3,
       name: 'task4',
       status: 'going',
-      group: 'develop',
+      group: '마케팅팀',
       menu: '테스트',
       targetMember: 'OCI(오채영)',
     },
@@ -60,7 +50,7 @@ export default function Project() {
       id: 4,
       name: 'task5',
       status: 'going',
-      group: 'develop',
+      group: '홍보팀',
       menu: '테스트',
       targetMember: 'OCI(오채영)',
     },
@@ -68,7 +58,7 @@ export default function Project() {
       id: 5,
       name: 'task6',
       status: 'going',
-      group: 'develop',
+      group: '홍보팀',
       menu: '요구사항',
       targetMember: 'OCI(오채영)',
     },
@@ -76,7 +66,7 @@ export default function Project() {
       id: 6,
       name: 'task7',
       status: 'done',
-      group: 'develop',
+      group: '개발팀',
       menu: '요구사항',
       targetMember: 'OCI(오채영)',
     },
@@ -84,20 +74,53 @@ export default function Project() {
       id: 7,
       name: 'task8',
       status: 'before',
-      group: 'develop',
+      group: '마케팅',
       menu: '요구사항',
       targetMember: 'OCI(오채영)',
     },
     {
       id: 8,
       name: 'task9',
+      status: 'done',
+      group: '백엔드',
+      menu: '테스트',
+      targetMember: 'OCI(오채영)',
+    },
+    {
+      id: 9,
+      name: 'task10',
+      status: 'done',
+      group: '프론트엔드',
+      menu: '요구사항',
+      targetMember: 'OCI(오채영)',
+    },
+    {
+      id: 10,
+      name: 'task11',
       status: 'before',
-      group: 'develop',
+      group: '프론트엔드',
+      menu: '테스트',
+      targetMember: 'OCI(오채영)',
+    },
+    {
+      id: 11,
+      name: 'task12',
+      status: 'before',
+      group: '백엔드',
+      menu: '요구사항',
+      targetMember: 'OCI(오채영)',
+    },
+    {
+      id: 12,
+      name: 'task13',
+      status: 'going',
+      group: '프론트엔드',
       menu: '테스트',
       targetMember: 'OCI(오채영)',
     },
   ];
 
+  // 그룹으로 필터링 된 값
   const progress = 77;
   const [isKanban, setIsKanban] = useState(true);
 
@@ -105,39 +128,90 @@ export default function Project() {
     setIsKanban(check);
   }, []);
 
-  const handleChange = (value: { value: string; label: React.ReactNode }) => {
-    console.log(value);
+  const pGroup = ['그룹', '개발팀', '마케팅팀', '홍보팀'];
+  const cGroup = {
+    그룹: ['하위그룹'],
+    개발팀: ['전체', '프론트엔드', '백엔드', '풀스택'],
+    마케팅팀: ['전체', '콘텐츠', '디자인'],
+    홍보팀: ['전체', 'SNS', '기사'],
   };
 
+  type ChildGroup = keyof typeof cGroup;
+
+  const [parentGroup, setParentGroup] = useState(cGroup[pGroup[0] as ChildGroup]);
+  const [childGroup, setChildGroup] = useState(cGroup[pGroup[0] as ChildGroup][0]);
+
+  const [filterGroup, setFilterGroup] = useState(pGroup[0]);
+
+  const [filterTaskList, setFilterTaskList] = useState(taskList);
+
+  const handleParentGroupChange = (value: ChildGroup) => {
+    // 선택한 상위그룹내용으로 하위 그룹 option으로 변경
+    setParentGroup(cGroup[value]);
+    setChildGroup(cGroup[value][0]);
+
+    // 선택한 상위 그룹으로 필터링된 페이지로 이동
+    setFilterGroup(value);
+  };
+
+  const onChildGroupChange = (value: ChildGroup) => {
+    // 선택한 하위 그룹으로 필터링된 페이지로 이동
+    setChildGroup(value);
+  };
+
+  // 필터링 된 페이지로 이동
   useEffect(() => {
-    console.log('product', product);
-    console.log('project', project);
-    console.log('parentgroup', parentgroup);
-    console.log('childgroup', childgroup);
-  }, []);
+    if (filterGroup === '그룹') {
+      navigate(`/workspace/${product}/${project}`);
+    } else {
+      childGroup === '전체'
+        ? navigate(`/workspace/${product}/${project}/group/${filterGroup}`)
+        : navigate(`/workspace/${product}/${project}/group/${filterGroup}/${childGroup}`);
+    }
+  }, [filterGroup, childGroup]);
+
+  // task 데이터 필터링된 그룹에 맞게 필터링
+  useEffect(() => {
+    if (filterGroup === '그룹') return;
+
+    if (childGroup === '전체') {
+      const allGroup = cGroup[filterGroup];
+
+      // 현재 Group name으로 필터링 한 결과
+      const firstGroup = taskList.filter((task) => task.group === filterGroup);
+
+      // 현재 Group에 해당하는 subGroup들도 포함해서 필터링 한 결과
+      for (let i = 1; i < allGroup.length; i++) {
+        firstGroup.push(...taskList.filter((task) => task.group === allGroup[i]));
+        console.log(i, firstGroup);
+      }
+      setFilterTaskList(firstGroup);
+    } else {
+      setFilterTaskList(taskList.filter((task) => task.group === childGroup));
+    }
+  }, [filterGroup, childGroup]);
 
   return (
     <section className={'flex-col justify-start w-noneSideBar h-full relative overflow-x-hidden'}>
       <div className={'w-noneSideBar h-[13.8rem] flex-col'}>
         <section className={'flex-row-center justify-start w-full h-[3.5rem] px-12 pt-4'}>
           {/*그룹 필터링*/}
-          <div className={'flex-row-center w-[18rem] justify-between'}>
+          <div className={'flex-row-center w-[25rem] justify-between'}>
             {/*그룹 -> 하위로 바꾸기*/}
-            <Select
-              labelInValue
-              defaultValue={{ value: pGroup[0].value, label: pGroup[0].label }}
-              style={{ width: 100 }}
-              onChange={handleChange}
-              options={pGroup}
-            ></Select>
-
-            <Select
-              labelInValue
-              defaultValue={{ value: cGroup[0].value, label: cGroup[0].label }}
-              style={{ width: 100 }}
-              onChange={handleChange}
-              options={cGroup}
-            ></Select>
+            <Space wrap>
+              <Select
+                defaultValue={pGroup[0]}
+                style={{ width: 110 }}
+                onChange={handleParentGroupChange}
+                options={pGroup.map((group) => ({ label: group, value: group }))}
+              />
+              <Select
+                style={{ width: 110 }}
+                value={childGroup}
+                onChange={onChildGroupChange}
+                options={parentGroup.map((group) => ({ label: group, value: group }))}
+              />
+            </Space>
           </div>
         </section>
         {/*칸반, 스크럼 선택*/}
@@ -195,14 +269,10 @@ export default function Project() {
       {/*보드*/}
       <div className={'w-noneSideBar h-board flex-col'}>
         <section className={'flex-col-center w-noneSideBar h-[90%]'}>
-          <div
-            className={
-              'flex-row-center justify-between w-full h-full pt-8 px-[12rem] border border-red-400'
-            }
-          >
-            <StatusBoard status={'before'} tasks={taskList} />
-            <StatusBoard status={'going'} tasks={taskList} />
-            <StatusBoard status={'done'} tasks={taskList} />
+          <div className={'flex-row-center justify-between w-full h-full pt-8 px-[12rem]'}>
+            <StatusBoard status={'before'} tasks={filterTaskList} />
+            <StatusBoard status={'going'} tasks={filterTaskList} />
+            <StatusBoard status={'done'} tasks={filterTaskList} />
           </div>
         </section>
         {/*하단페이지로 이동*/}
