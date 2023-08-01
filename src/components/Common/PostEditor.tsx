@@ -1,33 +1,30 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Editor } from '@toast-ui/react-editor';
 import '@toast-ui/editor/dist/toastui-editor.css';
 import colorSyntax from '@toast-ui/editor-plugin-color-syntax';
 import 'tui-color-picker/dist/tui-color-picker.css';
 import '@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css';
 import '@toast-ui/editor/dist/i18n/ko-kr';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { postHeight } from '@/recoil/Product/ReleaseNote.tsx';
+
+import '@toast-ui/editor/dist/toastui-editor.css';
+import '@toast-ui/editor/dist/theme/toastui-editor-dark.css';
 
 import 'prismjs/themes/prism.css';
 import '@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight.css';
 import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
-import Prism from 'prismjs'; // prism 테마 추가
+import Prism from 'prismjs';
+import { themeState } from '@/recoil/Common/atom.tsx'; // prism 테마 추가
 
 export default function PostEditor() {
   const editorRef = useRef<Editor>(null);
-  const [height, setHeight] = useRecoilState(postHeight);
 
   const onChange = () => {
     const data = editorRef!.current!.getInstance().getHTML();
     console.log(data);
     // console.log(editorRef!.current!.getRootElement().clientHeight);
   };
-
-  console.log(height);
-
-  useEffect(() => {
-    setHeight(editorRef!.current!.getRootElement().clientHeight);
-  }, [editorRef]);
 
   const onUploadImage = async (blob: Blob, callback: (url: string, altText: string) => void) => {
     console.log(blob);
@@ -43,9 +40,7 @@ export default function PostEditor() {
 
   return (
     <Editor
-      // theme="dark"
-      height="auto"
-      // minHeight={'100%'}
+      height="90vh"
       initialEditType="wysiwyg"
       ref={editorRef}
       // toolbarItems={[
