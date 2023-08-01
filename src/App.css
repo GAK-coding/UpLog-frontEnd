@@ -114,7 +114,6 @@ hgroup,
 menu,
 nav,
 section {
-  display: block;
 }
 header {
   background-color: var(--header-bg);
