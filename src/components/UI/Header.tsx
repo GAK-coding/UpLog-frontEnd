@@ -13,6 +13,9 @@ import UserProfile from '@/components/Member/Header/UserProfile.tsx';
 
 export default function Header() {
   const navigate = useNavigate();
+  const [darkMode, setDarkMode] = useState(localStorage.getItem('theme') === 'dark');
+
+  console.log(darkMode, '다크');
 
   // TODO: 실제 userprofile 값으로 변경하기
   const userprofile = '';
@@ -46,6 +49,31 @@ export default function Header() {
     }
   };
 
+  /** editor 다크 모드 */
+  const toggleDark = () => {
+    const editorEl = document.getElementsByClassName('toastui-editor-defaultUI')[0];
+    if (editorEl) {
+      if (!darkMode && editorEl.classList.contains('toastui-editor-dark')) {
+        editorEl.classList.remove('toastui-editor-dark');
+      } else {
+        editorEl.classList.add('toastui-editor-dark');
+      }
+    }
+  };
+
+  useEffect(() => {
+    const editorEl = document.getElementsByClassName('toastui-editor-defaultUI')[0];
+    if (editorEl) {
+      if (darkMode && !editorEl.classList.contains('toastui-editor-dark')) {
+        editorEl.classList.add('toastui-editor-dark');
+      } else if (!darkMode && editorEl.classList.contains('toastui-editor-dark')) {
+        editorEl.classList.remove('toastui-editor-dark');
+      } else {
+        editorEl.classList.add('toastui-editor-dark');
+      }
+    }
+  }, [darkMode]);
+
   // 다크모드 변경
   const themeModeHandler = useCallback(() => {
     if (!isChecked) {
@@ -56,7 +84,8 @@ export default function Header() {
       localStorage.removeItem('theme');
     }
     setIsChecked(!isChecked);
-  }, [isChecked]);
+    setDarkMode(!darkMode);
+  }, [isChecked, darkMode]);
 
   // 제품 list clickRef
   const productRef = useRef<HTMLDivElement>(null);

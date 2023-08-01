@@ -5,8 +5,7 @@
 @import 'css/project.css';
 @import 'css/collapse.css';
 
-@import
-  url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Baloo+Tammudu+2:wght@500&display=swap');
 
 #root {
@@ -82,14 +81,7 @@ fieldset,
 form,
 label,
 legend,
-table,
 caption,
-tbody,
-tfoot,
-thead,
-tr,
-th,
-td,
 article,
 aside,
 canvas,
@@ -122,7 +114,6 @@ hgroup,
 menu,
 nav,
 section {
-  display: block;
 }
 header {
   background-color: var(--header-bg);
@@ -160,4 +151,8 @@ html input:focus {
 
 html input {
   background-color: var(--input-bg);
+}
+
+* {
+  font-weight: 600;
 }

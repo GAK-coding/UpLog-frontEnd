@@ -25,9 +25,19 @@
   }
 
   .base-menu-selected{
-    @apply border-solid border-[0.5px] border-orange-light-sideBar bg-orange-light rounded-[0.31rem]
+    @apply border-solid border-[0.5px] border-orange bg-orange-light-sideBar rounded-[0.31rem]
+  }
+
+/*project-board  */
+  .task-border{
+    @apply border-solid border-[1px] border-task-line bg-task-bg rounded-[10px]
+  }
+
+  .task-detail-border {
+    @apply border-[0.5px] rounded-[2px] bg-white border-task-detail-line shadow-task-detail
   }
 }
+
 
 html {
   font-size: 11.8px;
