@@ -172,13 +172,20 @@ export default function Project() {
 
   // task 데이터 필터링된 그룹에 맞게 필터링
   useEffect(() => {
-    if (filterGroup === undefined) return;
+    if (filterGroup === '그룹') return;
 
     if (childGroup === '전체') {
-      setFilterTaskList(taskList.filter((task) => task.group === filterGroup));
-      // const allGroup = cGroup[filterGroup];
-      //
-      // console.log(allGroup);
+      const allGroup = cGroup[filterGroup];
+
+      // 현재 Group name으로 필터링 한 결과
+      const firstGroup = taskList.filter((task) => task.group === filterGroup);
+
+      // 현재 Group에 해당하는 subGroup들도 포함해서 필터링 한 결과
+      for (let i = 1; i < allGroup.length; i++) {
+        firstGroup.push(...taskList.filter((task) => task.group === allGroup[i]));
+        console.log(i, firstGroup);
+      }
+      setFilterTaskList(firstGroup);
     } else {
       setFilterTaskList(taskList.filter((task) => task.group === childGroup));
     }
