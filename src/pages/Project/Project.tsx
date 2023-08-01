@@ -1,14 +1,14 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { BsChevronCompactDown } from 'react-icons/bs';
-import { Task } from '@/typings/project.ts';
+import { SubGroup, Task } from '@/typings/project.ts';
 import { Progress, Select, Space } from 'antd';
 import StatusBoard from '@/components/Project/Board/StatusBoard.tsx';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
 
 export default function Project() {
-  const { product, project, group, subGroup } = useParams();
+  const { product, project } = useParams();
 
   const navigate = useNavigate();
 
@@ -128,8 +128,8 @@ export default function Project() {
     setIsKanban(check);
   }, []);
 
-  const pGroup = ['그룹', '개발팀', '마케팅팀', '홍보팀'];
-  const cGroup = {
+  const pGroup: string[] = ['그룹', '개발팀', '마케팅팀', '홍보팀'];
+  const cGroup: SubGroup = {
     그룹: ['하위그룹'],
     개발팀: ['전체', '프론트엔드', '백엔드', '풀스택'],
     마케팅팀: ['전체', '콘텐츠', '디자인'],
@@ -145,7 +145,7 @@ export default function Project() {
 
   const [filterTaskList, setFilterTaskList] = useState(taskList);
 
-  const handleParentGroupChange = (value: ChildGroup) => {
+  const handleParentGroupChange = (value: string) => {
     // 선택한 상위그룹내용으로 하위 그룹 option으로 변경
     setParentGroup(cGroup[value]);
     setChildGroup(cGroup[value][0]);
@@ -154,7 +154,7 @@ export default function Project() {
     setFilterGroup(value);
   };
 
-  const onChildGroupChange = (value: ChildGroup) => {
+  const onChildGroupChange = (value: string) => {
     // 선택한 하위 그룹으로 필터링된 페이지로 이동
     setChildGroup(value);
   };

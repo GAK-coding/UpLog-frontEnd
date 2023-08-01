@@ -1,8 +1,3 @@
-export interface ProjectGroupFilter {
-  value: string;
-  label: string;
-}
-
 export interface Task {
   id: number;
   name: string;
@@ -10,4 +5,8 @@ export interface Task {
   group: string;
   menu: string;
   targetMember: string;
+}
+
+export interface SubGroup {
+  [key: string]: string[];
 }
