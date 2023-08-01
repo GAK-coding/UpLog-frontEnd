@@ -1,27 +1,13 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useCallback, useState } from 'react';
+// import { useParams } from 'react-router-dom';
 import { BsChevronCompactDown } from 'react-icons/bs';
-import { ProjectGroupFilter, Task } from '@/typings/project.ts';
-import { Progress, Select } from 'antd';
+import { Task } from '@/typings/project.ts';
+import { Progress, Select, Space } from 'antd';
 import StatusBoard from '@/components/Project/Board/StatusBoard.tsx';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 
 export default function Project() {
-  const { product, project, parentgroup, childgroup } = useParams();
-
-  const pGroup: ProjectGroupFilter[] = [
-    { value: 'all', label: '그룹' },
-    { value: 'develop', label: '개발팀' },
-    { value: 'marketing', label: '마케팅' },
-    { value: 'promotion', label: '홍보' },
-  ];
-
-  const cGroup: ProjectGroupFilter[] = [
-    { value: 'all', label: '하위그룹' },
-    { value: 'develop', label: '개발팀' },
-    { value: 'marketing', label: '마케팅' },
-    { value: 'promotion', label: '홍보' },
-  ];
+  // const { product, project, parentgroup, childgroup } = useParams();
 
   const taskList: Task[] = [
     {
@@ -105,16 +91,26 @@ export default function Project() {
     setIsKanban(check);
   }, []);
 
-  const handleChange = (value: { value: string; label: React.ReactNode }) => {
-    console.log(value);
+  const pGroup = ['개발팀', '마케팅', '홍보팀'];
+  const cGroup = {
+    개발팀: ['하위개발1', '하위개발2'],
+    마케팅: ['하위마케팅1', '하위마케팅2'],
+    홍보팀: ['하위홍보1', '하위홍보2'],
   };
 
-  useEffect(() => {
-    console.log('product', product);
-    console.log('project', project);
-    console.log('parentgroup', parentgroup);
-    console.log('childgroup', childgroup);
-  }, []);
+  type ChildGroup = keyof typeof cGroup;
+
+  const [parentGroup, setParentGroup] = useState(cGroup[pGroup[0] as ChildGroup]);
+  const [childGroup, setChildGroup] = useState(cGroup[pGroup[0] as ChildGroup][0]);
+
+  const handleProvinceChange = (value: ChildGroup) => {
+    setParentGroup(cGroup[value]);
+    setChildGroup(cGroup[value][0]);
+  };
+
+  const onSecondCityChange = (value: ChildGroup) => {
+    setChildGroup(value);
+  };
 
   return (
     <section className={'flex-col justify-start w-noneSideBar h-full relative overflow-x-hidden'}>
@@ -123,21 +119,20 @@ export default function Project() {
           {/*그룹 필터링*/}
           <div className={'flex-row-center w-[18rem] justify-between'}>
             {/*그룹 -> 하위로 바꾸기*/}
-            <Select
-              labelInValue
-              defaultValue={{ value: pGroup[0].value, label: pGroup[0].label }}
-              style={{ width: 100 }}
-              onChange={handleChange}
-              options={pGroup}
-            ></Select>
-
-            <Select
-              labelInValue
-              defaultValue={{ value: cGroup[0].value, label: cGroup[0].label }}
-              style={{ width: 100 }}
-              onChange={handleChange}
-              options={cGroup}
-            ></Select>
+            <Space wrap>
+              <Select
+                defaultValue={pGroup[0]}
+                style={{ width: 100 }}
+                onChange={handleProvinceChange}
+                options={pGroup.map((group) => ({ label: group, value: group }))}
+              />
+              <Select
+                style={{ width: 100 }}
+                value={childGroup}
+                onChange={onSecondCityChange}
+                options={parentGroup.map((group) => ({ label: group, value: group }))}
+              />
+            </Space>
           </div>
         </section>
         {/*칸반, 스크럼 선택*/}
@@ -195,11 +190,7 @@ export default function Project() {
       {/*보드*/}
       <div className={'w-noneSideBar h-board flex-col'}>
         <section className={'flex-col-center w-noneSideBar h-[90%]'}>
-          <div
-            className={
-              'flex-row-center justify-between w-full h-full pt-8 px-[12rem] border border-red-400'
-            }
-          >
+          <div className={'flex-row-center justify-between w-full h-full pt-8 px-[12rem]'}>
             <StatusBoard status={'before'} tasks={taskList} />
             <StatusBoard status={'going'} tasks={taskList} />
             <StatusBoard status={'done'} tasks={taskList} />

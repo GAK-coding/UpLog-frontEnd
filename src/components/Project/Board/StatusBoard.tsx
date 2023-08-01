@@ -31,9 +31,7 @@ export default function StatusBoard({ status, tasks }: Props) {
 
   return (
     //TODO : 보드 max-w 적용시키기
-    <section
-      className={'min-w-[24rem] max-w-[40rem] w-auto h-full mx-6 task-border border-red-400 border'}
-    >
+    <section className={'min-w-[24rem] max-w-[40rem] w-auto h-full mx-6 task-border'}>
       {/*제목, 개수*/}
       <div
         className={
