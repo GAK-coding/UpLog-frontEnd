@@ -2,7 +2,9 @@ export interface Task {
   id: number;
   name: string;
   status: string;
+  group_id: number;
   group: string;
+  p_id: number | null;
   menu: string;
   targetMember: string;
 }
