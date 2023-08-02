@@ -16,7 +16,7 @@ export default function Project() {
   const navigate = useNavigate();
 
   // recoil에서 받아올 값
-  // const [taskList, setTaskList] = useRecoilState(taskState);
+  const [taskStatusList, setTaskStatusList] = useRecoilState(taskState);
   const taskList: Task[] = [
     {
       id: 0,
@@ -340,9 +340,12 @@ export default function Project() {
           {/*dnd*/}
           <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
             <div className={'flex-row-center justify-between w-full h-full pt-8 px-[12rem]'}>
-              <StatusBoard status={'before'} tasks={filterTaskList} />
-              <StatusBoard status={'going'} tasks={filterTaskList} />
-              <StatusBoard status={'done'} tasks={filterTaskList} />
+              <StatusBoard status={'before'} tasks={taskStatusList['before']} />
+              <StatusBoard status={'going'} tasks={taskStatusList['going']} />
+              <StatusBoard status={'done'} tasks={taskStatusList['done']} />
+              {/*<StatusBoard status={'before'} tasks={filterTaskList} />*/}
+              {/*<StatusBoard status={'going'} tasks={filterTaskList} />*/}
+              {/*<StatusBoard status={'done'} tasks={filterTaskList} />*/}
             </div>
           </DragDropContext>
         </section>
