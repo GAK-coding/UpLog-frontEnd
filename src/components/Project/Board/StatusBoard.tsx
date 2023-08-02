@@ -11,8 +11,6 @@ interface Props {
   tasks: Task[];
 }
 export default function StatusBoard({ status, tasks }: Props) {
-  //status에 따라 필터링
-  const filteredTasks = tasks.filter((task) => task.status === status);
   const convertStatus = formatStatus(status);
 
   // 유저 프로필 존재하는지 안하는지
@@ -30,7 +28,7 @@ export default function StatusBoard({ status, tasks }: Props) {
         }
       >
         <span className={'font-bold'}>{convertStatus}</span>
-        <span>{`${filteredTasks.length}개`}</span>
+        <span>{`${tasks.length}개`}</span>
       </div>
 
       {/*태스크들*/}
@@ -41,16 +39,16 @@ export default function StatusBoard({ status, tasks }: Props) {
             {...provided.droppableProps}
             className={'flex-col items-center max-h-[85%] overflow-y-auto'}
           >
-            {filteredTasks.map((task, index) => (
+            {tasks.map((task, index) => (
               <Draggable draggableId={task.dragId} index={index} key={task.dragId}>
                 {(provided, snapshot) => (
                   <section
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
+                    key={task.id}
                     className={`flex-col min-w-[19.5rem] w-[85%] h-[8rem] bg-white rounded-[10px] mx-auto my-[0.5rem] px-[1.12rem] py-[0.5rem]
                       ${snapshot.isDragging ? 'shadow-2xl shadow-gray-400' : ''}`}
-                    key={task.id}
                   >
                     {/*케밥 버튼*/}
                     <div className={'flex justify-end h-[0.7rem] relative'}>

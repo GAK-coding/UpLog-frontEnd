@@ -17,6 +17,7 @@ export default function Project() {
 
   // recoil에서 받아올 값
   const [taskStatusList, setTaskStatusList] = useRecoilState(taskState);
+
   const taskList: Task[] = [
     {
       id: 0,
@@ -202,30 +203,26 @@ export default function Project() {
   };
 
   // dnd - 드래그 끝나면 실행되는 함수
-  const onDragEnd = useCallback((result: DropResult) => {
-    const { destination, source } = result;
+  const onDragEnd = useCallback(
+    (result: DropResult) => {
+      const { destination, source, draggableId } = result;
 
-    // 이상한 곳에 드래그하면 return
-    if (!destination) return;
+      // 이상한 곳에 드래그하면 return
+      if (!destination) return;
 
-    // 출발지, 도착지의 board 상태 (전, 중, 후)
-    const scourceKey = source.droppableId as TaskStatus;
-    const destinationKey = destination.droppableId as TaskStatus;
+      // 출발지, 도착지의 board 상태 (전, 중, 후)
+      const sourceKey = source.droppableId as TaskStatus;
+      const destinationKey = destination.droppableId as TaskStatus;
 
-    console.log(result);
-    // 출발지와 도착지가 다르면 재정렬
-    // if (Array.isArray(productList)) {
-    //   // 깊은 복사
-    //   const updatedProduct = JSON.parse(JSON.stringify(productList)) as typeof productList;
-    //   // 기존 아이템 뽑아내기
-    //   const [movedItem] = updatedProduct.splice(source.index, 1);
-    //   // 기존 아이템을 새로운 위치에 삽입하기
-    //   updatedProduct.splice(destination.index, 0, movedItem);
-    //
-    //   // 상태 변경
-    //   setProductList(updatedProduct);
-    // }
-  }, []);
+      // 재정렬
+      const items = JSON.parse(JSON.stringify(taskStatusList)) as typeof taskStatusList;
+      const [targetItem] = items[sourceKey].splice(source.index, 1);
+      items[destinationKey].splice(destination.index, 0, targetItem);
+
+      setTaskStatusList(items);
+    },
+    [taskStatusList]
+  );
   // 필터링 된 페이지로 이동
   useEffect(() => {
     if (filterGroup === '그룹') {
@@ -343,9 +340,6 @@ export default function Project() {
               <StatusBoard status={'before'} tasks={taskStatusList['before']} />
               <StatusBoard status={'going'} tasks={taskStatusList['going']} />
               <StatusBoard status={'done'} tasks={taskStatusList['done']} />
-              {/*<StatusBoard status={'before'} tasks={filterTaskList} />*/}
-              {/*<StatusBoard status={'going'} tasks={filterTaskList} />*/}
-              {/*<StatusBoard status={'done'} tasks={filterTaskList} />*/}
             </div>
           </DragDropContext>
         </section>
