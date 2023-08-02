@@ -1,5 +1,5 @@
 import { atom } from 'recoil';
-import { ProductInfo } from '@typings/product.ts';
+import { ProductInfo } from '@/typings/product.ts';
 
 export const productOpen = atom({ key: 'productOpen', default: false });
 

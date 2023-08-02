@@ -1,6 +1,6 @@
 import { AiOutlinePlus } from 'react-icons/ai';
-import React, { useCallback, useEffect, useState } from 'react';
-import { product, productOpen } from '@/recoil/Product/atom.tsx';
+import React, { useCallback, useState } from 'react';
+import { product } from '@/recoil/Product/atom.tsx';
 import { useRecoilState } from 'recoil';
 import { RxDragHandleDots2 } from 'react-icons/rx';
 import { BiPencil } from 'react-icons/bi';
@@ -12,8 +12,7 @@ import { Scrollbars } from 'rc-scrollbars';
 export default function ProductList() {
   // ProductList 정보
   const [productList, setProductList] = useRecoilState(product);
-  // ProductList 모달창
-  const [isProductClick] = useRecoilState(productOpen);
+
   // 제품추가&정보수정 모달창
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isCreateProduct, setIsCreateProduct] = useState(true);
