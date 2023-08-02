@@ -1,5 +1,4 @@
 import { Task, TaskStatus } from '@/typings/project.ts';
-import BoardTaskDetail from '@/components/Project/Board/BoardTaskDetail.tsx';
 import { GoKebabHorizontal } from 'react-icons/go';
 import { FaUserCircle } from 'react-icons/fa';
 import { useState } from 'react';
@@ -63,7 +62,35 @@ export default function StatusBoard({ status, tasks }: Props) {
                       />
                       {
                         /*케밥 버튼 클릭시*/
-                        isClickTaskDetail[task.id] && <BoardTaskDetail />
+                        isClickTaskDetail[task.id] && (
+                          <section
+                            className={
+                              'absolute flex-col-center w-[5rem] h-[5.5rem] top-[1rem] task-detail-border cursor-pointer text-[0.5rem] text-gray-dark'
+                            }
+                          >
+                            <div
+                              className={
+                                'flex-row-center w-full h-1/3 hover:bg-orange-light-sideBar'
+                              }
+                            >
+                              링크복사
+                            </div>
+                            <div
+                              className={
+                                'flex-row-center w-full h-1/3 hover:bg-orange-light-sideBar'
+                              }
+                            >
+                              수정
+                            </div>
+                            <div
+                              className={
+                                'flex-row-center w-full h-1/3 hover:bg-orange-light-sideBar'
+                              }
+                            >
+                              삭제
+                            </div>
+                          </section>
+                        )
                       }
                     </div>
                     {/*task제목*/}

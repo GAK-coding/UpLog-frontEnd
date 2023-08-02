@@ -205,7 +205,7 @@ export default function Project() {
   // dnd - 드래그 끝나면 실행되는 함수
   const onDragEnd = useCallback(
     (result: DropResult) => {
-      const { destination, source, draggableId } = result;
+      const { destination, source } = result;
 
       // 이상한 곳에 드래그하면 return
       if (!destination) return;

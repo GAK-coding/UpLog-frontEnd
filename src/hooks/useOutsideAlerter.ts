@@ -1,4 +1,4 @@
-import { RefObject, useEffect, useRef } from 'react';
+import { RefObject, useEffect } from 'react';
 import { productOpen } from '../recoil/Product/atom.tsx';
 import { useRecoilState } from 'recoil';
 import { profileOpen } from '../recoil/User/atom.tsx';

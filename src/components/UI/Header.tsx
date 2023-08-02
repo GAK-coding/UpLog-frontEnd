@@ -1,4 +1,4 @@
-import React, { ChangeEvent, RefObject, useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { BsBellFill, BsMoonFill, BsQuestionCircle, BsSearch, BsSunFill } from 'react-icons/bs';
 import { FaUserCircle } from 'react-icons/fa';
@@ -20,7 +20,7 @@ export default function Header() {
   // TODO: 실제 userprofile 값으로 변경하기
   const userprofile = '';
   // 검색
-  const [searchTag, onChangeSearchTag, setSearchTag] = useInput('');
+  const [searchTag, onChangeSearchTag] = useInput('');
   // 다크모드 localstorage에서 체크
   const [isChecked, setIsChecked] = useState(localStorage.theme === 'dark');
   // 헤더 bottom
