@@ -6,6 +6,7 @@ import { Progress, Select, Space } from 'antd';
 import StatusBoard from '@/components/Project/Board/StatusBoard.tsx';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
+import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
 
 export default function Project() {
   const { product, project } = useParams();
@@ -16,6 +17,7 @@ export default function Project() {
   const taskList: Task[] = [
     {
       id: 0,
+      dragId: '0',
       name: 'task1',
       status: 'before',
       group_id: 1,
@@ -26,6 +28,7 @@ export default function Project() {
     },
     {
       id: 1,
+      dragId: '1',
       name: 'task2',
       status: 'before',
       group_id: 1,
@@ -36,6 +39,7 @@ export default function Project() {
     },
     {
       id: 2,
+      dragId: '2',
       name: 'task3',
       status: 'before',
       group_id: 2,
@@ -46,6 +50,7 @@ export default function Project() {
     },
     {
       id: 3,
+      dragId: '3',
       name: 'task4',
       status: 'going',
       group_id: 2,
@@ -56,6 +61,7 @@ export default function Project() {
     },
     {
       id: 4,
+      dragId: '4',
       name: 'task5',
       status: 'going',
       group_id: 3,
@@ -66,6 +72,7 @@ export default function Project() {
     },
     {
       id: 5,
+      dragId: '5',
       name: 'task6',
       status: 'going',
       group_id: 3,
@@ -76,6 +83,7 @@ export default function Project() {
     },
     {
       id: 6,
+      dragId: '6',
       name: 'task7',
       status: 'done',
       group_id: 1,
@@ -86,6 +94,7 @@ export default function Project() {
     },
     {
       id: 7,
+      dragId: '7',
       name: 'task8',
       status: 'before',
       group_id: 2,
@@ -96,6 +105,7 @@ export default function Project() {
     },
     {
       id: 8,
+      dragId: '8',
       name: 'task9',
       status: 'done',
       group_id: 5,
@@ -106,6 +116,7 @@ export default function Project() {
     },
     {
       id: 9,
+      dragId: '9',
       name: 'task10',
       status: 'done',
       group_id: 4,
@@ -116,6 +127,7 @@ export default function Project() {
     },
     {
       id: 10,
+      dragId: '10',
       name: 'task11',
       status: 'before',
       group_id: 4,
@@ -126,6 +138,7 @@ export default function Project() {
     },
     {
       id: 11,
+      dragId: '11',
       name: 'task12',
       status: 'before',
       group_id: 5,
@@ -136,6 +149,7 @@ export default function Project() {
     },
     {
       id: 12,
+      dragId: '12',
       name: 'task13',
       status: 'going',
       group_id: 6,
@@ -158,7 +172,7 @@ export default function Project() {
   const cGroup: SubGroup = {
     그룹: ['하위그룹'],
     개발팀: ['전체', '프론트엔드', '백엔드', '풀스택'],
-    마케팅팀: ['전체', '프론트엔드', '디자인'],
+    마케팅팀: ['전체', 'SNS', '디자인'],
     홍보팀: ['전체', 'SNS', '기사'],
   };
 
@@ -185,6 +199,26 @@ export default function Project() {
     setChildGroup(value);
   };
 
+  // dnd - 드래그 끝나면 실행되는 함수
+  const onDragEnd = useCallback((result: DropResult) => {
+    const { destination, source } = result;
+
+    // 이상한 곳에 드래그하면 return
+    if (!destination) return;
+
+    // 출발지와 도착지가 다르면 재정렬
+    // if (Array.isArray(productList)) {
+    //   // 깊은 복사
+    //   const updatedProduct = JSON.parse(JSON.stringify(productList)) as typeof productList;
+    //   // 기존 아이템 뽑아내기
+    //   const [movedItem] = updatedProduct.splice(source.index, 1);
+    //   // 기존 아이템을 새로운 위치에 삽입하기
+    //   updatedProduct.splice(destination.index, 0, movedItem);
+    //
+    //   // 상태 변경
+    //   setProductList(updatedProduct);
+    // }
+  }, []);
   // 필터링 된 페이지로 이동
   useEffect(() => {
     if (filterGroup === '그룹') {
@@ -296,11 +330,14 @@ export default function Project() {
       {/*보드*/}
       <div className={'w-noneSideBar h-board flex-col'}>
         <section className={'flex-col-center w-noneSideBar h-[90%]'}>
-          <div className={'flex-row-center justify-between w-full h-full pt-8 px-[12rem]'}>
-            <StatusBoard status={'before'} tasks={filterTaskList} />
-            <StatusBoard status={'going'} tasks={filterTaskList} />
-            <StatusBoard status={'done'} tasks={filterTaskList} />
-          </div>
+          {/*dnd*/}
+          <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
+            <div className={'flex-row-center justify-between w-full h-full pt-8 px-[12rem]'}>
+              <StatusBoard status={'before'} tasks={filterTaskList} />
+              <StatusBoard status={'going'} tasks={filterTaskList} />
+              <StatusBoard status={'done'} tasks={filterTaskList} />
+            </div>
+          </DragDropContext>
         </section>
         {/*하단페이지로 이동*/}
         <section className={'flex-row-center w-full h-[10%]'}>

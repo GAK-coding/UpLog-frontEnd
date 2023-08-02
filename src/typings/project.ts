@@ -1,5 +1,6 @@
 export interface Task {
   id: number;
+  dragId: string;
   name: string;
   status: string;
   group_id: number;
