@@ -162,8 +162,7 @@ export default function Project() {
     },
   ];
 
-  // 그룹으로 필터링 된 값
-  중const progress = 77;
+  const [progress, setProgress] = useState(0);
   const [isKanban, setIsKanban] = useState(true);
 
   const onClickKanban = useCallback((check: boolean) => {
@@ -185,7 +184,7 @@ export default function Project() {
 
   const [filterGroup, setFilterGroup] = useState(pGroup[0]);
 
-  const [filterTaskList, setFilterTaskList] = useState(taskList);
+  // const [filterTaskList, setFilterTaskList] = useState(taskList);
 
   const handleParentGroupChange = (value: string) => {
     // 선택한 상위그룹내용으로 하위 그룹 option으로 변경
@@ -222,6 +221,20 @@ export default function Project() {
     },
     [taskStatusList]
   );
+
+  // TODO : 그룹 필터링 되는거 확인하고 utils 함수로 빼기
+  useEffect(() => {
+    const totalTasks = [...taskStatusList.before, ...taskStatusList.going, ...taskStatusList.done]
+      .length;
+    const doneTasks = taskStatusList.done.length;
+    const percent = (doneTasks / totalTasks) * 100;
+    setProgress(Math.floor(percent));
+
+    console.log(totalTasks);
+    console.log(doneTasks);
+    console.log(progress);
+  }, [taskStatusList]);
+
   // 필터링 된 페이지로 이동
   useEffect(() => {
     if (filterGroup === '그룹') {
@@ -259,7 +272,6 @@ export default function Project() {
     //
     // setTaskStatusList(tempFilterGroup);
     // console.log(tempFilterGroup);
-
 
     // Object.keys(taskStatusList).map((key) => {
     //   if (childGroup === '전체') {
