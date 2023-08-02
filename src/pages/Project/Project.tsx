@@ -1,12 +1,14 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { BsChevronCompactDown } from 'react-icons/bs';
-import { SubGroup, Task } from '@/typings/project.ts';
+import { SubGroup, Task, TaskStatus } from '@/typings/project.ts';
 import { Progress, Select, Space } from 'antd';
 import StatusBoard from '@/components/Project/Board/StatusBoard.tsx';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
-import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
+import { DragDropContext, DropResult } from 'react-beautiful-dnd';
+import { useRecoilState } from 'recoil';
+import { taskState } from '@/recoil/Project/atom.tsx';
 
 export default function Project() {
   const { product, project } = useParams();
@@ -14,6 +16,7 @@ export default function Project() {
   const navigate = useNavigate();
 
   // recoil에서 받아올 값
+  // const [taskList, setTaskList] = useRecoilState(taskState);
   const taskList: Task[] = [
     {
       id: 0,
@@ -159,7 +162,6 @@ export default function Project() {
       targetMember: 'OCI(오채영)',
     },
   ];
-
   // 그룹으로 필터링 된 값
   const progress = 77;
   const [isKanban, setIsKanban] = useState(true);
@@ -206,6 +208,11 @@ export default function Project() {
     // 이상한 곳에 드래그하면 return
     if (!destination) return;
 
+    // 출발지, 도착지의 board 상태 (전, 중, 후)
+    const scourceKey = source.droppableId as TaskStatus;
+    const destinationKey = destination.droppableId as TaskStatus;
+
+    console.log(result);
     // 출발지와 도착지가 다르면 재정렬
     // if (Array.isArray(productList)) {
     //   // 깊은 복사

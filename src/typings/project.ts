@@ -1,13 +1,19 @@
+export type TaskStatus = 'before' | 'going' | 'done';
+
 export interface Task {
   id: number;
   dragId: string;
   name: string;
-  status: string;
+  status: TaskStatus;
   group_id: number;
   group: string;
   p_id: number | null;
   menu: string;
   targetMember: string;
+}
+
+export interface Tasks {
+  [key: string]: Task[];
 }
 
 export interface SubGroup {

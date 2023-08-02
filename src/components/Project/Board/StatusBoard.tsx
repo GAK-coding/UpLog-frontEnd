@@ -1,4 +1,4 @@
-import { Task } from '@/typings/project.ts';
+import { Task, TaskStatus } from '@/typings/project.ts';
 import BoardTaskDetail from '@/components/Project/Board/BoardTaskDetail.tsx';
 import { GoKebabHorizontal } from 'react-icons/go';
 import { FaUserCircle } from 'react-icons/fa';
@@ -7,7 +7,7 @@ import { formatStatus } from '@/utils/formatStatus.ts';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 
 interface Props {
-  status: 'before' | 'going' | 'done';
+  status: TaskStatus;
   tasks: Task[];
 }
 export default function StatusBoard({ status, tasks }: Props) {
