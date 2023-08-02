@@ -2,7 +2,8 @@ import { Task } from '@/typings/project.ts';
 import BoardTaskDetail from '@/components/Project/Board/BoardTaskDetail.tsx';
 import { GoKebabHorizontal } from 'react-icons/go';
 import { FaUserCircle } from 'react-icons/fa';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { formatStatus } from '@/utils/formatStatus.ts';
 
 interface Props {
   status: 'before' | 'going' | 'done';
@@ -11,23 +12,12 @@ interface Props {
 export default function StatusBoard({ status, tasks }: Props) {
   //status에 따라 필터링
   const filteredTasks = tasks.filter((task) => task.status === status);
+  const convertStatus = formatStatus(status);
 
-  const [statusInfo, setStatusInfo] = useState('');
   // 유저 프로필 존재하는지 안하는지
   const userprofile = '';
   // task detail 클릭 여부
   const [isClickTaskDetail, setIsClickTaskDetail] = useState<{ [key: number]: boolean }>({});
-
-  // TODO : utils 함수로 빼기
-  useEffect(() => {
-    if (status === 'before') {
-      setStatusInfo('진행 전');
-    } else if (status === 'going') {
-      setStatusInfo('진행 중');
-    } else {
-      setStatusInfo('진행 후');
-    }
-  }, []);
 
   return (
     //TODO : 보드 max-w 적용시키기
@@ -38,7 +28,7 @@ export default function StatusBoard({ status, tasks }: Props) {
           'flex-row-center justify-between h-[3.5rem] px-[2.3rem] text-gray-dark text-[0.93rem]'
         }
       >
-        <span className={'font-bold'}>{statusInfo}</span>
+        <span className={'font-bold'}>{convertStatus}</span>
         <span>{`${filteredTasks.length}개`}</span>
       </div>
 
