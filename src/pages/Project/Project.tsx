@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { BsChevronCompactDown } from 'react-icons/bs';
-import { SubGroup, Task, TaskStatus } from '@/typings/project.ts';
+import { SubGroup, Task, Tasks, TaskStatus } from '@/typings/project.ts';
 import { Progress, Select, Space } from 'antd';
 import StatusBoard from '@/components/Project/Board/StatusBoard.tsx';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
@@ -12,12 +12,10 @@ import { taskState } from '@/recoil/Project/atom.tsx';
 
 export default function Project() {
   const { product, project } = useParams();
-
   const navigate = useNavigate();
 
   // recoil에서 받아올 값
   const [taskStatusList, setTaskStatusList] = useRecoilState(taskState);
-
   const taskList: Task[] = [
     {
       id: 0,
@@ -163,8 +161,9 @@ export default function Project() {
       targetMember: 'OCI(오채영)',
     },
   ];
+
   // 그룹으로 필터링 된 값
-  const progress = 77;
+  중const progress = 77;
   const [isKanban, setIsKanban] = useState(true);
 
   const onClickKanban = useCallback((check: boolean) => {
@@ -238,22 +237,65 @@ export default function Project() {
   useEffect(() => {
     if (filterGroup === '그룹') return;
 
-    if (childGroup === '전체') {
-      const allGroup = cGroup[filterGroup];
+    // const tempFilterGroup: Tasks = {};
+    //
+    // if (childGroup === '전체') {
+    //   Object.keys(taskStatusList).map((key) => {
+    //     const filterTasks = taskStatusList[key as TaskStatus].filter(
+    //       (task: Task) => task.group === filterGroup
+    //     );
+    //     console.log(filterTasks);
+    //     tempFilterGroup.key = filterTasks;
+    //   });
+    // } else {
+    //   Object.keys(taskStatusList).map((key) => {
+    //     const filterTasks = taskStatusList[key as TaskStatus].filter(
+    //       (task: Task) => task.group === childGroup
+    //     );
+    //     console.log(filterTasks);
+    //     tempFilterGroup.key = filterTasks;
+    //   });
+    // }
+    //
+    // setTaskStatusList(tempFilterGroup);
+    // console.log(tempFilterGroup);
 
-      // 현재 Group name으로 필터링 한 결과
-      const firstGroup = taskList.filter((task) => task.group === filterGroup);
 
-      // 현재 Group에 해당하는 subGroup들도 포함해서 필터링 한 결과
-      for (let i = 1; i < allGroup.length; i++) {
-        firstGroup.push(...taskList.filter((task) => task.group === allGroup[i]));
-        console.log(i, firstGroup);
-      }
-      setFilterTaskList(firstGroup);
-    } else {
-      //TODO : 하위그룹 이름 중복 가능하게 한다면 p_id로 먼저 필터링 해야함
-      setFilterTaskList(taskList.filter((task) => task.group === childGroup));
-    }
+    // Object.keys(taskStatusList).map((key) => {
+    //   if (childGroup === '전체') {
+    //     const filterTasks = taskStatusList[key as TaskStatus].filter(
+    //       (task: Task) => task.group === filterGroup
+    //     );
+    //     console.log(filterTasks);
+    //     tempFilterGroup.key = filterTasks;
+    //   } else {
+    //     const filterTasks = taskStatusList[key as TaskStatus].filter(
+    //       (task: Task) => task.group === childGroup
+    //     );
+    //     console.log(filterTasks);
+    //     tempFilterGroup.key = filterTasks;
+    //   }
+    // console.log('key', key);
+    // console.log('taskStatusList[key]', taskStatusList[key]);
+    // console.log('taskStatusList', taskStatusList);
+    // });
+
+    // if (childGroup === '전체') {
+    //   const allGroup = cGroup[filterGroup];
+    //
+    //   // 현재 Group name으로 필터링 한 결과
+    //   const firstGroup = taskList.filter((task) => task.group === filterGroup);
+    //
+    //   // 현재 Group에 해당하는 subGroup들도 포함해서 필터링 한 결과
+    //   for (let i = 1; i < allGroup.length; i++) {
+    //     firstGroup.push(...taskList.filter((task) => task.group === allGroup[i]));
+    //     // console.log(i, firstGroup);
+    //   }
+    //   setFilterTaskList(firstGroup);
+    // } else {
+    //   //TODO : 하위그룹 이름 중복 가능하게 한다면 p_id로 먼저 필터링 해야함
+    //   setFilterTaskList(taskList.filter((task) => task.group === childGroup));
+    // }
   }, [filterGroup, childGroup]);
 
   return (
