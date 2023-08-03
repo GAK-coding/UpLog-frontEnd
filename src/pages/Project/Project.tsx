@@ -350,7 +350,7 @@ export default function Project() {
             <button type={'button'} onClick={() => onClickKanban(false)}>
               <span
                 className={`text-3xl transition ease-in-out duration-300 hover:scale-110  ${
-                  !isKanban ? 'text-black font-bold' : 'text-gray-border font-semibold'
+                  !isKanban ? 'text-black font-bold' : 'text-gray-border물 font-semibold'
                 }`}
               >
                 스크럼
@@ -404,7 +404,7 @@ export default function Project() {
         <section className={'flex-row-center w-full h-[10%]'}>
           <BsChevronCompactDown
             className={'text-[4rem] text-gray-light cursor-pointer'}
-            onClick={() => navigate(`/workspace/${product}/${project}/menu/main`)}
+            onClick={() => navigate(`/workspace/${product}/${project}/menu/결과물`)}
           />
         </section>
       </div>

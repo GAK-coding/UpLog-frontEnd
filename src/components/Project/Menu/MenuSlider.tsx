@@ -109,7 +109,7 @@ export default function MenuSlider({ product, project, menuTitle }: Props) {
     <StyledSlider {...settings} className={'w-h-full text-[1.25rem] font-bold text-gray-border'}>
       {/*결과물 menu (defult)*/}
       <NavLink
-        to={`/workspace/${product}/${project}/menu/main`}
+        to={`/workspace/${product}/${project}/menu/결과물`}
         className={({ isActive }) =>
           `flex-row-center h-[5rem] w-1/5 border-r border-gray-border ${
             isActive && 'bg-orange text-black'

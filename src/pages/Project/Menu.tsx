@@ -8,8 +8,6 @@ export default function Menu() {
   const { product, project, menutitle } = useParams();
   const navigate = useNavigate();
 
-  const menuList = useRecoilValue(menuListData);
-
   return (
     <section className={'flex-col-center justify-start w-noneSideBar h-full'}>
       <section className={'flex-row-center h-[5rem] w-full'}>
