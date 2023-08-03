@@ -162,7 +162,10 @@ export default function Project() {
     },
   ];
 
+  // 진행률 퍼센트
   const [progress, setProgress] = useState(0);
+
+  // 칸반 | 스크럼
   const [isKanban, setIsKanban] = useState(true);
 
   const onClickKanban = useCallback((check: boolean) => {
@@ -229,10 +232,6 @@ export default function Project() {
     const doneTasks = taskStatusList.done.length;
     const percent = (doneTasks / totalTasks) * 100;
     setProgress(Math.floor(percent));
-
-    console.log(totalTasks);
-    console.log(doneTasks);
-    console.log(progress);
   }, [taskStatusList]);
 
   // 필터링 된 페이지로 이동
@@ -390,7 +389,11 @@ export default function Project() {
         <section className={'flex-col-center w-noneSideBar h-[90%]'}>
           {/*dnd*/}
           <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
-            <div className={'flex-row-center justify-between w-full h-full pt-8 px-[12rem]'}>
+            <div
+              className={
+                'flex-row-center justify-between w-full h-full pt-8 px-[12rem] overflow-x-auto'
+              }
+            >
               <StatusBoard status={'before'} tasks={taskStatusList['before']} />
               <StatusBoard status={'going'} tasks={taskStatusList['going']} />
               <StatusBoard status={'done'} tasks={taskStatusList['done']} />

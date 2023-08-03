@@ -19,25 +19,25 @@ export default function StatusBoard({ status, tasks }: Props) {
 
   return (
     //TODO : 보드 max-w 적용시키기
-    <section className={'min-w-[24rem] max-w-[40rem] w-auto h-full mx-6 task-border'}>
-      {/*제목, 개수*/}
-      <div
-        className={
-          'flex-row-center justify-between h-[3.5rem] px-[2.3rem] text-gray-dark text-[0.93rem]'
-        }
-      >
-        <span className={'font-bold'}>{convertStatus}</span>
-        <span>{`${tasks.length}개`}</span>
-      </div>
-
-      {/*태스크들*/}
-      <Droppable droppableId={status}>
-        {(provided) => (
+    <Droppable droppableId={status} isDropDisabled={false}>
+      {(provided) => (
+        <section
+          className={'min-w-[24rem] max-w-[40rem] w-auto h-full mx-6 task-border'}
+          ref={provided.innerRef}
+          {...provided.droppableProps}
+        >
+          {/*제목, 개수*/}
           <div
-            ref={provided.innerRef}
-            {...provided.droppableProps}
-            className={'flex-col items-center max-h-[85%] overflow-y-auto'}
+            className={
+              'flex-row-center justify-between h-[3.5rem] px-[2.3rem] text-gray-dark text-[0.93rem]'
+            }
           >
+            <span className={'font-bold'}>{convertStatus}</span>
+            <span>{`${tasks.length}개`}</span>
+          </div>
+
+          {/*태스크들*/}
+          <div className={'flex-col items-center max-h-[85%] overflow-y-auto'}>
             {tasks.map((task, index) => (
               <Draggable draggableId={task.dragId} index={index} key={task.dragId}>
                 {(provided, snapshot) => (
@@ -133,8 +133,8 @@ export default function StatusBoard({ status, tasks }: Props) {
             ))}
             {provided.placeholder}
           </div>
-        )}
-      </Droppable>
-    </section>
+        </section>
+      )}
+    </Droppable>
   );
 }
