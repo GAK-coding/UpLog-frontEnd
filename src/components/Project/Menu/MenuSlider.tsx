@@ -9,7 +9,7 @@ import { AiOutlinePlus } from 'react-icons/ai';
 import { Editable, EditableInput, EditablePreview } from '@chakra-ui/react';
 import { useRecoilState } from 'recoil';
 import { menuListData } from '@/recoil/Project/atom.tsx';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 
 interface Props {
   product: string;
@@ -27,15 +27,20 @@ const StyledSlider = styled(Slider)`
 
 const CustomPrevSlider = styled.div`
   left: 3px;
+  z-index: 3;
 `;
 
 const CustomNextSlider = styled.div`
   right: 3px;
+  z-index: 3;
 `;
 
 export default function MenuSlider({ product, project }: Props) {
   const [menuList, setMenuList] = useRecoilState(menuListData);
 
+  const [plusMenu, setPlusMenu] = useState(false);
+
+  // menu 이름 수정된 값으로 다시 값 설정
   const onChangeMenuName = useCallback(
     (menuId: number) => (nextValue: string) => {
       // 변경된 값의 menu id랑 같은 menu 값을 찾기
@@ -45,10 +50,32 @@ export default function MenuSlider({ product, project }: Props) {
 
       // 바뀐 name으로 다시 정렬하기
       setMenuList(updatedMenuList);
-      console.log(menuList);
     },
     [menuList, setMenuList]
   );
+
+  // menu 추가
+  const onAddMenu = useCallback(
+    (nextValue: string) => {
+      // 아무런 값을 입력하지 않았으면 추가하지 않고 다시 + 버튼으로 변경함
+      if (nextValue === '') {
+        setPlusMenu(false);
+        return;
+      }
+
+      // 값을 입력했으면 새로운 값으로 메뉴 list에 추가
+      const newMenu: MenuInfo = {
+        id: Math.max(...menuList.map((menu) => menu.id)) + 1,
+        name: nextValue,
+      };
+      const updatedMenuList = [...menuList, newMenu];
+
+      setMenuList(updatedMenuList);
+      setPlusMenu(false);
+    },
+    [menuList]
+  );
+
   // slide settings 커스텀
   const settings = {
     dots: false, // 밑에 점으로 표시되는 것
@@ -103,14 +130,21 @@ export default function MenuSlider({ product, project }: Props) {
       ))}
       {menuList.length < 15 && (
         <div className={'flex-row-center h-[5rem] w-1/5'}>
-          <AiOutlinePlus
-            className={'flex-row-center h-full self-center m-auto text-[2rem] text-gray-border'}
-          >
-            <Editable defaultValue={'ddd'} textAlign="center">
-              <EditablePreview />
-              <EditableInput />
-            </Editable>
-          </AiOutlinePlus>
+          {plusMenu ? (
+            <div className={'flex-row-center h-full text-[1.25rem] font-semibold text-black'}>
+              <Editable placeholder={'메뉴 이름 입력'} onSubmit={onAddMenu}>
+                <EditablePreview />
+                <EditableInput />
+              </Editable>
+            </div>
+          ) : (
+            <AiOutlinePlus
+              className={'flex-row-center h-full self-center m-auto text-[2rem] text-gray-border'}
+              onClick={() => {
+                setPlusMenu(true);
+              }}
+            />
+          )}
         </div>
       )}
     </StyledSlider>
