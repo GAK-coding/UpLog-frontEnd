@@ -19,3 +19,8 @@ export interface Tasks {
 export interface SubGroup {
   [key: string]: string[];
 }
+
+export interface MenuInfo {
+  id: number;
+  name: string;
+}

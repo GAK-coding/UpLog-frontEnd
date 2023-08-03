@@ -8,7 +8,8 @@ import { ChakraProvider } from '@chakra-ui/react';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import loadable from '@loadable/component';
 import { Scrollbars } from 'rc-scrollbars';
-import Menu from '@/pages/Project/Menu.tsx';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 const Header = loadable(() => import('@/components/UI/Header'));
 const Home = loadable(() => import('@/pages/Home'));
@@ -24,7 +25,7 @@ const Calendar = loadable(() => import('@/pages/Product/Calendar.tsx'));
 const Chats = loadable(() => import('@/pages/Product/Chats.tsx'));
 const Members = loadable(() => import('@/pages/Product/Members.tsx'));
 const NewChangeLog = loadable(() => import('@/pages/Product/NewChangeLog.tsx'));
-
+const Menu = loadable(() => import('@/pages/Project/Menu.tsx'));
 // jest에서 .env 이용하려고 넣은 코드
 const { MODE: ENVIRONMENT } = import.meta.env;
 export { ENVIRONMENT };
@@ -65,10 +66,11 @@ function App() {
                       <Route path={':product/chats'} element={<Chats />} />
                       <Route path={':product/calendar'} element={<Calendar />} />
                       <Route path={':product/newchange'} element={<NewChangeLog />} />
+                      <Route path={':product/:project/menu'} element={<Menu />} />
+                      <Route path={':product/:project/menu/:menutitle'} element={<Menu />} />
 
                       {/* group의 그룹들 */}
                       <Route path={':product/:project'} element={<Project />} />
-                      <Route path={':product/:project/menu'} element={<Menu />} />
                       <Route path={':product/:project/group/:parentgroup'} element={<Project />} />
                       <Route
                         path={':product/:project/group/:parentgroup/:childgroup'}
