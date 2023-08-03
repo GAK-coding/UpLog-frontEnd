@@ -339,7 +339,7 @@ export default function Project() {
               <span
                 className={`text-3xl  ${
                   isKanban ? 'text-black font-bold' : 'text-gray-board font-semibold'
-                }`}
+                } transition ease-in-out duration-300 hover:scale-110 hover:-translate-y-1`}
               >
                 칸반
               </span>
@@ -349,7 +349,7 @@ export default function Project() {
 
             <button type={'button'} onClick={() => onClickKanban(false)}>
               <span
-                className={`text-3xl  ${
+                className={`text-3xl transition ease-in-out duration-300 hover:scale-110  ${
                   !isKanban ? 'text-black font-bold' : 'text-gray-board font-semibold'
                 }`}
               >
@@ -402,7 +402,10 @@ export default function Project() {
         </section>
         {/*하단페이지로 이동*/}
         <section className={'flex-row-center w-full h-[10%]'}>
-          <BsChevronCompactDown className={'text-[4rem] text-gray-light'} />
+          <BsChevronCompactDown
+            className={'text-[4rem] text-gray-light'}
+            onClick={() => navigate(`/workspace/${product}/${project}/menu`)}
+          />
         </section>
       </div>
     </section>
