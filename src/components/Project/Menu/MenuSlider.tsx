@@ -3,7 +3,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import Slider from 'react-slick';
 import { MenuInfo } from '@/typings/project.ts';
 import { NavLink } from 'react-router-dom';
-import { IoIosArrowForward, IoIosArrowBack } from 'react-icons/io';
+import { IoIosArrowForward, IoIosArrowBack, IoIosClose } from 'react-icons/io';
 import styled from '@emotion/styled';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { Editable, EditableInput, EditablePreview } from '@chakra-ui/react';
@@ -85,12 +85,12 @@ export default function MenuSlider({ product, project }: Props) {
     slidesToScroll: 5, // 슬라이드 넘길 시 몇개의 아이템을 넘길지
     prevArrow: (
       <CustomPrevSlider>
-        <IoIosArrowBack className={'text-[2rem] text-gray-border'} />
+        <IoIosArrowBack className={'text-[2rem] text-menu-arrow hover:text-gray-border'} />
       </CustomPrevSlider>
     ),
     nextArrow: (
       <CustomNextSlider>
-        <IoIosArrowForward className={'text-[2rem] text-gray-border'} />
+        <IoIosArrowForward className={'text-[2rem] text-menu-arrow hover:text-gray-border'} />
       </CustomNextSlider>
     ),
   };
@@ -113,12 +113,22 @@ export default function MenuSlider({ product, project }: Props) {
         <NavLink
           to={`/workspace/${product}/${project}/menu/${menu.name}`}
           className={({ isActive }) =>
-            `flex-row-center h-[5rem] w-1/5 border-r border-gray-border ${
+            `flex-row-center h-[5rem] w-1/5  relative border-r border-gray-border ${
               isActive && 'bg-orange text-black'
             }`
           }
           key={index}
         >
+          <div className={'hover:bg-red-400 hover:block'}>
+            <IoIosClose
+              className={
+                'absolute hidden right-2 border-red-400 border text-gray-light text-[1.5rem] '
+              }
+              onClick={() => {
+                console.log('클릭');
+              }}
+            />
+          </div>
           <span className={'flex-row-center h-full w-full'}>
             {/*클릭해서 값 변경*/}
             <Editable defaultValue={menu.name} onSubmit={onChangeMenuName(menu.id)}>

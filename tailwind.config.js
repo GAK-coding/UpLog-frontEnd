@@ -31,6 +31,7 @@ export default {
           table: 'var(--table-gray)',
         },
         hover: 'var(--hover)',
+        'menu-arrow': 'var(--menu-arrow)',
         type: {
           feature: 'var(--Feature)',
           changed: 'var(--Changed)',

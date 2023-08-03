@@ -17,6 +17,7 @@
   --task-board: #f4f5f7;
   --task-line : rgba(0, 0, 0, 0);
   --task-detail-line: #e5e5e5;
+  --menu-arrow : rgba(196, 196, 196, 0.2);
   /*
     border-bg : border 배경 색깔
     border-gray : input창 border 색깔
@@ -53,6 +54,7 @@ html.dark {
   --task-board: #403d39;
   --task-line: #424242;
   --task-detail-line: #424242;
+  --menu-arrow : rgba(100, 99 ,94, 0.2);
   /*
    border-bg : border 배경 색깔
    border-gray : input, button 창 border 색깔
