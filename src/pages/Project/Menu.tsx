@@ -36,35 +36,32 @@ export default function Menu() {
       </section>
       <section className={'flex-col w-[80%] min-w-[80rem] h-menu pt-6'}>
         <section className={'w-h-full border-base border-b-0 border-gray-border'}>
-          <div
-            className={'flex-row-center w-full h-[5rem] border-b border-gray-border bg-amber-100'}
-          >
+          <div className={'flex-row-center w-full h-[5rem] border-b border-gray-border'}>
             <div className={'w-[90%] min-w-[70rem] h-full items-center justify-center'}>
-              <Slider {...settings}>
+              <Slider
+                {...settings}
+                className={'w-h-full text-[1.25rem] font-bold text-gray-border'}
+              >
                 <NavLink
-                  to={`/workspace/${product}/${project}/menu`}
+                  to={`/workspace/${product}/${project}/menu/${menuList[0].name}`}
                   className={({ isActive }) =>
-                    `flex-row-center h-full w-1/5 ${isActive && 'bg-orange'}`
+                    `flex-row-center h-[5rem] w-1/5 ${isActive && 'bg-orange text-black'}`
                   }
                 >
-                  <span className={'flex-row-center h-full w-full border border-red-400 '}>
-                    {menuList[0].name}
-                  </span>
+                  <span className={'flex-row-center h-full w-full'}>{menuList[0].name}</span>
                 </NavLink>
                 {menuList.slice(1).map((menu, index) => (
                   <NavLink
-                    to={`/workspace/${product}/${project}/menu/${menu.name}`}
+                    to={`/workspace/${product}/${project}/menu/title/${menu.name}`}
                     className={({ isActive }) =>
-                      `flex-row-center h-full w-1/5 ${isActive && 'bg-orange'}`
+                      `flex-row-center h-[5rem] w-1/5 ${isActive && 'bg-orange text-black'}`
                     }
                     key={index}
                   >
-                    <span className={'flex-row-center h-full w-full border border-red-400 '}>
-                      {menu.name}
-                    </span>
+                    <span className={'flex-row-center h-full w-full'}>{menu.name}</span>
                   </NavLink>
                 ))}
-                <div className={'flex-row-center h-full w-1/5 bg-amber-400'}>
+                <div className={'flex-row-center h-[5rem] w-1/5'}>
                   <IoIosArrowForward className={'text-[2rem] text-gray-light'} />
                 </div>
               </Slider>

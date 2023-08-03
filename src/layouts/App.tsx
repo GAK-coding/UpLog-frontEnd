@@ -68,6 +68,7 @@ function App() {
                       <Route path={':product/newchange'} element={<NewChangeLog />} />
                       <Route path={':product/:project/menu'} element={<Menu />} />
                       <Route path={':product/:project/menu/:menutitle'} element={<Menu />} />
+                      <Route path={':product/:project/menu/title/:menutitle'} element={<Menu />} />
 
                       {/* group의 그룹들 */}
                       <Route path={':product/:project'} element={<Project />} />

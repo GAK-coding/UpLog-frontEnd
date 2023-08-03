@@ -14,4 +14,5 @@
 
 .slick-next{
     right : 3px;
+    color : var(--border-gray);
 }
