@@ -26,11 +26,11 @@ export default {
           dark: 'var(--gray-dark)',
           spring: 'var(--gray-spring)',
           border: 'var(--border-gray)',
-          board: 'var(--board-gray)',
           sideBar: 'var(--sideBar-gray)',
           table: 'var(--table-gray)',
         },
         hover: 'var(--hover)',
+        'menu-arrow': 'var(--menu-arrow)',
         type: {
           feature: 'var(--Feature)',
           changed: 'var(--Changed)',

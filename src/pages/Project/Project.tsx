@@ -338,19 +338,19 @@ export default function Project() {
             <button type={'button'} onClick={() => onClickKanban(true)}>
               <span
                 className={`text-3xl  ${
-                  isKanban ? 'text-black font-bold' : 'text-gray-board font-semibold'
+                  isKanban ? 'text-black font-bold' : 'text-gray-border font-semibold'
                 } transition ease-in-out duration-300 hover:scale-110 hover:-translate-y-1`}
               >
                 칸반
               </span>
             </button>
 
-            <div className={'mx-4 h-8 border-solid border-r border-[1px] border-gray-board'} />
+            <div className={'mx-4 h-8 border-solid border-r border-[1px] border-gray-border'} />
 
             <button type={'button'} onClick={() => onClickKanban(false)}>
               <span
                 className={`text-3xl transition ease-in-out duration-300 hover:scale-110  ${
-                  !isKanban ? 'text-black font-bold' : 'text-gray-board font-semibold'
+                  !isKanban ? 'text-black font-bold' : 'text-gray-border물 font-semibold'
                 }`}
               >
                 스크럼
@@ -403,8 +403,8 @@ export default function Project() {
         {/*하단페이지로 이동*/}
         <section className={'flex-row-center w-full h-[10%]'}>
           <BsChevronCompactDown
-            className={'text-[4rem] text-gray-light'}
-            onClick={() => navigate(`/workspace/${product}/${project}/menu`)}
+            className={'text-[4rem] text-gray-light cursor-pointer'}
+            onClick={() => navigate(`/workspace/${product}/${project}/menu/결과물`)}
           />
         </section>
       </div>

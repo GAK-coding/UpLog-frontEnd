@@ -14,10 +14,10 @@
   --gray-table: #e5e5e5;
   --black: #292723;
   --white: #ffffff;
-  --board-gray: #c4c4c4;
   --task-board: #f4f5f7;
   --task-line : rgba(0, 0, 0, 0);
   --task-detail-line: #e5e5e5;
+  --menu-arrow : rgba(196, 196, 196, 0.2);
   /*
     border-bg : border 배경 색깔
     border-gray : input창 border 색깔
@@ -51,10 +51,10 @@ html.dark {
   --gray-sideBar: #64635e;
   --black: #ffffff;
   --white: #2e2b27;
-  --board-gray: #4c4643;
   --task-board: #403d39;
   --task-line: #424242;
   --task-detail-line: #424242;
+  --menu-arrow : rgba(100, 99 ,94, 0.2);
   /*
    border-bg : border 배경 색깔
    border-gray : input, button 창 border 색깔

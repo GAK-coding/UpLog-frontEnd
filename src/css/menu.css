@@ -1,0 +1,18 @@
+.slick-next::before , .slick-prev::before{
+    color : var(--border-gray);
+    font-size : 15px;
+    opacity: 1;
+}
+
+.slick-prev::before, .slick-next::before {
+    font-size: 15px;
+    line-height: 1;
+    opacity: .75;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.slick-next{
+    right : 3px;
+    color : var(--border-gray);
+}
