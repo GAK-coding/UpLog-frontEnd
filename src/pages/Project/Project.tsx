@@ -162,8 +162,10 @@ export default function Project() {
     },
   ];
 
-  // 그룹으로 필터링 된 값
-  중const progress = 77;
+  // 진행률 퍼센트
+  const [progress, setProgress] = useState(0);
+
+  // 칸반 | 스크럼
   const [isKanban, setIsKanban] = useState(true);
 
   const onClickKanban = useCallback((check: boolean) => {
@@ -185,7 +187,7 @@ export default function Project() {
 
   const [filterGroup, setFilterGroup] = useState(pGroup[0]);
 
-  const [filterTaskList, setFilterTaskList] = useState(taskList);
+  // const [filterTaskList, setFilterTaskList] = useState(taskList);
 
   const handleParentGroupChange = (value: string) => {
     // 선택한 상위그룹내용으로 하위 그룹 option으로 변경
@@ -222,6 +224,16 @@ export default function Project() {
     },
     [taskStatusList]
   );
+
+  // TODO : 그룹 필터링 되는거 확인하고 utils 함수로 빼기
+  useEffect(() => {
+    const totalTasks = [...taskStatusList.before, ...taskStatusList.going, ...taskStatusList.done]
+      .length;
+    const doneTasks = taskStatusList.done.length;
+    const percent = (doneTasks / totalTasks) * 100;
+    setProgress(Math.floor(percent));
+  }, [taskStatusList]);
+
   // 필터링 된 페이지로 이동
   useEffect(() => {
     if (filterGroup === '그룹') {
@@ -259,7 +271,6 @@ export default function Project() {
     //
     // setTaskStatusList(tempFilterGroup);
     // console.log(tempFilterGroup);
-
 
     // Object.keys(taskStatusList).map((key) => {
     //   if (childGroup === '전체') {
@@ -328,7 +339,7 @@ export default function Project() {
               <span
                 className={`text-3xl  ${
                   isKanban ? 'text-black font-bold' : 'text-gray-board font-semibold'
-                }`}
+                } transition ease-in-out duration-300 hover:scale-110 hover:-translate-y-1`}
               >
                 칸반
               </span>
@@ -338,7 +349,7 @@ export default function Project() {
 
             <button type={'button'} onClick={() => onClickKanban(false)}>
               <span
-                className={`text-3xl  ${
+                className={`text-3xl transition ease-in-out duration-300 hover:scale-110  ${
                   !isKanban ? 'text-black font-bold' : 'text-gray-board font-semibold'
                 }`}
               >
@@ -378,7 +389,11 @@ export default function Project() {
         <section className={'flex-col-center w-noneSideBar h-[90%]'}>
           {/*dnd*/}
           <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
-            <div className={'flex-row-center justify-between w-full h-full pt-8 px-[12rem]'}>
+            <div
+              className={
+                'flex-row-center justify-between w-full h-full pt-8 px-[12rem] overflow-x-auto'
+              }
+            >
               <StatusBoard status={'before'} tasks={taskStatusList['before']} />
               <StatusBoard status={'going'} tasks={taskStatusList['going']} />
               <StatusBoard status={'done'} tasks={taskStatusList['done']} />
@@ -387,7 +402,10 @@ export default function Project() {
         </section>
         {/*하단페이지로 이동*/}
         <section className={'flex-row-center w-full h-[10%]'}>
-          <BsChevronCompactDown className={'text-[4rem] text-gray-light'} />
+          <BsChevronCompactDown
+            className={'text-[4rem] text-gray-light'}
+            onClick={() => navigate(`/workspace/${product}/${project}/menu`)}
+          />
         </section>
       </div>
     </section>

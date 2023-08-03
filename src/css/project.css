@@ -70,3 +70,18 @@
 .progress .anticon svg {
     color: #86c583;
 }
+
+@keyframes fadeInUp {
+    from {
+         opacity: 1;
+         transform: translate3d(0, 100%, 0);
+     }
+     to {
+         opacity: 0;
+         transform: translateZ(0);
+     }
+ }
+
+.test_obj {
+    animation: fadeInUp 1s;
+}
