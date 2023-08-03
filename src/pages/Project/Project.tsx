@@ -403,7 +403,7 @@ export default function Project() {
         {/*하단페이지로 이동*/}
         <section className={'flex-row-center w-full h-[10%]'}>
           <BsChevronCompactDown
-            className={'text-[4rem] text-gray-light'}
+            className={'text-[4rem] text-gray-light cursor-pointer'}
             onClick={() => navigate(`/workspace/${product}/${project}/menu`)}
           />
         </section>
