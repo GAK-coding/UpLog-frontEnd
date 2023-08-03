@@ -15,8 +15,6 @@ export default function Header() {
   const navigate = useNavigate();
   const [darkMode, setDarkMode] = useState(localStorage.getItem('theme') === 'dark');
 
-  console.log(darkMode, '다크');
-
   // TODO: 실제 userprofile 값으로 변경하기
   const userprofile = '';
   // 검색

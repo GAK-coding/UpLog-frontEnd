@@ -1,20 +1,14 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { BsChevronCompactUp } from 'react-icons/bs';
-import { MenuInfo } from '@/typings/project.ts';
 import MenuSlider from '@/components/Project/Menu/MenuSlider.tsx';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { menuListData } from '@/recoil/Project/atom.tsx';
 
 export default function Menu() {
   const { product, project } = useParams();
   const navigate = useNavigate();
 
-  const menuList: MenuInfo[] = [
-    { id: 1, name: '결과물' },
-    { id: 2, name: '요구사항' },
-    { id: 3, name: '개발' },
-    { id: 4, name: '배포' },
-    { id: 5, name: '개발2' },
-    { id: 6, name: '배포2' },
-  ];
+  const menuList = useRecoilValue(menuListData);
 
   return (
     <section className={'flex-col-center justify-start w-noneSideBar h-full'}>
@@ -32,7 +26,7 @@ export default function Menu() {
           {/*메뉴 list*/}
           <div className={'flex-row-center w-full h-[5rem] border-b border-gray-border '}>
             <div className={'w-full min-w-[70rem] h-full items-center justify-center'}>
-              <MenuSlider product={product!} project={project!} menuList={menuList} />
+              <MenuSlider product={product!} project={project!} />
             </div>
           </div>
         </section>
