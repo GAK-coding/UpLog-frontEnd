@@ -26,7 +26,6 @@ export default {
           dark: 'var(--gray-dark)',
           spring: 'var(--gray-spring)',
           border: 'var(--border-gray)',
-          board: 'var(--board-gray)',
           sideBar: 'var(--sideBar-gray)',
           table: 'var(--table-gray)',
         },

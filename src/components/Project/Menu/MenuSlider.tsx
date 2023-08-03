@@ -10,10 +10,13 @@ import { Editable, EditableInput, EditablePreview } from '@chakra-ui/react';
 import { useRecoilState } from 'recoil';
 import { menuListData } from '@/recoil/Project/atom.tsx';
 import { useCallback, useState } from 'react';
+import { useMessage } from '@/hooks/useMessage.ts';
+import * as events from 'events';
 
 interface Props {
   product: string;
   project: string;
+  menuTitle: string;
   // menuListData: MenuInfo[];
 }
 
@@ -35,7 +38,9 @@ const CustomNextSlider = styled.div`
   z-index: 3;
 `;
 
-export default function MenuSlider({ product, project }: Props) {
+export default function MenuSlider({ product, project, menuTitle }: Props) {
+  const { showMessage, contextHolder } = useMessage();
+
   const [menuList, setMenuList] = useRecoilState(menuListData);
 
   const [plusMenu, setPlusMenu] = useState(false);
@@ -43,12 +48,17 @@ export default function MenuSlider({ product, project }: Props) {
   // menu 이름 수정된 값으로 다시 값 설정
   const onChangeMenuName = useCallback(
     (menuId: number) => (nextValue: string) => {
+      // 빈 문자열인 경우
+      if (nextValue === '') {
+        showMessage('warning', '메뉴 이름을 입력해주세요.');
+        return;
+      }
       // 변경된 값의 menu id랑 같은 menu 값을 찾기
       const updatedMenuList = menuList.map((menu) =>
         menu.id === menuId ? { ...menu, name: nextValue } : menu
       );
 
-      // 바뀐 name으로 다시 정렬하기
+      // 바뀐 name으로 다시 셋팅하기
       setMenuList(updatedMenuList);
     },
     [menuList, setMenuList]
@@ -85,12 +95,12 @@ export default function MenuSlider({ product, project }: Props) {
     slidesToScroll: 5, // 슬라이드 넘길 시 몇개의 아이템을 넘길지
     prevArrow: (
       <CustomPrevSlider>
-        <IoIosArrowBack className={'text-[2rem] text-menu-arrow hover:text-gray-border'} />
+        <IoIosArrowBack className={'text-[2rem] text-menu-arrow hover:text-gray-light'} />
       </CustomPrevSlider>
     ),
     nextArrow: (
       <CustomNextSlider>
-        <IoIosArrowForward className={'text-[2rem] text-menu-arrow hover:text-gray-border'} />
+        <IoIosArrowForward className={'text-[2rem] text-menu-arrow hover:text-gray-light'} />
       </CustomNextSlider>
     ),
   };
@@ -106,32 +116,41 @@ export default function MenuSlider({ product, project }: Props) {
           }`
         }
       >
-        <span className={'flex-row-center h-full w-full'}>{menuList[0].name}</span>
+        <span className={'flex-row-center h-full w-full'}>
+          {menuList[0].name}
+          {contextHolder}
+        </span>
       </NavLink>
+
       {/*menuList 데이터*/}
       {menuList.slice(1).map((menu, index) => (
         <NavLink
           to={`/workspace/${product}/${project}/menu/${menu.name}`}
           className={({ isActive }) =>
-            `flex-row-center h-[5rem] w-1/5  relative border-r border-gray-border ${
+            `flex-row-center h-[5rem] w-1/5 relative border-r border-gray-border ${
               isActive && 'bg-orange text-black'
             }`
           }
           key={index}
         >
-          <div className={'hover:bg-red-400 hover:block'}>
+          {menuTitle === menu.name && (
             <IoIosClose
               className={
-                'absolute hidden right-2 border-red-400 border text-gray-light text-[1.5rem] '
+                'absolute right-2 top-0.5 text-transparent text-[2rem] hover:text-gray-dark'
               }
               onClick={() => {
                 console.log('클릭');
               }}
             />
-          </div>
+          )}
+
           <span className={'flex-row-center h-full w-full'}>
             {/*클릭해서 값 변경*/}
-            <Editable defaultValue={menu.name} onSubmit={onChangeMenuName(menu.id)}>
+            <Editable
+              defaultValue={menu.name}
+              placeholder={menu.name}
+              onSubmit={onChangeMenuName(menu.id)}
+            >
               <EditablePreview />
               <EditableInput />
             </Editable>
