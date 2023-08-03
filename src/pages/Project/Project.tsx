@@ -404,7 +404,7 @@ export default function Project() {
         <section className={'flex-row-center w-full h-[10%]'}>
           <BsChevronCompactDown
             className={'text-[4rem] text-gray-light cursor-pointer'}
-            onClick={() => navigate(`/workspace/${product}/${project}/menu`)}
+            onClick={() => navigate(`/workspace/${product}/${project}/menu/main`)}
           />
         </section>
       </div>

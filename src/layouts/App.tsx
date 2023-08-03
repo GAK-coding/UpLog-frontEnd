@@ -66,9 +66,8 @@ function App() {
                       <Route path={':product/chats'} element={<Chats />} />
                       <Route path={':product/calendar'} element={<Calendar />} />
                       <Route path={':product/newchange'} element={<NewChangeLog />} />
-                      <Route path={':product/:project/menu'} element={<Menu />} />
+                      <Route path={':product/:project/menu/main'} element={<Menu />} />
                       <Route path={':product/:project/menu/:menutitle'} element={<Menu />} />
-                      <Route path={':product/:project/menu/title/:menutitle'} element={<Menu />} />
 
                       {/* group의 그룹들 */}
                       <Route path={':product/:project'} element={<Project />} />
