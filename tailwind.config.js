@@ -55,7 +55,6 @@ export default {
         board: 'calc(100vh - 19.5rem)',
         menu: 'calc(100vh - 10.7rem)',
         content: 'calc(100vh - 15.7rem)',
-        'content-board': 'calc(100vh - 25.2rem)',
       },
       boxShadow: {
         'sign-up': '2px 2px 10px 1px rgba(0, 0, 0, 0.15), -2px -2px 10px 0px var(--shadow)',

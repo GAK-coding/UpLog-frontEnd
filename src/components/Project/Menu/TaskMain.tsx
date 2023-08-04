@@ -4,6 +4,7 @@ import { taskState } from '@/recoil/Project/atom.ts';
 import { useRecoilState } from 'recoil';
 import { RiCheckboxLine } from 'react-icons/ri';
 import { FaUserCircle } from 'react-icons/fa';
+import { AiOutlinePlus } from 'react-icons/ai';
 
 export default function TaskMain() {
   const dateData: SelectMenu[] = [
@@ -233,7 +234,11 @@ export default function TaskMain() {
               }
             >
               <div className={'flex-row-center justify-start w-[14rem] pr-1'}>
-                <RiCheckboxLine className={`text-[1.7rem] text-gray-light`} />
+                <RiCheckboxLine
+                  className={`text-[1.7rem] ${
+                    task.status === 'done' ? 'text-orange' : 'text-gray-light'
+                  }`}
+                />
                 <span className={'ml-2 text-gray-light text-[1.1rem]'}>{`Task ${task.id}`}</span>
               </div>
               <div className={'w-[45rem] ml-1 text-[1.1rem] font-bold'}>{task.name}</div>
@@ -250,11 +255,14 @@ export default function TaskMain() {
                   className={'mx-3 h-5 border-solid border-r border-[0.5px] border-gray-light'}
                 />
                 <span
-                  className={
-                    'flex items-center px-2 mr-3 h-[1.5rem] rounded-[0.31rem] bg-orange-light-sideBar'
-                  }
+                  className={`flex items-center px-2 mr-3 h-[1.5rem] rounded-[0.31rem] text-[#292723] 
+                    ${task.status === 'before' && 'bg-status-before'}
+                  ${task.status === 'going' && 'bg-status-going'}
+                  ${task.status === 'done' && 'bg-status-done'}`}
                 >
-                  진행 중
+                  {task.status === 'before' && '진행 전'}
+                  {task.status === 'going' && '진행 중'}
+                  {task.status === 'done' && '진행 후'}
                 </span>
                 {!userprofile ? (
                   <FaUserCircle className={'flex text-[2.2rem] fill-gray-dark'} />
@@ -268,7 +276,12 @@ export default function TaskMain() {
               </div>
             </section>
           ))}
-          <section className={'flex-row-center justify-start w-full min-h-[3.5rem] px-4'}></section>
+          <section
+            className={'flex-row-center justify-start w-full min-h-[3.5rem] px-4 text-gray-dark'}
+          >
+            <AiOutlinePlus className={'text-[1.7rem]'} />
+            <span className={'ml-2 text-[1.1rem]'}>Task 생성하기</span>
+          </section>
         </div>
       </section>
     </div>
