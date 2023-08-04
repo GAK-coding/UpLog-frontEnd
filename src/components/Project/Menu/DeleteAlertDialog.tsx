@@ -10,21 +10,25 @@ import {
 import { useCallback, useRef } from 'react';
 import { menuListData } from '@/recoil/Project/atom.tsx';
 import { useRecoilState } from 'recoil';
+import { useNavigate, useParams } from 'react-router-dom';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  menu: number;
+  menu: string;
 }
 export default function DeleteAlertDialog({ isOpen, onClose, menu }: Props) {
+  const { product, project } = useParams();
+  const navigate = useNavigate();
   const cancelRef = useRef();
   const [menuList, setMenuList] = useRecoilState(menuListData);
 
   const onClickDelete = useCallback(() => {
-    const updatedMenuList = menuList.filter((eachMenu) => eachMenu.id !== menu);
+    const updatedMenuList = menuList.filter((eachMenu) => eachMenu.name !== menu);
     setMenuList(updatedMenuList);
-
     onClose();
+
+    navigate(`/workspace/${product}/${project}/menu/결과물`);
   }, [menuList, setMenuList, menu]);
 
   return (
