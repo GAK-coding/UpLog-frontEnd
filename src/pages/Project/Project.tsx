@@ -13,7 +13,7 @@ import { taskState } from '@/recoil/Project/atom.ts';
 export default function Project() {
   const { product, project } = useParams();
   const navigate = useNavigate();
-  름;
+
   // recoil에서 받아올 값
   const [taskStatusList, setTaskStatusList] = useRecoilState(taskState);
   const taskList: Task[] = [

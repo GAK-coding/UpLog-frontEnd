@@ -31,7 +31,7 @@ export default function Menu() {
               <MenuSlider product={product!} project={project!} menuTitle={menutitle!} />
             </div>
           </div>
-          <div className={'flex-col-center w-h-full overflow-y-auto'}>
+          <div className={'flex-col-center w-full h-content pt-8 overflow-y-auto'}>
             {/*post, task 선택*/}
             <section className={'flex-row-center w-full h-[4.5rem] pt-6'}>
               <button type={'button'} onClick={() => setIsPost(true)}>
