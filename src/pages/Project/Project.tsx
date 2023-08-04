@@ -138,28 +138,6 @@ export default function Project() {
       menu: '테스트',
       targetMember: 'OCI(오채영)',
     },
-    {
-      id: 11,
-      dragId: '11',
-      name: 'task12',
-      status: 'before',
-      group_id: 5,
-      group: '백엔드',
-      p_id: 1,
-      menu: '요구사항',
-      targetMember: 'OCI(오채영)',
-    },
-    {
-      id: 12,
-      dragId: '12',
-      name: 'task13',
-      status: 'going',
-      group_id: 6,
-      group: '프론트엔드',
-      p_id: 2,
-      menu: '테스트',
-      targetMember: 'OCI(오채영)',
-    },
   ];
 
   // 진행률 퍼센트
