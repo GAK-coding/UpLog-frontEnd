@@ -2,22 +2,21 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Slider from 'react-slick';
 import { MenuInfo } from '@/typings/project.ts';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { IoIosArrowForward, IoIosArrowBack, IoIosClose } from 'react-icons/io';
 import styled from '@emotion/styled';
 import { AiOutlinePlus } from 'react-icons/ai';
-import { Editable, EditableInput, EditablePreview } from '@chakra-ui/react';
+import { Editable, EditableInput, EditablePreview, useDisclosure } from '@chakra-ui/react';
 import { useRecoilState } from 'recoil';
 import { menuListData } from '@/recoil/Project/atom.tsx';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useMessage } from '@/hooks/useMessage.ts';
-import * as events from 'events';
+import DeleteAlertDialog from '@/components/Project/Menu/DeleteAlertDialog.tsx';
 
 interface Props {
   product: string;
   project: string;
   menuTitle: string;
-  // menuListData: MenuInfo[];
 }
 
 const StyledSlider = styled(Slider)`
@@ -40,10 +39,11 @@ const CustomNextSlider = styled.div`
 
 export default function MenuSlider({ product, project, menuTitle }: Props) {
   const { showMessage, contextHolder } = useMessage();
-
   const [menuList, setMenuList] = useRecoilState(menuListData);
-
   const [plusMenu, setPlusMenu] = useState(false);
+  const navigate = useNavigate();
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   // menu 이름 수정된 값으로 다시 값 설정
   const onChangeMenuName = useCallback(
@@ -60,6 +60,9 @@ export default function MenuSlider({ product, project, menuTitle }: Props) {
 
       // 바뀐 name으로 다시 셋팅하기
       setMenuList(updatedMenuList);
+
+      // 바뀐 name에 맞게 주소값도 다시 설정
+      navigate(`/workspace/${product}/${project}/menu/${nextValue}`);
     },
     [menuList, setMenuList]
   );
@@ -133,17 +136,18 @@ export default function MenuSlider({ product, project, menuTitle }: Props) {
           }
           key={index}
         >
+          <DeleteAlertDialog isOpen={isOpen} onClose={onClose} menu={menu.id} />
+
           {menuTitle === menu.name && (
             <IoIosClose
               className={
                 'absolute right-2 top-0.5 text-transparent text-[2rem] hover:text-gray-dark'
               }
               onClick={() => {
-                console.log('클릭');
+                onOpen();
               }}
             />
           )}
-
           <span className={'flex-row-center h-full w-full'}>
             {/*클릭해서 값 변경*/}
             <Editable
