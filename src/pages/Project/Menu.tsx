@@ -33,7 +33,7 @@ export default function Menu() {
           </div>
           <div className={'flex-col-center w-full h-content pt-8 overflow-y-auto'}>
             {/*post, task 선택*/}
-            <section className={'flex-row-center w-full h-[4.5rem] pt-6'}>
+            <section className={'flex-row-center w-full h-[6rem] pt-[2.5rem]'}>
               <button type={'button'} onClick={() => setIsPost(true)}>
                 <span
                   className={`text-[1.4rem] ${

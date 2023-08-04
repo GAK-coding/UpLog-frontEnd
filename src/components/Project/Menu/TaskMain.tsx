@@ -177,7 +177,7 @@ export default function TaskMain() {
   return (
     <div className={'flex-col-center w-h-full'}>
       {/*상태별 개수 링 + 날짜, 상태 필터링*/}
-      <section className={'flex-row-center justify-between w-full h-[4rem]'}>
+      <section className={'flex-row-center justify-between w-full h-[4rem] mt-4 px-6'}>
         <div className={'flex justify-between w-[13rem] px-8'}>
           <div
             className={
@@ -222,8 +222,11 @@ export default function TaskMain() {
       <section
         className={'flex-col-center justify-start items-start w-[70%] min-w-[60rem] h-[90%] py-6'}
       >
+        {/*task list border*/}
         <div
-          className={'flex-col-center justify-start items-start w-full border-base rounded-[5px]'}
+          className={
+            'flex-col-center justify-start items-start w-full border-base rounded-[5px] mt-6'
+          }
         >
           {/*task 정보*/}
           {taskList.map((task, index) => (
@@ -233,6 +236,7 @@ export default function TaskMain() {
                 'flex-row-center justify-start w-full min-h-[3.5rem] px-4 border-b border-line overflow-y-auto'
               }
             >
+              {/*체크박스 + task 이름*/}
               <div className={'flex-row-center justify-start w-[14rem] pr-1'}>
                 <RiCheckboxLine
                   className={`text-[1.7rem] ${
@@ -242,6 +246,8 @@ export default function TaskMain() {
                 <span className={'ml-2 text-gray-light text-[1.1rem]'}>{`Task ${task.id}`}</span>
               </div>
               <div className={'w-[45rem] ml-1 text-[1.1rem] font-bold'}>{task.name}</div>
+
+              {/*task 메뉴, 상태, 할당자*/}
               <div className={'flex-row-center w-h-full justify-end text-gray-dark text-[0.93rem]'}>
                 <span className={'mr-3'}>{task.group}</span>
                 <span
