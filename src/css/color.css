@@ -35,6 +35,10 @@
   --Deprecated: #f7e1dc;
   --New: #d6e4ee;
   --Fixed: #e3e2e0;
+
+  --before: #FCCEC4;
+  --going : #BBDCF4;
+  --done: #CBF0C5;
 }
 
 html.dark {

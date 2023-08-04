@@ -24,3 +24,8 @@ export interface MenuInfo {
   id: number;
   name: string;
 }
+
+export interface SelectMenu {
+  value: string;
+  label: string;
+}
