@@ -1,38 +1,16 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { BsChevronCompactUp } from 'react-icons/bs';
 import MenuSlider from '@/components/Project/Menu/MenuSlider.tsx';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { menuListData } from '@/recoil/Project/atom.ts';
 import { useState } from 'react';
-import { Select } from 'antd';
-import { SelectMenu } from '@/typings/project.ts';
+import TaskMain from '@/components/Project/Menu/TaskMain.tsx';
+import PostMain from '@/components/Project/Menu/PostMain.tsx';
 
 export default function Menu() {
   const { product, project, menutitle } = useParams();
   const navigate = useNavigate();
 
-  const dateData: SelectMenu[] = [
-    { value: '날짜', label: '날짜' },
-    {
-      value: '최신순',
-      label: '최신순',
-    },
-  ];
-
-  const statusData: SelectMenu[] = [
-    { value: 'done', label: '완료' },
-    { value: 'before', label: '완료 전' },
-    { value: 'all', label: '전체' },
-  ];
-
   // post, task 구분
-  const [isPost, setIsPost] = useState(true);
-
-  // 날짜, 상태 데이터 필터링 값
-  const handleChange = (value: { value: string; label: React.ReactNode }) => {
-    //TODO : Task 상태, 날짜별로 필터링해서 보여주기
-    console.log(value);
-  };
+  const [isPost, setIsPost] = useState(false);
 
   return (
     <section className={'flex-col-center justify-start w-noneSideBar h-full'}>
@@ -76,59 +54,7 @@ export default function Menu() {
                 </span>
               </button>
             </section>
-            {/*상태별 개수 링 + 날짜, 상태 필터링*/}
-            <section className={'flex-row-center justify-between w-full h-[4rem]'}>
-              <div className={'flex justify-between w-[13rem] px-8'}>
-                <div
-                  className={
-                    'flex-row-center text-[0.9rem] text-gray-dark task-status-ring border-status-before'
-                  }
-                >
-                  1
-                </div>
-                <div
-                  className={
-                    'flex-row-center text-[0.9rem] text-gray-dark task-status-ring border-status-going'
-                  }
-                >
-                  2
-                </div>
-                <div
-                  className={
-                    'flex-row-center text-[0.9rem] text-gray-dark task-status-ring border-status-done'
-                  }
-                >
-                  3
-                </div>
-              </div>
-              <div className={'flex-row-center justify-between w-[18rem] px-4'}>
-                <Select
-                  labelInValue
-                  defaultValue={dateData[0]}
-                  onChange={handleChange}
-                  style={{ width: 90 }}
-                  options={dateData}
-                />
-                <Select
-                  labelInValue
-                  defaultValue={statusData[2]}
-                  onChange={handleChange}
-                  style={{ width: 90 }}
-                  options={statusData}
-                />{' '}
-              </div>
-            </section>
-            <section
-              className={
-                'flex-col-center justify-start items-start w-[70%] min-w-[60rem] h-content-board pt-6'
-              }
-            >
-              <div
-                className={
-                  'flex-col-center justify-start items-start w-full min-h-[7rem] border-base rounded-[5px] '
-                }
-              ></div>
-            </section>
+            {isPost ? <PostMain /> : <TaskMain />}
           </div>
         </section>
       </section>
