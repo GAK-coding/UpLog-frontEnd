@@ -1,16 +1,25 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { BsChevronCompactUp } from 'react-icons/bs';
 import MenuSlider from '@/components/Project/Menu/MenuSlider.tsx';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import TaskMain from '@/components/Project/Menu/TaskMain.tsx';
 import PostMain from '@/components/Project/Menu/PostMain.tsx';
+import { taskAll } from '@/recoil/Project/atom.ts';
+import { useRecoilState } from 'recoil';
 
 export default function Menu() {
   const { product, project, menutitle } = useParams();
   const navigate = useNavigate();
 
+  const [taskList, setTaskList] = useRecoilState(taskAll);
+
   // post, task 구분
   const [isPost, setIsPost] = useState(false);
+
+  // useEffect(() => {
+  //   const menuFilterTask = taskList.filter((eachMenu) => eachMenu.menu === menutitle);
+  //   setTaskList(menuFilterTask);
+  // }, [menutitle]);
 
   return (
     <section className={'flex-col-center justify-start w-noneSideBar h-full'}>
