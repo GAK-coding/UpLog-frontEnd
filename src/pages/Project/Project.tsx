@@ -1,14 +1,14 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { BsChevronCompactDown } from 'react-icons/bs';
-import { SubGroup, Task, Tasks, TaskStatus } from '@/typings/project.ts';
+import { SubGroup, Task, TaskStatus } from '@/typings/project.ts';
 import { Progress, Select, Space } from 'antd';
 import StatusBoard from '@/components/Project/Board/StatusBoard.tsx';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
 import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 import { useRecoilState } from 'recoil';
-import { taskState } from '@/recoil/Project/atom.tsx';
+import { taskState } from '@/recoil/Project/atom.ts';
 
 export default function Project() {
   const { product, project } = useParams();
@@ -350,7 +350,7 @@ export default function Project() {
             <button type={'button'} onClick={() => onClickKanban(false)}>
               <span
                 className={`text-3xl transition ease-in-out duration-300 hover:scale-110  ${
-                  !isKanban ? 'text-black font-bold' : 'text-gray-border물 font-semibold'
+                  !isKanban ? 'text-black font-bold' : 'text-gray-border font-semibold'
                 }`}
               >
                 스크럼

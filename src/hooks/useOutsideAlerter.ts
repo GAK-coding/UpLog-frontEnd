@@ -1,7 +1,7 @@
 import { RefObject, useEffect } from 'react';
-import { productOpen } from '../recoil/Product/atom.tsx';
+import { productOpen } from '@/recoil/Product/atom.ts';
 import { useRecoilState } from 'recoil';
-import { profileOpen } from '../recoil/User/atom.tsx';
+import { profileOpen } from '@/recoil/User/atom.ts';
 
 /** useOutsideAlertert는 header click 모달창 클릭 이벤트를 처리하는 훅이다. **/
 

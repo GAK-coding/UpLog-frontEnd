@@ -2,22 +2,21 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Slider from 'react-slick';
 import { MenuInfo } from '@/typings/project.ts';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { IoIosArrowForward, IoIosArrowBack, IoIosClose } from 'react-icons/io';
 import styled from '@emotion/styled';
 import { AiOutlinePlus } from 'react-icons/ai';
-import { Editable, EditableInput, EditablePreview } from '@chakra-ui/react';
+import { Editable, EditableInput, EditablePreview, useDisclosure } from '@chakra-ui/react';
 import { useRecoilState } from 'recoil';
-import { menuListData } from '@/recoil/Project/atom.tsx';
+import { menuListData } from '@/recoil/Project/atom.ts';
 import { useCallback, useState } from 'react';
 import { useMessage } from '@/hooks/useMessage.ts';
-import * as events from 'events';
+import DeleteAlertDialog from '@/components/Project/Menu/DeleteAlertDialog.tsx';
 
 interface Props {
   product: string;
   project: string;
   menuTitle: string;
-  // menuListData: MenuInfo[];
 }
 
 const StyledSlider = styled(Slider)`
@@ -40,26 +39,50 @@ const CustomNextSlider = styled.div`
 
 export default function MenuSlider({ product, project, menuTitle }: Props) {
   const { showMessage, contextHolder } = useMessage();
-
   const [menuList, setMenuList] = useRecoilState(menuListData);
-
   const [plusMenu, setPlusMenu] = useState(false);
+  const navigate = useNavigate();
+  const [deleteMenu, setDeleteMenu] = useState('name');
+  const [editMenu, setEditMenu] = useState('menuName');
 
-  // menu 이름 수정된 값으로 다시 값 설정
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   const onChangeMenuName = useCallback(
     (menuId: number) => (nextValue: string) => {
+      const updatedMenuList = menuList.map((menu) =>
+        menu.id === menuId ? { ...menu, name: nextValue } : menu
+      );
+
+      setMenuList(updatedMenuList);
+      // console.log(nextValue);
+      setEditMenu(nextValue);
+    },
+    [editMenu]
+  );
+
+  const onSubmitMenuName = useCallback(
+    (menuId: number) => (nextValue: string) => {
       // 빈 문자열인 경우
-      if (nextValue === '') {
+      if (editMenu === '') {
         showMessage('warning', '메뉴 이름을 입력해주세요.');
+        const updatedMenuList = menuList.map((menu) =>
+          menu.id === menuId ? { ...menu, name: `menu ${menu.id}` } : menu
+        );
+
+        setMenuList(updatedMenuList);
+        navigate(`/workspace/${product}/${project}/menu/menu ${menuId}`);
+
         return;
       }
+
       // 변경된 값의 menu id랑 같은 menu 값을 찾기
       const updatedMenuList = menuList.map((menu) =>
         menu.id === menuId ? { ...menu, name: nextValue } : menu
       );
 
-      // 바뀐 name으로 다시 셋팅하기
       setMenuList(updatedMenuList);
+      // 바뀐 name에 맞게 주소값도 다시 설정
+      navigate(`/workspace/${product}/${project}/menu/${nextValue}`);
     },
     [menuList, setMenuList]
   );
@@ -74,16 +97,18 @@ export default function MenuSlider({ product, project, menuTitle }: Props) {
       }
 
       // 값을 입력했으면 새로운 값으로 메뉴 list에 추가
-      const newMenu: MenuInfo = {
-        id: Math.max(...menuList.map((menu) => menu.id)) + 1,
-        name: nextValue,
-      };
-      const updatedMenuList = [...menuList, newMenu];
+      if (editMenu !== '') {
+        const newMenu: MenuInfo = {
+          id: Math.max(...menuList.map((menu) => menu.id)) + 1,
+          name: nextValue,
+        };
+        const updatedMenuList = [...menuList, newMenu];
 
-      setMenuList(updatedMenuList);
-      setPlusMenu(false);
+        setMenuList(updatedMenuList);
+        setPlusMenu(false);
+      }
     },
-    [menuList]
+    [menuList, editMenu]
   );
 
   // slide settings 커스텀
@@ -111,7 +136,7 @@ export default function MenuSlider({ product, project, menuTitle }: Props) {
       <NavLink
         to={`/workspace/${product}/${project}/menu/결과물`}
         className={({ isActive }) =>
-          `flex-row-center h-[5rem] w-1/5 border-r border-gray-border ${
+          `flex-row-center justify-start  m-auto h-[5rem] w-1/5 border-r border-gray-border ${
             isActive && 'bg-orange text-black'
           }`
         }
@@ -120,6 +145,7 @@ export default function MenuSlider({ product, project, menuTitle }: Props) {
           {menuList[0].name}
           {contextHolder}
         </span>
+        <DeleteAlertDialog isOpen={isOpen} onClose={onClose} menu={deleteMenu} />
       </NavLink>
 
       {/*menuList 데이터*/}
@@ -127,7 +153,7 @@ export default function MenuSlider({ product, project, menuTitle }: Props) {
         <NavLink
           to={`/workspace/${product}/${project}/menu/${menu.name}`}
           className={({ isActive }) =>
-            `flex-row-center h-[5rem] w-1/5 relative border-r border-gray-border ${
+            `flex items-center justify-start self-start m-auto h-[5rem] w-1/5 relative border-r border-gray-border ${
               isActive && 'bg-orange text-black'
             }`
           }
@@ -139,17 +165,18 @@ export default function MenuSlider({ product, project, menuTitle }: Props) {
                 'absolute right-2 top-0.5 text-transparent text-[2rem] hover:text-gray-dark'
               }
               onClick={() => {
-                console.log('클릭');
+                setDeleteMenu(menu.name);
+                onOpen();
               }}
             />
           )}
-
           <span className={'flex-row-center h-full w-full'}>
             {/*클릭해서 값 변경*/}
             <Editable
-              defaultValue={menu.name}
+              value={menu.name}
               placeholder={menu.name}
-              onSubmit={onChangeMenuName(menu.id)}
+              onChange={onChangeMenuName(menu.id)}
+              onSubmit={onSubmitMenuName(menu.id)}
             >
               <EditablePreview />
               <EditableInput />

@@ -23,9 +23,9 @@ interface Props {
 }
 
 export default function ProductInfoModal({ isOpen, onClose, isCreateProduct }: Props) {
-  const [productName, onChangeProductName, setProductName] = useInput('');
-  const [masterEmail, onChangeMasterEmail, setMasterEmail] = useInput('');
-  const [clientEmail, onChangeClientEmail, setClientEmail] = useInput('');
+  const [productName, onChangeProductName] = useInput('');
+  const [masterEmail, onChangeMasterEmail] = useInput('');
+  const [clientEmail, onChangeClientEmail] = useInput('');
   const { showMessage, contextHolder } = useMessage();
 
   // 제품 이미지 업로드
