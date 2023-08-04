@@ -5,7 +5,7 @@ import { GoKebabHorizontal } from 'react-icons/go';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
-import { typeBgColors } from '@/recoil/Product/ReleaseNote.tsx';
+import { typeBgColors } from '@/recoil/Product/ReleaseNote.ts';
 
 interface Props {
   isClickKebab: boolean;

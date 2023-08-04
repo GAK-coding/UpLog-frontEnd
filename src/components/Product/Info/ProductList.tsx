@@ -1,6 +1,6 @@
 import { AiOutlinePlus } from 'react-icons/ai';
 import React, { useCallback, useState } from 'react';
-import { product } from '@/recoil/Product/atom.tsx';
+import { product } from '@/recoil/Product/atom.ts';
 import { useRecoilState } from 'recoil';
 import { RxDragHandleDots2 } from 'react-icons/rx';
 import { BiPencil } from 'react-icons/bi';

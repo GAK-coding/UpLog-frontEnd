@@ -2,7 +2,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { BsChevronCompactUp } from 'react-icons/bs';
 import MenuSlider from '@/components/Project/Menu/MenuSlider.tsx';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { menuListData } from '@/recoil/Project/atom.tsx';
+import { menuListData } from '@/recoil/Project/atom.ts';
 import { useState } from 'react';
 import { Select } from 'antd';
 import { SelectMenu } from '@/typings/project.ts';

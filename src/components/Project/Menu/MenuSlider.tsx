@@ -8,7 +8,7 @@ import styled from '@emotion/styled';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { Editable, EditableInput, EditablePreview, useDisclosure } from '@chakra-ui/react';
 import { useRecoilState } from 'recoil';
-import { menuListData } from '@/recoil/Project/atom.tsx';
+import { menuListData } from '@/recoil/Project/atom.ts';
 import { useCallback, useState } from 'react';
 import { useMessage } from '@/hooks/useMessage.ts';
 import DeleteAlertDialog from '@/components/Project/Menu/DeleteAlertDialog.tsx';

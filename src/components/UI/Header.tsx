@@ -4,9 +4,9 @@ import { BsBellFill, BsMoonFill, BsQuestionCircle, BsSearch, BsSunFill } from 'r
 import { FaUserCircle } from 'react-icons/fa';
 import useInput from '@/hooks/useInput.ts';
 import { useRecoilState } from 'recoil';
-import { profileOpen } from '@/recoil/User/atom.tsx';
+import { profileOpen } from '@/recoil/User/atom.ts';
 import { PiCaretUpDownLight } from 'react-icons/pi';
-import { productOpen } from '@/recoil/Product/atom.tsx';
+import { productOpen } from '@/recoil/Product/atom.ts';
 import { useOutsideAlerter } from '@/hooks/useOutsideAlerter.ts';
 import ProductList from '@/components/Product/Info/ProductList.tsx';
 import UserProfile from '@/components/Member/Header/UserProfile.tsx';
