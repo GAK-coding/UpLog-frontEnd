@@ -43,7 +43,7 @@ export default function MenuSlider({ product, project, menuTitle }: Props) {
   const [plusMenu, setPlusMenu] = useState(false);
   const navigate = useNavigate();
   const [deleteMenu, setDeleteMenu] = useState('name');
-  const [editMenu, setEditMenu] = useState('');
+  const [editMenu, setEditMenu] = useState('menuName');
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
