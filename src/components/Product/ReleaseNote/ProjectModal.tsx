@@ -72,6 +72,7 @@ export default function ProjectModal({ isOpen, onClose, isAdd, versionName }: Pr
                   } h-14 rounded-xl px-4 py-2 text-[1.1rem] text-black `}
                   type="text"
                   value={text}
+                  onChange={onChangeText}
                   placeholder={
                     isAdd ? '새로 생성할 버전을 입력해 주세요.' : '최종 버전을 입력해 주세요.'
                   }

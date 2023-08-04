@@ -47,30 +47,16 @@ export default function Header() {
     }
   };
 
-  /** editor 다크 모드 */
-  const toggleDark = () => {
-    const editorEl = document.getElementsByClassName('toastui-editor-defaultUI')[0];
-    if (editorEl) {
-      if (!darkMode && editorEl.classList.contains('toastui-editor-dark')) {
-        editorEl.classList.remove('toastui-editor-dark');
-      } else {
-        editorEl.classList.add('toastui-editor-dark');
-      }
-    }
-  };
-
-  useEffect(() => {
-    const editorEl = document.getElementsByClassName('toastui-editor-defaultUI')[0];
-    if (editorEl) {
-      if (darkMode && !editorEl.classList.contains('toastui-editor-dark')) {
-        editorEl.classList.add('toastui-editor-dark');
-      } else if (!darkMode && editorEl.classList.contains('toastui-editor-dark')) {
-        editorEl.classList.remove('toastui-editor-dark');
-      } else {
-        editorEl.classList.add('toastui-editor-dark');
-      }
-    }
-  }, [darkMode]);
+  // const toggleDark = () => {
+  //   const editorEl = document.getElementsByClassName('toastui-editor-defaultUI')[0];
+  //   if (editorEl) {
+  //     if (!darkMode && editorEl.classList.contains('toastui-editor-dark')) {
+  //       editorEl.classList.remove('toastui-editor-dark');
+  //     } else {
+  //       editorEl.classList.add('toastui-editor-dark');
+  //     }
+  //   }
+  // };
 
   // 다크모드 변경
   const themeModeHandler = useCallback(() => {
@@ -97,6 +83,22 @@ export default function Header() {
   useEffect(() => {
     setIsNoneHeader(pathname === '/login' || pathname === '/signup' || pathname === '/pwinquiry');
   }, [pathname]);
+
+  /** editor 다크 모드 */
+  useEffect(() => {
+    const editorEl = document.getElementsByClassName('toastui-editor-defaultUI')[0];
+
+    if (editorEl) {
+      const shouldAddDarkClass = darkMode && !editorEl.classList.contains('toastui-editor-dark');
+      const shouldRemoveDarkClass = !darkMode && editorEl.classList.contains('toastui-editor-dark');
+
+      if (shouldAddDarkClass) {
+        editorEl.classList.add('toastui-editor-dark');
+      } else if (shouldRemoveDarkClass) {
+        editorEl.classList.remove('toastui-editor-dark');
+      }
+    }
+  }, [darkMode]);
 
   return (
     <header
