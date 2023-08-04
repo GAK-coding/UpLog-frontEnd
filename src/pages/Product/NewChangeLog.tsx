@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useCallback, useState } from 'react';
+import React, { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { Col, Row } from 'antd';
 import { IoIosArrowBack } from 'react-icons/io';
 import { Link, useParams } from 'react-router-dom';
@@ -13,6 +13,11 @@ const typeList: changeType[] = ['New', 'Feature', 'Changed', 'Fixed', 'Deprecate
 
 export default function NewChangeLog() {
   const { product } = useParams();
+  const ref = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    console.log(ref.current!.clientWidth);
+  });
 
   const [selectedType, setSelectedType] = useState(typeList[0]);
   const onChangeSelectedType = useCallback((e: ChangeEvent<HTMLSelectElement>) => {
@@ -23,8 +28,8 @@ export default function NewChangeLog() {
   const today: Date = new Date();
 
   return (
-    <section className={'w-full h-auto py-20'}>
-      <Row className={'h-full'}>
+    <section className={'w-full h-auto py-20'} ref={ref}>
+      <Row className={'h-full flex'}>
         <Col span={4} className={'px-14 pt-4'}>
           <Link
             to={`/workspace/${product}`}
@@ -33,7 +38,10 @@ export default function NewChangeLog() {
             <IoIosArrowBack className={'text-[2.2rem]'} /> 돌아가기
           </Link>
         </Col>
-        <Col span={16} className={'border-[0.6px] border-line bg-border shadow-sign-up h-auto'}>
+        <Col
+          span={16}
+          className={'border-[0.6px] border-line bg-border shadow-sign-up h-auto min-w-[50rem]'}
+        >
           <nav className={'px-6 pt-6 mb-4 text-right'}>
             <button
               className={'bg-orange rounded font-bold text-sm text-white w-[4.7rem] h-8'}
