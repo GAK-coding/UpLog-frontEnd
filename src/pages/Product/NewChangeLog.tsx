@@ -13,11 +13,6 @@ const typeList: changeType[] = ['New', 'Feature', 'Changed', 'Fixed', 'Deprecate
 
 export default function NewChangeLog() {
   const { product } = useParams();
-  const ref = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    console.log(ref.current!.clientWidth);
-  });
 
   const [selectedType, setSelectedType] = useState(typeList[0]);
   const onChangeSelectedType = useCallback((e: ChangeEvent<HTMLSelectElement>) => {
@@ -28,7 +23,7 @@ export default function NewChangeLog() {
   const today: Date = new Date();
 
   return (
-    <section className={'w-full h-auto flex py-20'} ref={ref}>
+    <section className={'w-full h-auto flex py-20'}>
       <article className={'pt-4 flex justify-center w-[10%] min-w-[6rem] lg:w-[16%]'}>
         <Link
           to={`/workspace/${product}`}
