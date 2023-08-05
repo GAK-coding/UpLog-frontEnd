@@ -35,5 +35,8 @@ describe('UserProfile', () => {
     expect(screen.getByText('스크랩')).toBeInTheDocument();
     expect(screen.getByText('프로필 수정')).toBeInTheDocument();
     expect(screen.getByText('로그아웃')).toBeInTheDocument();
+
+    expect(screen.getByText(userInfo.userId)).toBeInTheDocument();
+    expect(screen.getByText(`${userInfo.userNickname} (${userInfo.userName})`)).toBeInTheDocument();
   });
 });
