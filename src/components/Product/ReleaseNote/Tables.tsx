@@ -56,39 +56,39 @@ export default function Tables({
         },
       ],
     },
-    // {
-    //   status: 'done',
-    //   version: 'v.1.1.2',
-    //   date: '2023.06.12',
-    //   contents: [
-    //     { type: 'Feature', content: '채널 통신 응답 중 발생할 수 있는 오류 코드 추가' },
-    //     {
-    //       type: 'Changed',
-    //       content: '공통 Request Protocol 추가',
-    //     },
-    //   ],
-    // },
-    // {
-    //   status: 'done',
-    //   version: 'v.1.1.1',
-    //   date: '2023.05.12',
-    //   contents: [{ type: 'Deprecated', content: '미사용 필드 삭제' }],
-    // },
-    // {
-    //   status: 'done',
-    //   version: 'v.1.1.0',
-    //   date: '2023.03.25',
-    //   contents: [{ type: 'Feature', content: 'Service Argent 채널 연결과 통신 관련 설명' }],
-    // },
-    // {
-    //   status: 'done',
-    //   version: 'v.1.0.0',
-    //   date: '2023.02.18',
-    //   contents: [
-    //     { type: 'New', content: 'AI Service 기술 상세 설명' },
-    //     { type: 'Fixed', content: '채널 통신 응답 기능 수정' },
-    //   ],
-    // },
+    {
+      status: 'done',
+      version: 'v.1.1.2',
+      date: '2023.06.12',
+      contents: [
+        { type: 'Feature', content: '채널 통신 응답 중 발생할 수 있는 오류 코드 추가' },
+        {
+          type: 'Changed',
+          content: '공통 Request Protocol 추가',
+        },
+      ],
+    },
+    {
+      status: 'done',
+      version: 'v.1.1.1',
+      date: '2023.05.12',
+      contents: [{ type: 'Deprecated', content: '미사용 필드 삭제' }],
+    },
+    {
+      status: 'done',
+      version: 'v.1.1.0',
+      date: '2023.03.25',
+      contents: [{ type: 'Feature', content: 'Service Argent 채널 연결과 통신 관련 설명' }],
+    },
+    {
+      status: 'done',
+      version: 'v.1.0.0',
+      date: '2023.02.18',
+      contents: [
+        { type: 'New', content: 'AI Service 기술 상세 설명' },
+        { type: 'Fixed', content: '채널 통신 응답 기능 수정' },
+      ],
+    },
   ];
 
   const navigate = useNavigate();
