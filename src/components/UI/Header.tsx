@@ -102,9 +102,6 @@ export default function Header() {
     }
   }, [darkMode]);
 
-  useEffect(() => {
-    console.log(pathname);
-  }, []);
   return (
     <header
       className={`fixed top-0 flex-row-center justify-between pt-[0.5rem] w-full h-[5.7rem] z-50

@@ -97,21 +97,27 @@ export default function ProductList() {
                           }`}
                           onClick={() => {
                             navigate(`/workspace/${product.name}`);
-                            setIsProductClick(!isProductClick);
                           }}
                         >
                           <RxDragHandleDots2
                             className={'flex w-[2.6rem] items-center text-4xl ml-4 fill-gray-light'}
+                            onClick={() => setIsProductClick(!isProductClick)}
                           />
                           <img
                             src={product.image}
                             alt="userprofile"
                             className={'ml-2 w-[2rem] h-[2rem]'}
+                            onClick={() => setIsProductClick(!isProductClick)}
                           />
-                          <span className={'ml-3 text-xl font-bold w-full'}>{product.name}</span>
+                          <span
+                            className={'ml-3 text-xl font-bold w-full'}
+                            onClick={() => setIsProductClick(!isProductClick)}
+                          >
+                            {product.name}
+                          </span>
                           <BiPencil
                             className={
-                              'flex-row-center w-20 text-xl mr-4 fill-gray-light cursor-pointer'
+                              'flex-row-center w-20 text-xl mr-4 fill-gray-light cursor-pointer z-50'
                             }
                             onClick={() => {
                               onOpen();
