@@ -120,8 +120,8 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct }: P
               </div>
               {/*제품 이미지*/}
               <div className={'w-full mb-5 text-[1rem]'}>
-                <span className={'text-gray-dark font-bold mb-[0.93rem]'}>제품 이미지</span>
-                <div className={'flex-row-center w-[9.3rem] h-[9.3rem] z-40'}>
+                <span className={'text-gray-dark font-bold'}>제품 이미지</span>
+                <div className={'flex-row-center w-[9.3rem] h-[9.3rem] z-40 mt-[0.93rem]'}>
                   <ImageCrop
                     fileList={fileList}
                     onImageChange={onImageChange}
@@ -184,9 +184,11 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct }: P
 
               {/*의뢰인 초대*/}
               <div className={'w-full mb-3 text-[1rem]'}>
-                <span className={'text-gray-dark font-bold mb-[0.93rem]'}>의뢰인 초대</span>
+                <span className={'text-gray-dark font-bold'}>의뢰인 초대</span>
                 <div
-                  className={'flex w-full h-11 border-base border-gray-border rounded-xl relative'}
+                  className={
+                    'flex w-full h-11 border-base border-gray-border rounded-xl relative mt-[0.93rem]'
+                  }
                 >
                   <input
                     type="text"
