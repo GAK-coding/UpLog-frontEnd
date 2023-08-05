@@ -9,6 +9,7 @@ import { typeBgColors } from '@/recoil/Product/ReleaseNote.ts';
 
 interface Props {
   isClickKebab: boolean;
+  setIsClickKebab: React.Dispatch<React.SetStateAction<boolean>>;
   onClickKebab: (e: React.MouseEvent<HTMLButtonElement>) => void;
   onClickComplete: (modalType: 'add' | 'complete') => void;
   setTempVersion: React.Dispatch<React.SetStateAction<string>>;
@@ -16,6 +17,7 @@ interface Props {
 
 export default function Tables({
   isClickKebab,
+  setIsClickKebab,
   onClickKebab,
   onClickComplete,
   setTempVersion,
@@ -99,6 +101,13 @@ export default function Tables({
     if (status === 'going') setIsHovering(true);
   }, []);
 
+  const handleMouseLeave = useCallback((status: string) => {
+    if (status === 'going') {
+      setIsHovering(false);
+      setIsClickKebab(false);
+    }
+  }, []);
+
   return (
     <Tbody>
       {dummy.map((version, index) => {
@@ -108,7 +117,7 @@ export default function Tables({
             color={version.status === 'going' ? 'var(--gray-dark)' : ''}
             position={'relative'}
             onMouseEnter={() => handleMouseEnter(version.status)}
-            // onMouseLeave={() => handleMouseLeave(version.status)}
+            onMouseLeave={() => handleMouseLeave(version.status)}
           >
             <Td
               borderTop={'1px solid var(--gray-table)'}
