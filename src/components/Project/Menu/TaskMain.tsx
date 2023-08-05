@@ -37,7 +37,7 @@ export default function TaskMain() {
   };
 
   return (
-    <div className={'flex-col-center w-h-full'}>
+    <div className={'flex-col-center w-h-full '}>
       {/*상태별 개수 링 + 날짜, 상태 필터링*/}
       <section className={'flex-row-center justify-between w-full h-[4rem] mt-4 px-6'}>
         <div className={'flex justify-between w-[13rem] px-8'}>
@@ -46,21 +46,21 @@ export default function TaskMain() {
               'flex-row-center text-[0.9rem] text-gray-dark task-status-ring border-status-before'
             }
           >
-            {taskStatusList['before'].length}
+            {taskList.filter((task) => task.menu === menutitle && task.status === 'before').length}
           </div>
           <div
             className={
               'flex-row-center text-[0.9rem] text-gray-dark task-status-ring border-status-going'
             }
           >
-            {taskStatusList['going'].length}
+            {taskList.filter((task) => task.menu === menutitle && task.status === 'going').length}
           </div>
           <div
             className={
               'flex-row-center text-[0.9rem] text-gray-dark task-status-ring border-status-done'
             }
           >
-            {taskStatusList['done'].length}
+            {taskList.filter((task) => task.menu === menutitle && task.status === 'done').length}
           </div>
         </div>
         <div className={'flex-row-center justify-between w-[18rem] px-4'}>
@@ -97,7 +97,7 @@ export default function TaskMain() {
               <section
                 key={index}
                 className={
-                  'flex-row-center justify-start w-full min-h-[3.5rem] px-4 border-b border-line overflow-y-auto'
+                  'flex-row-center justify-start w-full min-h-[3.5rem] px-4 border-b border-line'
                 }
               >
                 {/*체크박스 + task 이름*/}

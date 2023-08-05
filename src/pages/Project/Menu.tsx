@@ -1,25 +1,16 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { BsChevronCompactUp } from 'react-icons/bs';
 import MenuSlider from '@/components/Project/Menu/MenuSlider.tsx';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import TaskMain from '@/components/Project/Menu/TaskMain.tsx';
 import PostMain from '@/components/Project/Menu/PostMain.tsx';
-import { taskAll } from '@/recoil/Project/atom.ts';
-import { useRecoilState } from 'recoil';
 
 export default function Menu() {
   const { product, project, menutitle } = useParams();
   const navigate = useNavigate();
 
-  const [taskList, setTaskList] = useRecoilState(taskAll);
-
   // post, task 구분
   const [isPost, setIsPost] = useState(false);
-
-  // useEffect(() => {
-  //   const menuFilterTask = taskList.filter((eachMenu) => eachMenu.menu === menutitle);
-  //   setTaskList(menuFilterTask);
-  // }, [menutitle]);
 
   return (
     <section className={'flex-col-center justify-start w-noneSideBar h-full'}>
@@ -40,31 +31,35 @@ export default function Menu() {
               <MenuSlider product={product!} project={project!} menuTitle={menutitle!} />
             </div>
           </div>
-          <div className={'flex-col-center w-full h-content pt-8 overflow-y-auto'}>
-            {/*post, task 선택*/}
-            <section className={'flex-row-center w-full h-[6rem] pt-[2.5rem]'}>
-              <button type={'button'} onClick={() => setIsPost(true)}>
-                <span
-                  className={`text-[1.4rem] ${
-                    isPost ? 'text-black font-bold' : 'text-gray-border font-semibold'
-                  }transition ease-in-out duration-300 hover:scale-110 hover:-translate-y-1`}
-                >
-                  Post
-                </span>
-              </button>
-              <div className={'mx-5 h-6 border-solid border-r border-[1px] border-gray-border'} />
-              <button type={'button'} onClick={() => setIsPost(false)}>
-                <span
-                  className={`text-[1.4rem] ${
-                    !isPost ? 'text-black font-bold' : 'text-gray-border font-semibold'
-                  }transition ease-in-out duration-300 hover:scale-110 hover:-translate-y-1`}
-                >
-                  Task
-                </span>
-              </button>
-            </section>
-            {isPost ? <PostMain /> : <TaskMain />}
-          </div>
+          {menutitle !== '결과물' && (
+            <div className={'flex-col-center w-full h-content overflow-y-auto'}>
+              {/*post, task 선택*/}
+
+              <section className={'flex-row-center w-full min-h-[6rem] border-red-400 border '}>
+                <button type={'button'} onClick={() => setIsPost(true)}>
+                  <span
+                    className={`text-[1.4rem] ${
+                      isPost ? 'text-black font-bold' : 'text-gray-border font-semibold'
+                    }transition ease-in-out duration-300 hover:scale-110 hover:-translate-y-1`}
+                  >
+                    Post
+                  </span>
+                </button>
+                <div className={'mx-5 h-6 border-solid border-r border-[1px] border-gray-border'} />
+                <button type={'button'} onClick={() => setIsPost(false)}>
+                  <span
+                    className={`text-[1.4rem] ${
+                      !isPost ? 'text-black font-bold' : 'text-gray-border font-semibold'
+                    }transition ease-in-out duration-300 hover:scale-110 hover:-translate-y-1`}
+                  >
+                    Task
+                  </span>
+                </button>
+              </section>
+
+              {isPost ? <PostMain /> : <TaskMain />}
+            </div>
+          )}
         </section>
       </section>
     </section>
