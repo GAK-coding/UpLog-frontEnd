@@ -157,6 +157,7 @@ export default function ReleaseNote() {
             {dummy.length > 0 && (
               <Tables
                 isClickKebab={isClickKebab}
+                setIsClickKebab={setIsClickKebab}
                 onClickKebab={onClickKebab}
                 onClickComplete={onClickProjectModal}
                 setTempVersion={setTempVersion}
