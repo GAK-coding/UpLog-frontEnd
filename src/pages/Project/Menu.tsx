@@ -22,11 +22,13 @@ export default function Menu() {
         />
       </section>
       {/*메뉴 보드 Wrapper*/}
-      <section className={'flex-col w-[80%] min-w-[80rem] h-menu pt-6'}>
+      <section className={'flex-col w-[80%] min-w-[80rem] h-menu'}>
         {/*post, task 메뉴보드*/}
-        <section className={'flex-col-center w-h-full border-base border-b-0 border-gray-border'}>
+        <section
+          className={'flex-col-center w-h-full mt-6 border-base border-b-0 border-gray-border'}
+        >
           {/*메뉴 list*/}
-          <div className={'flex-row-center w-full h-[5rem] border-b border-gray-border '}>
+          <div className={'flex-row-center w-full h-[5rem] border-b border-gray-border'}>
             <div className={'w-full min-w-[70rem] h-full items-center justify-center'}>
               <MenuSlider product={product!} project={project!} menuTitle={menutitle!} />
             </div>
@@ -34,8 +36,7 @@ export default function Menu() {
           {menutitle !== '결과물' && (
             <div className={'flex-col-center w-full h-content overflow-y-auto'}>
               {/*post, task 선택*/}
-
-              <section className={'flex-row-center w-full min-h-[6rem] border-red-400 border '}>
+              <section className={'flex-row-center w-full min-h-[6rem]'}>
                 <button type={'button'} onClick={() => setIsPost(true)}>
                   <span
                     className={`text-[1.4rem] ${
@@ -56,7 +57,6 @@ export default function Menu() {
                   </span>
                 </button>
               </section>
-
               {isPost ? <PostMain /> : <TaskMain />}
             </div>
           )}
