@@ -1,5 +1,4 @@
-import React, { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
-import { Col, Row } from 'antd';
+import React, { ChangeEvent, useCallback, useState } from 'react';
 import { IoIosArrowBack } from 'react-icons/io';
 import { Link, useParams } from 'react-router-dom';
 import { Select } from '@chakra-ui/react';
@@ -40,7 +39,7 @@ export default function NewChangeLog() {
       >
         <nav className={'px-6 pt-6 mb-4 text-right'}>
           <button
-            className={'bg-orange rounded font-bold text-sm text-white w-[4.7rem] h-8'}
+            className={'bg-orange rounded font-bold text-white w-[5rem] h-9'}
             onClick={() => {}}
           >
             완료
