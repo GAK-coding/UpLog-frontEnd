@@ -26,11 +26,9 @@ describe('UserProfile', () => {
 
   test('UserProfile Modal Open MenuInfo Correctly', () => {
     render(
-      withAllContexts(
-        withRouter(
-          <Route path={'/workspace/product'} element={<UserProfile />} />,
-          '/workspace/product'
-        )
+      withRouter(
+        <Route path={'/workspace/product'} element={<UserProfile />} />,
+        '/workspace/product'
       )
     );
 
