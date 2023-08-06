@@ -82,7 +82,7 @@ export default function TaskMain() {
         </div>
       </section>
       <section
-        className={'flex-col-center justify-start items-start w-[70%] min-w-[60rem] h-[90%] py-6'}
+        className={'flex-col-center justify-start items-start w-[70%] min-w-[60rem] h-[90%] pt-6'}
       >
         {/*task list border*/}
         <div

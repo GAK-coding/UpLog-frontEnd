@@ -13,7 +13,7 @@ export default function Menu() {
   const [isPost, setIsPost] = useState(false);
 
   return (
-    <section className={'flex-col-center justify-start w-noneSideBar h-full'}>
+    <section className={'flex-col-center justify-start w-full h-full'}>
       <section className={'flex-row-center h-[5rem] w-full'}>
         {/*프로젝트 페이지로 이동하는 버튼*/}
         <BsChevronCompactUp
@@ -25,15 +25,17 @@ export default function Menu() {
       <section className={'flex-col w-[80%] min-w-[80rem] h-menu'}>
         {/*post, task 메뉴보드*/}
         <section
-          className={'flex-col-center w-h-full mt-6 border-base border-b-0 border-gray-border'}
+          className={
+            'flex-col-center justify-start w-h-full mt-6 border-base border-b-0 border-gray-border'
+          }
         >
           {/*메뉴 list*/}
-          <div className={'flex-row-center w-full h-[5rem] border-b border-gray-border'}>
+          <div className={'flex-row-center  w-full h-[5rem] border-b border-gray-border'}>
             <div className={'w-full min-w-[70rem] h-full items-center justify-center'}>
               <MenuSlider product={product!} project={project!} menuTitle={menutitle!} />
             </div>
           </div>
-          {menutitle !== '결과물' && (
+          {menutitle !== undefined && (
             <div className={'flex-col-center w-full h-content overflow-y-auto'}>
               {/*post, task 선택*/}
               <section className={'flex-row-center w-full min-h-[6rem]'}>
