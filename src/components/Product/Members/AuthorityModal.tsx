@@ -11,6 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { productMemberList } from '@/recoil/Product/atom.ts';
 import { useRecoilState } from 'recoil';
+import { AiFillCaretDown } from 'react-icons/ai';
 
 interface Props {
   isOpen: boolean;
@@ -63,6 +64,7 @@ export default function AuthorityModal({ isOpen, onClose }: Props) {
                   border={'1px solid var(--gray-light)'}
                   borderRadius={'0.625rem'}
                   onChange={onSelectedMember}
+                  icon={<AiFillCaretDown fill={'var(--gray-light)'} />}
                 >
                   <option selected hidden disabled value="">
                     위임할 멤버를 선택해주세요.
