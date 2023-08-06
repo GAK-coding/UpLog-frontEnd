@@ -52,7 +52,12 @@ export default function TaskDetail() {
         </section>
         <div className={'w-[80%] border-b border-gray-spring my-4'}></div>
         {/*부가 내용 detail*/}
-        <TaskDetailInfo />기<div className={'w-[80%] border-b border-gray-spring my-4'}></div>
+        <TaskDetailInfo />
+        <div className={'w-[80%] border-b border-gray-spring my-4'}></div>
+        {/*세부 내용 */}
+        <section className={'w-[80%] h-auto text-[2rem]'}>
+          <div>여기 세부내용 입력하는 text area로 바꾸기</div>
+        </section>
       </article>
     </section>
   );
