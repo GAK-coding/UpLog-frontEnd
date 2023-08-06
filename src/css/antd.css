@@ -1,3 +1,32 @@
 .ant-message {
   z-index: 1500;
 }
+
+.ant-picker {
+    z-index: 1500;
+}
+
+.ant-picker-dropdown {
+    z-index: 1500;
+    inset: 550px auto auto 338px;
+}
+
+.ant-picker-date-panel{
+  z-index: 1500;
+}
+
+.ant-picker-suffix {
+  z-index : 1500;
+}
+
+.ant-select {
+    z-index: 1500;
+}
+
+.ant-select-dropdown{
+    z-index: 1400;
+}
+
+.ant-select-arrow {
+    z-index: 1500;
+}

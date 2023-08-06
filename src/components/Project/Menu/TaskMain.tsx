@@ -1,5 +1,5 @@
 import { SelectMenu, Task } from '@/typings/project.ts';
-import { Select } from 'antd';
+import { DatePicker, DatePickerProps, Select } from 'antd';
 import { taskAll, taskState } from '@/recoil/Project/atom.ts';
 import { useRecoilState } from 'recoil';
 import { RiCheckboxLine } from 'react-icons/ri';
@@ -7,6 +7,8 @@ import { FaUserCircle } from 'react-icons/fa';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { useParams } from 'react-router-dom';
 import { useEffect } from 'react';
+import { useDisclosure } from '@chakra-ui/react';
+import CreateTask from '@/components/Project/Task/CreateTask.tsx';
 
 export default function TaskMain() {
   const { menutitle } = useParams();
@@ -30,10 +32,17 @@ export default function TaskMain() {
 
   const [taskList, setTaskList] = useRecoilState(taskAll);
 
+  // task 추가 모달창
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   // 날짜, 상태 데이터 필터링 값
   const handleChange = (value: { value: string; label: React.ReactNode }) => {
     //TODO : Task 상태, 날짜별로 필터링해서 보여주기
     console.log(value);
+  };
+
+  const onChange: DatePickerProps['onChange'] = (date, dateString) => {
+    console.log(date, dateString);
   };
 
   return (
@@ -65,6 +74,8 @@ export default function TaskMain() {
         </div>
         <div className={'flex-row-center justify-between w-[18rem] px-4'}>
           {/*날짜, task 상태별 필터링 select*/}
+          <DatePicker onChange={onChange} />
+
           <Select
             labelInValue
             defaultValue={dateData[0]}
@@ -149,13 +160,17 @@ export default function TaskMain() {
               </section>
             ))}
           <section
-            className={'flex-row-center justify-start w-full min-h-[3.5rem] px-4 text-gray-dark'}
+            className={
+              'flex-row-center justify-start w-full min-h-[3.5rem] px-4 text-gray-dark cursor-pointer'
+            }
+            onClick={() => onOpen()}
           >
             <AiOutlinePlus className={'text-[1.7rem]'} />
             <span className={'ml-2 text-[1.1rem]'}>Task 생성하기</span>
           </section>
         </div>
       </section>
+      <CreateTask isOpen={isOpen} onClose={onClose} />
     </div>
   );
 }
