@@ -92,7 +92,7 @@ export default function Tables({
   ];
 
   const navigate = useNavigate();
-  const { product, projectId } = useParams();
+  const { product, project } = useParams();
 
   // 마우스 올렸을 때, kebab 버튼 나타남
   const [isHovering, setIsHovering] = useState(false);
@@ -124,6 +124,8 @@ export default function Tables({
               borderBottom={'1px solid var(--gray-table)'}
               padding={'1.6rem 0'}
               textAlign={'center'}
+              cursor={'pointer'}
+              onClick={() => navigate(`/workspace/${product}/${version.version}`)}
             >
               {version.version}
             </Td>
