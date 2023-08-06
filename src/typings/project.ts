@@ -29,3 +29,12 @@ export interface SelectMenu {
   value: string;
   label: string;
 }
+
+export interface GroupMember {
+  position: 'master' | 'leader' | 'member';
+  profile: string | null;
+  nickName: string;
+  name: string;
+  email: string;
+  group: string | null;
+}

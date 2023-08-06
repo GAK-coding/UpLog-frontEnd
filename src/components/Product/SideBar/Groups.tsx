@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { Button, Collapse, Fade, useDisclosure } from '@chakra-ui/react';
 import { BsDot } from 'react-icons/bs';
-import { NavLink, useNavigate, useParams } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { IoIosArrowDown, IoMdSettings } from 'react-icons/io';
 import CreateGroupModal from '@/components/Product/SideBar/CreateGroupModal.tsx';
 
@@ -10,6 +10,7 @@ export default function Groups() {
   const { product, project, parentgroup, childgroup } = useParams();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   const [parentGroups, setParentGroups] = useState<
     Array<{ name: string; isOpen: boolean; isHover: boolean }>
@@ -63,9 +64,9 @@ export default function Groups() {
     [parentGroups]
   );
 
-  const onClickSetting = useCallback((e: React.MouseEvent<SVGElement>) => {
+  const onClickSetting = useCallback((e: React.MouseEvent<SVGElement>, group: string) => {
     e.preventDefault();
-    navigate('/');
+    navigate(`/workspace/${product}/${project}/group/${group}/setting`);
   }, []);
 
   return (
@@ -94,18 +95,18 @@ export default function Groups() {
                 to={`/workspace/${product}/${project}/group/${parent.name}`}
                 className={({ isActive }) =>
                   `w-[90%] flex justify-between items-center font-bold text-[1.1rem] ${
-                    isActive && 'text-orange-sideBar'
+                    isActive && !pathname.includes('setting') && 'text-orange-sideBar'
                   }`
                 }
                 onMouseEnter={() => onHover(index)}
                 onMouseLeave={() => onLeave(index)}
               >
-                <span className={'flex items-center h-full border-base'}>
+                <span className={'flex items-center h-full'}>
                   <BsDot /> {parent.name}
                   {parent.isHover && (
                     <IoMdSettings
                       className={'ml-2 fill-gray-light text-[1.4rem]'}
-                      onClick={onClickSetting}
+                      onClick={(e) => onClickSetting(e, parent.name)}
                     />
                   )}
                 </span>
