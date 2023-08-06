@@ -10,10 +10,11 @@ import { productOpen } from '@/recoil/Product/atom.ts';
 import { useOutsideAlerter } from '@/hooks/useOutsideAlerter.ts';
 import ProductList from '@/components/Product/Info/ProductList.tsx';
 import UserProfile from '@/components/Member/Header/UserProfile.tsx';
+import { themeState } from '@/recoil/Common/atom.ts';
 
 export default function Header() {
   const navigate = useNavigate();
-  const [darkMode, setDarkMode] = useState(localStorage.getItem('theme') === 'dark');
+  const [darkMode, setDarkMode] = useRecoilState(themeState);
 
   // TODO: 실제 userprofile 값으로 변경하기
   const userprofile = '';
@@ -49,17 +50,6 @@ export default function Header() {
     }
   };
 
-  // const toggleDark = () => {
-  //   const editorEl = document.getElementsByClassName('toastui-editor-defaultUI')[0];
-  //   if (editorEl) {
-  //     if (!darkMode && editorEl.classList.contains('toastui-editor-dark')) {
-  //       editorEl.classList.remove('toastui-editor-dark');
-  //     } else {
-  //       editorEl.classList.add('toastui-editor-dark');
-  //     }
-  //   }
-  // };
-
   // 다크모드 변경
   const themeModeHandler = useCallback(() => {
     if (!isChecked) {
@@ -85,22 +75,6 @@ export default function Header() {
   useEffect(() => {
     setIsNoneHeader(pathname === '/login' || pathname === '/signup' || pathname === '/pwinquiry');
   }, [pathname]);
-
-  /** editor 다크 모드 */
-  useEffect(() => {
-    const editorEl = document.getElementsByClassName('toastui-editor-defaultUI')[0];
-
-    if (editorEl) {
-      const shouldAddDarkClass = darkMode && !editorEl.classList.contains('toastui-editor-dark');
-      const shouldRemoveDarkClass = !darkMode && editorEl.classList.contains('toastui-editor-dark');
-
-      if (shouldAddDarkClass) {
-        editorEl.classList.add('toastui-editor-dark');
-      } else if (shouldRemoveDarkClass) {
-        editorEl.classList.remove('toastui-editor-dark');
-      }
-    }
-  }, [darkMode]);
 
   return (
     <header
