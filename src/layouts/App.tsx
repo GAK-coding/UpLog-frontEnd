@@ -10,6 +10,7 @@ import loadable from '@loadable/component';
 import { Scrollbars } from 'rc-scrollbars';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import TaskDetail from '@/pages/Project/TaskDetail.tsx';
 
 const Header = loadable(() => import('@/components/UI/Header'));
 const Home = loadable(() => import('@/pages/Home'));
@@ -68,6 +69,10 @@ function App() {
                       <Route path={':product/newchange'} element={<NewChangeLog />} />
                       <Route path={':product/:project/menu/결과물'} element={<Menu />} />
                       <Route path={':product/:project/menu/:menutitle'} element={<Menu />} />
+                      <Route
+                        path={':product/:project/menu/:menutitle/task/:taskid'}
+                        element={<TaskDetail />}
+                      />
 
                       {/* group의 그룹들 */}
                       <Route path={':product/:project'} element={<Project />} />

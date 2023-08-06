@@ -5,13 +5,14 @@ import { useRecoilState } from 'recoil';
 import { RiCheckboxLine } from 'react-icons/ri';
 import { FaUserCircle } from 'react-icons/fa';
 import { AiOutlinePlus } from 'react-icons/ai';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useDisclosure } from '@chakra-ui/react';
 import CreateTask from '@/components/Project/Task/CreateTask.tsx';
 
 export default function TaskMain() {
-  const { menutitle } = useParams();
+  const { product, project, menutitle } = useParams();
+  const navigate = useNavigate();
 
   const dateData: SelectMenu[] = [
     { value: '날짜', label: '날짜' },
@@ -39,10 +40,6 @@ export default function TaskMain() {
   const handleChange = (value: { value: string; label: React.ReactNode }) => {
     //TODO : Task 상태, 날짜별로 필터링해서 보여주기
     console.log(value);
-  };
-
-  const onChange: DatePickerProps['onChange'] = (date, dateString) => {
-    console.log(date, dateString);
   };
 
   return (
@@ -116,7 +113,10 @@ export default function TaskMain() {
               <section
                 key={index}
                 className={
-                  'flex-row-center justify-start w-full min-h-[3.5rem] px-4 border-b border-line'
+                  'flex-row-center justify-start w-full min-h-[3.5rem] px-4 border-b border-line cursor-pointer'
+                }
+                onClick={() =>
+                  navigate(`/workspace/${product}/${project}/menu/${menutitle}/task/${task.id}`)
                 }
               >
                 {/*체크박스 + task 이름*/}
