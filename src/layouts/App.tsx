@@ -10,7 +10,6 @@ import loadable from '@loadable/component';
 import { Scrollbars } from 'rc-scrollbars';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import TaskDetail from '@/pages/Project/TaskDetail.tsx';
 
 const Header = loadable(() => import('@/components/UI/Header'));
 const Home = loadable(() => import('@/pages/Home'));
@@ -27,6 +26,8 @@ const Chats = loadable(() => import('@/pages/Product/Chats.tsx'));
 const Members = loadable(() => import('@/pages/Product/Members.tsx'));
 const NewChangeLog = loadable(() => import('@/pages/Product/NewChangeLog.tsx'));
 const Menu = loadable(() => import('@/pages/Project/Menu.tsx'));
+const TaskDetail = loadable(() => import('@/pages/Project/TaskDetail.tsx'));
+
 // jest에서 .env 이용하려고 넣은 코드
 const { MODE: ENVIRONMENT } = import.meta.env;
 export { ENVIRONMENT };
