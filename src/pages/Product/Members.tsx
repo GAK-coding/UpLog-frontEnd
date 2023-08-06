@@ -97,7 +97,7 @@ export default function Members() {
                 <Textarea
                   value={emails}
                   onChange={onChangeEmails}
-                  border={'1px solid var(--gray-light)'}
+                  border={'1px solid var(--border-line)'}
                   height={'100%'}
                   focusBorderColor={'none'}
                   placeholder="이메일은 쉼표(,)로 구분해 주세요."

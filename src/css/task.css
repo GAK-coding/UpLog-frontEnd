@@ -1,0 +1,92 @@
+:where(.css-dev-only-do-not-override-1m62vyb).ant-picker {
+    color: var(--gray-dark);
+    border: 1px solid var(--border-line);
+}
+
+:where(.css-dev-only-do-not-override-1m62vyb).ant-picker-focused {
+    border-color: var(--border-line);
+    box-shadow: 0 0 0 2px rgba(5, 145, 255, 0);
+    border-inline-end-width: 1px;
+    outline: 0;
+}
+
+:where(.css-dev-only-do-not-override-1m62vyb).ant-picker:hover, :where(.css-dev-only-do-not-override-1m62vyb).ant-picker-focused {
+    border-color: var(--border-line);
+    border-inline-end-width: 1px;
+    background-color: var(--white);
+}
+
+:where(.css-dev-only-do-not-override-1m62vyb).ant-picker {
+    background-color: var(--white);
+}
+
+:where(.css-dev-only-do-not-override-1m62vyb).ant-picker .ant-picker-input >input {
+    color : var(--gray-dark);
+    font-size: 0.93rem;
+}
+
+.anticon svg {
+    color : var(--gray-light);
+}
+
+:where(.css-dev-only-do-not-override-1m62vyb).ant-picker .ant-picker-input::placeholder {
+    color : var(--gray-light);
+}
+
+:where(.css-dev-only-do-not-override-1m62vyb).ant-picker-dropdown .ant-picker-panel-container .ant-picker-panel {
+    background-color: var(--white);
+    border-color: var(--border-line);
+}
+
+:where(.css-dev-only-do-not-override-1m62vyb).ant-picker-dropdown .ant-picker-header {
+    color: var(--black);
+    border-bottom : 1px solid var(--border-line);
+}
+
+:where(.css-dev-only-do-not-override-1m62vyb).ant-picker-dropdown .ant-picker-header button {
+    color: var(--black);
+}
+
+:where(.css-dev-only-do-not-override-1m62vyb).ant-picker-dropdown .ant-picker-panel-container .ant-picker-panel .ant-picker-content, :where(.css-dev-only-do-not-override-1m62vyb).ant-picker-dropdown .ant-picker-panel-container .ant-picker-panel table {
+    background: var(--white);
+}
+
+:where(.css-dev-only-do-not-override-1m62vyb).ant-picker-dropdown .ant-picker-today-btn {
+    color: var(--black);
+}
+
+:where(.css-dev-only-do-not-override-1m62vyb).ant-picker-dropdown .ant-picker-cell .ant-picker-cell-inner {
+    color: var(--black);
+}
+
+:where(.css-dev-only-do-not-override-1m62vyb).ant-picker-dropdown .ant-picker-content th {
+color: var(--black);
+}
+:where(.css-dev-only-do-not-override-1m62vyb).ant-picker-dropdown .ant-picker-cell-in-view.ant-picker-cell-selected .ant-picker-cell-inner, :where(.css-dev-only-do-not-override-1m62vyb).ant-picker-dropdown .ant-picker-cell-in-view.ant-picker-cell-range-start .ant-picker-cell-inner, :where(.css-dev-only-do-not-override-1m62vyb).ant-picker-dropdown .ant-picker-cell-in-view.ant-picker-cell-range-end .ant-picker-cell-inner {
+    color: var(--black);
+    background: var(--orange);
+}
+
+:where(.css-dev-only-do-not-override-1m62vyb).ant-picker-dropdown .ant-picker-panel .ant-picker-footer {
+    border-top: 1px solid var(--border-line);
+}
+
+:where(.css-dev-only-do-not-override-1m62vyb).ant-picker-dropdown .ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner::before {
+    border: 1px solid var(--orange);
+}
+
+:where(.css-dev-only-do-not-override-1m62vyb).ant-picker-dropdown .ant-picker-cell-in-view.ant-picker-cell-selected .ant-picker-cell-inner{
+    color : var(--black)
+}
+
+:where(.css-dev-only-do-not-override-1m62vyb).ant-picker-dropdown .ant-picker-header-view button:hover {
+    color: var(--orange);
+}
+
+:where(.css-dev-only-do-not-override-1m62vyb).ant-picker-dropdown .ant-picker-today-btn:hover{
+    color : var(--orange);
+}
+
+:where(.css-dev-only-do-not-override-1m62vyb).ant-picker-dropdown {
+    font-size : 12.5px
+}

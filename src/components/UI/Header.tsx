@@ -29,14 +29,16 @@ export default function Header() {
     pathname === '/login' || pathname === '/signup' || pathname === '/pwinquiry'
   );
 
+  // 현재 url에서 제품 이름 가져오기
+  const parts = pathname.split('/');
+  const product = parts[2];
+
   // 로그인 여부
   //TODO : 섹션 storage 값으로 변경하기
   const [isLogin, setIsLogin] = useState(true);
 
   // userProfile click
   const [isProfileClick, setIsProfileClick] = useRecoilState(profileOpen);
-  // 제품 List
-  const productList = ['AllFormU', 'hi'];
   // 제품 List click
   const [isProductClick, setIsProductClick] = useRecoilState(productOpen);
 
@@ -88,7 +90,7 @@ export default function Header() {
           </span>
         </nav>
 
-        {isLogin && productList?.[0] !== '' && (
+        {isLogin && product !== '' && (
           <div className={'flex-row-center'} ref={productRef}>
             <div className={'flex-row-center ml-4 h-9 border-solid border-r border-gray-light'} />
             <div
@@ -98,7 +100,7 @@ export default function Header() {
               }}
             >
               <span className={'flex-row-center font-logo text-[2.3rem] font-semibold ml-4 mt-3'}>
-                {productList[0]}
+                {product}
               </span>
               <PiCaretUpDownLight
                 className={'flex-row-center text-[1.4rem] fill-gray-light ml-2'}

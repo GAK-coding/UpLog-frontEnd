@@ -3,7 +3,7 @@ import { ProductInfo, ProductMember } from '@/typings/product.ts';
 
 export const productOpen = atom({ key: 'productOpen', default: false });
 
-export const product = atom<ProductInfo[]>({
+export const productListData = atom<ProductInfo[]>({
   key: 'productList',
   default: [
     {

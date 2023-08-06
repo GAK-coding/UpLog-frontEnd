@@ -25,6 +25,7 @@
 }
 
 .ant-select-focused:where(.css-dev-only-do-not-override-1m62vyb).ant-select:not(.ant-select-disabled):not(.ant-select-customize-input):not(.ant-pagination-size-changer).ant-select-selector {
+
     border-color : var(--border-line);
 }
 
@@ -85,3 +86,28 @@
 .test_obj {
     animation: fadeInUp 1s;
 }
+
+:where (.css-dev-only-do-not-override-1m62vyb).ant-select:not(.ant-select-disabled):not(.ant-select-customize-input):not(.ant-pagination-size-changer).ant-select-selector{
+    border-color: var(--border-line);
+}
+.ant-select-focused:where(.css-dev-only-do-not-override-1m62vyb).ant-select:not(.ant-select-disabled):not(.ant-select-customize-input):not(.ant-pagination-size-changer).ant-select-selector{
+    border-color: var(--border-line)
+}
+/*.slick-next::before , .slick-prev::before{*/
+/*    color : var(--border-gray);*/
+/*    font-size : 15px;*/
+/*    opacity: 1;*/
+/*}*/
+
+/*.slick-prev::before, .slick-next::before {*/
+/*    font-size: 15px;*/
+/*    line-height: 1;*/
+/*    opacity: .75;*/
+/*    -webkit-font-smoothing: antialiased;*/
+/*    -moz-osx-font-smoothing: grayscale;*/
+/*}*/
+
+/*.slick-next{*/
+/*    right : 3px;*/
+/*    color : var(--border-gray);*/
+/*}*/
