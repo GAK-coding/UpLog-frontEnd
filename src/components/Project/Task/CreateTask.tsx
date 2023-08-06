@@ -7,11 +7,13 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Textarea,
 } from '@chakra-ui/react';
 import { useMessage } from '@/hooks/useMessage.ts';
 import useInput from '@/hooks/useInput.ts';
 import { SelectMenu } from '@/typings/project.ts';
 import { DatePicker, DatePickerProps, Select } from 'antd';
+import { ChangeEvent, useCallback } from 'react';
 
 interface Props {
   isOpen: boolean;
@@ -21,6 +23,7 @@ export default function CreateTask({ isOpen, onClose }: Props) {
   const { showMessage, contextHolder } = useMessage();
 
   const [taskName, onChangeTaskName] = useInput('');
+  const [taskDescription, , setTaskDescription] = useInput('');
 
   const dateData: SelectMenu[] = [
     { value: '날짜', label: '날짜' },
@@ -38,12 +41,17 @@ export default function CreateTask({ isOpen, onClose }: Props) {
     console.log(date, dateString);
   };
 
+  const onChangeTaskDescription = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {
+    setTaskDescription(e.target.value);
+  }, []);
+
+  const onClickCreateTask = useCallback(() => {}, []);
   return (
     <Modal isCentered onClose={onClose} isOpen={isOpen}>
       <ModalOverlay />
       <ModalContent
         maxW="40rem"
-        h={'50rem'}
+        h={'55rem'}
         shadow={'boxShadow-sign-up'}
         rounded={'none'}
         p={'1.2rem'}
@@ -70,7 +78,7 @@ export default function CreateTask({ isOpen, onClose }: Props) {
 
               {/*Task 정보 입력 -> 제목*/}
               <div className={'w-full mt-4 mb-5 text-[1rem]'}>
-                <span className={'flex mb-[0.93rem] text-gray-dark font-bold'}>Task 제목</span>
+                <span className={'flex mb-[0.5rem] text-gray-dark font-bold'}>Task 제목</span>
                 <input
                   type="text"
                   value={taskName}
@@ -85,26 +93,102 @@ export default function CreateTask({ isOpen, onClose }: Props) {
 
               {/*Task 기간 지정*/}
               <div className={'w-full mb-5 text-[1rem]'}>
-                <span className={'flex mb-[0.93rem] text-gray-dark font-bold'}>기간 설정</span>
+                <span className={'flex mb-[0.5rem] text-gray-dark font-bold'}>기간 설정</span>
                 <div className={'w-h-full'}>
                   <Select
                     labelInValue
                     defaultValue={dateData[0]}
                     onChange={handleChange}
-                    style={{ width: 100 }}
+                    style={{ width: 120 }}
                     options={dateData}
+                    dropdownStyle={{
+                      backgroundColor: 'var(--gray-sideBar)',
+                      color: 'var(--black)',
+                      borderColor: 'var(--border-line)',
+                    }}
                   />
                 </div>
               </div>
 
               {/* 날짜 선택*/}
               <div className={'flex-row-center w-full mb-5 text-[1rem]'}>
-                <div className={'w-1/2 bg-teal-200 pr-6 z-50'}>
-                  <span className={'flex mb-[0.93rem] text-gray-dark font-bold'}>시작 날짜</span>
+                <div className={'flex-col w-1/2'}>
+                  <span className={'flex mb-[0.5rem] text-gray-dark font-bold'}>시작 날짜</span>
                   <DatePicker onChange={onChange} placement={'bottomLeft'} />
                 </div>
-                <div className={'w-1/2 bg-amber-400 pl-6'}>
-                  <span className={'flex mb-[0.93rem] text-gray-dark font-bold'}>종료 날짜</span>
+                <div className={'flex-col w-1/2 ml-16'}>
+                  <span className={'flex mb-[0.5rem] text-gray-dark font-bold'}>종료 날짜</span>
+                  <DatePicker onChange={onChange} placement={'bottomLeft'} />
+                </div>
+              </div>
+
+              {/*메뉴 선택*/}
+              <div className={'w-full mb-5 text-[1rem]'}>
+                <span className={'flex mb-[0.5rem] text-gray-dark font-bold'}>메뉴</span>
+                <div className={'w-h-full'}>
+                  <Select
+                    labelInValue
+                    defaultValue={dateData[0]}
+                    onChange={handleChange}
+                    style={{ width: 120 }}
+                    options={dateData}
+                    dropdownStyle={{
+                      backgroundColor: 'var(--gray-sideBar)',
+                      color: 'var(--black)',
+                      borderColor: 'var(--border-line)',
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/*그룹 + 할당자*/}
+              <div className={'flex-row-center w-full mb-5 text-[1rem]'}>
+                <div className={'flex-col w-1/2'}>
+                  <span className={'flex mb-[0.5rem] text-gray-dark font-bold'}>그룹</span>
+                  <Select
+                    labelInValue
+                    defaultValue={dateData[0]}
+                    onChange={handleChange}
+                    style={{ width: 120 }}
+                    options={dateData}
+                    dropdownStyle={{
+                      backgroundColor: 'var(--gray-sideBar)',
+                      color: 'var(--black)',
+                      borderColor: 'var(--border-line)',
+                    }}
+                  />
+                </div>
+                <div className={'flex-col w-1/2 ml-16'}>
+                  <span className={'flex mb-[0.5rem] text-gray-dark font-bold'}>할당자</span>
+                  <Select
+                    labelInValue
+                    defaultValue={dateData[0]}
+                    onChange={handleChange}
+                    style={{ width: 120 }}
+                    options={dateData}
+                    dropdownStyle={{
+                      backgroundColor: 'var(--gray-sideBar)',
+                      color: 'var(--black)',
+                      borderColor: 'var(--border-line)',
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/*상세 설명*/}
+              <div className={'w-full mb-5 text-[1rem]'}>
+                <span className={'flex mb-[0.5rem] text-gray-dark font-bold'}>메뉴</span>
+                <div className={'w-full h-[80%]'}>
+                  <Textarea
+                    value={taskDescription}
+                    onChange={onChangeTaskDescription}
+                    border={'1px solid var(--border-line)'}
+                    height={'100%'}
+                    focusBorderColor={'none'}
+                    resize={'none'}
+                    placeholder="Task에 대한 상세 설명을 입력해주세요."
+                    color={'var(--black)'}
+                  />
                 </div>
               </div>
             </section>
@@ -112,12 +196,12 @@ export default function CreateTask({ isOpen, onClose }: Props) {
         </ModalBody>
 
         <ModalFooter>
-          {/*<button*/}
-          {/*  className={'bg-orange rounded font-bold text-xs text-white h-9 w-[4.5rem]'}*/}
-          {/*  onClick={onClickMakeProduct}*/}
-          {/*>*/}
-          {/*  완료*/}
-          {/*</button>*/}
+          <button
+            className={'bg-orange rounded font-bold text-xs text-white h-9 w-[4.5rem]'}
+            onClick={onClickCreateTask}
+          >
+            완료
+          </button>
         </ModalFooter>
       </ModalContent>
     </Modal>

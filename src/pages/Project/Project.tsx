@@ -300,12 +300,22 @@ export default function Project() {
                 style={{ width: 110 }}
                 onChange={handleParentGroupChange}
                 options={pGroup.map((group) => ({ label: group, value: group }))}
+                dropdownStyle={{
+                  backgroundColor: 'var(--gray-sideBar)',
+                  color: 'var(--black)',
+                  borderColor: 'var(--border-line)',
+                }}
               />
               <Select
                 style={{ width: 110 }}
                 value={childGroup}
                 onChange={onChildGroupChange}
                 options={parentGroup.map((group) => ({ label: group, value: group }))}
+                dropdownStyle={{
+                  backgroundColor: 'var(--gray-sideBar)',
+                  color: 'var(--black)',
+                  borderColor: 'var(--border-line)',
+                }}
               />
             </Space>
           </div>

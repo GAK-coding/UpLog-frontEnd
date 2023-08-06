@@ -72,16 +72,19 @@ export default function TaskMain() {
             {taskList.filter((task) => task.menu === menutitle && task.status === 'done').length}
           </div>
         </div>
-        <div className={'flex-row-center justify-between w-[18rem] px-4'}>
+        <div className={'flex-row-center justify-between w-[18rem] px-4 z-10'}>
           {/*날짜, task 상태별 필터링 select*/}
-          <DatePicker onChange={onChange} />
-
           <Select
             labelInValue
             defaultValue={dateData[0]}
             onChange={handleChange}
             style={{ width: 90 }}
             options={dateData}
+            dropdownStyle={{
+              backgroundColor: 'var(--gray-sideBar)',
+              color: 'var(--black)',
+              borderColor: 'var(--border-line)',
+            }}
           />
           <Select
             labelInValue
@@ -89,6 +92,11 @@ export default function TaskMain() {
             onChange={handleChange}
             style={{ width: 90 }}
             options={statusData}
+            dropdownStyle={{
+              backgroundColor: 'var(--gray-sideBar)',
+              color: 'var(--black)',
+              borderColor: 'var(--border-line)',
+            }}
           />
         </div>
       </section>

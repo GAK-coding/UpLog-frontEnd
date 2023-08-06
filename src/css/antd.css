@@ -25,8 +25,20 @@
 
 .ant-select-dropdown{
     z-index: 1400;
+    background-color: var(--gray-sideBar);
 }
 
 .ant-select-arrow {
     z-index: 1500;
 }
+
+
+/*.ant-select-selection.search-input {*/
+/*    color : var(--black);*/
+/*}*/
+
+/*.ant-select-selection.item {*/
+/*    color : var(--black);*/
+/*}*/
+
+
