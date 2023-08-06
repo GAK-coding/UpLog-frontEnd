@@ -86,7 +86,7 @@ export default function Groups() {
                 <Collapse in={parent.isOpen} startingHeight={20}>
                   {childGroups[index].map((child, idx) => (
                     <NavLink
-                      to={`/workspace/${product}/${project}/group/${parent.name}/${child}}`}
+                      to={`/workspace/${product}/${project}/group/${parent.name}/${child}`}
                       key={`${parent.name}-${child}-${idx}`}
                       className={({ isActive }) =>
                         `w-[90%] flex justify-between items-center font-bold text-[1.1rem] ml-4 mb-4 ${
