@@ -13,8 +13,8 @@ export default function Workspace() {
 
   return (
     <section className={'w-h-full flex'}>
-      <nav className={'w-[18.6rem] h-full border-r border-gray-sideBar] py-4'}>
-        <div className={'h-[30%] border-b'}>
+      <nav className={'w-[18.6rem] h-full border-r py-4'}>
+        <div className={`h-[30%] ${product && project && 'border-b'}`}>
           <div className={'h-1/5 flex-row-center px-10'}>
             <Link to={`/workspace/${product}`} className={'text-3xl font-bold'}>
               AllFromU
@@ -42,17 +42,19 @@ export default function Workspace() {
             </NavLink>
           </div>
         </div>
-        <div className={'overflow-y-auto h-[70%]'}>
-          <Scrollbars
-            style={{ height: '100%' }}
-            autoHide
-            autoHideTimeout={1000}
-            // Duration for hide animation in ms.
-            autoHideDuration={200}
-          >
-            {pathname === `/workspace/${product}/chats` ? <Chats /> : <Groups />}
-          </Scrollbars>
-        </div>
+        {product && project && (
+          <div className={'overflow-y-auto h-[70%]'}>
+            <Scrollbars
+              style={{ height: '100%' }}
+              autoHide
+              autoHideTimeout={1000}
+              // Duration for hide animation in ms.
+              autoHideDuration={200}
+            >
+              {pathname === `/workspace/${product}/chats` ? <Chats /> : <Groups />}
+            </Scrollbars>
+          </div>
+        )}
       </nav>
       <article className={'w-noneSideBar h-full'}>
         <Scrollbars

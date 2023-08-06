@@ -2,20 +2,25 @@ import React, { useCallback, useState } from 'react';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { Button, Collapse, Fade, useDisclosure } from '@chakra-ui/react';
 import { BsDot } from 'react-icons/bs';
-import { NavLink, useParams } from 'react-router-dom';
-import { IoIosArrowDown } from 'react-icons/io';
+import { NavLink, useNavigate, useParams } from 'react-router-dom';
+import { IoIosArrowDown, IoMdSettings } from 'react-icons/io';
+import CreateGroupModal from '@/components/Product/SideBar/CreateGroupModal.tsx';
 
 export default function Groups() {
   const { product, project, parentgroup, childgroup } = useParams();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const navigate = useNavigate();
 
-  const [parentGroups, setParentGroups] = useState<Array<{ name: string; isOpen: boolean }>>([
-    { name: '개발팀', isOpen: false },
-    { name: '마케팅팀', isOpen: false },
-    { name: '홍보팀', isOpen: false },
-    { name: '바보팀', isOpen: false },
-    { name: '멍청이팀', isOpen: false },
-    { name: '똥개팀', isOpen: false },
-    { name: '젠킨스팀', isOpen: false },
+  const [parentGroups, setParentGroups] = useState<
+    Array<{ name: string; isOpen: boolean; isHover: boolean }>
+  >([
+    { name: '개발팀', isOpen: false, isHover: false },
+    { name: '마케팅팀', isOpen: false, isHover: false },
+    { name: '홍보팀', isOpen: false, isHover: false },
+    { name: '바보팀', isOpen: false, isHover: false },
+    { name: '멍청이팀', isOpen: false, isHover: false },
+    { name: '똥개팀', isOpen: false, isHover: false },
+    { name: '젠킨스팀', isOpen: false, isHover: false },
   ]);
 
   const childGroups: string[][] = [
@@ -28,6 +33,7 @@ export default function Groups() {
     ['장준'],
   ];
 
+  /** 부모 집합 펼치는 함수 */
   const onToggle = useCallback(
     (id: number) => {
       const temp = [...parentGroups];
@@ -37,11 +43,36 @@ export default function Groups() {
     [parentGroups]
   );
 
+  /** 설정 이모티콘 보이게 하는 함수*/
+  const onHover = useCallback(
+    (num: number) => {
+      const temp = JSON.parse(JSON.stringify(parentGroups));
+      temp[num].isHover = true;
+      setParentGroups(temp);
+    },
+    [parentGroups]
+  );
+
+  /**설정 이모티콘 안보이게 하는 함수*/
+  const onLeave = useCallback(
+    (num: number) => {
+      const temp = JSON.parse(JSON.stringify(parentGroups));
+      temp[num].isHover = false;
+      setParentGroups(temp);
+    },
+    [parentGroups]
+  );
+
+  const onClickSetting = useCallback((e: React.MouseEvent<SVGElement>) => {
+    e.preventDefault();
+    navigate('/');
+  }, []);
+
   return (
     <section className={'px-10'}>
       <div className={'h-20 flex-row-center justify-between'}>
         <header className={'text-[1.4rem] font-bold'}>Group</header>
-        <span>
+        <span className={'cursor-pointer'} onClick={onOpen}>
           <AiOutlinePlus className={'text-2xl fill-gray-light'} />
         </span>
       </div>
@@ -66,9 +97,17 @@ export default function Groups() {
                     isActive && 'text-orange-sideBar'
                   }`
                 }
+                onMouseEnter={() => onHover(index)}
+                onMouseLeave={() => onLeave(index)}
               >
-                <span className={'flex items-center'}>
+                <span className={'flex items-center h-full border-base'}>
                   <BsDot /> {parent.name}
+                  {parent.isHover && (
+                    <IoMdSettings
+                      className={'ml-2 fill-gray-light text-[1.4rem]'}
+                      onClick={onClickSetting}
+                    />
+                  )}
                 </span>
               </NavLink>
 
@@ -105,6 +144,7 @@ export default function Groups() {
           </div>
         ))}
       </div>
+      <CreateGroupModal isOpen={isOpen} onClose={onClose} />
     </section>
   );
 }
