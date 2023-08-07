@@ -11,10 +11,11 @@ import {
 } from '@chakra-ui/react';
 import { useMessage } from '@/hooks/useMessage.ts';
 import useInput from '@/hooks/useInput.ts';
-import { SelectMenu, Task } from '@/typings/project.ts';
-import { DatePicker, DatePickerProps, Select } from 'antd';
-import { ChangeEvent, useCallback, useState } from 'react';
-import { eachTask } from '@/recoil/Project/atom.ts';
+import { SelectMenu, SubGroup, Task } from '@/typings/project.ts';
+import { DatePicker, DatePickerProps, Select, Space } from 'antd';
+import { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import { menuListData } from '@/recoil/Project/atom.ts';
 
 interface Props {
   isOpen: boolean;
@@ -24,37 +25,109 @@ export default function CreateTask({ isOpen, onClose }: Props) {
   const { showMessage, contextHolder } = useMessage();
 
   const [taskName, onChangeTaskName] = useInput('');
-  const [taskDescription, , setTaskDescription] = useInput('');
+  const [newTask, setNewTask] = useState({
+    taskName: '',
+    startTime: '',
+    endTime: '',
+    menuName: '',
+    groupName: '',
+    targetMember: '',
+    taskDetail: '',
+  });
 
-  const [newTask, setNewTask] = useState<Task>(eachTask);
-
-  const dateData: SelectMenu[] = [
+  const taskPeriod: SelectMenu[] = [
     { value: '날짜', label: '날짜' },
     {
       value: '최신순',
       label: '최신순',
     },
   ];
+
+  const menuList = useRecoilValue(menuListData);
+
+  const menuNameList: SelectMenu[] = menuList.map((menuItem) => ({
+    value: menuItem.name,
+    label: menuItem.name,
+  }));
+
   const handleChange = (type: string) => (value: { value: string; label: React.ReactNode }) => {
-    //update task
-    console.log(type);
-    console.log(value);
+    // task 사용자 입력값으로 지정
+    const updatedTask = {
+      ...newTask,
+      [type]: value.value,
+    };
+
+    setNewTask(updatedTask);
+    console.log(newTask);
   };
 
-  const onChange: DatePickerProps['onChange'] = (date, dateString) => {
-    console.log(date, dateString);
+  const pGroup: string[] = ['그룹', '개발팀', '마케팅팀', '홍보팀'];
+  const cGroup: SubGroup = {
+    그룹: ['하위그룹'],
+    개발팀: ['전체', '프론트엔드', '백엔드', '풀스택'],
+    마케팅팀: ['전체', 'SNS', '디자인'],
+    홍보팀: ['전체', 'SNS', '기사'],
+  };
+
+  type ChildGroup = keyof typeof cGroup;
+
+  const [parentGroup, setParentGroup] = useState(cGroup[pGroup[0] as ChildGroup]);
+  const [childGroup, setChildGroup] = useState(cGroup[pGroup[0] as ChildGroup][0]);
+
+  const handleParentGroupChange = (value: string) => {
+    // 선택한 상위그룹내용으로 하위 그룹 option으로 변경
+    setParentGroup(cGroup[value]);
+    setChildGroup(cGroup[value][0]);
+  };
+
+  const onChildGroupChange = (value: string) => {
+    // 선택한 하위 그룹으로 필터링된 페이지로 이동
+    setChildGroup(value);
+  };
+
+  const onChangeStartTime: DatePickerProps['onChange'] = (date, dateString) => {
+    const updatedTask = {
+      ...newTask,
+      startTime: dateString,
+    };
+
+    setNewTask(updatedTask);
+  };
+
+  const onChangeEndTime: DatePickerProps['onChange'] = (date, dateString) => {
+    const updatedTask = {
+      ...newTask,
+      endTime: dateString,
+    };
+
+    setNewTask(updatedTask);
   };
 
   const onChangeTaskDescription = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {
-    setTaskDescription(e.target.value);
+    const updatedTask = {
+      ...newTask,
+      taskDetail: e.target.value,
+    };
+
+    setNewTask(updatedTask);
   }, []);
+
+  useEffect(() => {
+    const updatedTask = {
+      ...newTask,
+      taskName: taskName,
+    };
+
+    setNewTask(updatedTask);
+    console.log(newTask);
+  }, [taskName]);
 
   const onClickCreateTask = useCallback(() => {}, []);
   return (
     <Modal isCentered onClose={onClose} isOpen={isOpen}>
       <ModalOverlay />
       <ModalContent
-        maxW="40rem"
+        minW="40rem"
         h={'55rem'}
         shadow={'boxShadow-sign-up'}
         rounded={'none'}
@@ -101,10 +174,10 @@ export default function CreateTask({ isOpen, onClose }: Props) {
                 <div className={'w-h-full'}>
                   <Select
                     labelInValue
-                    defaultValue={dateData[0]}
+                    defaultValue={taskPeriod[0]}
                     onChange={handleChange('date')}
                     style={{ width: 120 }}
-                    options={dateData}
+                    options={taskPeriod}
                     dropdownStyle={{
                       backgroundColor: 'var(--gray-sideBar)',
                       color: 'var(--black)',
@@ -118,43 +191,24 @@ export default function CreateTask({ isOpen, onClose }: Props) {
               <div className={'flex-row-center w-full mb-5 text-[1rem]'}>
                 <div className={'flex-col w-1/2'}>
                   <span className={'flex mb-[0.5rem] text-gray-dark font-bold'}>시작 날짜</span>
-                  <DatePicker onChange={onChange} placement={'bottomLeft'} />
+                  <DatePicker onChange={onChangeStartTime} placement={'bottomLeft'} />
                 </div>
                 <div className={'flex-col w-1/2 ml-16'}>
                   <span className={'flex mb-[0.5rem] text-gray-dark font-bold'}>종료 날짜</span>
-                  <DatePicker onChange={onChange} placement={'bottomLeft'} />
+                  <DatePicker onChange={onChangeEndTime} placement={'bottomLeft'} />
                 </div>
               </div>
 
-              {/*메뉴 선택*/}
-              <div className={'w-full mb-5 text-[1rem]'}>
-                <span className={'flex mb-[0.5rem] text-gray-dark font-bold'}>메뉴</span>
-                <div className={'w-h-full'}>
-                  <Select
-                    labelInValue
-                    defaultValue={dateData[0]}
-                    onChange={handleChange('menu')}
-                    style={{ width: 120 }}
-                    options={dateData}
-                    dropdownStyle={{
-                      backgroundColor: 'var(--gray-sideBar)',
-                      color: 'var(--black)',
-                      borderColor: 'var(--border-line)',
-                    }}
-                  />
-                </div>
-              </div>
-
-              {/*그룹 + 할당자*/}
+              {/*메뉴*/}
               <div className={'flex-row-center w-full mb-5 text-[1rem]'}>
                 <div className={'flex-col w-1/2'}>
-                  <span className={'flex mb-[0.5rem] text-gray-dark font-bold'}>그룹</span>
+                  <span className={'flex mb-[0.5rem] text-gray-dark font-bold'}>메뉴</span>
                   <Select
                     labelInValue
-                    defaultValue={dateData[0]}
-                    onChange={handleChange('group')}
+                    defaultValue={{ value: '', label: '선택' }}
+                    onChange={handleChange('menuName')}
                     style={{ width: 120 }}
-                    options={dateData}
+                    options={menuNameList}
                     dropdownStyle={{
                       backgroundColor: 'var(--gray-sideBar)',
                       color: 'var(--black)',
@@ -166,10 +220,40 @@ export default function CreateTask({ isOpen, onClose }: Props) {
                   <span className={'flex mb-[0.5rem] text-gray-dark font-bold'}>할당자</span>
                   <Select
                     labelInValue
-                    defaultValue={dateData[0]}
+                    defaultValue={taskPeriod[0]}
                     onChange={handleChange('targetMember')}
                     style={{ width: 120 }}
-                    options={dateData}
+                    options={taskPeriod}
+                    dropdownStyle={{
+                      backgroundColor: 'var(--gray-sideBar)',
+                      color: 'var(--black)',
+                      borderColor: 'var(--border-line)',
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/*그룹 + 할당자*/}
+              <div className={'w-full mb-5 text-[1rem]'}>
+                <span className={'flex mb-[0.5rem] text-gray-dark font-bold'}>그룹</span>
+                <div className={'flex justify-between pr-7'}>
+                  <Select
+                    defaultValue={pGroup[0]}
+                    style={{ width: 120 }}
+                    onChange={handleParentGroupChange}
+                    options={pGroup.map((group) => ({ label: group, value: group }))}
+                    dropdownStyle={{
+                      backgroundColor: 'var(--gray-sideBar)',
+                      color: 'var(--black)',
+                      borderColor: 'var(--border-line)',
+                    }}
+                  />
+
+                  <Select
+                    style={{ width: 120 }}
+                    value={childGroup}
+                    onChange={onChildGroupChange}
+                    options={parentGroup.map((group) => ({ label: group, value: group }))}
                     dropdownStyle={{
                       backgroundColor: 'var(--gray-sideBar)',
                       color: 'var(--black)',
@@ -184,7 +268,7 @@ export default function CreateTask({ isOpen, onClose }: Props) {
                 <span className={'flex mb-[0.5rem] text-gray-dark font-bold'}>메뉴</span>
                 <div className={'w-full h-[80%]'}>
                   <Textarea
-                    value={taskDescription}
+                    value={newTask.taskDetail}
                     onChange={onChangeTaskDescription}
                     border={'1px solid var(--border-line)'}
                     height={'100%'}

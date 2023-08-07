@@ -104,8 +104,6 @@ export default function Project() {
 
   const [filterGroup, setFilterGroup] = useState(pGroup[0]);
 
-  // const [filterTaskList, setFilterTaskList] = useState(taskList);
-
   const handleParentGroupChange = (value: string) => {
     // 선택한 상위그룹내용으로 하위 그룹 option으로 변경
     setParentGroup(cGroup[value]);
