@@ -3,9 +3,9 @@ import { instance } from '@/api';
 
 export const signUp = async (data: SignUpInfo) => {
   try {
-    const res = await instance.post('/members', data);
-    return res;
+    await instance.post('/members', data);
+    return '회원가입 성공';
   } catch (err) {
-    console.error(err);
+    return '회원가입 실패';
   }
 };
