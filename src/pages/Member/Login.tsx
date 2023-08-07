@@ -7,7 +7,7 @@ import { useGoogleLogin } from '@react-oauth/google';
 import { useMessage } from '@/hooks/useMessage.ts';
 import { loginUp } from '@/api/Members/Login-Signup.ts';
 import { useMutation } from 'react-query';
-import { Auth, SaveUserInfo } from '@/typings/member.ts';
+import { Auth, GetUserInfo, SaveUserInfo } from '@/typings/member.ts';
 
 export default function Login() {
   const { showMessage, contextHolder } = useMessage();
@@ -16,7 +16,7 @@ export default function Login() {
   const navigate = useNavigate();
 
   const { mutate } = useMutation(loginUp, {
-    onSuccess: (data) => {
+    onSuccess: (data: GetUserInfo) => {
       const { id, email, nickname, name, position, accessToken, refreshToken } = data;
       const userInfo: SaveUserInfo = {
         id,
