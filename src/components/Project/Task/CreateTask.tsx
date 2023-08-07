@@ -25,14 +25,14 @@ interface Props {
 export default function CreateTask({ isOpen, onClose }: Props) {
   const { showMessage, contextHolder } = useMessage();
 
-  const [taskName, onChangeTaskName] = useInput('');
+  const [taskName, onChangeTaskName, setTaskName] = useInput('');
   const [newTask, setNewTask] = useState({
     taskName: '',
     startTime: '',
     endTime: '',
-    menuName: '',
-    groupName: '',
-    targetMember: '',
+    menuId: -1,
+    projectTeamId: -1,
+    targetMemberId: -1,
     taskDetail: '',
   });
 
@@ -61,7 +61,7 @@ export default function CreateTask({ isOpen, onClose }: Props) {
 
   const member = useRecoilValue(productMemberList);
   const memberList: SelectMenu[] = member.map((memberItem) => ({
-    value: `${memberItem.nickName}(${memberItem.name})`,
+    value: memberItem.id.toString(),
     label: `${memberItem.nickName}(${memberItem.name})`,
   }));
 
@@ -70,58 +70,75 @@ export default function CreateTask({ isOpen, onClose }: Props) {
   const [parentGroup, setParentGroup] = useState(cGroup[pGroup[0] as ChildGroup]);
   const [childGroup, setChildGroup] = useState(cGroup[pGroup[0] as ChildGroup][0]);
 
-  // task 사용자 입력값으로 지정
+  // task 사용자 입력값으로 지정 (select인 경우)
   const handleChange = (type: string) => (value: { value: string; label: React.ReactNode }) => {
-    // 날짜 입력 타입이 사용자 지정이 아니면 custom 불가능하게
-    if (type === 'date') {
-      if (value.value !== '사용자 지정') {
-        setIsCustom(false);
+    switch (type) {
+      case 'date': {
+        // 날짜 입력 타입이 사용자 지정이 아니면 custom 불가능하게
+        if (value.value !== '사용자 지정') {
+          setIsCustom(false);
 
-        // 주차 계산
-        const currentDate = new Date();
-        const endDate = new Date(currentDate);
-        endDate.setDate(currentDate.getDate() + +value.value);
+          // 주차 계산
+          const currentDate = new Date();
+          const endDate = new Date(currentDate);
+          endDate.setDate(currentDate.getDate() + +value.value);
 
-        // task 날짜 정보 설정
+          // task 날짜 정보 설정
+          const updatedTask = {
+            ...newTask,
+            startTime: currentDate.toISOString().split('T')[0],
+            endTime: endDate.toISOString().split('T')[0],
+          };
+
+          setNewTask(updatedTask);
+        } else {
+          setIsCustom(true);
+          const updatedTask = {
+            ...newTask,
+            startTime: '',
+            endTime: '',
+          };
+
+          setNewTask(updatedTask);
+          console.log(newTask);
+        }
+        break;
+      }
+      case 'targetMemberId' || 'menuId': {
+        // value값을 number로 변환
         const updatedTask = {
           ...newTask,
-          startTime: currentDate.toISOString().split('T')[0],
-          endTime: endDate.toISOString().split('T')[0],
+          [type]: +value.value,
         };
 
         setNewTask(updatedTask);
-      } else {
-        setIsCustom(true);
+        break;
+      }
+      default: {
         const updatedTask = {
           ...newTask,
-          startTime: '',
-          endTime: '',
+          [type]: value.value,
         };
 
         setNewTask(updatedTask);
       }
-      return;
     }
-
-    const updatedTask = {
-      ...newTask,
-      [type]: value.value,
-    };
-
-    setNewTask(updatedTask);
+    console.log(newTask);
   };
 
+  // 상위그룹 select 선택 값
   const handleParentGroupChange = (value: string) => {
     // 선택한 상위그룹내용으로 하위 그룹 option으로 변경
     setParentGroup(cGroup[value]);
     setChildGroup(cGroup[value][0]);
   };
 
+  // 하위그룹 select 선택 값
   const onChildGroupChange = (value: string) => {
-    // 선택한 하위 그룹으로 필터링된 페이지로 이동
     setChildGroup(value);
   };
 
+  // 시작 날짜 입력 값
   const onChangeStartTime: DatePickerProps['onChange'] = (date, dateString) => {
     const updatedTask = {
       ...newTask,
@@ -129,8 +146,10 @@ export default function CreateTask({ isOpen, onClose }: Props) {
     };
 
     setNewTask(updatedTask);
+    console.log(newTask);
   };
 
+  // 종료 날짜 입력 값
   const onChangeEndTime: DatePickerProps['onChange'] = (date, dateString) => {
     const updatedTask = {
       ...newTask,
@@ -138,17 +157,21 @@ export default function CreateTask({ isOpen, onClose }: Props) {
     };
 
     setNewTask(updatedTask);
+    console.log(newTask);
   };
 
-  const onChangeTaskDescription = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {
+  // task 상세설명 입력 값
+  const onChangeTaskDescription = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const updatedTask = {
       ...newTask,
       taskDetail: e.target.value,
     };
 
     setNewTask(updatedTask);
-  }, []);
+    console.log(newTask);
+  };
 
+  // task 이름 newTask에 저장
   useEffect(() => {
     const updatedTask = {
       ...newTask,
@@ -159,17 +182,20 @@ export default function CreateTask({ isOpen, onClose }: Props) {
     console.log(newTask);
   }, [taskName]);
 
+  // 모달창이 새로 열릴 때 마다 값 초기화
   useEffect(() => {
     setNewTask({
       taskName: '',
       startTime: '',
       endTime: '',
-      menuName: '',
-      groupName: '',
-      targetMember: '',
+      menuId: -1,
+      projectTeamId: -1,
+      targetMemberId: -1,
       taskDetail: '',
     });
     setIsCustom(true);
+    setTaskName('');
+    console.log(newTask);
   }, [isOpen]);
 
   const onClickCreateTask = useCallback(() => {}, []);
@@ -265,7 +291,7 @@ export default function CreateTask({ isOpen, onClose }: Props) {
                   <Select
                     labelInValue
                     defaultValue={{ value: '', label: '메뉴 선택' }}
-                    onChange={handleChange('menuName')}
+                    onChange={handleChange('menuId')}
                     style={{ width: 120 }}
                     options={menuNameList}
                     dropdownStyle={{
@@ -280,7 +306,7 @@ export default function CreateTask({ isOpen, onClose }: Props) {
                   <Select
                     labelInValue
                     defaultValue={{ value: '', label: '할당자 선택' }}
-                    onChange={handleChange('targetMember')}
+                    onChange={handleChange('targetMemberId')}
                     style={{ width: 120 }}
                     options={memberList}
                     dropdownStyle={{
