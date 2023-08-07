@@ -10,10 +10,13 @@ import {
 } from 'react-icons/ai';
 import { convertMinutes } from '@/utils/convertMinutes.ts';
 import { useMessage } from '@/hooks/useMessage.ts';
+import { useMutation } from 'react-query';
+import { signUp } from '@/api/Members/Login-Signup.ts';
+import { SignUpInfo } from '@/typings/member.ts';
 const time = 300;
 export default function SignUp() {
   const [name, onChangeName, setName] = useInput('');
-  const [nickName, onChangeNickName, setNickName] = useInput('');
+  const [nickname, onChangeNickname, setNickname] = useInput('');
   const [email, onChangeEmail, setEmail] = useInput('');
   const [auth, onChangeAuth, setAuth] = useInput('');
   const [password, onChangePassword, setPassword] = useInput('');
@@ -27,6 +30,16 @@ export default function SignUp() {
   const [isPwVisible, setIsPwVisible] = useState(false);
   const [isCheckPw, setIsCheckPw] = useState(false);
   const { showMessage, contextHolder } = useMessage();
+
+  const { mutate } = useMutation(signUp);
+  const signUpInfo: SignUpInfo = {
+    email,
+    password,
+    nickname,
+    name,
+    position: isEach ? 'INDIVIDUAL' : 'COMPANY',
+    loginType: 'UPLOG',
+  };
 
   /** 인증번호 전송 함수, 재전송에서도 활용하기 위해서 밖으로 뺌 */
   const sendAuth = useCallback(() => {
@@ -70,7 +83,7 @@ export default function SignUp() {
     (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
-      if (!name || !nickName || !email || !isAuth || !isCheckPw) {
+      if (!name || !nickname || !email || !isAuth || !isCheckPw) {
         showMessage('warning', '모든 정보를 입력해주세요.');
 
         return;
@@ -78,7 +91,7 @@ export default function SignUp() {
 
       showMessage('success', '잘됨.');
     },
-    [name, nickName, email, isAuth, isCheckPw]
+    [name, nickname, email, isAuth, isCheckPw]
   );
 
   // timer
@@ -186,12 +199,12 @@ export default function SignUp() {
               <span className={'w-full h-1/3 flex-row-center'}>
                 <label className={'w-h-full flex-row-center'}>
                   <span className={'w-1/6 h-full flex-row-center text-[1.7rem]'}>
-                    <FiUser className={nickName ? 'stroke-orange' : 'stroke-gray-light'} />
+                    <FiUser className={nickname ? 'stroke-orange' : 'stroke-gray-light'} />
                   </span>
                   <input
                     type="text"
-                    value={nickName}
-                    onChange={onChangeNickName}
+                    value={nickname}
+                    onChange={onChangeNickname}
                     placeholder={'닉네임'}
                     maxLength={10}
                     required
@@ -287,9 +300,9 @@ export default function SignUp() {
                       placeholder={'비밀번호'}
                       maxLength={15}
                       required
-                      className={`w-9/12 h-full text-lg ${
-                        password && !isPwVisible && 'tracking-[-0.3rem]'
-                      }`}
+                      className={`w-9/12 h-full text-lg 
+                  
+                      `}
                     />
                     <button
                       type={'button'}
@@ -320,6 +333,7 @@ export default function SignUp() {
         className={
           'flex-row-center rounded-md w-[37rem] h-12 mt-10 py-7 font-bold text-xl bg-orange text-white'
         }
+        onClick={() => mutate(signUpInfo)}
       >
         회원가입
       </button>
