@@ -25,7 +25,7 @@
     font-size: 0.93rem;
 }
 
-.anticon svg {
+.ant-picker .anticon svg {
     color : var(--gray-light);
 }
 
