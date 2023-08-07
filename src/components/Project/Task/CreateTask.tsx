@@ -11,9 +11,10 @@ import {
 } from '@chakra-ui/react';
 import { useMessage } from '@/hooks/useMessage.ts';
 import useInput from '@/hooks/useInput.ts';
-import { SelectMenu } from '@/typings/project.ts';
+import { SelectMenu, Task } from '@/typings/project.ts';
 import { DatePicker, DatePickerProps, Select } from 'antd';
-import { ChangeEvent, useCallback } from 'react';
+import { ChangeEvent, useCallback, useState } from 'react';
+import { eachTask } from '@/recoil/Project/atom.ts';
 
 interface Props {
   isOpen: boolean;
@@ -25,6 +26,8 @@ export default function CreateTask({ isOpen, onClose }: Props) {
   const [taskName, onChangeTaskName] = useInput('');
   const [taskDescription, , setTaskDescription] = useInput('');
 
+  const [newTask, setNewTask] = useState<Task>(eachTask);
+
   const dateData: SelectMenu[] = [
     { value: '날짜', label: '날짜' },
     {
@@ -32,8 +35,9 @@ export default function CreateTask({ isOpen, onClose }: Props) {
       label: '최신순',
     },
   ];
-  const handleChange = (value: { value: string; label: React.ReactNode }) => {
-    //TODO : Task 상태, 날짜별로 필터링해서 보여주기
+  const handleChange = (type: string) => (value: { value: string; label: React.ReactNode }) => {
+    //update task
+    console.log(type);
     console.log(value);
   };
 
@@ -98,7 +102,7 @@ export default function CreateTask({ isOpen, onClose }: Props) {
                   <Select
                     labelInValue
                     defaultValue={dateData[0]}
-                    onChange={handleChange}
+                    onChange={handleChange('date')}
                     style={{ width: 120 }}
                     options={dateData}
                     dropdownStyle={{
@@ -129,7 +133,7 @@ export default function CreateTask({ isOpen, onClose }: Props) {
                   <Select
                     labelInValue
                     defaultValue={dateData[0]}
-                    onChange={handleChange}
+                    onChange={handleChange('menu')}
                     style={{ width: 120 }}
                     options={dateData}
                     dropdownStyle={{
@@ -148,7 +152,7 @@ export default function CreateTask({ isOpen, onClose }: Props) {
                   <Select
                     labelInValue
                     defaultValue={dateData[0]}
-                    onChange={handleChange}
+                    onChange={handleChange('group')}
                     style={{ width: 120 }}
                     options={dateData}
                     dropdownStyle={{
@@ -163,7 +167,7 @@ export default function CreateTask({ isOpen, onClose }: Props) {
                   <Select
                     labelInValue
                     defaultValue={dateData[0]}
-                    onChange={handleChange}
+                    onChange={handleChange('targetMember')}
                     style={{ width: 120 }}
                     options={dateData}
                     dropdownStyle={{
