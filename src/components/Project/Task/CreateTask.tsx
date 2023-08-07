@@ -37,9 +37,9 @@ export default function CreateTask({ isOpen, onClose }: Props) {
   });
 
   const taskPeriod: SelectMenu[] = [
-    { value: '1주', label: '1주' },
-    { value: '2주', label: '2주' },
-    { value: '3주', label: '3주' },
+    { value: '7', label: '1주' },
+    { value: '14', label: '2주' },
+    { value: '21', label: '3주' },
     { value: '사용자 지정', label: '사용자 지정' },
   ];
 
@@ -54,7 +54,6 @@ export default function CreateTask({ isOpen, onClose }: Props) {
   type ChildGroup = keyof typeof cGroup;
 
   const menuList = useRecoilValue(menuListData);
-
   const menuNameList: SelectMenu[] = menuList.map((menuItem) => ({
     value: menuItem.name,
     label: menuItem.name,
@@ -66,19 +65,51 @@ export default function CreateTask({ isOpen, onClose }: Props) {
     label: `${memberItem.nickName}(${memberItem.name})`,
   }));
 
+  const [isCustom, setIsCustom] = useState(true);
+
+  const [parentGroup, setParentGroup] = useState(cGroup[pGroup[0] as ChildGroup]);
+  const [childGroup, setChildGroup] = useState(cGroup[pGroup[0] as ChildGroup][0]);
+
+  // task 사용자 입력값으로 지정
   const handleChange = (type: string) => (value: { value: string; label: React.ReactNode }) => {
-    // task 사용자 입력값으로 지정
+    // 날짜 입력 타입이 사용자 지정이 아니면 custom 불가능하게
+    if (type === 'date') {
+      if (value.value !== '사용자 지정') {
+        setIsCustom(false);
+
+        // 주차 계산
+        const currentDate = new Date();
+        const endDate = new Date(currentDate);
+        endDate.setDate(currentDate.getDate() + +value.value);
+
+        // task 날짜 정보 설정
+        const updatedTask = {
+          ...newTask,
+          startTime: currentDate.toISOString().split('T')[0],
+          endTime: endDate.toISOString().split('T')[0],
+        };
+
+        setNewTask(updatedTask);
+      } else {
+        setIsCustom(true);
+        const updatedTask = {
+          ...newTask,
+          startTime: '',
+          endTime: '',
+        };
+
+        setNewTask(updatedTask);
+      }
+      return;
+    }
+
     const updatedTask = {
       ...newTask,
       [type]: value.value,
     };
 
     setNewTask(updatedTask);
-    console.log(newTask);
   };
-
-  const [parentGroup, setParentGroup] = useState(cGroup[pGroup[0] as ChildGroup]);
-  const [childGroup, setChildGroup] = useState(cGroup[pGroup[0] as ChildGroup][0]);
 
   const handleParentGroupChange = (value: string) => {
     // 선택한 상위그룹내용으로 하위 그룹 option으로 변경
@@ -127,6 +158,19 @@ export default function CreateTask({ isOpen, onClose }: Props) {
     setNewTask(updatedTask);
     console.log(newTask);
   }, [taskName]);
+
+  useEffect(() => {
+    setNewTask({
+      taskName: '',
+      startTime: '',
+      endTime: '',
+      menuName: '',
+      groupName: '',
+      targetMember: '',
+      taskDetail: '',
+    });
+    setIsCustom(true);
+  }, [isOpen]);
 
   const onClickCreateTask = useCallback(() => {}, []);
   return (
@@ -197,11 +241,20 @@ export default function CreateTask({ isOpen, onClose }: Props) {
               <div className={'flex-row-center w-full mb-5 text-[1rem]'}>
                 <div className={'flex-col w-1/2'}>
                   <span className={'flex mb-[0.5rem] text-gray-dark font-bold'}>시작 날짜</span>
-                  <DatePicker onChange={onChangeStartTime} placement={'bottomLeft'} />
+
+                  {isCustom ? (
+                    <DatePicker onChange={onChangeStartTime} placement={'bottomLeft'} />
+                  ) : (
+                    <span className={'text-black ml-3'}>{newTask.startTime}</span>
+                  )}
                 </div>
                 <div className={'flex-col w-1/2 ml-16'}>
                   <span className={'flex mb-[0.5rem] text-gray-dark font-bold'}>종료 날짜</span>
-                  <DatePicker onChange={onChangeEndTime} placement={'bottomLeft'} />
+                  {isCustom ? (
+                    <DatePicker onChange={onChangeEndTime} placement={'bottomLeft'} />
+                  ) : (
+                    <span className={'text-black ml-3'}>{newTask.endTime}</span>
+                  )}
                 </div>
               </div>
 
