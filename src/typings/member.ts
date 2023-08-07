@@ -17,3 +17,10 @@ export interface GetUserInfo extends Omit<SignUpInfo, 'loginType' | 'password'> 
 }
 
 export interface SaveUserInfo extends Omit<GetUserInfo, 'accessToken' | 'refreshToken'> {}
+
+export interface targetMemberInfo {
+  id: number;
+  name: string;
+  nickname: string;
+  image: string;
+}
