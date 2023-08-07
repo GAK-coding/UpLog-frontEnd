@@ -6,10 +6,3 @@ export interface SignUpInfo {
   position: 'INDIVIDUAL' | 'COMPANY';
   loginType: 'UPLOG' | 'GOOGLE';
 }
-
-export interface targetMemberInfo {
-  id: number;
-  name: string;
-  nickname: string;
-  image: string;
-}

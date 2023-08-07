@@ -13,6 +13,7 @@ import { useMessage } from '@/hooks/useMessage.ts';
 import { useMutation } from 'react-query';
 import { signUp } from '@/api/Members/Login-Signup.ts';
 import { SignUpInfo } from '@/typings/member.ts';
+import { useNavigate } from 'react-router-dom';
 const time = 300;
 export default function SignUp() {
   const [name, onChangeName, setName] = useInput('');
@@ -30,8 +31,9 @@ export default function SignUp() {
   const [isPwVisible, setIsPwVisible] = useState(false);
   const [isCheckPw, setIsCheckPw] = useState(false);
   const { showMessage, contextHolder } = useMessage();
+  const navigate = useNavigate();
 
-  const { mutate } = useMutation(signUp);
+  const { mutate, isSuccess } = useMutation(signUp);
   const signUpInfo: SignUpInfo = {
     email,
     password,
@@ -55,6 +57,13 @@ export default function SignUp() {
     if (isAuth) return;
 
     if (!email) return showMessage('warning', '이메일을 입력해주세요.');
+
+    const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+    if (!emailRegex.test(email)) {
+      showMessage('warning', '이메일이 유효하지 않습니다.');
+
+      return;
+    }
 
     // 인증 번호 전송
     if (!isAuthClick) {
@@ -89,9 +98,18 @@ export default function SignUp() {
         return;
       }
 
-      showMessage('success', '잘됨.');
+      const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+      if (!emailRegex.test(email)) {
+        showMessage('warning', '이메일이 유효하지 않습니다.');
+
+        return;
+      }
+
+      mutate(signUpInfo);
+
+      navigate('/login');
     },
-    [name, nickname, email, isAuth, isCheckPw]
+    [name, nickname, email, isAuth, isCheckPw, signUpInfo, isSuccess]
   );
 
   // timer
@@ -190,7 +208,6 @@ export default function SignUp() {
                     onChange={onChangeName}
                     placeholder={'이름'}
                     maxLength={10}
-                    required
                     className={'w-5/6 h-full text-lg'}
                   />
                 </label>
@@ -207,7 +224,6 @@ export default function SignUp() {
                     onChange={onChangeNickname}
                     placeholder={'닉네임'}
                     maxLength={10}
-                    required
                     className={'w-5/6 h-full text-lg rounded-br-md'}
                   />
                 </label>
@@ -230,11 +246,10 @@ export default function SignUp() {
                     <MdOutlineMailOutline className={email ? 'fill-orange' : 'fill-gray-light'} />
                   </span>
                   <input
-                    type="email"
+                    type="text"
                     value={email}
                     onChange={onChangeEmail}
                     placeholder={'이메일'}
-                    required
                     maxLength={30}
                     className={'w-5/6 h-full text-lg rounded-tr-md'}
                   />
@@ -256,7 +271,6 @@ export default function SignUp() {
                       value={auth}
                       onChange={onChangeAuth}
                       placeholder={'인증번호'}
-                      required
                       disabled={isAuth}
                       maxLength={10}
                       className={'w-9/12 h-full text-lg disabled:bg-inherit'}
@@ -299,7 +313,6 @@ export default function SignUp() {
                       onChange={onChangePassword}
                       placeholder={'비밀번호'}
                       maxLength={15}
-                      required
                       className={`w-9/12 h-full text-lg 
                   
                       `}
@@ -333,7 +346,6 @@ export default function SignUp() {
         className={
           'flex-row-center rounded-md w-[37rem] h-12 mt-10 py-7 font-bold text-xl bg-orange text-white'
         }
-        onClick={() => mutate(signUpInfo)}
       >
         회원가입
       </button>
