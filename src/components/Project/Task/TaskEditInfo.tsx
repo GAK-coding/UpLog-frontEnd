@@ -3,7 +3,7 @@ import { SelectMenu } from '@/typings/project.ts';
 import { useState } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 
-export default function TaskEditInfo() {
+export default function TaskEditInfo({ isEdit: booleaan }) {
   const dateData: SelectMenu[] = [
     { value: '날짜', label: '날짜' },
     {

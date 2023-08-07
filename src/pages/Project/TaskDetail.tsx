@@ -55,7 +55,7 @@ export default function TaskDetail() {
         </section>
         <div className={'w-[80%] border-b border-gray-spring my-4'}></div>
         {/*부가 내용 detail*/}
-        <TaskEditInfo />
+        <TaskEditInfo isEdit={isEdit} />
         <div className={'w-[80%] border-b border-gray-spring my-4'}></div>
         {/*세부 내용 */}
         <section className={'w-[70%] h-auto text-[2rem] pt-4 pb-8'}>
