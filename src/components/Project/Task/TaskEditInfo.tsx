@@ -3,7 +3,10 @@ import { SelectMenu } from '@/typings/project.ts';
 import { useState } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 
-export default function TaskEditInfo({ isEdit: booleaan }) {
+interface Props {
+  isEdit: boolean;
+}
+export default function TaskEditInfo({ isEdit }: Props) {
   const dateData: SelectMenu[] = [
     { value: '날짜', label: '날짜' },
     {
@@ -34,7 +37,12 @@ export default function TaskEditInfo({ isEdit: booleaan }) {
           <span>시작날짜</span>
           <div className={'ml-3 h-4 border-solid border-r border-[0.2px] border-gray-border'} />
         </div>
-        <DatePicker onChange={onChange} placement={'bottomLeft'} bordered={false} />
+        {isEdit}
+        {isEdit ? (
+          <DatePicker onChange={onChange} placement={'bottomLeft'} bordered={false} />
+        ) : (
+          <span className={'ml-3 text-gray-dark'}>2023.07.07</span>
+        )}
       </div>
 
       {/*종료날짜*/}
@@ -45,7 +53,11 @@ export default function TaskEditInfo({ isEdit: booleaan }) {
           <span>종료날짜</span>
           <div className={'ml-3 h-4 border-solid border-r border-[0.2px] border-gray-border'} />
         </div>
-        <DatePicker onChange={onChange} placement={'bottomLeft'} bordered={false} />
+        {isEdit ? (
+          <DatePicker onChange={onChange} placement={'bottomLeft'} bordered={false} />
+        ) : (
+          <span className={'ml-3 text-gray-dark'}>2023.07.07</span>
+        )}
       </div>
       {/*메뉴*/}
       <div
@@ -55,19 +67,23 @@ export default function TaskEditInfo({ isEdit: booleaan }) {
           <span>메뉴</span>
           <div className={'ml-3 h-4 border-solid border-r border-[0.2px] border-gray-border'} />
         </div>
-        <Select
-          labelInValue
-          defaultValue={dateData[0]}
-          onChange={handleChange}
-          style={{ width: 100 }}
-          bordered={false}
-          options={dateData}
-          dropdownStyle={{
-            backgroundColor: 'var(--gray-sideBar)',
-            color: 'var(--black)',
-            borderColor: 'var(--border-line)',
-          }}
-        />
+        {isEdit ? (
+          <Select
+            labelInValue
+            defaultValue={dateData[0]}
+            onChange={handleChange}
+            style={{ width: 100 }}
+            bordered={false}
+            options={dateData}
+            dropdownStyle={{
+              backgroundColor: 'var(--gray-sideBar)',
+              color: 'var(--black)',
+              borderColor: 'var(--border-line)',
+            }}
+          />
+        ) : (
+          <span className={'ml-3 text-gray-dark'}>요구사항</span>
+        )}
       </div>
 
       {/*그룹*/}
@@ -78,19 +94,23 @@ export default function TaskEditInfo({ isEdit: booleaan }) {
           <span>그룹</span>
           <div className={'ml-3 h-4 border-solid border-r border-[0.2px] border-gray-border'} />
         </div>
-        <Select
-          labelInValue
-          defaultValue={dateData[0]}
-          onChange={handleChange}
-          style={{ width: 100 }}
-          bordered={false}
-          options={dateData}
-          dropdownStyle={{
-            backgroundColor: 'var(--gray-sideBar)',
-            color: 'var(--black)',
-            borderColor: 'var(--border-line)',
-          }}
-        />
+        {isEdit ? (
+          <Select
+            labelInValue
+            defaultValue={dateData[0]}
+            onChange={handleChange}
+            style={{ width: 100 }}
+            bordered={false}
+            options={dateData}
+            dropdownStyle={{
+              backgroundColor: 'var(--gray-sideBar)',
+              color: 'var(--black)',
+              borderColor: 'var(--border-line)',
+            }}
+          />
+        ) : (
+          <span className={'ml-3 text-gray-dark'}>개발팀-frontend</span>
+        )}
       </div>
 
       {/*할당자*/}
@@ -107,19 +127,23 @@ export default function TaskEditInfo({ isEdit: booleaan }) {
         {isTargetMember && userprofile !== '' && (
           <img src={userprofile} className={'ml-3 w-[2rem] h-[2rem] rounded-full'} />
         )}
-        <Select
-          labelInValue
-          defaultValue={dateData[0]}
-          onChange={handleChange}
-          style={{ width: 100 }}
-          bordered={false}
-          options={dateData}
-          dropdownStyle={{
-            backgroundColor: 'var(--gray-sideBar)',
-            color: 'var(--black)',
-            borderColor: 'var(--border-line)',
-          }}
-        />
+        {isEdit ? (
+          <Select
+            labelInValue
+            defaultValue={dateData[0]}
+            onChange={handleChange}
+            style={{ width: 100 }}
+            bordered={false}
+            options={dateData}
+            dropdownStyle={{
+              backgroundColor: 'var(--gray-sideBar)',
+              color: 'var(--black)',
+              borderColor: 'var(--border-line)',
+            }}
+          />
+        ) : (
+          <span className={'ml-2 text-gray-dark'}>OCI(오채영)</span>
+        )}
       </div>
     </section>
   );
