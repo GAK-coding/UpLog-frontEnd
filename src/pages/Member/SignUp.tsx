@@ -14,7 +14,6 @@ import { useMutation } from 'react-query';
 import { signUp } from '@/api/Members/Login-Signup.ts';
 import { SignUpInfo } from '@/typings/member.ts';
 import { useNavigate } from 'react-router-dom';
-import message from 'antd/lib/message';
 const time = 300;
 export default function SignUp() {
   const [name, onChangeName, setName] = useInput('');
