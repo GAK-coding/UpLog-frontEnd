@@ -3,7 +3,7 @@ import { SelectMenu } from '@/typings/project.ts';
 import { useState } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 
-export default function TaskDetailInfo() {
+export default function TaskEditInfo() {
   const dateData: SelectMenu[] = [
     { value: '날짜', label: '날짜' },
     {

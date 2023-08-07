@@ -1,11 +1,14 @@
 import { IoIosArrowBack } from 'react-icons/io';
 import { Link, useParams } from 'react-router-dom';
-import { Select } from '@chakra-ui/react';
+import { Select, Textarea } from '@chakra-ui/react';
 import { AiFillCaretDown } from 'react-icons/ai';
-import TaskDetailInfo from '@/components/Project/Task/TaskDetailInfo.tsx';
+import TaskEditInfo from '@/components/Project/Task/TaskEditInfo.tsx';
+import { useState } from 'react';
 
 export default function TaskDetail() {
   const { product, project, menutitle } = useParams();
+
+  const [isEdit, setIsEdit] = useState<boolean>(false);
   return (
     <section className={'flex w-full h-auto py-20'}>
       {/*돌아가기 버튼*/}
@@ -52,11 +55,31 @@ export default function TaskDetail() {
         </section>
         <div className={'w-[80%] border-b border-gray-spring my-4'}></div>
         {/*부가 내용 detail*/}
-        <TaskDetailInfo />
+        <TaskEditInfo />
         <div className={'w-[80%] border-b border-gray-spring my-4'}></div>
         {/*세부 내용 */}
-        <section className={'w-[80%] h-auto text-[2rem]'}>
-          <div>여기 세부내용 입력하는 text area로 바꾸기</div>
+        <section className={'w-[70%] h-auto text-[2rem] pt-4 pb-8'}>
+          <Textarea
+            value={'emails'}
+            // onChange={onChangeEmails}
+            border={'1px solid var(--border-line)'}
+            height={'100%'}
+            focusBorderColor={'none'}
+            placeholder="이메일은 쉼표(,)로 구분해 주세요."
+            isReadOnly={true}
+          />
+        </section>
+
+        {/*수정 삭제 버튼*/}
+        <section className={'flex-row-center justify-end w-full h-[4.5rem] mb-4'}>
+          <nav
+            className={`flex-row-center ${
+              isEdit ? 'justify-end' : 'justify-between'
+            } w-[13rem] h-auto py-4 px-4 mr-6 font-bold text-white`}
+          >
+            {!isEdit && <button className={'w-[5rem] rounded h-9 bg-orange'}>수정</button>}
+            <button className={'w-[5rem] rounded h-9 bg-orange'}>{isEdit ? '완료' : '삭제'}</button>
+          </nav>
         </section>
       </article>
     </section>
