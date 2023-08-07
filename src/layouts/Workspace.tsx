@@ -8,13 +8,13 @@ import Groups from '@/components/Product/SideBar/Groups.tsx';
 import { Scrollbars } from 'rc-scrollbars';
 
 export default function Workspace() {
-  const { product, project } = useParams();
+  const { product, project, parentgroup, childgroup } = useParams();
   const { pathname } = useLocation();
 
   return (
     <section className={'w-h-full flex'}>
-      <nav className={'w-[18.6rem] h-full border-r border-gray-sideBar] py-4'}>
-        <div className={'h-[30%] border-b'}>
+      <nav className={'w-[18.6rem] h-full border-r py-4'}>
+        <div className={`h-[30%] ${product && project && 'border-b'}`}>
           <div className={'h-1/5 flex-row-center px-10'}>
             <Link to={`/workspace/${product}`} className={'text-3xl font-bold'}>
               AllFromU
@@ -23,7 +23,11 @@ export default function Workspace() {
           </div>
           <div className={'h-4/5 flex flex-col justify-evenly'}>
             <NavLink
-              to={`/workspace/${product}/members`}
+              to={
+                parentgroup
+                  ? `/workspace/${product}/${project}/group/${parentgroup}/setting`
+                  : `/workspace/${product}/members`
+              }
               className={({ isActive }) => `base-menu ${isActive && 'base-menu-selected'}`}
             >
               <FiUser className={'text-[1.4rem] ml-2 mr-3'} /> 멤버
@@ -42,17 +46,19 @@ export default function Workspace() {
             </NavLink>
           </div>
         </div>
-        <div className={'overflow-y-auto h-[70%]'}>
-          <Scrollbars
-            style={{ height: '100%' }}
-            autoHide
-            autoHideTimeout={1000}
-            // Duration for hide animation in ms.
-            autoHideDuration={200}
-          >
-            {pathname === `/workspace/${product}/chats` ? <Chats /> : <Groups />}
-          </Scrollbars>
-        </div>
+        {product && project && (
+          <div className={'overflow-y-auto h-[70%]'}>
+            <Scrollbars
+              style={{ height: '100%' }}
+              autoHide
+              autoHideTimeout={1000}
+              // Duration for hide animation in ms.
+              autoHideDuration={200}
+            >
+              {pathname === `/workspace/${product}/chats` ? <Chats /> : <Groups />}
+            </Scrollbars>
+          </div>
+        )}
       </nav>
       <article className={'w-noneSideBar h-full'}>
         <Scrollbars

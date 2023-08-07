@@ -26,17 +26,22 @@ export default {
           dark: 'var(--gray-dark)',
           spring: 'var(--gray-spring)',
           border: 'var(--border-gray)',
-          board: 'var(--board-gray)',
           sideBar: 'var(--sideBar-gray)',
           table: 'var(--table-gray)',
         },
         hover: 'var(--hover)',
+        'menu-arrow': 'var(--menu-arrow)',
         type: {
           feature: 'var(--Feature)',
           changed: 'var(--Changed)',
           deprecated: 'var(--Deprecated)',
           new: 'var(--New)',
           fixed: 'var(--Fixed)',
+        },
+        status: {
+          before: 'var(--before)',
+          going: 'var(--going)',
+          done: 'var(--done)',
         },
       },
       fontFamily: {
@@ -48,7 +53,8 @@ export default {
       height: {
         noneHeader: 'calc(100vh - 5.7rem)',
         board: 'calc(100vh - 19.5rem)',
-        'board-scroll': 'calc(100vh - 20.5rem)',
+        menu: 'calc(100vh - 10.7rem)',
+        content: 'calc(100vh - 15.7rem)',
       },
       boxShadow: {
         'sign-up': '2px 2px 10px 1px rgba(0, 0, 0, 0.15), -2px -2px 10px 0px var(--shadow)',

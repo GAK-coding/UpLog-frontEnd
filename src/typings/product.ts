@@ -22,3 +22,13 @@ export interface Release {
   date: string;
   contents: changeLog[];
 }
+
+export interface ProductMember {
+  position: 'master' | 'leader' | 'member';
+  profile: string | null;
+  nickName: string;
+  name: string;
+  email: string;
+  // 케밥 버튼을 위한 변수이며 프론트에서 추가해줘야됨
+  isOpen: boolean;
+}

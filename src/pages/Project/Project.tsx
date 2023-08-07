@@ -1,127 +1,88 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { BsChevronCompactDown } from 'react-icons/bs';
-import { SubGroup, Task } from '@/typings/project.ts';
+import { SubGroup, Task, TaskStatus } from '@/typings/project.ts';
 import { Progress, Select, Space } from 'antd';
 import StatusBoard from '@/components/Project/Board/StatusBoard.tsx';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
+import { DragDropContext, DropResult } from 'react-beautiful-dnd';
+import { useRecoilState } from 'recoil';
+import { taskState } from '@/recoil/Project/atom.ts';
 
 export default function Project() {
   const { product, project } = useParams();
-
   const navigate = useNavigate();
 
   // recoil에서 받아올 값
+  const [taskStatusList, setTaskStatusList] = useRecoilState(taskState);
   const taskList: Task[] = [
     {
       id: 0,
-      name: 'task1',
-      status: 'before',
-      group: '개발팀',
-      menu: '요구사항',
-      targetMember: 'OCI(오채영)',
+      dragId: '0',
+      taskName: 'task1',
+      targetMember: {
+        id: 1,
+        name: '오채영',
+        nickname: 'OCI',
+        image: '',
+      },
+      menuId: 1,
+      menuName: '요구사항',
+      projectId: 1,
+      projectTeamName: '개발팀',
+      projectTeamParentId: null,
+      taskStatus: 'PROGRESS_BEFORE',
+      taskDetail: 'task1 입니다롱',
+      startTime: '2023-08-01',
+      endTime: '2023-08-04',
     },
     {
       id: 1,
-      name: 'task2',
-      status: 'before',
-      group: '개발팀',
-      menu: '요구사항',
-      targetMember: 'OCI(오채영)',
-    },
-    {
-      id: 2,
-      name: 'task3',
-      status: 'before',
-      group: '마케팅팀',
-      menu: '요구사항',
-      targetMember: 'OCI(오채영)',
+      dragId: '1',
+      taskName: 'task2',
+      targetMember: {
+        id: 1,
+        name: '오채영',
+        nickname: 'OCI',
+        image: '',
+      },
+      menuId: 1,
+      menuName: '요구사항',
+      projectId: 1,
+      projectTeamName: '프론트엔드',
+      projectTeamParentId: 1,
+      taskStatus: 'PROGRESS_IN',
+      taskDetail: 'task2 입니다롱',
+      startTime: '2023-08-03',
+      endTime: '2023-08-10',
     },
     {
       id: 3,
-      name: 'task4',
-      status: 'going',
-      group: '마케팅팀',
-      menu: '테스트',
-      targetMember: 'OCI(오채영)',
-    },
-    {
-      id: 4,
-      name: 'task5',
-      status: 'going',
-      group: '홍보팀',
-      menu: '테스트',
-      targetMember: 'OCI(오채영)',
-    },
-    {
-      id: 5,
-      name: 'task6',
-      status: 'going',
-      group: '홍보팀',
-      menu: '요구사항',
-      targetMember: 'OCI(오채영)',
-    },
-    {
-      id: 6,
-      name: 'task7',
-      status: 'done',
-      group: '개발팀',
-      menu: '요구사항',
-      targetMember: 'OCI(오채영)',
-    },
-    {
-      id: 7,
-      name: 'task8',
-      status: 'before',
-      group: '마케팅',
-      menu: '요구사항',
-      targetMember: 'OCI(오채영)',
-    },
-    {
-      id: 8,
-      name: 'task9',
-      status: 'done',
-      group: '백엔드',
-      menu: '테스트',
-      targetMember: 'OCI(오채영)',
-    },
-    {
-      id: 9,
-      name: 'task10',
-      status: 'done',
-      group: '프론트엔드',
-      menu: '요구사항',
-      targetMember: 'OCI(오채영)',
-    },
-    {
-      id: 10,
-      name: 'task11',
-      status: 'before',
-      group: '프론트엔드',
-      menu: '테스트',
-      targetMember: 'OCI(오채영)',
-    },
-    {
-      id: 11,
-      name: 'task12',
-      status: 'before',
-      group: '백엔드',
-      menu: '요구사항',
-      targetMember: 'OCI(오채영)',
-    },
-    {
-      id: 12,
-      name: 'task13',
-      status: 'going',
-      group: '프론트엔드',
-      menu: '테스트',
-      targetMember: 'OCI(오채영)',
+      dragId: '3',
+      taskName: 'task3',
+      targetMember: {
+        id: 1,
+        name: '오채영',
+        nickname: 'OCI',
+        image: '',
+      },
+      menuId: 2,
+      menuName: '개발',
+      projectId: 1,
+      projectTeamName: '개발팀',
+      projectTeamParentId: null,
+      taskStatus: 'PROGRESS_COMPLETE',
+      taskDetail: 'task3 입니다롱',
+      startTime: '2023-08-01',
+      endTime: '2023-08-15',
     },
   ];
 
-  // 그룹으로 필터링 된 값
-  const progress = 77;
+  // 진행률 퍼센트
+  const [progress, setProgress] = useState(0);
+
+  // 칸반 | 스크럼
   const [isKanban, setIsKanban] = useState(true);
 
   const onClickKanban = useCallback((check: boolean) => {
@@ -132,7 +93,7 @@ export default function Project() {
   const cGroup: SubGroup = {
     그룹: ['하위그룹'],
     개발팀: ['전체', '프론트엔드', '백엔드', '풀스택'],
-    마케팅팀: ['전체', '콘텐츠', '디자인'],
+    마케팅팀: ['전체', 'SNS', '디자인'],
     홍보팀: ['전체', 'SNS', '기사'],
   };
 
@@ -142,8 +103,6 @@ export default function Project() {
   const [childGroup, setChildGroup] = useState(cGroup[pGroup[0] as ChildGroup][0]);
 
   const [filterGroup, setFilterGroup] = useState(pGroup[0]);
-
-  const [filterTaskList, setFilterTaskList] = useState(taskList);
 
   const handleParentGroupChange = (value: string) => {
     // 선택한 상위그룹내용으로 하위 그룹 option으로 변경
@@ -158,6 +117,37 @@ export default function Project() {
     // 선택한 하위 그룹으로 필터링된 페이지로 이동
     setChildGroup(value);
   };
+
+  // dnd - 드래그 끝나면 실행되는 함수
+  const onDragEnd = useCallback(
+    (result: DropResult) => {
+      const { destination, source } = result;
+
+      // 이상한 곳에 드래그하면 return
+      if (!destination) return;
+
+      // 출발지, 도착지의 board 상태 (전, 중, 후)
+      const sourceKey = source.droppableId as TaskStatus;
+      const destinationKey = destination.droppableId as TaskStatus;
+
+      // 재정렬
+      const items = JSON.parse(JSON.stringify(taskStatusList)) as typeof taskStatusList;
+      const [targetItem] = items[sourceKey].splice(source.index, 1);
+      items[destinationKey].splice(destination.index, 0, targetItem);
+
+      setTaskStatusList(items);
+    },
+    [taskStatusList]
+  );
+
+  // TODO : 그룹 필터링 되는거 확인하고 utils 함수로 빼기
+  useEffect(() => {
+    const totalTasks = [...taskStatusList.before, ...taskStatusList.going, ...taskStatusList.done]
+      .length;
+    const doneTasks = taskStatusList.done.length;
+    const percent = (doneTasks / totalTasks) * 100;
+    setProgress(Math.floor(percent));
+  }, [taskStatusList]);
 
   // 필터링 된 페이지로 이동
   useEffect(() => {
@@ -174,21 +164,64 @@ export default function Project() {
   useEffect(() => {
     if (filterGroup === '그룹') return;
 
-    if (childGroup === '전체') {
-      const allGroup = cGroup[filterGroup];
+    // const tempFilterGroup: Tasks = {};
+    //
+    // if (childGroup === '전체') {
+    //   Object.keys(taskStatusList).map((key) => {
+    //     const filterTasks = taskStatusList[key as TaskStatus].filter(
+    //       (task: Task) => task.group === filterGroup
+    //     );
+    //     console.log(filterTasks);
+    //     tempFilterGroup.key = filterTasks;
+    //   });
+    // } else {
+    //   Object.keys(taskStatusList).map((key) => {
+    //     const filterTasks = taskStatusList[key as TaskStatus].filter(
+    //       (task: Task) => task.group === childGroup
+    //     );
+    //     console.log(filterTasks);
+    //     tempFilterGroup.key = filterTasks;
+    //   });
+    // }
+    //
+    // setTaskStatusList(tempFilterGroup);
+    // console.log(tempFilterGroup);
 
-      // 현재 Group name으로 필터링 한 결과
-      const firstGroup = taskList.filter((task) => task.group === filterGroup);
+    // Object.keys(taskStatusList).map((key) => {
+    //   if (childGroup === '전체') {
+    //     const filterTasks = taskStatusList[key as TaskStatus].filter(
+    //       (task: Task) => task.group === filterGroup
+    //     );
+    //     console.log(filterTasks);
+    //     tempFilterGroup.key = filterTasks;
+    //   } else {
+    //     const filterTasks = taskStatusList[key as TaskStatus].filter(
+    //       (task: Task) => task.group === childGroup
+    //     );
+    //     console.log(filterTasks);
+    //     tempFilterGroup.key = filterTasks;
+    //   }
+    // console.log('key', key);
+    // console.log('taskStatusList[key]', taskStatusList[key]);
+    // console.log('taskStatusList', taskStatusList);
+    // });
 
-      // 현재 Group에 해당하는 subGroup들도 포함해서 필터링 한 결과
-      for (let i = 1; i < allGroup.length; i++) {
-        firstGroup.push(...taskList.filter((task) => task.group === allGroup[i]));
-        console.log(i, firstGroup);
-      }
-      setFilterTaskList(firstGroup);
-    } else {
-      setFilterTaskList(taskList.filter((task) => task.group === childGroup));
-    }
+    // if (childGroup === '전체') {
+    //   const allGroup = cGroup[filterGroup];
+    //
+    //   // 현재 Group name으로 필터링 한 결과
+    //   const firstGroup = taskList.filter((task) => task.group === filterGroup);
+    //
+    //   // 현재 Group에 해당하는 subGroup들도 포함해서 필터링 한 결과
+    //   for (let i = 1; i < allGroup.length; i++) {
+    //     firstGroup.push(...taskList.filter((task) => task.group === allGroup[i]));
+    //     // console.log(i, firstGroup);
+    //   }
+    //   setFilterTaskList(firstGroup);
+    // } else {
+    //   //TODO : 하위그룹 이름 중복 가능하게 한다면 p_id로 먼저 필터링 해야함
+    //   setFilterTaskList(taskList.filter((task) => task.group === childGroup));
+    // }
   }, [filterGroup, childGroup]);
 
   return (
@@ -204,12 +237,22 @@ export default function Project() {
                 style={{ width: 110 }}
                 onChange={handleParentGroupChange}
                 options={pGroup.map((group) => ({ label: group, value: group }))}
+                dropdownStyle={{
+                  backgroundColor: 'var(--gray-sideBar)',
+                  color: 'var(--black)',
+                  borderColor: 'var(--border-line)',
+                }}
               />
               <Select
                 style={{ width: 110 }}
                 value={childGroup}
                 onChange={onChildGroupChange}
                 options={parentGroup.map((group) => ({ label: group, value: group }))}
+                dropdownStyle={{
+                  backgroundColor: 'var(--gray-sideBar)',
+                  color: 'var(--black)',
+                  borderColor: 'var(--border-line)',
+                }}
               />
             </Space>
           </div>
@@ -220,19 +263,19 @@ export default function Project() {
             <button type={'button'} onClick={() => onClickKanban(true)}>
               <span
                 className={`text-3xl  ${
-                  isKanban ? 'text-black font-bold' : 'text-gray-board font-semibold'
-                }`}
+                  isKanban ? 'text-black font-bold' : 'text-gray-border font-semibold'
+                } transition ease-in-out duration-300 hover:scale-110 hover:-translate-y-1`}
               >
                 칸반
               </span>
             </button>
 
-            <div className={'mx-4 h-8 border-solid border-r border-[1px] border-gray-board'} />
+            <div className={'mx-4 h-8 border-solid border-r border-[1px] border-gray-border'} />
 
             <button type={'button'} onClick={() => onClickKanban(false)}>
               <span
-                className={`text-3xl  ${
-                  !isKanban ? 'text-black font-bold' : 'text-gray-board font-semibold'
+                className={`text-3xl transition ease-in-out duration-300 hover:scale-110  ${
+                  !isKanban ? 'text-black font-bold' : 'text-gray-border font-semibold'
                 }`}
               >
                 스크럼
@@ -269,15 +312,25 @@ export default function Project() {
       {/*보드*/}
       <div className={'w-noneSideBar h-board flex-col'}>
         <section className={'flex-col-center w-noneSideBar h-[90%]'}>
-          <div className={'flex-row-center justify-between w-full h-full pt-8 px-[12rem]'}>
-            <StatusBoard status={'before'} tasks={filterTaskList} />
-            <StatusBoard status={'going'} tasks={filterTaskList} />
-            <StatusBoard status={'done'} tasks={filterTaskList} />
-          </div>
+          {/*dnd*/}
+          <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
+            <div
+              className={
+                'flex-row-center justify-between w-full h-full pt-8 px-[12rem] overflow-x-auto'
+              }
+            >
+              <StatusBoard status={'PROGRESS_BEFORE'} tasks={taskStatusList['before']} />
+              <StatusBoard status={'PROGRESS_IN'} tasks={taskStatusList['going']} />
+              <StatusBoard status={'PROGRESS_COMPLETE'} tasks={taskStatusList['done']} />
+            </div>
+          </DragDropContext>
         </section>
         {/*하단페이지로 이동*/}
         <section className={'flex-row-center w-full h-[10%]'}>
-          <BsChevronCompactDown className={'text-[4rem] text-gray-light'} />
+          <BsChevronCompactDown
+            className={'text-[4rem] text-gray-light cursor-pointer'}
+            onClick={() => navigate(`/workspace/${product}/${project}/menu/결과물`)}
+          />
         </section>
       </div>
     </section>

@@ -5,10 +5,11 @@ import { GoKebabHorizontal } from 'react-icons/go';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
-import { typeBgColors } from '@/recoil/Product/ReleaseNote.tsx';
+import { typeBgColors } from '@/recoil/Product/ReleaseNote.ts';
 
 interface Props {
   isClickKebab: boolean;
+  setIsClickKebab: React.Dispatch<React.SetStateAction<boolean>>;
   onClickKebab: (e: React.MouseEvent<HTMLButtonElement>) => void;
   onClickComplete: (modalType: 'add' | 'complete') => void;
   setTempVersion: React.Dispatch<React.SetStateAction<string>>;
@@ -16,6 +17,7 @@ interface Props {
 
 export default function Tables({
   isClickKebab,
+  setIsClickKebab,
   onClickKebab,
   onClickComplete,
   setTempVersion,
@@ -54,49 +56,56 @@ export default function Tables({
         },
       ],
     },
-    // {
-    //   status: 'done',
-    //   version: 'v.1.1.2',
-    //   date: '2023.06.12',
-    //   contents: [
-    //     { type: 'Feature', content: '채널 통신 응답 중 발생할 수 있는 오류 코드 추가' },
-    //     {
-    //       type: 'Changed',
-    //       content: '공통 Request Protocol 추가',
-    //     },
-    //   ],
-    // },
-    // {
-    //   status: 'done',
-    //   version: 'v.1.1.1',
-    //   date: '2023.05.12',
-    //   contents: [{ type: 'Deprecated', content: '미사용 필드 삭제' }],
-    // },
-    // {
-    //   status: 'done',
-    //   version: 'v.1.1.0',
-    //   date: '2023.03.25',
-    //   contents: [{ type: 'Feature', content: 'Service Argent 채널 연결과 통신 관련 설명' }],
-    // },
-    // {
-    //   status: 'done',
-    //   version: 'v.1.0.0',
-    //   date: '2023.02.18',
-    //   contents: [
-    //     { type: 'New', content: 'AI Service 기술 상세 설명' },
-    //     { type: 'Fixed', content: '채널 통신 응답 기능 수정' },
-    //   ],
-    // },
+    {
+      status: 'done',
+      version: 'v.1.1.2',
+      date: '2023.06.12',
+      contents: [
+        { type: 'Feature', content: '채널 통신 응답 중 발생할 수 있는 오류 코드 추가' },
+        {
+          type: 'Changed',
+          content: '공통 Request Protocol 추가',
+        },
+      ],
+    },
+    {
+      status: 'done',
+      version: 'v.1.1.1',
+      date: '2023.05.12',
+      contents: [{ type: 'Deprecated', content: '미사용 필드 삭제' }],
+    },
+    {
+      status: 'done',
+      version: 'v.1.1.0',
+      date: '2023.03.25',
+      contents: [{ type: 'Feature', content: 'Service Argent 채널 연결과 통신 관련 설명' }],
+    },
+    {
+      status: 'done',
+      version: 'v.1.0.0',
+      date: '2023.02.18',
+      contents: [
+        { type: 'New', content: 'AI Service 기술 상세 설명' },
+        { type: 'Fixed', content: '채널 통신 응답 기능 수정' },
+      ],
+    },
   ];
 
   const navigate = useNavigate();
-  const { product, projectId } = useParams();
+  const { product, project } = useParams();
 
   // 마우스 올렸을 때, kebab 버튼 나타남
   const [isHovering, setIsHovering] = useState(false);
 
   const handleMouseEnter = useCallback((status: string) => {
     if (status === 'going') setIsHovering(true);
+  }, []);
+
+  const handleMouseLeave = useCallback((status: string) => {
+    if (status === 'going') {
+      setIsHovering(false);
+      setIsClickKebab(false);
+    }
   }, []);
 
   return (
@@ -108,13 +117,15 @@ export default function Tables({
             color={version.status === 'going' ? 'var(--gray-dark)' : ''}
             position={'relative'}
             onMouseEnter={() => handleMouseEnter(version.status)}
-            // onMouseLeave={() => handleMouseLeave(version.status)}
+            onMouseLeave={() => handleMouseLeave(version.status)}
           >
             <Td
               borderTop={'1px solid var(--gray-table)'}
               borderBottom={'1px solid var(--gray-table)'}
               padding={'1.6rem 0'}
               textAlign={'center'}
+              cursor={'pointer'}
+              onClick={() => navigate(`/workspace/${product}/${version.version}`)}
             >
               {version.version}
             </Td>

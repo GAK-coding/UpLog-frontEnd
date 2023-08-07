@@ -2,20 +2,58 @@ import React, { FormEvent, useCallback } from 'react';
 import { MdOutlineMailOutline } from 'react-icons/md';
 import useInput from '@/hooks/useInput.ts';
 import { AiOutlineLock } from 'react-icons/ai';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useGoogleLogin } from '@react-oauth/google';
 import { useMessage } from '@/hooks/useMessage.ts';
+import { GetUserInfo, LoginInfo, SaveUserInfo } from '@/typings/member.ts';
+import { loginUp } from '@/api/Members/Login-Signup.ts';
+import { useMutation } from 'react-query';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { loginStatus } from '@/recoil/User/atom.ts';
 
 export default function Login() {
   const { showMessage, contextHolder } = useMessage();
   const [email, onChangeEmail, setEmail] = useInput('');
   const [password, onChangePassword, setPassword] = useInput('');
+  const navigate = useNavigate();
+  const setIsLogin = useSetRecoilState(loginStatus);
 
-  const onSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const { mutate } = useMutation(loginUp, {
+    onSuccess: (data: GetUserInfo) => {
+      const { id, email, nickname, name, position, accessToken, refreshToken } = data;
+      const userInfo: SaveUserInfo = {
+        id,
+        nickname,
+        name,
+        position,
+        email,
+      };
 
-    if (!email || !password) showMessage('warning', '이메일과 비밀번호를 입력해주세요.');
-  }, []);
+      navigate('/workspace/product');
+      sessionStorage.setItem('accessToken', accessToken);
+      sessionStorage.setItem('refreshToken', refreshToken);
+      sessionStorage.setItem('userInfo', JSON.stringify(userInfo));
+      setIsLogin(true);
+    },
+    onError: () => {
+      showMessage('error', '일치하지 않아요.');
+    },
+  });
+
+  const onSubmit = useCallback(
+    (e: FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+
+      if (!email || !password) {
+        showMessage('warning', '이메일과 비밀번호를 입력해주세요.');
+        return;
+      }
+
+      const loginInfo: LoginInfo = { email, password };
+      mutate(loginInfo);
+    },
+    [email, password]
+  );
 
   const login = useGoogleLogin({
     onSuccess: (codeResponse) => console.log(codeResponse),
@@ -53,11 +91,10 @@ export default function Login() {
                     />
                   </span>
                   <input
-                    type="email"
+                    type="text"
                     value={email}
                     onChange={onChangeEmail}
                     placeholder={'이메일'}
-                    required
                     maxLength={30}
                     className={'w-5/6 h-full text-lg rounded-xl'}
                   />
@@ -77,8 +114,7 @@ export default function Login() {
                       onChange={onChangePassword}
                       placeholder={'비밀번호'}
                       maxLength={15}
-                      required
-                      className={`w-h-full text-lg rounded-xl ${password && 'tracking-[-0.3rem]'}`}
+                      className={`w-h-full text-lg rounded-xl`}
                     />
                   </span>
                 </label>

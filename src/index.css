@@ -36,6 +36,10 @@
   .task-detail-border {
     @apply border-[0.5px] rounded-[2px] bg-white border-task-detail-line shadow-task-detail
   }
+
+  .task-status-ring {
+    @apply w-[2.3rem] h-[2.3rem] rounded-full border-[3px]
+  }
 }
 
 

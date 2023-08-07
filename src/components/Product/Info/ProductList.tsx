@@ -1,6 +1,6 @@
 import { AiOutlinePlus } from 'react-icons/ai';
-import React, { useCallback, useEffect, useState } from 'react';
-import { product, productOpen } from '@/recoil/Product/atom.tsx';
+import React, { useCallback, useState } from 'react';
+import { productListData, productOpen } from '@/recoil/Product/atom.ts';
 import { useRecoilState } from 'recoil';
 import { RxDragHandleDots2 } from 'react-icons/rx';
 import { BiPencil } from 'react-icons/bi';
@@ -8,12 +8,16 @@ import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautif
 import { useDisclosure } from '@chakra-ui/react';
 import ProductInfoModal from '@/components/Product/Info/ProductInfoModal.tsx';
 import { Scrollbars } from 'rc-scrollbars';
+import { useNavigate } from 'react-router-dom';
 
 export default function ProductList() {
+  const navigate = useNavigate();
   // ProductList 정보
-  const [productList, setProductList] = useRecoilState(product);
-  // ProductList 모달창
-  const [isProductClick] = useRecoilState(productOpen);
+  const [productList, setProductList] = useRecoilState(productListData);
+
+  // 제품 List click
+  const [isProductClick, setIsProductClick] = useRecoilState(productOpen);
+
   // 제품추가&정보수정 모달창
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isCreateProduct, setIsCreateProduct] = useState(true);
@@ -91,19 +95,29 @@ export default function ProductList() {
                           className={`flex-row-center justify-between w-full h-[4.5rem] hover:bg-hover ${
                             snapshot.isDragging ? 'shadow-2xl shadow-gray-400' : ''
                           }`}
+                          onClick={() => {
+                            navigate(`/workspace/${product.name}`);
+                          }}
                         >
                           <RxDragHandleDots2
                             className={'flex w-[2.6rem] items-center text-4xl ml-4 fill-gray-light'}
+                            onClick={() => setIsProductClick(!isProductClick)}
                           />
                           <img
                             src={product.image}
                             alt="userprofile"
                             className={'ml-2 w-[2rem] h-[2rem]'}
+                            onClick={() => setIsProductClick(!isProductClick)}
                           />
-                          <span className={'ml-3 text-xl font-bold w-full'}>{product.name}</span>
+                          <span
+                            className={'ml-3 text-xl font-bold w-full'}
+                            onClick={() => setIsProductClick(!isProductClick)}
+                          >
+                            {product.name}
+                          </span>
                           <BiPencil
                             className={
-                              'flex-row-center w-20 text-xl mr-4 fill-gray-light cursor-pointer'
+                              'flex-row-center w-20 text-xl mr-4 fill-gray-light cursor-pointer z-50'
                             }
                             onClick={() => {
                               onOpen();

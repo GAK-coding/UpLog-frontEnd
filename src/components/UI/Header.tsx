@@ -1,26 +1,25 @@
-import React, { ChangeEvent, RefObject, useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { BsBellFill, BsMoonFill, BsQuestionCircle, BsSearch, BsSunFill } from 'react-icons/bs';
 import { FaUserCircle } from 'react-icons/fa';
 import useInput from '@/hooks/useInput.ts';
 import { useRecoilState } from 'recoil';
-import { profileOpen } from '@/recoil/User/atom.tsx';
+import { loginStatus, profileOpen } from '@/recoil/User/atom.ts';
 import { PiCaretUpDownLight } from 'react-icons/pi';
-import { productOpen } from '@/recoil/Product/atom.tsx';
+import { productOpen } from '@/recoil/Product/atom.ts';
 import { useOutsideAlerter } from '@/hooks/useOutsideAlerter.ts';
 import ProductList from '@/components/Product/Info/ProductList.tsx';
 import UserProfile from '@/components/Member/Header/UserProfile.tsx';
+import { themeState } from '@/recoil/Common/atom.ts';
 
 export default function Header() {
   const navigate = useNavigate();
-  const [darkMode, setDarkMode] = useState(localStorage.getItem('theme') === 'dark');
-
-  console.log(darkMode, '다크');
+  const [darkMode, setDarkMode] = useRecoilState(themeState);
 
   // TODO: 실제 userprofile 값으로 변경하기
   const userprofile = '';
   // 검색
-  const [searchTag, onChangeSearchTag, setSearchTag] = useInput('');
+  const [searchTag, onChangeSearchTag] = useInput('');
   // 다크모드 localstorage에서 체크
   const [isChecked, setIsChecked] = useState(localStorage.theme === 'dark');
   // 헤더 bottom
@@ -30,14 +29,16 @@ export default function Header() {
     pathname === '/login' || pathname === '/signup' || pathname === '/pwinquiry'
   );
 
+  // 현재 url에서 제품 이름 가져오기
+  const parts = pathname.split('/');
+  const product = parts[2];
+
   // 로그인 여부
   //TODO : 섹션 storage 값으로 변경하기
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useRecoilState(loginStatus);
 
   // userProfile click
   const [isProfileClick, setIsProfileClick] = useRecoilState(profileOpen);
-  // 제품 List
-  const productList = ['AllFormU', 'hi'];
   // 제품 List click
   const [isProductClick, setIsProductClick] = useRecoilState(productOpen);
 
@@ -48,31 +49,6 @@ export default function Header() {
       navigate(`/search/${searchTag}`);
     }
   };
-
-  /** editor 다크 모드 */
-  const toggleDark = () => {
-    const editorEl = document.getElementsByClassName('toastui-editor-defaultUI')[0];
-    if (editorEl) {
-      if (!darkMode && editorEl.classList.contains('toastui-editor-dark')) {
-        editorEl.classList.remove('toastui-editor-dark');
-      } else {
-        editorEl.classList.add('toastui-editor-dark');
-      }
-    }
-  };
-
-  useEffect(() => {
-    const editorEl = document.getElementsByClassName('toastui-editor-defaultUI')[0];
-    if (editorEl) {
-      if (darkMode && !editorEl.classList.contains('toastui-editor-dark')) {
-        editorEl.classList.add('toastui-editor-dark');
-      } else if (!darkMode && editorEl.classList.contains('toastui-editor-dark')) {
-        editorEl.classList.remove('toastui-editor-dark');
-      } else {
-        editorEl.classList.add('toastui-editor-dark');
-      }
-    }
-  }, [darkMode]);
 
   // 다크모드 변경
   const themeModeHandler = useCallback(() => {
@@ -100,13 +76,22 @@ export default function Header() {
     setIsNoneHeader(pathname === '/login' || pathname === '/signup' || pathname === '/pwinquiry');
   }, [pathname]);
 
+  useEffect(() => {
+    const nowLogin = !!sessionStorage.getItem('userInfo');
+    setIsLogin(nowLogin);
+
+    if (!nowLogin) {
+      navigate('/');
+    }
+  }, [isLogin]);
+
   return (
     <header
       className={`fixed top-0 flex-row-center justify-between pt-[0.5rem] w-full h-[5.7rem] z-50
       ${isNoneHeader ? 'bg-none-header' : 'border-solid border-b border-header-gray'}`}
     >
       {/*로고 + 글자 (메인페이지로 이동)*/}
-      <div className={'flex-row-center ml-32'}>
+      <div className={'flex-row-center w-[40rem] md:w-auto ml-8 md:ml-32'}>
         <nav className={'flex-row-center cursor-pointer'} onClick={() => navigate('/')}>
           <img className={'flex mr-4 h-10'} src={'/images/mainLogo.png'} alt={'main-logo'} />
           <span className={'flex font-logo text-[2.3rem] font-semibold text-gray-dark mt-2'}>
@@ -114,9 +99,9 @@ export default function Header() {
           </span>
         </nav>
 
-        {isLogin && productList?.[0] !== '' && (
-          <div className={'flex-row-center'} ref={productRef}>
-            <div className={'flex-row-center ml-4 h-9 border-solid border-r border-gray-light'} />
+        {isLogin && product !== '' && (
+          <div className={'flex-row-center ml-4'} ref={productRef}>
+            <div className={'flex-row-center h-9 border-solid border-r border-gray-light'} />
             <div
               className={'flex-row-center cursor-pointer relative'}
               onClick={() => {
@@ -124,7 +109,7 @@ export default function Header() {
               }}
             >
               <span className={'flex-row-center font-logo text-[2.3rem] font-semibold ml-4 mt-3'}>
-                {productList[0]}
+                {product}
               </span>
               <PiCaretUpDownLight
                 className={'flex-row-center text-[1.4rem] fill-gray-light ml-2'}
@@ -138,11 +123,13 @@ export default function Header() {
       {/*TODO : 스토리지 값 체크후에 변경하기 (조건으로 렌더링 여부 바꿔야함)*/}
       {/*로그인 상태*/}
       {isLogin && (
-        <div className={'flex w-[26rem] h-full justify-between mr-12 font-bold items-center '}>
+        <div
+          className={'flex w-[26rem] h-full justify-between mr-4 md:mr-12 font-bold items-center '}
+        >
           {/*검색창*/}
           <div
             className={
-              'flex-row-center justify-between w-48 h-3/5 p-2  border-solid border border-gray-light rounded-lg'
+              'flex-row-center justify-between w-48 h-3/5 p-2 border-solid border border-gray-light rounded-lg hidden md:flex'
             }
           >
             <BsSearch className={'ml-2 text-base fill-gray-dark '} />

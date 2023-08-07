@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Release } from '@/typings/product.ts';
 import { Table, TableContainer, Th, Thead, Tr, useDisclosure } from '@chakra-ui/react';
 import { AiOutlinePlus } from 'react-icons/ai';
@@ -37,39 +37,39 @@ export default function ReleaseNote() {
         },
       ],
     },
-    // {
-    //   status: 'done',
-    //   version: 'v.1.1.2',
-    //   date: '2023.06.12',
-    //   contents: [
-    //     { type: 'Feature', content: '채널 통신 응답 중 발생할 수 있는 오류 코드 추가' },
-    //     {
-    //       type: 'Changed',
-    //       content: '공통 Request Protocol 추가',
-    //     },
-    //   ],
-    // },
-    // {
-    //   status: 'done',
-    //   version: 'v.1.1.1',
-    //   date: '2023.05.12',
-    //   contents: [{ type: 'Deprecated', content: '미사용 필드 삭제' }],
-    // },
-    // {
-    //   status: 'done',
-    //   version: 'v.1.1.0',
-    //   date: '2023.03.25',
-    //   contents: [{ type: 'Feature', content: 'Service Argent 채널 연결과 통신 관련 설명' }],
-    // },
-    // {
-    //   status: 'done',
-    //   version: 'v.1.0.0',
-    //   date: '2023.02.18',
-    //   contents: [
-    //     { type: 'New', content: 'AI Service 기술 상세 설명' },
-    //     { type: 'Fixed', content: '채널 통신 응답 기능 수정' },
-    //   ],
-    // },
+    {
+      status: 'done',
+      version: 'v.1.1.2',
+      date: '2023.06.12',
+      contents: [
+        { type: 'Feature', content: '채널 통신 응답 중 발생할 수 있는 오류 코드 추가' },
+        {
+          type: 'Changed',
+          content: '공통 Request Protocol 추가',
+        },
+      ],
+    },
+    {
+      status: 'done',
+      version: 'v.1.1.1',
+      date: '2023.05.12',
+      contents: [{ type: 'Deprecated', content: '미사용 필드 삭제' }],
+    },
+    {
+      status: 'done',
+      version: 'v.1.1.0',
+      date: '2023.03.25',
+      contents: [{ type: 'Feature', content: 'Service Argent 채널 연결과 통신 관련 설명' }],
+    },
+    {
+      status: 'done',
+      version: 'v.1.0.0',
+      date: '2023.02.18',
+      contents: [
+        { type: 'New', content: 'AI Service 기술 상세 설명' },
+        { type: 'Fixed', content: '채널 통신 응답 기능 수정' },
+      ],
+    },
   ];
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -97,7 +97,7 @@ export default function ReleaseNote() {
   }, []);
 
   return (
-    <section className={'w-h-full min-w-[50em] py-32 px-14 xl:px-56'} onClick={onCloseKebab}>
+    <section className={'w-full min-w-[50em] py-32 px-14 xl:px-56'} onClick={onCloseKebab}>
       <div className={'min-w-[30em] flex justify-between mb-4'}>
         <span className={'flex items-center'}>
           <img src="/images/test.jpeg" alt={'제품 사진'} className={'w-12 h-12 mr-4'} />
@@ -157,6 +157,7 @@ export default function ReleaseNote() {
             {dummy.length > 0 && (
               <Tables
                 isClickKebab={isClickKebab}
+                setIsClickKebab={setIsClickKebab}
                 onClickKebab={onClickKebab}
                 onClickComplete={onClickProjectModal}
                 setTempVersion={setTempVersion}
