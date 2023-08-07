@@ -11,11 +11,12 @@ import {
 } from '@chakra-ui/react';
 import { useMessage } from '@/hooks/useMessage.ts';
 import useInput from '@/hooks/useInput.ts';
-import { SelectMenu, SubGroup, Task } from '@/typings/project.ts';
-import { DatePicker, DatePickerProps, Select, Space } from 'antd';
+import { SelectMenu, SubGroup } from '@/typings/project.ts';
+import { DatePicker, DatePickerProps, Select } from 'antd';
 import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { menuListData } from '@/recoil/Project/atom.ts';
+import { productMemberList } from '@/recoil/Product/atom.ts';
 
 interface Props {
   isOpen: boolean;
@@ -36,18 +37,33 @@ export default function CreateTask({ isOpen, onClose }: Props) {
   });
 
   const taskPeriod: SelectMenu[] = [
-    { value: '날짜', label: '날짜' },
-    {
-      value: '최신순',
-      label: '최신순',
-    },
+    { value: '1주', label: '1주' },
+    { value: '2주', label: '2주' },
+    { value: '3주', label: '3주' },
+    { value: '사용자 지정', label: '사용자 지정' },
   ];
+
+  const pGroup: string[] = ['그룹', '개발팀', '마케팅팀', '홍보팀'];
+  const cGroup: SubGroup = {
+    그룹: ['하위그룹'],
+    개발팀: ['전체', '프론트엔드', '백엔드', '풀스택'],
+    마케팅팀: ['전체', 'SNS', '디자인'],
+    홍보팀: ['전체', 'SNS', '기사'],
+  };
+
+  type ChildGroup = keyof typeof cGroup;
 
   const menuList = useRecoilValue(menuListData);
 
   const menuNameList: SelectMenu[] = menuList.map((menuItem) => ({
     value: menuItem.name,
     label: menuItem.name,
+  }));
+
+  const member = useRecoilValue(productMemberList);
+  const memberList: SelectMenu[] = member.map((memberItem) => ({
+    value: `${memberItem.nickName}(${memberItem.name})`,
+    label: `${memberItem.nickName}(${memberItem.name})`,
   }));
 
   const handleChange = (type: string) => (value: { value: string; label: React.ReactNode }) => {
@@ -60,16 +76,6 @@ export default function CreateTask({ isOpen, onClose }: Props) {
     setNewTask(updatedTask);
     console.log(newTask);
   };
-
-  const pGroup: string[] = ['그룹', '개발팀', '마케팅팀', '홍보팀'];
-  const cGroup: SubGroup = {
-    그룹: ['하위그룹'],
-    개발팀: ['전체', '프론트엔드', '백엔드', '풀스택'],
-    마케팅팀: ['전체', 'SNS', '디자인'],
-    홍보팀: ['전체', 'SNS', '기사'],
-  };
-
-  type ChildGroup = keyof typeof cGroup;
 
   const [parentGroup, setParentGroup] = useState(cGroup[pGroup[0] as ChildGroup]);
   const [childGroup, setChildGroup] = useState(cGroup[pGroup[0] as ChildGroup][0]);
@@ -174,7 +180,7 @@ export default function CreateTask({ isOpen, onClose }: Props) {
                 <div className={'w-h-full'}>
                   <Select
                     labelInValue
-                    defaultValue={taskPeriod[0]}
+                    defaultValue={{ value: '', label: '기간 선택' }}
                     onChange={handleChange('date')}
                     style={{ width: 120 }}
                     options={taskPeriod}
@@ -199,13 +205,13 @@ export default function CreateTask({ isOpen, onClose }: Props) {
                 </div>
               </div>
 
-              {/*메뉴*/}
+              {/*메뉴 + 할당자*/}
               <div className={'flex-row-center w-full mb-5 text-[1rem]'}>
                 <div className={'flex-col w-1/2'}>
                   <span className={'flex mb-[0.5rem] text-gray-dark font-bold'}>메뉴</span>
                   <Select
                     labelInValue
-                    defaultValue={{ value: '', label: '선택' }}
+                    defaultValue={{ value: '', label: '메뉴 선택' }}
                     onChange={handleChange('menuName')}
                     style={{ width: 120 }}
                     options={menuNameList}
@@ -220,10 +226,10 @@ export default function CreateTask({ isOpen, onClose }: Props) {
                   <span className={'flex mb-[0.5rem] text-gray-dark font-bold'}>할당자</span>
                   <Select
                     labelInValue
-                    defaultValue={taskPeriod[0]}
+                    defaultValue={{ value: '', label: '할당자 선택' }}
                     onChange={handleChange('targetMember')}
                     style={{ width: 120 }}
-                    options={taskPeriod}
+                    options={memberList}
                     dropdownStyle={{
                       backgroundColor: 'var(--gray-sideBar)',
                       color: 'var(--black)',
@@ -233,7 +239,7 @@ export default function CreateTask({ isOpen, onClose }: Props) {
                 </div>
               </div>
 
-              {/*그룹 + 할당자*/}
+              {/*그룹*/}
               <div className={'w-full mb-5 text-[1rem]'}>
                 <span className={'flex mb-[0.5rem] text-gray-dark font-bold'}>그룹</span>
                 <div className={'flex justify-between pr-7'}>
