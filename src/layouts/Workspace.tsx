@@ -8,7 +8,7 @@ import Groups from '@/components/Product/SideBar/Groups.tsx';
 import { Scrollbars } from 'rc-scrollbars';
 
 export default function Workspace() {
-  const { product, project } = useParams();
+  const { product, project, parentgroup, childgroup } = useParams();
   const { pathname } = useLocation();
 
   return (
@@ -23,7 +23,11 @@ export default function Workspace() {
           </div>
           <div className={'h-4/5 flex flex-col justify-evenly'}>
             <NavLink
-              to={`/workspace/${product}/members`}
+              to={
+                parentgroup
+                  ? `/workspace/${product}/${project}/group/${parentgroup}/setting`
+                  : `/workspace/${product}/members`
+              }
               className={({ isActive }) => `base-menu ${isActive && 'base-menu-selected'}`}
             >
               <FiUser className={'text-[1.4rem] ml-2 mr-3'} /> 멤버
