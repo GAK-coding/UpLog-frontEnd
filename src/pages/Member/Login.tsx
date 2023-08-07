@@ -5,15 +5,18 @@ import { AiOutlineLock } from 'react-icons/ai';
 import { Link, useNavigate } from 'react-router-dom';
 import { useGoogleLogin } from '@react-oauth/google';
 import { useMessage } from '@/hooks/useMessage.ts';
+import { GetUserInfo, LoginInfo, SaveUserInfo } from '@/typings/member.ts';
 import { loginUp } from '@/api/Members/Login-Signup.ts';
 import { useMutation } from 'react-query';
-import { Auth, GetUserInfo, SaveUserInfo } from '@/typings/member.ts';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { loginStatus } from '@/recoil/User/atom.ts';
 
 export default function Login() {
   const { showMessage, contextHolder } = useMessage();
   const [email, onChangeEmail, setEmail] = useInput('');
   const [password, onChangePassword, setPassword] = useInput('');
   const navigate = useNavigate();
+  const setIsLogin = useSetRecoilState(loginStatus);
 
   const { mutate } = useMutation(loginUp, {
     onSuccess: (data: GetUserInfo) => {
@@ -30,6 +33,7 @@ export default function Login() {
       sessionStorage.setItem('accessToken', accessToken);
       sessionStorage.setItem('refreshToken', refreshToken);
       sessionStorage.setItem('userInfo', JSON.stringify(userInfo));
+      setIsLogin(true);
     },
     onError: () => {
       showMessage('error', '일치하지 않아요.');
@@ -45,7 +49,8 @@ export default function Login() {
         return;
       }
 
-      mutate({ email, password });
+      const loginInfo: LoginInfo = { email, password };
+      mutate(loginInfo);
     },
     [email, password]
   );
