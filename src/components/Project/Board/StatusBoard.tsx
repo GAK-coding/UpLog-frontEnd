@@ -12,8 +12,6 @@ interface Props {
 export default function StatusBoard({ status, tasks }: Props) {
   const convertStatus = formatStatus(status);
 
-  // 유저 프로필 존재하는지 안하는지
-  const userprofile = '';
   // task detail 클릭 여부
   const [isClickTaskDetail, setIsClickTaskDetail] = useState<{ [key: number]: boolean }>({});
 
@@ -95,11 +93,13 @@ export default function StatusBoard({ status, tasks }: Props) {
                     </div>
                     {/*task제목*/}
                     <div className={'flex justify-start h-[2.5rem]'}>
-                      <span className={'text-[1rem]'}>{task.name}</span>
+                      <span className={'text-[1rem]'}>{task.taskName}</span>
                     </div>
                     {/*그룹정보*/}
                     <div className={'flex justify-start items-center mb-2'}>
-                      <span className={'text-gray-dark text-[0.65rem]'}>{task.group}</span>
+                      <span className={'text-gray-dark text-[0.65rem]'}>
+                        {task.projectTeamName}
+                      </span>
                     </div>
                     {/*menu, 할당자 정보 */}
                     <div
@@ -110,17 +110,17 @@ export default function StatusBoard({ status, tasks }: Props) {
                           'flex items-center px-2 h-[1.5rem] rounded-[0.31rem] bg-orange-light-sideBar '
                         }
                       >
-                        {task.menu}
+                        {task.menuName}
                       </span>
                       <div className={'flex-row-center justify-between items-center'}>
                         <span className={'px-2 text-[0.65rem] text-gray-dark'}>
-                          {task.targetMember}
+                          {task.targetMember.name}
                         </span>
-                        {!userprofile ? (
+                        {!task.targetMember.image ? (
                           <FaUserCircle className={'flex text-[1.7rem] fill-gray-dark'} />
                         ) : (
                           <img
-                            src={userprofile}
+                            src={task.targetMember.image}
                             alt="userprofile"
                             className={'flex w-[1.7rem] h-[1.7rem]'}
                           />

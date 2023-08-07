@@ -24,7 +24,7 @@
 }
 
 .ant-select-dropdown{
-    z-index: 1400;
+    z-index: 1500;
     background-color: var(--gray-sideBar);
 }
 

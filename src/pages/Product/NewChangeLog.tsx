@@ -26,7 +26,7 @@ export default function NewChangeLog() {
       <article className={'pt-4 flex justify-center w-[10%] min-w-[6rem] lg:w-[16%]'}>
         <Link
           to={`/workspace/${product}`}
-          className={'flex justify-center text-[1.4rem] text-gray-dark font-bold'}
+          className={'flex justify-center text-[1.3rem] text-gray-dark font-bold'}
         >
           <IoIosArrowBack className={'text-[2.3rem] block'} />
           <span className={'hidden xl:block'}>돌아가기</span>
@@ -34,7 +34,7 @@ export default function NewChangeLog() {
       </article>
       <article
         className={
-          'border-[0.6px] border-line bg-border shadow-sign-up h-auto min-w-[50rem] w-[80%] lg:w-[68%]'
+          'border-[0.6px] border-base shadow-sign-up h-auto min-w-[50rem] w-[80%] lg:w-[68%]'
         }
       >
         <nav className={'px-6 pt-6 mb-4 text-right'}>

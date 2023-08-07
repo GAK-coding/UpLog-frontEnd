@@ -1,17 +1,18 @@
-import { SelectMenu, Task } from '@/typings/project.ts';
-import { DatePicker, DatePickerProps, Select } from 'antd';
-import { taskAll, taskState } from '@/recoil/Project/atom.ts';
+import { SelectMenu } from '@/typings/project.ts';
+import { Select } from 'antd';
+import { taskAll } from '@/recoil/Project/atom.ts';
 import { useRecoilState } from 'recoil';
 import { RiCheckboxLine } from 'react-icons/ri';
 import { FaUserCircle } from 'react-icons/fa';
 import { AiOutlinePlus } from 'react-icons/ai';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useDisclosure } from '@chakra-ui/react';
 import CreateTask from '@/components/Project/Task/CreateTask.tsx';
 
 export default function TaskMain() {
-  const { menutitle } = useParams();
+  const { product, project, menutitle } = useParams();
+  const navigate = useNavigate();
 
   const dateData: SelectMenu[] = [
     { value: '날짜', label: '날짜' },
@@ -41,10 +42,6 @@ export default function TaskMain() {
     console.log(value);
   };
 
-  const onChange: DatePickerProps['onChange'] = (date, dateString) => {
-    console.log(date, dateString);
-  };
-
   return (
     <div className={'flex-col-center w-h-full'}>
       {/*상태별 개수 링 + 날짜, 상태 필터링*/}
@@ -55,21 +52,33 @@ export default function TaskMain() {
               'flex-row-center text-[0.9rem] text-gray-dark task-status-ring border-status-before'
             }
           >
-            {taskList.filter((task) => task.menu === menutitle && task.status === 'before').length}
+            {
+              taskList.filter(
+                (task) => task.menuName === menutitle && task.taskStatus === 'PROGRESS_BEFORE'
+              ).length
+            }
           </div>
           <div
             className={
               'flex-row-center text-[0.9rem] text-gray-dark task-status-ring border-status-going'
             }
           >
-            {taskList.filter((task) => task.menu === menutitle && task.status === 'going').length}
+            {
+              taskList.filter(
+                (task) => task.menuName === menutitle && task.taskStatus === 'PROGRESS_IN'
+              ).length
+            }
           </div>
           <div
             className={
               'flex-row-center text-[0.9rem] text-gray-dark task-status-ring border-status-done'
             }
           >
-            {taskList.filter((task) => task.menu === menutitle && task.status === 'done').length}
+            {
+              taskList.filter(
+                (task) => task.menuName === menutitle && task.taskStatus === 'PROGRESS_COMPLETE'
+              ).length
+            }
           </div>
         </div>
         <div className={'flex-row-center justify-between w-[18rem] px-4 z-10'}>
@@ -111,49 +120,52 @@ export default function TaskMain() {
         >
           {/*task 정보*/}
           {taskList
-            .filter((task) => task.menu === menutitle)
+            .filter((task) => task.menuName === menutitle)
             .map((task, index) => (
               <section
                 key={index}
                 className={
-                  'flex-row-center justify-start w-full min-h-[3.5rem] px-4 border-b border-line'
+                  'flex-row-center justify-start w-full min-h-[3.5rem] px-4 border-b border-line cursor-pointer'
+                }
+                onClick={() =>
+                  navigate(`/workspace/${product}/${project}/menu/${menutitle}/task/${task.id}`)
                 }
               >
                 {/*체크박스 + task 이름*/}
                 <div className={'flex-row-center justify-start w-[14rem] pr-1'}>
                   <RiCheckboxLine
                     className={`text-[1.7rem] ${
-                      task.status === 'done' ? 'text-orange' : 'text-gray-light'
+                      task.taskStatus === 'PROGRESS_COMPLETE' ? 'text-orange' : 'text-gray-light'
                     }`}
                   />
                   <span className={'ml-2 text-gray-light text-[1.1rem]'}>{`Task ${task.id}`}</span>
                 </div>
-                <div className={'w-[45rem] ml-1 text-[1.1rem] font-bold'}>{task.name}</div>
+                <div className={'w-[45rem] ml-1 text-[1.1rem] font-bold'}>{task.taskName}</div>
 
                 {/*task 메뉴, 상태, 할당자*/}
                 <div
                   className={'flex-row-center w-h-full justify-end text-gray-dark text-[0.93rem]'}
                 >
-                  <span className={'mr-3'}>{task.group}</span>
+                  <span className={'mr-3'}>{task.projectTeamName}</span>
                   <span
                     className={
                       'flex items-center px-2 h-[1.5rem] rounded-[0.31rem] bg-orange-light-sideBar'
                     }
                   >
-                    {task.menu}
+                    {task.menuName}
                   </span>
                   <div
                     className={'mx-3 h-5 border-solid border-r border-[0.5px] border-gray-light'}
                   />
                   <span
                     className={`flex items-center px-2 mr-3 h-[1.5rem] rounded-[0.31rem] text-[#292723] 
-                    ${task.status === 'before' && 'bg-status-before'}
-                  ${task.status === 'going' && 'bg-status-going'}
-                  ${task.status === 'done' && 'bg-status-done'}`}
+                    ${task.taskStatus === 'PROGRESS_BEFORE' && 'bg-status-before'}
+                  ${task.taskStatus === 'PROGRESS_IN' && 'bg-status-going'}
+                  ${task.taskStatus === 'PROGRESS_COMPLETE' && 'bg-status-done'}`}
                   >
-                    {task.status === 'before' && '진행 전'}
-                    {task.status === 'going' && '진행 중'}
-                    {task.status === 'done' && '진행 후'}
+                    {task.taskStatus === 'PROGRESS_BEFORE' && '진행 전'}
+                    {task.taskStatus === 'PROGRESS_IN' && '진행 중'}
+                    {task.taskStatus === 'PROGRESS_COMPLETE' && '진행 후'}
                   </span>
                   {!userprofile ? (
                     <FaUserCircle className={'flex text-[2.2rem] fill-gray-dark'} />
