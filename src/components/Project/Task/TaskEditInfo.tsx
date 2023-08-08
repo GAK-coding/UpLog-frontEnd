@@ -1,5 +1,5 @@
 import { DatePicker, DatePickerProps, Select } from 'antd';
-import { SelectMenu, Task } from '@/typings/project.ts';
+import { SelectMenu, SubGroup, Task } from '@/typings/project.ts';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 import * as dayjs from 'dayjs';
@@ -13,15 +13,17 @@ interface Props {
   setEditTask: Dispatch<SetStateAction<Task>>;
 }
 export default function TaskEditInfo({ isEdit, editTask, setEditTask }: Props) {
-  const dateData: SelectMenu[] = [
-    { value: '날짜', label: '날짜' },
-    {
-      value: '최신순',
-      label: '최신순',
-    },
-  ];
+  const pGroup: string[] = ['그룹', '개발팀', '마케팅팀', '홍보팀'];
+  const cGroup: SubGroup = {
+    그룹: ['하위그룹'],
+    개발팀: ['전체', '프론트엔드', '백엔드', '풀스택'],
+    마케팅팀: ['전체', 'SNS', '디자인'],
+    홍보팀: ['전체', 'SNS', '기사'],
+  };
+  type ChildGroup = keyof typeof cGroup;
 
-  const userprofile = '';
+  const [parentGroup, setParentGroup] = useState(cGroup[pGroup[0] as ChildGroup]);
+  const [childGroup, setChildGroup] = useState(cGroup[pGroup[0] as ChildGroup][0]);
 
   const menuList = useRecoilValue(menuListData);
   const menuNameList: SelectMenu[] = menuList.map((menuItem) => ({
@@ -88,6 +90,32 @@ export default function TaskEditInfo({ isEdit, editTask, setEditTask }: Props) {
     }
   };
 
+  // TODO : projectTeamId 값 group id 값으로 바꾸기
+  // 상위그룹 select 선택 값
+  const handleParentGroupChange = (value: string) => {
+    // 선택한 상위그룹내용으로 하위 그룹 option으로 변경
+    setParentGroup(cGroup[value]);
+    setChildGroup(cGroup[value][0]);
+
+    const updatedTask = {
+      ...editTask,
+      projectTeamId: value,
+    };
+
+    setEditTask(updatedTask);
+  };
+
+  // 하위그룹 select 선택 값
+  const onChildGroupChange = (value: string) => {
+    setChildGroup(value);
+
+    const updatedTask = {
+      ...editTask,
+      projectTeamId: value,
+    };
+
+    setEditTask(updatedTask);
+  };
   return (
     <section className={'flex-col justify-start items-start w-[80%] h-[15rem] pl-[3rem]'}>
       {/*시작날짜*/}
@@ -142,7 +170,7 @@ export default function TaskEditInfo({ isEdit, editTask, setEditTask }: Props) {
         {isEdit ? (
           <Select
             labelInValue
-            defaultValue={{ value: '-1', label: '메뉴 선택' }}
+            defaultValue={{ value: '-1', label: editTask.menuName }}
             onChange={handleChange('menuId')}
             style={{ width: 120 }}
             bordered={false}
@@ -160,26 +188,41 @@ export default function TaskEditInfo({ isEdit, editTask, setEditTask }: Props) {
 
       {/*그룹*/}
       <div
-        className={'flex items-center justify-start w-[17rem] h-1/5 text-gray-light text-[1rem]'}
+        className={'flex items-center justify-start w-[25rem] h-1/5 text-gray-light text-[1rem]'}
       >
         <div className={'flex w-[6rem] items-center justify-end h-auto'}>
           <span>그룹</span>
           <div className={'ml-3 h-4 border-solid border-r border-[0.2px] border-gray-border'} />
         </div>
         {isEdit ? (
-          <Select
-            labelInValue
-            defaultValue={dateData[0]}
-            onChange={handleChange('projectTeam')}
-            style={{ width: 120 }}
-            bordered={false}
-            options={dateData}
-            dropdownStyle={{
-              backgroundColor: 'var(--gray-sideBar)',
-              color: 'var(--black)',
-              borderColor: 'var(--border-line)',
-            }}
-          />
+          <div className={'flex justify-between pr-7'}>
+            {/*TODO : projectTeamParentId 값 존재에 따라 defaultValue 값 변경하기*/}
+            <Select
+              defaultValue={pGroup[0]}
+              style={{ width: 100 }}
+              onChange={handleParentGroupChange}
+              bordered={false}
+              options={pGroup.map((group) => ({ label: group, value: group }))}
+              dropdownStyle={{
+                backgroundColor: 'var(--gray-sideBar)',
+                color: 'var(--black)',
+                borderColor: 'var(--border-line)',
+              }}
+            />
+
+            <Select
+              style={{ width: 100 }}
+              value={childGroup}
+              onChange={onChildGroupChange}
+              options={parentGroup.map((group) => ({ label: group, value: group }))}
+              bordered={false}
+              dropdownStyle={{
+                backgroundColor: 'var(--gray-sideBar)',
+                color: 'var(--black)',
+                borderColor: 'var(--border-line)',
+              }}
+            />
+          </div>
         ) : (
           <span className={'ml-3 text-gray-dark'}>{editTask.projectTeamName}</span>
         )}
@@ -193,10 +236,13 @@ export default function TaskEditInfo({ isEdit, editTask, setEditTask }: Props) {
           <span>할당자</span>
           <div className={'ml-3 h-4 border-solid border-r border-[0.2px] border-gray-border'} />
         </div>
-        {userprofile === '' ? (
+        {editTask.targetMember.image === '' ? (
           <FaUserCircle className={'ml-3 text-[2rem] fill-gray-dark'} />
         ) : (
-          <img src={userprofile} className={'ml-3 w-[2rem] h-[2rem] rounded-full'} />
+          <img
+            src={editTask.targetMember.image}
+            className={'ml-3 w-[2rem] h-[2rem] rounded-full'}
+          />
         )}
 
         {isEdit ? (
