@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { useMessage } from '@/hooks/useMessage.ts';
 import useInput from '@/hooks/useInput.ts';
-import { GroupInfo, SelectMenu, SubGroup } from '@/typings/project.ts';
+import { SelectMenu, SubGroup } from '@/typings/project.ts';
 import { DatePicker, DatePickerProps, Select } from 'antd';
 import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';

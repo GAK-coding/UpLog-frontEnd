@@ -3,11 +3,13 @@ import { Link, useParams } from 'react-router-dom';
 import { Select, Textarea } from '@chakra-ui/react';
 import { AiFillCaretDown } from 'react-icons/ai';
 import TaskEditInfo from '@/components/Project/Task/TaskEditInfo.tsx';
-import { FormEventHandler, useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
+import { formatStatus } from '@/utils/formatStatus.ts';
 
 export default function TaskDetail() {
   const { product, project, menutitle } = useParams();
 
+  const status = formatStatus('PROGRESS_IN');
   const [isEdit, setIsEdit] = useState<boolean>(false);
 
   const onChangeEdit = useCallback(() => {
@@ -60,21 +62,31 @@ export default function TaskDetail() {
           </div>
           {/*진행상태 select*/}
           <div className={'w-[30%] h-auto flex justify-end'}>
-            <Select
-              defaultValue={'hi'}
-              // onChange={onChangeSelectedType}
-              width={'10rem'}
-              height={'2rem'}
-              // backgroundColor={`var(--${selectedType})`}
-              fontSize={'1.2rem'}
-              border={'none'}
-              fontWeight={700}
-              color={'#292723'}
-              marginLeft={'0.5rem'}
-              icon={<AiFillCaretDown fill={'var(--gray-light)'} />}
-            >
-              <option value={'hi'}>hi</option>
-            </Select>
+            {isEdit ? (
+              <Select
+                defaultValue={'hi'}
+                // onChange={onChangeSelectedType}
+                width={'8rem'}
+                height={'2rem'}
+                // backgroundColor={`var(--${selectedType})`}
+                fontSize={'1rem'}
+                border={'none'}
+                fontWeight={700}
+                color={'#292723'}
+                marginLeft={'0.5rem'}
+                icon={<AiFillCaretDown fill={'var(--gray-light)'} />}
+              >
+                <option value={'hi'}>hi</option>
+              </Select>
+            ) : (
+              <div
+                className={`flex-row-center w-[4.8rem] h-[1.7rem] rounded bg-status-${
+                  status === '진행 전' ? 'before' : status === '진행 후' ? 'going' : 'done'
+                }`}
+              >
+                <span className={'text-[0.93rem] text-gray-dark'}>{status}</span>
+              </div>
+            )}
           </div>
         </section>
         <div className={'w-[80%] border-b border-gray-spring my-4'}></div>
