@@ -28,7 +28,7 @@ export default function Menu() {
         />
       </section>
       {/*메뉴 보드 Wrapper*/}
-      <section className={'flex-col w-[80%] min-w-[80rem] h-menu pt-6'}>
+      <section className={'flex-col justify-start w-[80%] min-w-[80rem] h-menu pt-6'}>
         {/*post, task 메뉴보드*/}
         <section
           className={
@@ -41,8 +41,10 @@ export default function Menu() {
               <MenuSlider product={product!} project={project!} menuTitle={menutitle!} />
             </div>
           </div>
-          {menutitle !== undefined && (
-            <div className={'flex-col-center w-full h-content overflow-y-auto relative'}>
+          {menutitle !== undefined ? (
+            <div
+              className={'flex-col-center justify-start w-full h-content overflow-y-auto relative'}
+            >
               {/*post, task 선택*/}
               <section className={'flex-row-center w-full min-h-[6rem]'}>
                 <button type={'button'} onClick={() => setIsPost(true)}>
@@ -65,21 +67,24 @@ export default function Menu() {
                   </span>
                 </button>
               </section>
-              {isPost && (
-                <button
-                  className={
-                    'absolute flex justify-between items-center px-2.5 w-[5.5rem] h-[2rem] top-8 right-12 text-[0.93rem] border border-line rounded'
-                  }
-                  onClick={() => onOpen()}
-                >
-                  <BiPencil className={'flex text-gray-dark text-[1.2rem]'} />
-                  <span className={'flex text-gray-dark'}>글쓰기</span>
-                </button>
-              )}
-              <CreatePost isOpen={isOpen} onClose={onClose} />
               {isPost ? <PostMain /> : <TaskMain />}
             </div>
+          ) : (
+            <PostMain />
           )}
+          {isPost && (
+            <button
+              className={
+                'absolute flex justify-between items-center px-2.5 w-[5.5rem] h-[2rem] top-56 right-52 text-[0.93rem] border border-line rounded'
+              }
+              onClick={() => onOpen()}
+            >
+              <BiPencil className={'flex text-gray-dark text-[1.2rem]'} />
+              <span className={'flex text-gray-dark'}>글쓰기</span>
+            </button>
+          )}
+
+          <CreatePost isOpen={isOpen} onClose={onClose} />
         </section>
       </section>
     </section>
