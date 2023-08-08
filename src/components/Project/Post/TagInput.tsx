@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { TiDelete } from 'react-icons/ti';
 import { useMessage } from '@/hooks/useMessage.ts';
+import { useRecoilState } from 'recoil';
+import { postTagList } from '@/recoil/Project/Post.ts';
 
 export default function TagInput() {
   const { showMessage, contextHolder } = useMessage();
   const [tagItem, setTagItem] = useState('');
-  const [tagList, setTagList] = useState<string[]>([]);
+  const [tagList, setTagList] = useRecoilState(postTagList);
 
   // Enter 입력 시 tagItem 추가
   const activeEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {

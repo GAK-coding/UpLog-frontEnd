@@ -19,6 +19,7 @@ import PostEditor from '@/components/Common/PostEditor.tsx';
 import { useNavigate, useParams } from 'react-router-dom';
 import TagInput from '@/components/Project/Post/TagInput.tsx';
 import { editorPost } from '@/recoil/Common/atom.ts';
+import { postTagList } from '@/recoil/Project/Post.ts';
 
 interface Props {
   isOpen: boolean;
@@ -44,11 +45,12 @@ export default function CreatePost({ isOpen, onClose }: Props) {
     { value: '2', label: '필독' },
   ];
 
-  // 포스트 제목, 메뉴, 타입, 내용
+  // 포스트 제목, 메뉴, 타입, 내용, 태그
   const [postName, onChangePostName, setPostName] = useInput('');
   const [postMenu, setPostMenu] = useState(-1);
   const [postType, setPostType] = useState('');
   const [postContent, setPostContent] = useRecoilState(editorPost);
+  const postTag = useRecoilValue(postTagList);
 
   const handleChange = (type: string) => (value: { value: string; label: React.ReactNode }) => {
     if (type === 'menuId') {
@@ -72,9 +74,7 @@ export default function CreatePost({ isOpen, onClose }: Props) {
     }
 
     // TODO: Post 생성 api 연결
-    // 해당 Post가 존재하는 페이지로 이동
     onClose();
-    navigate(`/workspace/${product}/${project}/menu/${menutitle}`);
   }, [postName, postMenu]);
 
   // 모달창이 새로 열릴 때 마다 값 초기화
