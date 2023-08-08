@@ -1,5 +1,10 @@
 import { atom } from 'recoil';
-import { GroupMember, MenuInfo, Task, Tasks, TaskStatus } from '@/typings/project.ts';
+import { GroupMember, MenuInfo, Task, Tasks } from '@/typings/project.ts';
+
+export const postMain = atom({
+  key: 'postMain',
+  default: true,
+});
 
 export const eachTask = atom<Task>({
   key: 'eachTask',

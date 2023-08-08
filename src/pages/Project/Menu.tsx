@@ -1,16 +1,16 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { BsChevronCompactUp } from 'react-icons/bs';
 import MenuSlider from '@/components/Project/Menu/MenuSlider.tsx';
-import { useState } from 'react';
 import TaskMain from '@/components/Project/Menu/TaskMain.tsx';
 import PostMain from '@/components/Project/Menu/PostMain.tsx';
+import { useRecoilState } from 'recoil';
 
 export default function Menu() {
   const { product, project, menutitle } = useParams();
   const navigate = useNavigate();
 
   // post, task 구분
-  const [isPost, setIsPost] = useState(false);
+  const [isPost, setIsPost] = useRecoilState(postMain);
 
   return (
     <section className={'flex-col-center justify-start w-full h-full'}>
