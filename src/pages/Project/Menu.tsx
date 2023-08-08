@@ -4,10 +4,16 @@ import MenuSlider from '@/components/Project/Menu/MenuSlider.tsx';
 import TaskMain from '@/components/Project/Menu/TaskMain.tsx';
 import PostMain from '@/components/Project/Menu/PostMain.tsx';
 import { useRecoilState } from 'recoil';
+import { postMain } from '@/recoil/Project/atom.ts';
+import { BiPencil } from 'react-icons/bi';
+import { useDisclosure } from '@chakra-ui/react';
+import CreatePost from '@/components/Project/Post/CreatePost.tsx';
 
 export default function Menu() {
   const { product, project, menutitle } = useParams();
   const navigate = useNavigate();
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   // post, task 구분
   const [isPost, setIsPost] = useRecoilState(postMain);
@@ -30,13 +36,13 @@ export default function Menu() {
           }
         >
           {/*메뉴 list*/}
-          <div className={'flex-row-center  w-full h-[5rem] border-b border-gray-border'}>
+          <div className={'flex-row-center w-full h-[5rem] border-b border-gray-border'}>
             <div className={'w-full min-w-[70rem] h-full items-center justify-center'}>
               <MenuSlider product={product!} project={project!} menuTitle={menutitle!} />
             </div>
           </div>
           {menutitle !== undefined && (
-            <div className={'flex-col-center w-full h-content overflow-y-auto'}>
+            <div className={'flex-col-center w-full h-content overflow-y-auto relative'}>
               {/*post, task 선택*/}
               <section className={'flex-row-center w-full min-h-[6rem]'}>
                 <button type={'button'} onClick={() => setIsPost(true)}>
@@ -51,14 +57,26 @@ export default function Menu() {
                 <div className={'mx-5 h-6 border-solid border-r border-[1px] border-gray-border'} />
                 <button type={'button'} onClick={() => setIsPost(false)}>
                   <span
-                    className={`text-[1.4rem] ${
-                      !isPost ? 'text-black font-bold' : 'text-gray-border font-semibold'
+                    className={`text-[1.4rem] relative ${
+                      isPost ? 'text-gray-border font-semibold' : 'text-black font-bold'
                     }transition ease-in-out duration-300 hover:scale-110 hover:-translate-y-1`}
                   >
                     Task
                   </span>
                 </button>
               </section>
+              {isPost && (
+                <button
+                  className={
+                    'absolute flex justify-between items-center px-2.5 w-[5.5rem] h-[2rem] top-8 right-12 text-[0.93rem] border border-line rounded'
+                  }
+                  onClick={() => onOpen()}
+                >
+                  <BiPencil className={'flex text-gray-dark text-[1.2rem]'} />
+                  <span className={'flex text-gray-dark'}>글쓰기</span>
+                </button>
+              )}
+              <CreatePost isOpen={isOpen} onClose={onClose} />
               {isPost ? <PostMain /> : <TaskMain />}
             </div>
           )}

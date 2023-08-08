@@ -298,7 +298,7 @@ export default function CreateTask({ isOpen, onClose }: Props) {
                   value={taskName}
                   onChange={onChangeTaskName}
                   placeholder={'Task 제목을 입력해주세요.'}
-                  maxLength={10}
+                  maxLength={20}
                   className={
                     'w-full h-11 border-base border-gray-border text-[1rem] rounded-xl mb-2 p-4 text-black'
                   }
@@ -423,6 +423,7 @@ export default function CreateTask({ isOpen, onClose }: Props) {
                     resize={'none'}
                     placeholder={'Task에 대한 상세 설명을 입력해주세요.'}
                     color={'var(--black)'}
+                    maxLength={1000}
                   />
                 </div>
               </div>
