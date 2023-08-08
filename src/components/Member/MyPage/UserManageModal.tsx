@@ -14,6 +14,9 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import useInput from '@/hooks/useInput.ts';
 
 import { useMessage } from '@/hooks/useMessage.ts';
+import { useMutation } from 'react-query';
+import { changePassword } from '@/api/Members/mypage.ts';
+import { SaveUserInfo } from '@/typings/member.ts';
 
 interface Props {
   isOpen: boolean;
@@ -21,24 +24,32 @@ interface Props {
   isClickPwChange: boolean;
 }
 export default function UserManageModal({ isOpen, onClose, isClickPwChange }: Props) {
-  const [nowPw, onChangeNowPw, setNowPw] = useInput('');
-  const [newPw, onChangeNewPw, setPassword] = useInput('');
+  const userInfo: SaveUserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
+  const [nowPassword, onChangeNowPassword, setNowPassword] = useInput('');
+  const [password, onChangePassword, setPassword] = useInput('');
   const [isCheckPw, setIsCheckPw] = useState(false);
   const [isPwVisible, setIsPwVisible] = useState(false);
   const { showMessage, contextHolder } = useMessage();
 
-  const onClickChangePw = useCallback(() => {
-    if (!nowPw || !newPw) {
+  const { mutate } = useMutation(changePassword, {
+    onSuccess: () => {
+      showMessage('success', '비밀번호 변경 완료!');
+      onClose();
+    },
+  });
+
+  const onClickChangePassword = useCallback(() => {
+    if (!nowPassword || !password) {
       showMessage('warning', '비밀번호를 입력해주세요.');
       return;
     }
 
-    onClose();
-  }, []);
+    mutate({ id: userInfo.id, nowPassword, password });
+  }, [nowPassword, password, userInfo]);
   const onClickPwVisible = useCallback(() => setIsPwVisible((prev) => !prev), []);
 
   const resetPw = useCallback(() => {
-    setNowPw('');
+    setNowPassword('');
     setPassword('');
     onClose();
   }, [onClose]);
@@ -46,8 +57,8 @@ export default function UserManageModal({ isOpen, onClose, isClickPwChange }: Pr
   // 비밀번호 유효성 검사
   useEffect(() => {
     const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,15}$/;
-    setIsCheckPw(regex.test(newPw));
-  }, [newPw, isCheckPw]);
+    setIsCheckPw(regex.test(password));
+  }, [password, isCheckPw]);
 
   return (
     <Modal isCentered onClose={resetPw} isOpen={isOpen}>
@@ -84,8 +95,8 @@ export default function UserManageModal({ isOpen, onClose, isClickPwChange }: Pr
                 <span className={'text-gray-dark font-bold mb-[0.93rem]'}>현재 비밀번호</span>
                 <input
                   type="password"
-                  value={nowPw}
-                  onChange={onChangeNowPw}
+                  value={nowPassword}
+                  onChange={onChangeNowPassword}
                   placeholder={'현재 비밀번호를 입력하세요.'}
                   maxLength={15}
                   className={
@@ -112,8 +123,8 @@ export default function UserManageModal({ isOpen, onClose, isClickPwChange }: Pr
                   >
                     <input
                       type={`${isPwVisible ? 'text' : 'password'}`}
-                      value={newPw}
-                      onChange={onChangeNewPw}
+                      value={password}
+                      onChange={onChangePassword}
                       placeholder={'새로운 비밀번호를 입력하세요.'}
                       maxLength={15}
                       className={'w-[90%] h-full text-[0.93rem] text-black'}
@@ -126,7 +137,7 @@ export default function UserManageModal({ isOpen, onClose, isClickPwChange }: Pr
                       )}
                     </span>
                   </span>
-                  {!isCheckPw && newPw && (
+                  {!isCheckPw && password && (
                     <span className={'flex-row-center justify-start text-sm text-[#E06469] pl-4'}>
                       영문/숫자/특수문자 포함, 8~15자로 입력해주세요.
                     </span>
@@ -141,7 +152,7 @@ export default function UserManageModal({ isOpen, onClose, isClickPwChange }: Pr
           <button
             className={`bg-orange rounded font-bold text-sm text-white
             ${isClickPwChange ? 'w-[4.5rem] h-9' : 'w-[6rem] h-9'}`}
-            onClick={onClickChangePw}
+            onClick={onClickChangePassword}
           >
             {isClickPwChange ? '확인' : '계정 삭제'}
           </button>
