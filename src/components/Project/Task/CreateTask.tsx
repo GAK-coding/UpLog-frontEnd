@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { useMessage } from '@/hooks/useMessage.ts';
 import useInput from '@/hooks/useInput.ts';
-import { SelectMenu, SubGroup } from '@/typings/project.ts';
+import { GroupInfo, SelectMenu, SubGroup } from '@/typings/project.ts';
 import { DatePicker, DatePickerProps, Select } from 'antd';
 import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
@@ -31,7 +31,7 @@ export default function CreateTask({ isOpen, onClose }: Props) {
     startTime: '',
     endTime: '',
     menuId: -1,
-    projectTeamId: -1,
+    projectTeamId: '',
     targetMemberId: -1,
     taskDetail: '',
   });
@@ -42,6 +42,25 @@ export default function CreateTask({ isOpen, onClose }: Props) {
     { value: '21', label: '3주' },
     { value: '사용자 지정', label: '사용자 지정' },
   ];
+
+  // const pGroup: GroupInfo[] = [
+  //   {
+  //     id: 1,
+  //     name: '그룹',
+  //   },
+  //   {
+  //     id: 2,
+  //     name: '개발팀',
+  //   },
+  //   {
+  //     id: 3,
+  //     name: '마케팅팀',
+  //   },
+  //   {
+  //     id: 4,
+  //     name: '홍보팀',
+  //   },
+  // ];
 
   const pGroup: string[] = ['그룹', '개발팀', '마케팅팀', '홍보팀'];
   const cGroup: SubGroup = {
@@ -66,6 +85,7 @@ export default function CreateTask({ isOpen, onClose }: Props) {
   }));
 
   const [isCustom, setIsCustom] = useState(true);
+  const [isGroup, setIsGroup] = useState(false);
 
   const [parentGroup, setParentGroup] = useState(cGroup[pGroup[0] as ChildGroup]);
   const [childGroup, setChildGroup] = useState(cGroup[pGroup[0] as ChildGroup][0]);
@@ -126,16 +146,34 @@ export default function CreateTask({ isOpen, onClose }: Props) {
     console.log(newTask);
   };
 
+  // TODO : projectTeamId 값 group id 값으로 바꾸기
   // 상위그룹 select 선택 값
   const handleParentGroupChange = (value: string) => {
     // 선택한 상위그룹내용으로 하위 그룹 option으로 변경
     setParentGroup(cGroup[value]);
     setChildGroup(cGroup[value][0]);
+
+    setIsGroup(true);
+
+    const updatedTask = {
+      ...newTask,
+      projectTeamId: value,
+    };
+
+    setNewTask(updatedTask);
   };
 
   // 하위그룹 select 선택 값
   const onChildGroupChange = (value: string) => {
     setChildGroup(value);
+    setIsGroup(true);
+
+    const updatedTask = {
+      ...newTask,
+      projectTeamId: value,
+    };
+
+    setNewTask(updatedTask);
   };
 
   // 시작 날짜 입력 값
@@ -182,6 +220,18 @@ export default function CreateTask({ isOpen, onClose }: Props) {
     console.log(newTask);
   }, [taskName]);
 
+  // 선택한 그룹 값 바뀔때마다 타겟 멤버 id 초기화
+  useEffect(() => {
+    const updatedTask = {
+      ...newTask,
+      targetMemberId: -1,
+    };
+
+    setNewTask(updatedTask);
+    console.log('멤버 다시', newTask);
+    // handleChange('targetMemberId')({ value: '-1', label: '할당자 선택' });
+  }, [newTask.projectTeamId]);
+
   // 모달창이 새로 열릴 때 마다 값 초기화
   useEffect(() => {
     setNewTask({
@@ -189,16 +239,46 @@ export default function CreateTask({ isOpen, onClose }: Props) {
       startTime: '',
       endTime: '',
       menuId: -1,
-      projectTeamId: -1,
+      projectTeamId: '',
       targetMemberId: -1,
       taskDetail: '',
     });
     setIsCustom(true);
     setTaskName('');
+    setIsGroup(false);
     console.log(newTask);
   }, [isOpen]);
 
-  const onClickCreateTask = useCallback(() => {}, []);
+  // 완료 버튼 눌렀을 때
+  const onClickCreateTask = useCallback(() => {
+    // 빈 값이 있는지 예외처리
+    if (newTask.taskName === '') {
+      showMessage('warning', 'Task 이름을 입력해주세요.');
+      return;
+    }
+
+    if (newTask.startTime === '' || newTask.endTime === '') {
+      showMessage('warning', '날짜를 선택해주세요.');
+      return;
+    }
+
+    if (newTask.projectTeamId === '') {
+      showMessage('warning', '그룹을 선택해주세요.');
+      return;
+    }
+
+    if (newTask.menuId === -1) {
+      showMessage('warning', '메뉴를 선택해주세요.');
+      return;
+    }
+
+    if (newTask.targetMemberId === -1) {
+      showMessage('warning', '할당자를 선택해주세요.');
+      return;
+    }
+
+    //TODO : Task 생성 API 연결
+  }, [newTask]);
   return (
     <Modal isCentered onClose={onClose} isOpen={isOpen}>
       <ModalOverlay />
@@ -284,40 +364,6 @@ export default function CreateTask({ isOpen, onClose }: Props) {
                 </div>
               </div>
 
-              {/*메뉴 + 할당자*/}
-              <div className={'flex-row-center w-full mb-5 text-[1rem]'}>
-                <div className={'flex-col w-1/2'}>
-                  <span className={'flex mb-[0.5rem] text-gray-dark font-bold'}>메뉴</span>
-                  <Select
-                    labelInValue
-                    defaultValue={{ value: '', label: '메뉴 선택' }}
-                    onChange={handleChange('menuId')}
-                    style={{ width: 120 }}
-                    options={menuNameList}
-                    dropdownStyle={{
-                      backgroundColor: 'var(--gray-sideBar)',
-                      color: 'var(--black)',
-                      borderColor: 'var(--border-line)',
-                    }}
-                  />
-                </div>
-                <div className={'flex-col w-1/2 ml-16'}>
-                  <span className={'flex mb-[0.5rem] text-gray-dark font-bold'}>할당자</span>
-                  <Select
-                    labelInValue
-                    defaultValue={{ value: '', label: '할당자 선택' }}
-                    onChange={handleChange('targetMemberId')}
-                    style={{ width: 120 }}
-                    options={memberList}
-                    dropdownStyle={{
-                      backgroundColor: 'var(--gray-sideBar)',
-                      color: 'var(--black)',
-                      borderColor: 'var(--border-line)',
-                    }}
-                  />
-                </div>
-              </div>
-
               {/*그룹*/}
               <div className={'w-full mb-5 text-[1rem]'}>
                 <span className={'flex mb-[0.5rem] text-gray-dark font-bold'}>그룹</span>
@@ -348,9 +394,44 @@ export default function CreateTask({ isOpen, onClose }: Props) {
                 </div>
               </div>
 
+              {/*메뉴 + 할당자*/}
+              <div className={'flex-row-center w-full mb-5 text-[1rem]'}>
+                <div className={'flex-col w-1/2'}>
+                  <span className={'flex mb-[0.5rem] text-gray-dark font-bold'}>메뉴</span>
+                  <Select
+                    labelInValue
+                    defaultValue={{ value: '-1', label: '메뉴 선택' }}
+                    onChange={handleChange('menuId')}
+                    style={{ width: 120 }}
+                    options={menuNameList}
+                    dropdownStyle={{
+                      backgroundColor: 'var(--gray-sideBar)',
+                      color: 'var(--black)',
+                      borderColor: 'var(--border-line)',
+                    }}
+                  />
+                </div>
+                <div className={'flex-col w-1/2 ml-16'}>
+                  <span className={'flex mb-[0.5rem] text-gray-dark font-bold'}>할당자</span>
+                  <Select
+                    labelInValue
+                    defaultValue={{ value: '-1', label: '할당자 선택' }}
+                    onChange={handleChange('targetMemberId')}
+                    style={{ width: 120 }}
+                    options={memberList}
+                    dropdownStyle={{
+                      backgroundColor: 'var(--gray-sideBar)',
+                      color: 'var(--black)',
+                      borderColor: 'var(--border-line)',
+                    }}
+                    disabled={!isGroup}
+                  />
+                </div>
+              </div>
+
               {/*상세 설명*/}
               <div className={'w-full mb-5 text-[1rem]'}>
-                <span className={'flex mb-[0.5rem] text-gray-dark font-bold'}>메뉴</span>
+                <span className={'flex mb-[0.5rem] text-gray-dark font-bold'}>상세 설명</span>
                 <div className={'w-full h-[80%]'}>
                   <Textarea
                     value={newTask.taskDetail}
