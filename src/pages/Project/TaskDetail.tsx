@@ -1,6 +1,6 @@
 import { IoIosArrowBack } from 'react-icons/io';
 import { Link, useParams } from 'react-router-dom';
-import { Select, Textarea } from '@chakra-ui/react';
+import { Select, Textarea, useDisclosure } from '@chakra-ui/react';
 import { AiFillCaretDown } from 'react-icons/ai';
 import TaskEditInfo from '@/components/Project/Task/TaskEditInfo.tsx';
 import { ChangeEvent, useCallback, useEffect, useState } from 'react';
@@ -9,9 +9,12 @@ import { useRecoilValue } from 'recoil';
 import { taskAll } from '@/recoil/Project/atom.ts';
 import useInput from '@/hooks/useInput.ts';
 import { TaskStatus } from '@/typings/project.ts';
+import DeleteDialog from '@/components/Common/DeleteDialog.tsx';
 
 export default function TaskDetail() {
   const { product, project, menutitle, taskid } = useParams();
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   // 현재 task 데이터 가져오기
   const taskData = useRecoilValue(taskAll);
@@ -161,9 +164,19 @@ export default function TaskDetail() {
                 수정
               </button>
             )}
-            <button className={'w-[5rem] rounded h-9 bg-orange'} onClick={() => setIsEdit(!isEdit)}>
+            <button
+              className={'w-[5rem] rounded h-9 bg-orange'}
+              onClick={() => {
+                if (!isEdit) {
+                  onOpen();
+                  return;
+                }
+                setIsEdit(!isEdit);
+              }}
+            >
               {isEdit ? '완료' : '삭제'}
             </button>
+            <DeleteDialog isOpen={isOpen} onClose={onClose} isTask={true} task={+taskid!} />
           </nav>
         </section>
       </article>
