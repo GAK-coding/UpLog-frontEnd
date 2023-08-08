@@ -4,10 +4,10 @@ import MenuSlider from '@/components/Project/Menu/MenuSlider.tsx';
 import TaskMain from '@/components/Project/Menu/TaskMain.tsx';
 import PostMain from '@/components/Project/Menu/PostMain.tsx';
 import { useRecoilState } from 'recoil';
-import { postMain } from '@/recoil/Project/atom.ts';
 import { BiPencil } from 'react-icons/bi';
 import { useDisclosure } from '@chakra-ui/react';
 import CreatePost from '@/components/Project/Post/CreatePost.tsx';
+import { postMain } from '@/recoil/Project/Post.ts';
 
 export default function Menu() {
   const { product, project, menutitle } = useParams();

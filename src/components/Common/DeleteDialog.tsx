@@ -8,8 +8,6 @@ import {
   Button,
 } from '@chakra-ui/react';
 import { useCallback, useRef } from 'react';
-import { menuListData } from '@/recoil/Project/atom.ts';
-import { useRecoilState } from 'recoil';
 import { useNavigate, useParams } from 'react-router-dom';
 
 interface Props {

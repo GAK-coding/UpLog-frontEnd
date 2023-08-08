@@ -11,7 +11,7 @@ import {
 import { useMessage } from '@/hooks/useMessage.ts';
 import useInput from '@/hooks/useInput.ts';
 import { Select } from 'antd';
-import { menuListData } from '@/recoil/Project/atom.ts';
+import { menuListData } from '@/recoil/Project/Task.ts';
 import { SelectMenu } from '@/typings/project.ts';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useCallback, useEffect, useState } from 'react';

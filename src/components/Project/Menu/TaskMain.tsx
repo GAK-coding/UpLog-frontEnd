@@ -1,6 +1,6 @@
 import { SelectMenu } from '@/typings/project.ts';
 import { Select } from 'antd';
-import { taskAll } from '@/recoil/Project/atom.ts';
+import { taskAll } from '@/recoil/Project/Task.ts';
 import { useRecoilState } from 'recoil';
 import { RiCheckboxLine } from 'react-icons/ri';
 import { FaUserCircle } from 'react-icons/fa';

@@ -15,7 +15,7 @@ import { SelectMenu, SubGroup } from '@/typings/project.ts';
 import { DatePicker, DatePickerProps, Select } from 'antd';
 import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { menuListData } from '@/recoil/Project/atom.ts';
+import { menuListData } from '@/recoil/Project/Task.ts';
 import { productMemberList } from '@/recoil/Product/atom.ts';
 
 interface Props {

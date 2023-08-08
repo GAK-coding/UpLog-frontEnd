@@ -6,7 +6,7 @@ import TaskEditInfo from '@/components/Project/Task/TaskEditInfo.tsx';
 import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { formatStatus } from '@/utils/formatStatus.ts';
 import { useRecoilValue } from 'recoil';
-import { taskAll } from '@/recoil/Project/atom.ts';
+import { taskAll } from '@/recoil/Project/Task.ts';
 import useInput from '@/hooks/useInput.ts';
 import { TaskStatus } from '@/typings/project.ts';
 import DeleteDialog from '@/components/Common/DeleteDialog.tsx';
