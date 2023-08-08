@@ -61,20 +61,21 @@ export default function CreatePost({ isOpen, onClose }: Props) {
   // 생성 버튼 클릭
   const createPost = useCallback(() => {
     // 빈 값이 있는지 예외처리
-
     if (postName === '') {
       showMessage('warning', 'Post 제목을 입력해주세요.');
+      return;
     }
 
     if (postMenu === -1) {
       showMessage('warning', '메뉴를 선택해주세요.');
+      return;
     }
 
     // TODO: Post 생성 api 연결
     // 해당 Post가 존재하는 페이지로 이동
     onClose();
     navigate(`/workspace/${product}/${project}/menu/${menutitle}`);
-  }, []);
+  }, [postName, postMenu]);
 
   // 모달창이 새로 열릴 때 마다 값 초기화
   useEffect(() => {
