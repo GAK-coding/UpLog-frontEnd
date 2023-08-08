@@ -4,7 +4,7 @@ import { BsBellFill, BsMoonFill, BsQuestionCircle, BsSearch, BsSunFill } from 'r
 import { FaUserCircle } from 'react-icons/fa';
 import useInput from '@/hooks/useInput.ts';
 import { useRecoilState } from 'recoil';
-import { profileOpen } from '@/recoil/User/atom.ts';
+import { loginStatus, profileOpen } from '@/recoil/User/atom.ts';
 import { PiCaretUpDownLight } from 'react-icons/pi';
 import { productOpen } from '@/recoil/Product/atom.ts';
 import { useOutsideAlerter } from '@/hooks/useOutsideAlerter.ts';
@@ -35,7 +35,7 @@ export default function Header() {
 
   // 로그인 여부
   //TODO : 섹션 storage 값으로 변경하기
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useRecoilState(loginStatus);
 
   // userProfile click
   const [isProfileClick, setIsProfileClick] = useRecoilState(profileOpen);
@@ -76,13 +76,22 @@ export default function Header() {
     setIsNoneHeader(pathname === '/login' || pathname === '/signup' || pathname === '/pwinquiry');
   }, [pathname]);
 
+  useEffect(() => {
+    const nowLogin = !!sessionStorage.getItem('userInfo');
+    setIsLogin(nowLogin);
+
+    if (!nowLogin) {
+      navigate('/');
+    }
+  }, [isLogin]);
+
   return (
     <header
       className={`fixed top-0 flex-row-center justify-between pt-[0.5rem] w-full h-[5.7rem] z-50
       ${isNoneHeader ? 'bg-none-header' : 'border-solid border-b border-header-gray'}`}
     >
       {/*로고 + 글자 (메인페이지로 이동)*/}
-      <div className={'flex-row-center ml-32'}>
+      <div className={'flex-row-center w-[40rem] md:w-auto ml-8 md:ml-32'}>
         <nav className={'flex-row-center cursor-pointer'} onClick={() => navigate('/')}>
           <img className={'flex mr-4 h-10'} src={'/images/mainLogo.png'} alt={'main-logo'} />
           <span className={'flex font-logo text-[2.3rem] font-semibold text-gray-dark mt-2'}>
@@ -91,8 +100,8 @@ export default function Header() {
         </nav>
 
         {isLogin && product !== '' && (
-          <div className={'flex-row-center'} ref={productRef}>
-            <div className={'flex-row-center ml-4 h-9 border-solid border-r border-gray-light'} />
+          <div className={'flex-row-center ml-4'} ref={productRef}>
+            <div className={'flex-row-center h-9 border-solid border-r border-gray-light'} />
             <div
               className={'flex-row-center cursor-pointer relative'}
               onClick={() => {
@@ -114,11 +123,13 @@ export default function Header() {
       {/*TODO : 스토리지 값 체크후에 변경하기 (조건으로 렌더링 여부 바꿔야함)*/}
       {/*로그인 상태*/}
       {isLogin && (
-        <div className={'flex w-[26rem] h-full justify-between mr-12 font-bold items-center '}>
+        <div
+          className={'flex w-[26rem] h-full justify-between mr-4 md:mr-12 font-bold items-center '}
+        >
           {/*검색창*/}
           <div
             className={
-              'flex-row-center justify-between w-48 h-3/5 p-2  border-solid border border-gray-light rounded-lg'
+              'flex-row-center justify-between w-48 h-3/5 p-2 border-solid border border-gray-light rounded-lg hidden md:flex'
             }
           >
             <BsSearch className={'ml-2 text-base fill-gray-dark '} />
