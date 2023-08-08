@@ -22,11 +22,11 @@ export default function Menu() {
         />
       </section>
       {/*메뉴 보드 Wrapper*/}
-      <section className={'flex-col w-[80%] min-w-[80rem] h-menu'}>
+      <section className={'flex-col w-[80%] min-w-[80rem] h-menu pt-6'}>
         {/*post, task 메뉴보드*/}
         <section
           className={
-            'flex-col-center justify-start w-h-full mt-6 border-base border-b-0 border-gray-border'
+            'flex-col-center justify-start w-h-full border-base border-b-0 border-gray-border'
           }
         >
           {/*메뉴 list*/}
