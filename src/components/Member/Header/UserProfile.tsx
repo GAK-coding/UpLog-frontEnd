@@ -6,15 +6,12 @@ import { loginStatus, profileOpen } from '@/recoil/User/atom.ts';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { useCallback } from 'react';
 import { useCookies } from 'react-cookie';
+import { SaveUserInfo } from '@/typings/member.ts';
 
 export default function UserProfile() {
   // TODO: 실제 userprofile 값으로 변경하기
-  const userInfo = {
-    userprofile: '',
-    userName: '오채영',
-    userNickname: 'OCI',
-    userId: 'oco6029@naver.com',
-  };
+
+  const userInfo: SaveUserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
 
   const navigate = useNavigate();
 
@@ -42,18 +39,15 @@ export default function UserProfile() {
       >
         {/*유저 정보*/}
         <div className={'flex-row-center w-[4rem] h-full'}>
-          {!userInfo.userprofile ? (
-            <FaUserCircle className={'text-[2.8rem] fill-gray-dark'} />
-          ) : (
-            <img src={userInfo.userprofile} alt="userprofile" className={'w-[2.8rem] h-[2.8rem]'} />
-          )}
+          {/*TODO: 백엔드에서 로그인 정보 프로필 사진 추가해주면 됨*/}
+          {<FaUserCircle className={'text-[2.8rem] fill-gray-dark'} />}
         </div>
         <div className={'flex-col-center w-[13rem] h-full pl-2'}>
           <span
             className={'flex self-start text-lg font-bold'}
-          >{`${userInfo.userNickname} (${userInfo.userName})`}</span>
+          >{`${userInfo.nickname} (${userInfo.name})`}</span>
           <span className={'flex self-start text-gray-light text-base font-semibold'}>
-            {userInfo.userId}
+            {userInfo.email}
           </span>
         </div>
       </div>

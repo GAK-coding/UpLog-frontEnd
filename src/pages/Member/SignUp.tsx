@@ -1,4 +1,4 @@
-import React, { FormEvent, useCallback, useEffect, useLayoutEffect, useState } from 'react';
+import React, { FormEvent, useCallback, useEffect, useState } from 'react';
 import useInput from '@/hooks/useInput';
 import { FiUser } from 'react-icons/fi';
 import { MdOutlineMailOutline } from 'react-icons/md';
@@ -11,8 +11,8 @@ import {
 import { convertMinutes } from '@/utils/convertMinutes.ts';
 import { useMessage } from '@/hooks/useMessage.ts';
 import { useMutation } from 'react-query';
-import { signUp } from '@/api/Members/Login-Signup.ts';
-import { SignUpInfo } from '@/typings/member.ts';
+import { emailRequest, signUp } from '@/api/Members/Login-Signup.ts';
+import { EmailInfo, SignUpInfo } from '@/typings/member.ts';
 import { useNavigate } from 'react-router-dom';
 import { loginStatus } from '@/recoil/User/atom.ts';
 import { useRecoilState } from 'recoil';
@@ -35,6 +35,15 @@ export default function SignUp() {
   const { showMessage, contextHolder } = useMessage();
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useRecoilState(loginStatus);
+  const [correctAuth, setCorrectAuth] = useState('');
+
+  const { mutate: emailMutate } = useMutation(emailRequest, {
+    onSuccess: (data) => {
+      // TODO: 인증번호 지워야됨
+      console.log(data.slice(14, 21));
+      setCorrectAuth(data.slice(14, 21));
+    },
+  });
 
   const { mutate, isSuccess } = useMutation(signUp, {
     onSuccess: (data) => {
@@ -56,11 +65,12 @@ export default function SignUp() {
 
   /** 인증번호 전송 함수, 재전송에서도 활용하기 위해서 밖으로 뺌 */
   const sendAuth = useCallback(() => {
-    //TODO: 인증번호 전송
+    const emailInfo: EmailInfo = { email, type: 0 };
+    emailMutate(emailInfo);
 
     showMessage('success', '인증번호가 전송되었습니다.');
     setTimer(time);
-  }, []);
+  }, [email]);
 
   /** 인증번호 버튼 */
   const onClickIsAuth = useCallback(() => {
@@ -84,8 +94,7 @@ export default function SignUp() {
       return;
     }
 
-    // TODO: 인증번호 확인, 이메일 입력됐는지 확인 + 이메일 유효성 검사
-    const check = true;
+    const check = auth === correctAuth;
 
     if (check) {
       setIsAuth(true);
@@ -93,7 +102,7 @@ export default function SignUp() {
     } else {
       showMessage('warning', '인증번호가 일치하지 않습니다.');
     }
-  }, [isAuthClick, isAuth, email]);
+  }, [isAuthClick, isAuth, email, correctAuth, auth]);
 
   // 개인 기업 선택
   const onClickEach = useCallback((check: boolean) => setIsEach(check), []);
@@ -129,6 +138,7 @@ export default function SignUp() {
           if (prevTimer === 0) {
             clearInterval(interval);
             setIsAuthClick(false);
+            setCorrectAuth('');
 
             return 0;
           }
@@ -148,9 +158,9 @@ export default function SignUp() {
     setIsCheckPw(regex.test(password));
   }, [password, isCheckPw]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (isLogin) navigate('/');
-  }, [isLogin]);
+  }, []);
 
   return (
     <form onSubmit={onSubmit} className={'h-full flex-col-center'}>

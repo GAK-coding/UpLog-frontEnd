@@ -29,3 +29,10 @@ export interface targetMemberInfo {
   nickname: string;
   image: string;
 }
+
+export interface EmailInfo {
+  email: string;
+  type: number;
+  link?: string;
+  powerType?: string;
+}

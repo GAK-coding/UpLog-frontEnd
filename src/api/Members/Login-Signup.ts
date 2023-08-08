@@ -1,4 +1,4 @@
-import { FailLogin, GetUserInfo, LoginInfo, SignUpInfo } from '@/typings/member.ts';
+import { EmailInfo, FailLogin, GetUserInfo, LoginInfo, SignUpInfo } from '@/typings/member.ts';
 import { instance } from '@/api';
 import { AxiosResponse } from 'axios';
 
@@ -19,5 +19,18 @@ export const loginUp = async (data: LoginInfo): Promise<GetUserInfo | string> =>
     return res.data;
   } catch (err) {
     return 'login fail';
+  }
+};
+
+export const emailRequest = async (data: EmailInfo) => {
+  try {
+    const res: AxiosResponse<{ message: string }> = await instance.post('/members/email-request', {
+      email: data.email,
+      link: data.type,
+    });
+
+    return res.data.message;
+  } catch (err) {
+    return 'email fail';
   }
 };
