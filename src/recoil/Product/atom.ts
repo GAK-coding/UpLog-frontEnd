@@ -102,59 +102,59 @@ export const productMemberList = atom<ProductMember[]>({
       email: 'fasfs@gmail.com',
       isOpen: false,
     },
-    {
-      position: 'member',
-      profile:
-        'https://w7.pngwing.com/pngs/276/1019/png-transparent-sid-sloth-scrat-ice-age-the-sloth-buckle-free-thumbnail.png',
-      nickName: '젠킨스',
-      name: '장준',
-      email: '1231124@gmail.com',
-      isOpen: false,
-    },
-    {
-      position: 'member',
-      profile:
-        'https://w7.pngwing.com/pngs/276/1019/png-transparent-sid-sloth-scrat-ice-age-the-sloth-buckle-free-thumbnail.png',
-      nickName: '나무늘보',
-      name: '김윤정',
-      email: 'faskas@gmail.com',
-      isOpen: false,
-    },
-    {
-      position: 'member',
-      profile:
-        'https://w7.pngwing.com/pngs/276/1019/png-transparent-sid-sloth-scrat-ice-age-the-sloth-buckle-free-thumbnail.png',
-      nickName: '젠킨스',
-      name: '장준',
-      email: '23123124@gmail.com',
-      isOpen: false,
-    },
-    {
-      position: 'member',
-      profile:
-        'https://w7.pngwing.com/pngs/276/1019/png-transparent-sid-sloth-scrat-ice-age-the-sloth-buckle-free-thumbnail.png',
-      nickName: '나무늘보',
-      name: '김윤정',
-      email: 'faslkas@gmail.com',
-      isOpen: false,
-    },
-    {
-      position: 'member',
-      profile:
-        'https://w7.pngwing.com/pngs/276/1019/png-transparent-sid-sloth-scrat-ice-age-the-sloth-buckle-free-thumbnail.png',
-      nickName: '젠킨스',
-      name: '장준',
-      email: '12123124@gmail.com',
-      isOpen: false,
-    },
-    {
-      position: 'member',
-      profile:
-        'https://w7.pngwing.com/pngs/276/1019/png-transparent-sid-sloth-scrat-ice-age-the-sloth-buckle-free-thumbnail.png',
-      nickName: '나무늘보',
-      name: '김윤정',
-      email: 'fasflks@gmail.com',
-      isOpen: false,
-    },
+    // {
+    //   position: 'member',
+    //   profile:
+    //     'https://w7.pngwing.com/pngs/276/1019/png-transparent-sid-sloth-scrat-ice-age-the-sloth-buckle-free-thumbnail.png',
+    //   nickName: '젠킨스',
+    //   name: '장준',
+    //   email: '1231124@gmail.com',
+    //   isOpen: false,
+    // },
+    // {
+    //   position: 'member',
+    //   profile:
+    //     'https://w7.pngwing.com/pngs/276/1019/png-transparent-sid-sloth-scrat-ice-age-the-sloth-buckle-free-thumbnail.png',
+    //   nickName: '나무늘보',
+    //   name: '김윤정',
+    //   email: 'faskas@gmail.com',
+    //   isOpen: false,
+    // },
+    // {
+    //   position: 'member',
+    //   profile:
+    //     'https://w7.pngwing.com/pngs/276/1019/png-transparent-sid-sloth-scrat-ice-age-the-sloth-buckle-free-thumbnail.png',
+    //   nickName: '젠킨스',
+    //   name: '장준',
+    //   email: '23123124@gmail.com',
+    //   isOpen: false,
+    // },
+    // {
+    //   position: 'member',
+    //   profile:
+    //     'https://w7.pngwing.com/pngs/276/1019/png-transparent-sid-sloth-scrat-ice-age-the-sloth-buckle-free-thumbnail.png',
+    //   nickName: '나무늘보',
+    //   name: '김윤정',
+    //   email: 'faslkas@gmail.com',
+    //   isOpen: false,
+    // },
+    // {
+    //   position: 'member',
+    //   profile:
+    //     'https://w7.pngwing.com/pngs/276/1019/png-transparent-sid-sloth-scrat-ice-age-the-sloth-buckle-free-thumbnail.png',
+    //   nickName: '젠킨스',
+    //   name: '장준',
+    //   email: '12123124@gmail.com',
+    //   isOpen: false,
+    // },
+    // {
+    //   position: 'member',
+    //   profile:
+    //     'https://w7.pngwing.com/pngs/276/1019/png-transparent-sid-sloth-scrat-ice-age-the-sloth-buckle-free-thumbnail.png',
+    //   nickName: '나무늘보',
+    //   name: '김윤정',
+    //   email: 'fasflks@gmail.com',
+    //   isOpen: false,
+    // },
   ],
 });

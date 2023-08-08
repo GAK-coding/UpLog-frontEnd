@@ -86,7 +86,7 @@ export default function Members() {
         <h1 className={'text-3xl font-bold mb-7'}>멤버 추가</h1>
         <div
           className={
-            'border-[0.6px] rounded-[0.625rem] shadow-sign-up w-[50rem] h-auto min-h-64 px-9 py-7 bg-border'
+            'border-[0.6px] rounded-[0.625rem] shadow-sign-up w-[50rem] h-auto px-9 py-7 bg-border'
           }
         >
           <h2 className={'text-[1.4rem] font-bold mb-7'}>초대하기</h2>
@@ -122,14 +122,12 @@ export default function Members() {
 
       <article>
         <h1 className={'text-3xl font-bold mb-7'}>멤버 리스트</h1>
-        <div
-          className={
-            'border-[0.6px] rounded-[0.625rem] shadow-sign-up w-[50rem] h-[80vh] bg-border'
-          }
-        >
+        <div className={'border-[0.6px] rounded-[0.625rem] shadow-sign-up w-[50rem] bg-border'}>
           <Scrollbars
             style={{ height: '100%' }}
             autoHide
+            autoHeight
+            autoHeightMax={'80vh'}
             autoHideTimeout={1000}
             // Duration for hide animation in ms.
             autoHideDuration={200}
