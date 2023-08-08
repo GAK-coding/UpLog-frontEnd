@@ -17,7 +17,7 @@ interface Props {
   onClose: () => void;
   menu: string;
 }
-export default function DeleteAlertDialog({ isOpen, onClose, menu }: Props) {
+export default function DeleteMenuDialog({ isOpen, onClose, menu }: Props) {
   const { product, project } = useParams();
   const navigate = useNavigate();
   const cancelRef = useRef();
