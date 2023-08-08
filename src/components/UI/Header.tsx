@@ -83,7 +83,7 @@ export default function Header() {
     if (pathname === '/login' || pathname === '/signup') return;
 
     if (!nowLogin) {
-      navigate('/');
+      navigate('/', { replace: true });
     }
   }, [isLogin]);
 
