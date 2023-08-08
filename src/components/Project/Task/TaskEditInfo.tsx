@@ -3,6 +3,9 @@ import { SelectMenu, Task } from '@/typings/project.ts';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 import * as dayjs from 'dayjs';
+import { menuListData } from '@/recoil/Project/atom.ts';
+import { productMemberList } from '@/recoil/Product/atom.ts';
+import { useRecoilValue } from 'recoil';
 
 interface Props {
   isEdit: boolean;
@@ -19,7 +22,18 @@ export default function TaskEditInfo({ isEdit, editTask, setEditTask }: Props) {
   ];
 
   const userprofile = '';
-  const [isTargetMember, setIsTargetMember] = useState(true);
+
+  const menuList = useRecoilValue(menuListData);
+  const menuNameList: SelectMenu[] = menuList.map((menuItem) => ({
+    value: menuItem.id.toString(),
+    label: menuItem.name,
+  }));
+
+  const member = useRecoilValue(productMemberList);
+  const memberList: SelectMenu[] = member.map((memberItem) => ({
+    value: memberItem.id.toString(),
+    label: `${memberItem.nickName}(${memberItem.name})`,
+  }));
 
   // 시작 날짜 입력 값
   const onChangeStartTime: DatePickerProps['onChange'] = (date, dateString) => {
@@ -41,9 +55,37 @@ export default function TaskEditInfo({ isEdit, editTask, setEditTask }: Props) {
     setEditTask(updatedTask);
   };
 
-  const handleChange = (value: { value: string; label: React.ReactNode }) => {
-    //TODO : Task 상태, 날짜별로 필터링해서 보여주기
-    console.log(value);
+  const handleChange = (type: string) => (value: { value: string; label: React.ReactNode }) => {
+    // menuId
+    if (type === 'menuId') {
+      const updatedTask = {
+        ...editTask,
+        [type]: +value.value,
+      };
+      setEditTask(updatedTask);
+      return;
+    }
+
+    // targetMember
+    if (type === 'targetMember') {
+      const nameValue = value.label as string;
+      const splitStrings = nameValue.split('(');
+
+      const nickName = splitStrings[0];
+      const name = splitStrings[1].replace(')', '');
+
+      const updatedTask = {
+        ...editTask,
+        [type]: {
+          id: +value.value,
+          image: '',
+          name: name,
+          nickname: nickName,
+        },
+      };
+
+      setEditTask(updatedTask);
+    }
   };
 
   return (
@@ -100,11 +142,11 @@ export default function TaskEditInfo({ isEdit, editTask, setEditTask }: Props) {
         {isEdit ? (
           <Select
             labelInValue
-            defaultValue={dateData[0]}
-            onChange={handleChange}
-            style={{ width: 100 }}
+            defaultValue={{ value: '-1', label: '메뉴 선택' }}
+            onChange={handleChange('menuId')}
+            style={{ width: 120 }}
             bordered={false}
-            options={dateData}
+            options={menuNameList}
             dropdownStyle={{
               backgroundColor: 'var(--gray-sideBar)',
               color: 'var(--black)',
@@ -128,8 +170,8 @@ export default function TaskEditInfo({ isEdit, editTask, setEditTask }: Props) {
           <Select
             labelInValue
             defaultValue={dateData[0]}
-            onChange={handleChange}
-            style={{ width: 100 }}
+            onChange={handleChange('projectTeam')}
+            style={{ width: 120 }}
             bordered={false}
             options={dateData}
             dropdownStyle={{
@@ -145,26 +187,29 @@ export default function TaskEditInfo({ isEdit, editTask, setEditTask }: Props) {
 
       {/*할당자*/}
       <div
-        className={'flex items-center justify-start w-[17rem] h-1/5 text-gray-light text-[1rem]'}
+        className={'flex items-center justify-start w-[20rem] h-1/5 text-gray-light text-[1rem]'}
       >
         <div className={'flex w-[6rem] items-center justify-end h-auto'}>
           <span>할당자</span>
           <div className={'ml-3 h-4 border-solid border-r border-[0.2px] border-gray-border'} />
         </div>
-        {isTargetMember && userprofile === '' && (
+        {userprofile === '' ? (
           <FaUserCircle className={'ml-3 text-[2rem] fill-gray-dark'} />
-        )}
-        {isTargetMember && userprofile !== '' && (
+        ) : (
           <img src={userprofile} className={'ml-3 w-[2rem] h-[2rem] rounded-full'} />
         )}
+
         {isEdit ? (
           <Select
             labelInValue
-            defaultValue={dateData[0]}
-            onChange={handleChange}
-            style={{ width: 100 }}
+            defaultValue={{
+              value: '-1',
+              label: `${editTask.targetMember.nickname}(${editTask.targetMember.name})`,
+            }}
+            onChange={handleChange('targetMember')}
+            style={{ width: 120 }}
             bordered={false}
-            options={dateData}
+            options={memberList}
             dropdownStyle={{
               backgroundColor: 'var(--gray-sideBar)',
               color: 'var(--black)',

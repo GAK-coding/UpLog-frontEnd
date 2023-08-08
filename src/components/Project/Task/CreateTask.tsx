@@ -55,7 +55,7 @@ export default function CreateTask({ isOpen, onClose }: Props) {
 
   const menuList = useRecoilValue(menuListData);
   const menuNameList: SelectMenu[] = menuList.map((menuItem) => ({
-    value: menuItem.name,
+    value: menuItem.id.toString(),
     label: menuItem.name,
   }));
 
