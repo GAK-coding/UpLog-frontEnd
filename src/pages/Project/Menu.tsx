@@ -32,19 +32,17 @@ export default function Menu() {
         {/*post, task 메뉴보드*/}
         <section
           className={
-            'flex-col-center justify-start w-h-full border-base border-b-0 border-gray-border'
+            'flex-col-center justify-start w-h-full border-base border-b-0 border-gray-border relative'
           }
         >
           {/*메뉴 list*/}
-          <div className={'flex-row-center w-full h-[5rem] border-b border-gray-border'}>
+          <div className={'flex-row-center w-full h-[5rem] border-b border-gray-border '}>
             <div className={'w-full min-w-[70rem] h-full items-center justify-center'}>
               <MenuSlider product={product!} project={project!} menuTitle={menutitle!} />
             </div>
           </div>
           {menutitle !== undefined ? (
-            <div
-              className={'flex-col-center justify-start w-full h-content overflow-y-auto relative'}
-            >
+            <div className={'flex-col-center justify-start w-full h-content overflow-y-auto'}>
               {/*post, task 선택*/}
               <section className={'flex-row-center w-full min-h-[6rem]'}>
                 <button type={'button'} onClick={() => setIsPost(true)}>
@@ -75,7 +73,7 @@ export default function Menu() {
           {isPost && (
             <button
               className={
-                'absolute flex justify-between items-center px-2.5 w-[5.5rem] h-[2rem] top-56 right-52 text-[0.93rem] border border-line rounded'
+                'absolute flex justify-between items-center px-2.5 w-[5.5rem] h-[2rem] top-[6.5rem] right-10 text-[0.93rem] border border-line rounded'
               }
               onClick={() => onOpen()}
             >

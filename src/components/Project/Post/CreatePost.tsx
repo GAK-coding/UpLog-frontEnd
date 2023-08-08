@@ -18,6 +18,7 @@ import { useCallback, useEffect, useState } from 'react';
 import PostEditor from '@/components/Common/PostEditor.tsx';
 import { useNavigate, useParams } from 'react-router-dom';
 import { postEditor } from '@/recoil/Common/atom.ts';
+import TagInput from '@/components/Project/Post/TagInput.tsx';
 
 interface Props {
   isOpen: boolean;
@@ -92,9 +93,7 @@ export default function CreatePost({ isOpen, onClose }: Props) {
         />
         <ModalBody>
           <Flex justifyContent={'center'} h={'100%'}>
-            <section
-              className={'flex-col-center justify-start w-[82%] h-full border border-red-400'}
-            >
+            <section className={'flex-col-center justify-start w-[82%] h-full'}>
               {contextHolder}
               <section className={'flex-row-center justify-start w-full h-[4rem]'}>
                 <input
@@ -107,7 +106,9 @@ export default function CreatePost({ isOpen, onClose }: Props) {
                 />
               </section>
               <div className={'w-full border-b border-gray-spring'} />
-              <section className={'flex-col justify-start items-start w-full h-[5rem] pl-[2rem]'}>
+              <section
+                className={'flex-col justify-start items-start w-full h-[6rem] pl-[2rem] py-2'}
+              >
                 {/* 메뉴 | select */}
                 <div
                   className={
@@ -163,15 +164,28 @@ export default function CreatePost({ isOpen, onClose }: Props) {
                 </div>
               </section>
               <div className={'w-full border-b border-gray-spring'} />
-              <section className={'flex-row-center w-[90%] h-[30rem] mt-4'}>
+              <section className={'flex-row-center w-[90%] h-[28rem] my-4'}>
                 <PostEditor isPost={true} />
+              </section>
+              <div className={'w-full border-b border-gray-spring relative'} />
+              <section className={'flex-row-center justify-start items-start w-full py-4 pl-10'}>
+                <div className={'flex-row-center justify-start'}>
+                  <span className={'text-gray-light text-[1rem]'}>태그 추가</span>
+                  <div
+                    className={'mx-3 h-4 border-solid border-r border-[0.2px] border-gray-border'}
+                  />
+                </div>
+                <TagInput />
               </section>
             </section>
           </Flex>
         </ModalBody>
 
         <ModalFooter>
-          <button className={'w-[5rem] rounded h-9 bg-orange text-white'} onClick={createPost}>
+          <button
+            className={'absolute bottom-10 right-16 fix w-[5rem] h-9 rounded bg-orange text-white'}
+            onClick={createPost}
+          >
             완료
           </button>
         </ModalFooter>
