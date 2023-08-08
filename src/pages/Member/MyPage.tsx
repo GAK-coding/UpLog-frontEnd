@@ -6,8 +6,64 @@ import { FaUserCircle } from 'react-icons/fa';
 import { BsFillCameraFill } from 'react-icons/bs';
 import { RcFile } from 'antd/es/upload';
 import UserManageModal from '@/components/Member/MyPage/UserManageModal.tsx';
+import { SaveUserInfo } from '@/typings/member.ts';
+import useInput from '@/hooks/useInput.ts';
+import { useMutation } from 'react-query';
+import { changeName, changeNickname } from '@/api/Members/mypage.ts';
+import { useMessage } from '@/hooks/useMessage.ts';
 
 export default function MyPage() {
+  // const userInfo: SaveUserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
+  const [userInfo, setUserInfo] = useState<SaveUserInfo>(
+    JSON.parse(sessionStorage.getItem('userInfo')!)
+  );
+  const [newName, onChangeNewName, setNewName] = useInput('');
+  const [newNickname, onChangeNewNickname, setNewNickname] = useInput('');
+  const { showMessage, contextHolder } = useMessage();
+
+  const { mutate: nameChangeMutate } = useMutation(changeName);
+  const { mutate: nicknameChangeMutate } = useMutation(changeNickname);
+
+  const onChangeProfile = useCallback(async () => {
+    if (!newName && !newNickname) {
+      showMessage('warning', '이름과 닉네임을 입력해주세요.');
+      return;
+    }
+
+    if (newName && newNickname) {
+      await nameChangeMutate({ id: userInfo.id, newName });
+      setTimeout(() => {
+        nicknameChangeMutate({ id: userInfo.id, newNickname });
+      }, 1);
+
+      setUserInfo({ ...userInfo, nickname: newNickname, name: newName });
+      sessionStorage.setItem(
+        'userInfo',
+        JSON.stringify({ ...userInfo, nickname: newNickname, name: newName })
+      );
+      setNewNickname('');
+      setNewName('');
+
+      showMessage('success', '이름, 닉네임 변경 완료!');
+    } else if (newName) {
+      nameChangeMutate({ id: userInfo.id, newName });
+
+      setUserInfo({ ...userInfo, name: newName });
+      sessionStorage.setItem('userInfo', JSON.stringify({ ...userInfo, name: newName }));
+      setNewName('');
+
+      showMessage('success', '이름 변경 완료!');
+    } else {
+      nicknameChangeMutate({ id: userInfo.id, newNickname });
+
+      setUserInfo({ ...userInfo, nickname: newNickname });
+      sessionStorage.setItem('userInfo', JSON.stringify({ ...userInfo, nickname: newNickname }));
+      setNewNickname('');
+
+      showMessage('success', '닉네임 변경 완료!');
+    }
+  }, [newName, newNickname]);
+
   // 비밀번호 변경 모달
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isClickPwChange, setIsClickPwChange] = useState(false);
@@ -38,6 +94,7 @@ export default function MyPage() {
 
   return (
     <section className={'mypage flex flex-col items-center w-full h-[68rem]'}>
+      {contextHolder}
       <article className={'w-[46rem] h-[44rem] mt-12'}>
         <h1 className={'h-[10%] text-3xl font-bold'}>프로필 수정</h1>
         <div
@@ -48,8 +105,10 @@ export default function MyPage() {
           {/* 상단 */}
           <div className={'flex-row-center justify-between w-full h-[13%]'}>
             <div className={'flex-col-center items-start'}>
-              <span className={'text-[1.4rem] font-bold'}>오현 프로필 관리</span>
-              <span className={'text-[1.1rem] text-gray-dark'}>qhslsl@gmail.com</span>
+              <span className={'text-[1.4rem] font-bold'}>
+                {userInfo.nickname}({userInfo.name}) 프로필 관리
+              </span>
+              <span className={'text-[1.1rem] text-gray-dark'}>{userInfo.email}</span>
             </div>
             <div className={'h-full flex-col-center justify-end'}>
               <button
@@ -94,6 +153,8 @@ export default function MyPage() {
                   'border-base border-gray-border w-full h-11 rounded-[0.625rem] text-[0.93rem] font-semibold p-2'
                 }
                 type="text"
+                value={newName}
+                onChange={onChangeNewName}
                 maxLength={10}
                 placeholder={'이름'}
               />
@@ -106,6 +167,8 @@ export default function MyPage() {
                   'border-base border-gray-border w-full h-11 rounded-[0.625rem] text-[0.93rem] font-semibold p-2'
                 }
                 type="text"
+                value={newNickname}
+                onChange={onChangeNewNickname}
                 maxLength={10}
                 placeholder={'닉네임'}
               />
@@ -114,14 +177,10 @@ export default function MyPage() {
           {/*  확인 취소 버튼  */}
           <div className={'w-full h-[8%] flex-row-center justify-end px-9'}>
             <button
-              className={'w-[4.5rem] h-10 rounded-[0.3rem] bg-orange text-white text-xs font-bold'}
-            >
-              취소
-            </button>
-            <button
               className={
                 'w-[4.5rem] h-10 rounded-[0.3rem] bg-orange text-white text-xs font-bold ml-4'
               }
+              onClick={onChangeProfile}
             >
               저장
             </button>
