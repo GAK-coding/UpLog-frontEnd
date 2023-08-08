@@ -24,7 +24,11 @@ import 'prismjs/plugins/line-numbers/prism-line-numbers.css'; // 코드 블럭�
 import 'prismjs/plugins/line-numbers/prism-line-numbers.min';
 import { useRecoilState } from 'recoil';
 import { themeState } from '@/recoil/Common/atom.ts'; // 줄 번호 플러그인을 포함합니다
-export default function PostEditor() {
+
+interface Props {
+  isPost: boolean;
+}
+export default function PostEditor({ isPost }: Props) {
   const editorRef = useRef<Editor>(null);
   const [darkMode, setDarkMode] = useRecoilState(themeState);
 
@@ -64,25 +68,27 @@ export default function PostEditor() {
   }, [darkMode]);
 
   return (
-    <Editor
-      height="90vh"
-      initialEditType="wysiwyg"
-      ref={editorRef}
-      // toolbarItems={[
-      //   ['bold', 'italic', 'strike'],
-      //   ['hr'],
-      //   ['image', 'link'],
-      //   ['ul', 'ol'],
-      //   ['code', 'codeblock'],
-      // ]}
-      hideModeSwitch={true}
-      useCommandShortcut={false}
-      plugins={[colorSyntax, [codeSyntaxHighlight, { highlighter: Prism }]]}
-      language="ko-KR"
-      onChange={onChange}
-      hooks={{
-        addImageBlobHook: onUploadImage,
-      }}
-    />
+    <div className={'w-h-full'}>
+      <Editor
+        height={isPost ? '100%' : '90vh'}
+        initialEditType="wysiwyg"
+        ref={editorRef}
+        // toolbarItems={[
+        //   ['bold', 'italic', 'strike'],
+        //   ['hr'],
+        //   ['image', 'link'],
+        //   ['ul', 'ol'],
+        //   ['code', 'codeblock'],
+        // ]}
+        hideModeSwitch={true}
+        useCommandShortcut={false}
+        plugins={[colorSyntax, [codeSyntaxHighlight, { highlighter: Prism }]]}
+        language="ko-KR"
+        onChange={onChange}
+        hooks={{
+          addImageBlobHook: onUploadImage,
+        }}
+      />
+    </div>
   );
 }

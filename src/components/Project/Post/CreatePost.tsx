@@ -15,6 +15,7 @@ import { menuListData } from '@/recoil/Project/atom.ts';
 import { SelectMenu } from '@/typings/project.ts';
 import { useRecoilValue } from 'recoil';
 import { useState } from 'react';
+import PostEditor from '@/components/Common/PostEditor.tsx';
 
 interface Props {
   isOpen: boolean;
@@ -148,9 +149,9 @@ export default function CreatePost({ isOpen, onClose }: Props) {
                 </div>
               </section>
               <div className={'w-full border-b border-gray-spring'} />
-              <section
-                className={'flex-row-center w-[90%] h-[28rem] border border-red-400'}
-              ></section>
+              <section className={'flex-row-center w-[90%] h-[28rem] border border-red-400'}>
+                <PostEditor isPost={true} />
+              </section>
             </section>
           </Flex>
         </ModalBody>
