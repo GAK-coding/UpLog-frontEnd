@@ -1,4 +1,4 @@
-import React, { FormEvent, useCallback, useEffect, useState } from 'react';
+import React, { FormEvent, useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import useInput from '@/hooks/useInput';
 import { FiUser } from 'react-icons/fi';
 import { MdOutlineMailOutline } from 'react-icons/md';
@@ -14,6 +14,8 @@ import { useMutation } from 'react-query';
 import { signUp } from '@/api/Members/Login-Signup.ts';
 import { SignUpInfo } from '@/typings/member.ts';
 import { useNavigate } from 'react-router-dom';
+import { loginStatus } from '@/recoil/User/atom.ts';
+import { useRecoilState } from 'recoil';
 const time = 300;
 export default function SignUp() {
   const [name, onChangeName, setName] = useInput('');
@@ -32,6 +34,7 @@ export default function SignUp() {
   const [isCheckPw, setIsCheckPw] = useState(false);
   const { showMessage, contextHolder } = useMessage();
   const navigate = useNavigate();
+  const [isLogin, setIsLogin] = useRecoilState(loginStatus);
 
   const { mutate, isSuccess } = useMutation(signUp, {
     onSuccess: (data) => {
@@ -144,6 +147,10 @@ export default function SignUp() {
     const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,15}$/;
     setIsCheckPw(regex.test(password));
   }, [password, isCheckPw]);
+
+  useLayoutEffect(() => {
+    if (isLogin) navigate('/');
+  }, [isLogin]);
 
   return (
     <form onSubmit={onSubmit} className={'h-full flex-col-center'}>
