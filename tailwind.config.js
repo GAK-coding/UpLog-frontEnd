@@ -39,9 +39,9 @@ export default {
           fixed: 'var(--Fixed)',
         },
         status: {
-          before: 'var(--before)',
-          going: 'var(--going)',
-          done: 'var(--done)',
+          before: 'var(--PROGRESS_BEFORE)',
+          going: 'var(--PROGRESS_IN)',
+          done: 'var(--PROGRESS_COMPLETE)',
         },
       },
       fontFamily: {

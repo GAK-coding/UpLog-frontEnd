@@ -43,25 +43,6 @@ export default function CreateTask({ isOpen, onClose }: Props) {
     { value: '사용자 지정', label: '사용자 지정' },
   ];
 
-  // const pGroup: GroupInfo[] = [
-  //   {
-  //     id: 1,
-  //     name: '그룹',
-  //   },
-  //   {
-  //     id: 2,
-  //     name: '개발팀',
-  //   },
-  //   {
-  //     id: 3,
-  //     name: '마케팅팀',
-  //   },
-  //   {
-  //     id: 4,
-  //     name: '홍보팀',
-  //   },
-  // ];
-
   const pGroup: string[] = ['그룹', '개발팀', '마케팅팀', '홍보팀'];
   const cGroup: SubGroup = {
     그룹: ['하위그룹'],
@@ -440,7 +421,7 @@ export default function CreateTask({ isOpen, onClose }: Props) {
                     height={'100%'}
                     focusBorderColor={'none'}
                     resize={'none'}
-                    placeholder="Task에 대한 상세 설명을 입력해주세요."
+                    placeholder={'Task에 대한 상세 설명을 입력해주세요.'}
                     color={'var(--black)'}
                   />
                 </div>
