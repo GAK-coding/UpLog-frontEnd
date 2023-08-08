@@ -123,6 +123,7 @@ export default function Project() {
     (result: DropResult) => {
       const { destination, source } = result;
 
+      console.log(result);
       // 이상한 곳에 드래그하면 return
       if (!destination) return;
 
@@ -142,9 +143,12 @@ export default function Project() {
 
   // TODO : 그룹 필터링 되는거 확인하고 utils 함수로 빼기
   useEffect(() => {
-    const totalTasks = [...taskStatusList.before, ...taskStatusList.going, ...taskStatusList.done]
-      .length;
-    const doneTasks = taskStatusList.done.length;
+    const totalTasks = [
+      ...taskStatusList.PROGRESS_BEFORE,
+      ...taskStatusList.PROGRESS_IN,
+      ...taskStatusList.PROGRESS_COMPLETE,
+    ].length;
+    const doneTasks = taskStatusList.PROGRESS_COMPLETE.length;
     const percent = (doneTasks / totalTasks) * 100;
     setProgress(Math.floor(percent));
   }, [taskStatusList]);
@@ -319,9 +323,12 @@ export default function Project() {
                 'flex-row-center justify-between w-full h-full pt-8 px-[12rem] overflow-x-auto'
               }
             >
-              <StatusBoard status={'PROGRESS_BEFORE'} tasks={taskStatusList['before']} />
-              <StatusBoard status={'PROGRESS_IN'} tasks={taskStatusList['going']} />
-              <StatusBoard status={'PROGRESS_COMPLETE'} tasks={taskStatusList['done']} />
+              <StatusBoard status={'PROGRESS_BEFORE'} tasks={taskStatusList['PROGRESS_BEFORE']} />
+              <StatusBoard status={'PROGRESS_IN'} tasks={taskStatusList['PROGRESS_IN']} />
+              <StatusBoard
+                status={'PROGRESS_COMPLETE'}
+                tasks={taskStatusList['PROGRESS_COMPLETE']}
+              />
             </div>
           </DragDropContext>
         </section>

@@ -44,3 +44,8 @@ export interface GroupMember {
   email: string;
   group: string | null;
 }
+
+export interface GroupInfo {
+  id: number;
+  name: string;
+}

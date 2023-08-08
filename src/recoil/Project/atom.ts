@@ -94,7 +94,7 @@ export const taskAll = atom<Task[]>({
 export const taskState = atom<Tasks>({
   key: 'task',
   default: {
-    before: [
+    PROGRESS_BEFORE: [
       {
         id: 0,
         dragId: '0',
@@ -116,7 +116,7 @@ export const taskState = atom<Tasks>({
         endTime: '2023-08-04',
       },
     ],
-    going: [
+    PROGRESS_IN: [
       {
         id: 1,
         dragId: '1',
@@ -138,7 +138,7 @@ export const taskState = atom<Tasks>({
         endTime: '2023-08-10',
       },
     ],
-    done: [
+    PROGRESS_COMPLETE: [
       {
         id: 3,
         dragId: '3',

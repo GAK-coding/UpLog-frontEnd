@@ -29,6 +29,7 @@ export interface ProductMember {
   nickName: string;
   name: string;
   email: string;
+  id: number;
   // 케밥 버튼을 위한 변수이며 프론트에서 추가해줘야됨
   isOpen: boolean;
 }
