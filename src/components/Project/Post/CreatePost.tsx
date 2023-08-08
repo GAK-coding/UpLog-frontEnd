@@ -13,12 +13,12 @@ import useInput from '@/hooks/useInput.ts';
 import { Select } from 'antd';
 import { menuListData } from '@/recoil/Project/atom.ts';
 import { SelectMenu } from '@/typings/project.ts';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { useCallback, useEffect, useState } from 'react';
 import PostEditor from '@/components/Common/PostEditor.tsx';
 import { useNavigate, useParams } from 'react-router-dom';
-import { postEditor } from '@/recoil/Common/atom.ts';
 import TagInput from '@/components/Project/Post/TagInput.tsx';
+import { editorPost } from '@/recoil/Common/atom.ts';
 
 interface Props {
   isOpen: boolean;
@@ -45,10 +45,10 @@ export default function CreatePost({ isOpen, onClose }: Props) {
   ];
 
   // 포스트 제목, 메뉴, 타입, 내용
-  const [postName, onChangePostName] = useInput('');
+  const [postName, onChangePostName, setPostName] = useInput('');
   const [postMenu, setPostMenu] = useState(-1);
   const [postType, setPostType] = useState('');
-  const postContent = useRecoilValue(postEditor);
+  const [postContent, setPostContent] = useRecoilState(editorPost);
 
   const handleChange = (type: string) => (value: { value: string; label: React.ReactNode }) => {
     if (type === 'menuId') {
@@ -60,14 +60,32 @@ export default function CreatePost({ isOpen, onClose }: Props) {
 
   // 생성 버튼 클릭
   const createPost = useCallback(() => {
+    // 빈 값이 있는지 예외처리
+
+    if (postName === '') {
+      showMessage('warning', 'Post 제목을 입력해주세요.');
+    }
+
+    if (postMenu === -1) {
+      showMessage('warning', '메뉴를 선택해주세요.');
+    }
+
     // TODO: Post 생성 api 연결
     // 해당 Post가 존재하는 페이지로 이동
     onClose();
     navigate(`/workspace/${product}/${project}/menu/${menutitle}`);
   }, []);
 
+  // 모달창이 새로 열릴 때 마다 값 초기화
+  useEffect(() => {
+    setPostName('');
+    setPostType('');
+    setPostMenu(-1);
+    setPostContent('');
+  }, [isOpen]);
   return (
     <Modal isCentered onClose={onClose} isOpen={isOpen}>
+      {contextHolder}
       <ModalOverlay />
       <ModalContent
         minW="65rem"

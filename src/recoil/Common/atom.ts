@@ -5,7 +5,12 @@ export const themeState = atom<boolean>({
   default: localStorage.getItem('theme') === 'dark',
 });
 
-export const postEditor = atom<string>({
-  key: 'postEditor',
+export const editorPost = atom<string>({
+  key: 'editorPost',
+  default: '',
+});
+
+export const editorChangeLog = atom<string>({
+  key: 'editorChangeLog',
   default: '',
 });

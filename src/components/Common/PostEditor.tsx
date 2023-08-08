@@ -23,7 +23,7 @@ import 'prismjs/components/prism-jsx.min'; // JSX 언어 지원을 포함합니�
 import 'prismjs/plugins/line-numbers/prism-line-numbers.css'; // 코드 블럭에 줄 번호를 추가하기 위해 이 줄을 추가합니다
 import 'prismjs/plugins/line-numbers/prism-line-numbers.min';
 import { useRecoilState } from 'recoil';
-import { postEditor, themeState } from '@/recoil/Common/atom.ts'; // 줄 번호 플러그인을 포함합니다
+import { editorChangeLog, editorPost, themeState } from '@/recoil/Common/atom.ts'; // 줄 번호 플러그인을 포함합니다
 
 interface Props {
   isPost: boolean;
@@ -32,12 +32,15 @@ export default function PostEditor({ isPost }: Props) {
   const editorRef = useRef<Editor>(null);
   const [darkMode, setDarkMode] = useRecoilState(themeState);
 
-  const [editValue, setEditValue] = useRecoilState(postEditor);
+  const [editPost, setEditPost] = useRecoilState(editorPost);
+  const [editChangeLog, setEditChangeLog] = useRecoilState(editorChangeLog);
 
   const onChange = () => {
     const data = editorRef!.current!.getInstance().getHTML();
     console.log(data);
-    setEditValue(data);
+
+    if (isPost) setEditPost(data);
+    else setEditChangeLog(data);
     // console.log(editorRef!.current!.getRootElement().clientHeight);
   };
 
