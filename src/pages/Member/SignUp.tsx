@@ -33,7 +33,15 @@ export default function SignUp() {
   const { showMessage, contextHolder } = useMessage();
   const navigate = useNavigate();
 
-  const { mutate, isSuccess } = useMutation(signUp);
+  const { mutate, isSuccess } = useMutation(signUp, {
+    onSuccess: (data) => {
+      if (typeof data !== 'string' && 'message' in data) {
+        showMessage('warning', data.message);
+      } else {
+        navigate('/login');
+      }
+    },
+  });
   const signUpInfo: SignUpInfo = {
     email,
     password,
@@ -106,8 +114,6 @@ export default function SignUp() {
       }
 
       mutate(signUpInfo);
-
-      navigate('/login');
     },
     [name, nickname, email, isAuth, isCheckPw, signUpInfo, isSuccess]
   );

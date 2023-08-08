@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { loginStatus, profileOpen } from '@/recoil/User/atom.ts';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { useCallback } from 'react';
+import { useCookies } from 'react-cookie';
 
 export default function UserProfile() {
   // TODO: 실제 userprofile 값으로 변경하기
@@ -20,11 +21,12 @@ export default function UserProfile() {
   // userProfile click
   const [isProfileClick, setIsProfileClick] = useRecoilState(profileOpen);
   const setIsLogin = useSetRecoilState(loginStatus);
+  const [cookies, setCookie, removeCookie] = useCookies();
 
   const onClickLogout = useCallback(() => {
     sessionStorage.removeItem('userInfo');
     sessionStorage.removeItem('accessToken');
-    sessionStorage.removeItem('refreshToken');
+    removeCookie('refreshToken', { path: '/' });
     setIsLogin(false);
     setIsProfileClick(false);
   }, []);

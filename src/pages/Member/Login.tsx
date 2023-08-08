@@ -8,8 +8,9 @@ import { useMessage } from '@/hooks/useMessage.ts';
 import { GetUserInfo, LoginInfo, SaveUserInfo } from '@/typings/member.ts';
 import { loginUp } from '@/api/Members/Login-Signup.ts';
 import { useMutation } from 'react-query';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import { loginStatus } from '@/recoil/User/atom.ts';
+import { useCookies } from 'react-cookie';
 
 export default function Login() {
   const { showMessage, contextHolder } = useMessage();
@@ -17,9 +18,15 @@ export default function Login() {
   const [password, onChangePassword, setPassword] = useInput('');
   const navigate = useNavigate();
   const setIsLogin = useSetRecoilState(loginStatus);
+  const [cookies, setCookie, removeCookie] = useCookies();
 
   const { mutate } = useMutation(loginUp, {
-    onSuccess: (data: GetUserInfo) => {
+    onSuccess: (data: GetUserInfo | string) => {
+      if (typeof data === 'string') {
+        showMessage('error', '아이디 또는 비밀번호를 잘못 입력하셨습니다.');
+        return;
+      }
+
       const { id, email, nickname, name, position, accessToken, refreshToken } = data;
       const userInfo: SaveUserInfo = {
         id,
@@ -31,12 +38,12 @@ export default function Login() {
 
       navigate('/workspace/product');
       sessionStorage.setItem('accessToken', accessToken);
-      sessionStorage.setItem('refreshToken', refreshToken);
+      setCookie('refreshToken', refreshToken, { path: '/' });
       sessionStorage.setItem('userInfo', JSON.stringify(userInfo));
       setIsLogin(true);
     },
     onError: () => {
-      showMessage('error', '일치하지 않아요.');
+      showMessage('error', '아이디 또는 비밀번호를 잘못 입력하셨습니다.');
     },
   });
 
