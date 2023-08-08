@@ -104,8 +104,9 @@ export default function NewChangeLog() {
             <div className={'border-b border-gray-spring'} />
           </div>
 
-          <div className={'mt-4 min-h-change-post mb-20'}>
-            <PostEditor />
+          {/*<div className={'mt-4 min-h-change-post mb-20'}>*/}
+          <div className={'mt-4 mb-20'}>
+            <PostEditor isPost={false} />
           </div>
         </div>
       </article>

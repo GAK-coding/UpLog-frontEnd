@@ -8,7 +8,7 @@ import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
 import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 import { useRecoilState } from 'recoil';
-import { taskState } from '@/recoil/Project/atom.ts';
+import { taskState } from '@/recoil/Project/Task.ts';
 
 export default function Project() {
   const { product, project } = useParams();

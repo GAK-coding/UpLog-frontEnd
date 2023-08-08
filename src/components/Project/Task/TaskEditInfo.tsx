@@ -3,7 +3,7 @@ import { SelectMenu, SubGroup, Task } from '@/typings/project.ts';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 import * as dayjs from 'dayjs';
-import { menuListData } from '@/recoil/Project/atom.ts';
+import { menuListData } from '@/recoil/Project/Task.ts';
 import { productMemberList } from '@/recoil/Product/atom.ts';
 import { useRecoilValue } from 'recoil';
 

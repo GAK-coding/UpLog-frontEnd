@@ -15,7 +15,7 @@ import { SelectMenu, SubGroup } from '@/typings/project.ts';
 import { DatePicker, DatePickerProps, Select } from 'antd';
 import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { menuListData } from '@/recoil/Project/atom.ts';
+import { menuListData } from '@/recoil/Project/Task.ts';
 import { productMemberList } from '@/recoil/Product/atom.ts';
 
 interface Props {
@@ -190,6 +190,37 @@ export default function CreateTask({ isOpen, onClose }: Props) {
     console.log(newTask);
   };
 
+  // 완료 버튼 눌렀을 때
+  const onClickCreateTask = useCallback(() => {
+    // 빈 값이 있는지 예외처리
+    if (newTask.taskName === '') {
+      showMessage('warning', 'Task 이름을 입력해주세요.');
+      return;
+    }
+
+    if (newTask.startTime === '' || newTask.endTime === '') {
+      showMessage('warning', '날짜를 선택해주세요.');
+      return;
+    }
+
+    if (newTask.projectTeamId === '') {
+      showMessage('warning', '그룹을 선택해주세요.');
+      return;
+    }
+
+    if (newTask.menuId === -1) {
+      showMessage('warning', '메뉴를 선택해주세요.');
+      return;
+    }
+
+    if (newTask.targetMemberId === -1) {
+      showMessage('warning', '할당자를 선택해주세요.');
+      return;
+    }
+
+    //TODO : Task 생성 API 연결
+  }, [newTask]);
+
   // task 이름 newTask에 저장
   useEffect(() => {
     const updatedTask = {
@@ -230,36 +261,6 @@ export default function CreateTask({ isOpen, onClose }: Props) {
     console.log(newTask);
   }, [isOpen]);
 
-  // 완료 버튼 눌렀을 때
-  const onClickCreateTask = useCallback(() => {
-    // 빈 값이 있는지 예외처리
-    if (newTask.taskName === '') {
-      showMessage('warning', 'Task 이름을 입력해주세요.');
-      return;
-    }
-
-    if (newTask.startTime === '' || newTask.endTime === '') {
-      showMessage('warning', '날짜를 선택해주세요.');
-      return;
-    }
-
-    if (newTask.projectTeamId === '') {
-      showMessage('warning', '그룹을 선택해주세요.');
-      return;
-    }
-
-    if (newTask.menuId === -1) {
-      showMessage('warning', '메뉴를 선택해주세요.');
-      return;
-    }
-
-    if (newTask.targetMemberId === -1) {
-      showMessage('warning', '할당자를 선택해주세요.');
-      return;
-    }
-
-    //TODO : Task 생성 API 연결
-  }, [newTask]);
   return (
     <Modal isCentered onClose={onClose} isOpen={isOpen}>
       <ModalOverlay />
@@ -298,7 +299,7 @@ export default function CreateTask({ isOpen, onClose }: Props) {
                   value={taskName}
                   onChange={onChangeTaskName}
                   placeholder={'Task 제목을 입력해주세요.'}
-                  maxLength={10}
+                  maxLength={20}
                   className={
                     'w-full h-11 border-base border-gray-border text-[1rem] rounded-xl mb-2 p-4 text-black'
                   }
@@ -423,6 +424,7 @@ export default function CreateTask({ isOpen, onClose }: Props) {
                     resize={'none'}
                     placeholder={'Task에 대한 상세 설명을 입력해주세요.'}
                     color={'var(--black)'}
+                    maxLength={1000}
                   />
                 </div>
               </div>

@@ -1,17 +1,20 @@
 import { IoIosArrowBack } from 'react-icons/io';
 import { Link, useParams } from 'react-router-dom';
-import { Select, Textarea } from '@chakra-ui/react';
+import { Select, Textarea, useDisclosure } from '@chakra-ui/react';
 import { AiFillCaretDown } from 'react-icons/ai';
 import TaskEditInfo from '@/components/Project/Task/TaskEditInfo.tsx';
 import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { formatStatus } from '@/utils/formatStatus.ts';
 import { useRecoilValue } from 'recoil';
-import { taskAll } from '@/recoil/Project/atom.ts';
+import { taskAll } from '@/recoil/Project/Task.ts';
 import useInput from '@/hooks/useInput.ts';
 import { TaskStatus } from '@/typings/project.ts';
+import DeleteDialog from '@/components/Common/DeleteDialog.tsx';
 
 export default function TaskDetail() {
   const { product, project, menutitle, taskid } = useParams();
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   // 현재 task 데이터 가져오기
   const taskData = useRecoilValue(taskAll);
@@ -89,11 +92,12 @@ export default function TaskDetail() {
               <span className={'text-3xl mr-4'}>{taskInfo[0].taskName}</span>
             ) : (
               <input
-                className={'w-[70%] h-full text-3xl mr-4 border-b border-orange pb-2'}
+                className={'w-[70%] h-full text-3xl mr-4 pb-2'}
                 type="text"
                 placeholder="Task 제목을 입력해주세요."
                 value={taskName}
                 onChange={onChangeTaskName}
+                maxLength={20}
               />
             )}
             <span className={'text-[1.4rem] text-gray-light'}>{`task ${taskid}`}</span>
@@ -123,7 +127,7 @@ export default function TaskDetail() {
                   status === '진행 전' ? 'before' : status === '진행 중' ? 'going' : 'done'
                 }`}
               >
-                <span className={'text-[0.93rem] text-gray-dark'}>{status}</span>
+                <span className={'text-[0.93rem] text-[#292723]'}>{status}</span>
               </div>
             )}
           </div>
@@ -145,6 +149,7 @@ export default function TaskDetail() {
               focusBorderColor={'none'}
               placeholder={'Task에 대한 상세 설명을 입력해주세요.'}
               color={'var(--black)'}
+              maxLength={1000}
             />
           )}
         </section>
@@ -161,9 +166,19 @@ export default function TaskDetail() {
                 수정
               </button>
             )}
-            <button className={'w-[5rem] rounded h-9 bg-orange'} onClick={() => setIsEdit(!isEdit)}>
+            <button
+              className={'w-[5rem] rounded h-9 bg-orange'}
+              onClick={() => {
+                if (!isEdit) {
+                  onOpen();
+                  return;
+                }
+                setIsEdit(!isEdit);
+              }}
+            >
               {isEdit ? '완료' : '삭제'}
             </button>
+            <DeleteDialog isOpen={isOpen} onClose={onClose} isTask={true} task={+taskid!} />
           </nav>
         </section>
       </article>
