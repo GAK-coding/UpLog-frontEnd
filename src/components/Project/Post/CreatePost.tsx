@@ -14,8 +14,10 @@ import { Select } from 'antd';
 import { menuListData } from '@/recoil/Project/atom.ts';
 import { SelectMenu } from '@/typings/project.ts';
 import { useRecoilValue } from 'recoil';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import PostEditor from '@/components/Common/PostEditor.tsx';
+import { useNavigate, useParams } from 'react-router-dom';
+import { postEditor } from '@/recoil/Common/atom.ts';
 
 interface Props {
   isOpen: boolean;
@@ -23,7 +25,10 @@ interface Props {
 }
 
 export default function CreatePost({ isOpen, onClose }: Props) {
+  const { product, project, menutitle } = useParams();
   const { showMessage, contextHolder } = useMessage();
+
+  const navigate = useNavigate();
 
   // 메뉴 list
   const menuList = useRecoilValue(menuListData);
@@ -38,10 +43,11 @@ export default function CreatePost({ isOpen, onClose }: Props) {
     { value: '2', label: '필독' },
   ];
 
-  // 포스트 제목, 메뉴, 타입,
+  // 포스트 제목, 메뉴, 타입, 내용
   const [postName, onChangePostName] = useInput('');
   const [postMenu, setPostMenu] = useState(-1);
   const [postType, setPostType] = useState('');
+  const postContent = useRecoilValue(postEditor);
 
   const handleChange = (type: string) => (value: { value: string; label: React.ReactNode }) => {
     if (type === 'menuId') {
@@ -51,12 +57,20 @@ export default function CreatePost({ isOpen, onClose }: Props) {
     }
   };
 
+  // 생성 버튼 클릭
+  const createPost = useCallback(() => {
+    // TODO: Post 생성 api 연결
+    // 해당 Post가 존재하는 페이지로 이동
+    onClose();
+    navigate(`/workspace/${product}/${project}/menu/${menutitle}`);
+  }, []);
+
   return (
     <Modal isCentered onClose={onClose} isOpen={isOpen}>
       <ModalOverlay />
       <ModalContent
         minW="65rem"
-        h={'55rem'}
+        h={'58rem'}
         shadow={'boxShadow-sign-up'}
         rounded={'none'}
         p={'1.2rem'}
@@ -149,7 +163,7 @@ export default function CreatePost({ isOpen, onClose }: Props) {
                 </div>
               </section>
               <div className={'w-full border-b border-gray-spring'} />
-              <section className={'flex-row-center w-[90%] h-[28rem] border border-red-400'}>
+              <section className={'flex-row-center w-[90%] h-[30rem] mt-4'}>
                 <PostEditor isPost={true} />
               </section>
             </section>
@@ -157,7 +171,9 @@ export default function CreatePost({ isOpen, onClose }: Props) {
         </ModalBody>
 
         <ModalFooter>
-          <button className={'w-[5rem] rounded h-9 bg-orange text-white'}>완료</button>
+          <button className={'w-[5rem] rounded h-9 bg-orange text-white'} onClick={createPost}>
+            완료
+          </button>
         </ModalFooter>
       </ModalContent>
     </Modal>
