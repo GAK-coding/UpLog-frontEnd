@@ -1,12 +1,15 @@
 import { DatePicker, DatePickerProps, Select } from 'antd';
-import { SelectMenu } from '@/typings/project.ts';
-import { useState } from 'react';
+import { SelectMenu, Task } from '@/typings/project.ts';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
+import * as dayjs from 'dayjs';
 
 interface Props {
   isEdit: boolean;
+  editTask: Task;
+  setEditTask: Dispatch<SetStateAction<Task>>;
 }
-export default function TaskEditInfo({ isEdit }: Props) {
+export default function TaskEditInfo({ isEdit, editTask, setEditTask }: Props) {
   const dateData: SelectMenu[] = [
     { value: '날짜', label: '날짜' },
     {
@@ -17,8 +20,25 @@ export default function TaskEditInfo({ isEdit }: Props) {
 
   const userprofile = '';
   const [isTargetMember, setIsTargetMember] = useState(true);
-  const onChange: DatePickerProps['onChange'] = (date, dateString) => {
-    console.log(date, dateString);
+
+  // 시작 날짜 입력 값
+  const onChangeStartTime: DatePickerProps['onChange'] = (date, dateString) => {
+    const updatedTask = {
+      ...editTask,
+      startTime: dateString,
+    };
+
+    setEditTask(updatedTask);
+  };
+
+  // 종료 날짜 입력 값
+  const onChangeEndTime: DatePickerProps['onChange'] = (date, dateString) => {
+    const updatedTask = {
+      ...editTask,
+      endTime: dateString,
+    };
+
+    setEditTask(updatedTask);
   };
 
   const handleChange = (value: { value: string; label: React.ReactNode }) => {
@@ -39,9 +59,14 @@ export default function TaskEditInfo({ isEdit }: Props) {
         </div>
         {isEdit}
         {isEdit ? (
-          <DatePicker onChange={onChange} placement={'bottomLeft'} bordered={false} />
+          <DatePicker
+            defaultValue={dayjs(editTask.startTime, 'YYYY.MM.DD')}
+            onChange={onChangeStartTime}
+            placement={'bottomLeft'}
+            bordered={false}
+          />
         ) : (
-          <span className={'ml-3 text-gray-dark'}>2023.07.07</span>
+          <span className={'ml-3 text-gray-dark'}>{editTask.startTime}</span>
         )}
       </div>
 
@@ -54,9 +79,14 @@ export default function TaskEditInfo({ isEdit }: Props) {
           <div className={'ml-3 h-4 border-solid border-r border-[0.2px] border-gray-border'} />
         </div>
         {isEdit ? (
-          <DatePicker onChange={onChange} placement={'bottomLeft'} bordered={false} />
+          <DatePicker
+            defaultValue={dayjs(editTask.endTime, 'YYYY.MM.DD')}
+            onChange={onChangeEndTime}
+            placement={'bottomLeft'}
+            bordered={false}
+          />
         ) : (
-          <span className={'ml-3 text-gray-dark'}>2023.07.07</span>
+          <span className={'ml-3 text-gray-dark'}>{editTask.endTime}</span>
         )}
       </div>
       {/*메뉴*/}
@@ -82,7 +112,7 @@ export default function TaskEditInfo({ isEdit }: Props) {
             }}
           />
         ) : (
-          <span className={'ml-3 text-gray-dark'}>요구사항</span>
+          <span className={'ml-3 text-gray-dark'}>{editTask.menuName}</span>
         )}
       </div>
 
@@ -109,7 +139,7 @@ export default function TaskEditInfo({ isEdit }: Props) {
             }}
           />
         ) : (
-          <span className={'ml-3 text-gray-dark'}>개발팀-frontend</span>
+          <span className={'ml-3 text-gray-dark'}>{editTask.projectTeamName}</span>
         )}
       </div>
 
@@ -142,7 +172,9 @@ export default function TaskEditInfo({ isEdit }: Props) {
             }}
           />
         ) : (
-          <span className={'ml-2 text-gray-dark'}>OCI(오채영)</span>
+          <span
+            className={'ml-2 text-gray-dark'}
+          >{`${editTask.targetMember.nickname}(${editTask.targetMember.name})`}</span>
         )}
       </div>
     </section>

@@ -43,6 +43,7 @@
     "antd-img-crop": "^4.12.2",
     "axios": "^1.4.0",
     "cosmiconfig": "^8.2.0",
+    "dayjs": "^1.11.9",
     "esbuild": "^0.18.11",
     "framer-motion": "^10.12.20",
     "prismjs": "^1.29.0",

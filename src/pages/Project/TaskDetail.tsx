@@ -26,11 +26,10 @@ export default function TaskDetail() {
 
   // taskname input 값
   const [taskName, onChangeTaskName] = useInput(taskInfo[0].taskName);
-  // task description input 값
-  // const [taskDescription, onChangeTaskDescription] = useInput(taskInfo[0].taskDetail);
 
   console.log('taskInfo', taskInfo[0]);
   console.log('edit', editTask);
+
   const onChangeEdit = useCallback(() => {
     setIsEdit(true);
   }, [isEdit]);
@@ -131,7 +130,7 @@ export default function TaskDetail() {
         </section>
         <div className={'w-[80%] border-b border-gray-spring my-4'}></div>
         {/*부가 내용 detail*/}
-        <TaskEditInfo isEdit={isEdit} />
+        <TaskEditInfo isEdit={isEdit} editTask={editTask} setEditTask={setEditTask} />
         <div className={'w-[80%] border-b border-gray-spring my-4'}></div>
         {/*세부 내용 */}
         <section className={'w-[70%] h-auto text-[2rem] pt-4 pb-8'}>
