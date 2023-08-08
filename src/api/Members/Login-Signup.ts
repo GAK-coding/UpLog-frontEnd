@@ -1,23 +1,36 @@
-import { GetUserInfo, LoginInfo, SignUpInfo } from '@/typings/member.ts';
+import { EmailInfo, FailLogin, GetUserInfo, LoginInfo, SignUpInfo } from '@/typings/member.ts';
 import { instance } from '@/api';
 import { AxiosResponse } from 'axios';
 
 export const signUp = async (data: SignUpInfo) => {
   try {
-    await instance.post('/members', data);
-    return '회원가입 성공';
+    const res: AxiosResponse<FailLogin | SignUpInfo> = await instance.post('/members', data);
+
+    return res.data;
   } catch (err) {
-    return '회원가입 실패';
+    return 'signup fail';
   }
 };
 
-export const loginUp = async (data: LoginInfo): Promise<GetUserInfo> => {
+export const loginUp = async (data: LoginInfo): Promise<GetUserInfo | string> => {
   try {
     const res: AxiosResponse<GetUserInfo> = await instance.post('/members/login', data);
 
     return res.data;
   } catch (err) {
-    console.log('회원가입 실패');
-    throw err;
+    return 'login fail';
+  }
+};
+
+export const emailRequest = async (data: EmailInfo) => {
+  try {
+    const res: AxiosResponse<{ message: string }> = await instance.post('/members/email-request', {
+      email: data.email,
+      link: data.type,
+    });
+
+    return res.data.message;
+  } catch (err) {
+    return 'email fail';
   }
 };

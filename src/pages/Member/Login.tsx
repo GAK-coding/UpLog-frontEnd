@@ -1,4 +1,4 @@
-import React, { FormEvent, useCallback } from 'react';
+import React, { FormEvent, useCallback, useEffect } from 'react';
 import { MdOutlineMailOutline } from 'react-icons/md';
 import useInput from '@/hooks/useInput.ts';
 import { AiOutlineLock } from 'react-icons/ai';
@@ -8,18 +8,25 @@ import { useMessage } from '@/hooks/useMessage.ts';
 import { GetUserInfo, LoginInfo, SaveUserInfo } from '@/typings/member.ts';
 import { loginUp } from '@/api/Members/Login-Signup.ts';
 import { useMutation } from 'react-query';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { loginStatus } from '@/recoil/User/atom.ts';
+import { useCookies } from 'react-cookie';
 
 export default function Login() {
   const { showMessage, contextHolder } = useMessage();
   const [email, onChangeEmail, setEmail] = useInput('');
   const [password, onChangePassword, setPassword] = useInput('');
   const navigate = useNavigate();
-  const setIsLogin = useSetRecoilState(loginStatus);
+  const [isLogin, setIsLogin] = useRecoilState(loginStatus);
+  const [cookies, setCookie, removeCookie] = useCookies();
 
   const { mutate } = useMutation(loginUp, {
-    onSuccess: (data: GetUserInfo) => {
+    onSuccess: (data: GetUserInfo | string) => {
+      if (typeof data === 'string') {
+        showMessage('error', '아이디 또는 비밀번호를 잘못 입력하셨습니다.');
+        return;
+      }
+
       const { id, email, nickname, name, position, accessToken, refreshToken } = data;
       const userInfo: SaveUserInfo = {
         id,
@@ -31,12 +38,12 @@ export default function Login() {
 
       navigate('/workspace/product');
       sessionStorage.setItem('accessToken', accessToken);
-      sessionStorage.setItem('refreshToken', refreshToken);
+      setCookie('refreshToken', refreshToken, { path: '/' });
       sessionStorage.setItem('userInfo', JSON.stringify(userInfo));
       setIsLogin(true);
     },
     onError: () => {
-      showMessage('error', '일치하지 않아요.');
+      showMessage('error', '아이디 또는 비밀번호를 잘못 입력하셨습니다.');
     },
   });
 
@@ -59,6 +66,10 @@ export default function Login() {
     onSuccess: (codeResponse) => console.log(codeResponse),
     flow: 'auth-code',
   });
+
+  useEffect(() => {
+    if (isLogin) navigate('/');
+  }, [isLogin]);
 
   return (
     <section className={'h-full'}>
