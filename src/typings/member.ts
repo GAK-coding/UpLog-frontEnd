@@ -16,6 +16,11 @@ export interface GetUserInfo extends Omit<SignUpInfo, 'loginType' | 'password'> 
   refreshToken: string;
 }
 
+export interface FailLogin {
+  httpStatus: 'CONFLICT';
+  message: '이미 존재하는 회원입니다.';
+}
+
 export interface SaveUserInfo extends Omit<GetUserInfo, 'accessToken' | 'refreshToken'> {}
 
 export interface targetMemberInfo {
@@ -23,4 +28,11 @@ export interface targetMemberInfo {
   name: string;
   nickname: string;
   image: string;
+}
+
+export interface EmailInfo {
+  email: string;
+  type: number;
+  link?: string;
+  powerType?: string;
 }
