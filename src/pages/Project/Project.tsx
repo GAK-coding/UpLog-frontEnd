@@ -154,15 +154,15 @@ export default function Project() {
   }, [taskStatusList]);
 
   // 필터링 된 페이지로 이동
-  useEffect(() => {
-    if (filterGroup === '그룹') {
-      navigate(`/workspace/${product}/${project}`);
-    } else {
-      childGroup === '전체'
-        ? navigate(`/workspace/${product}/${project}/group/${filterGroup}`)
-        : navigate(`/workspace/${product}/${project}/group/${filterGroup}/${childGroup}`);
-    }
-  }, [filterGroup, childGroup]);
+  // useEffect(() => {
+  //   if (filterGroup === '그룹') {
+  //     navigate(`/workspace/${product}/${project}`);
+  //   } else {
+  //     childGroup === '전체'
+  //       ? navigate(`/workspace/${product}/${project}/group/${filterGroup}`)
+  //       : navigate(`/workspace/${product}/${project}/group/${filterGroup}/${childGroup}`);
+  //   }
+  // }, [filterGroup, childGroup]);
 
   // task 데이터 필터링된 그룹에 맞게 필터링
   useEffect(() => {
