@@ -1,5 +1,5 @@
 import { atom } from 'recoil';
-import { Posts } from '@/typings/project.ts';
+import { CommentInfo, Posts } from '@/typings/project.ts';
 
 export const postMain = atom({
   key: 'postMain',
@@ -46,7 +46,8 @@ export const eachMenuPost = atom<Posts>({
         productName: 'string',
         projectName: 'string',
         postType: null,
-        content: '안녕엉ㅇ안년ㅇ항ㄴ연ㅇ앎ㄴㅇㄴㅇ힌ㅇ힌ㅇㄹn',
+        content:
+          '안녕엉ㅇ안년ㅇ항ㄴ연ㅇ앎ㄴㅇㄴㅇ힌ㅇ힌ㅇㄹn안녕엉ㅇ안년ㅇ항ㄴ연ㅇ앎ㄴㅇㄴㅇ힌ㅇ힌ㅇㄹn안녕엉ㅇ안년ㅇ항ㄴ연ㅇ앎ㄴㅇㄴㅇ힌ㅇ힌ㅇㄹn안녕엉ㅇ안년ㅇ항ㄴ연ㅇ앎ㄴㅇㄴㅇ힌ㅇ힌ㅇㄹn안녕엉ㅇ안년ㅇ항ㄴ연ㅇ앎ㄴㅇㄴㅇ힌ㅇ힌ㅇㄹn안녕엉ㅇ안년ㅇ항ㄴ연ㅇ앎ㄴㅇㄴㅇ힌ㅇ힌ㅇㄹn안녕엉ㅇ안년ㅇ항ㄴ연ㅇ앎ㄴㅇㄴㅇ힌ㅇ힌ㅇㄹn안녕엉ㅇ안년ㅇ항ㄴ연ㅇ앎ㄴㅇㄴㅇ힌ㅇ힌ㅇㄹn안녕엉ㅇ안년ㅇ항ㄴ연ㅇ앎ㄴㅇㄴㅇ힌ㅇ힌ㅇㄹn',
         createTime: '2023-08-09T01:09:41.985Z',
         tagList: ['1', '2', '3'],
         likeCount: 4,
@@ -74,4 +75,100 @@ export const eachMenuPost = atom<Posts>({
       },
     ],
   },
+});
+
+export const eachComment = atom<CommentInfo[]>({
+  key: 'eachComment',
+  default: [
+    {
+      id: 1,
+      parentId: null,
+      content: '댓글 1',
+      createTime: '2023-08-09T11:11:07.357Z',
+      memberId: 1,
+      nickname: 'OCI',
+      name: '오채영',
+      image: '/images/test_userprofile.png',
+    },
+    {
+      id: 2,
+      parentId: null,
+      content: '댓글 2',
+      createTime: '2023-08-09T11:11:07.357Z',
+      memberId: 2,
+      nickname: 'OCI 2',
+      name: '오채영2',
+      image: '',
+    },
+    {
+      id: 3,
+      parentId: 1,
+      content: '댓글 1의 대댓글 1',
+      createTime: '2023-08-09T11:11:07.357Z',
+      memberId: 3,
+      nickname: 'OCI',
+      name: '오채영',
+      image: '',
+    },
+    {
+      id: 4,
+      parentId: 1,
+      content: '댓글 1의 대댓글 2',
+      createTime: '2023-08-09T11:11:07.357Z',
+      memberId: 4,
+      nickname: 'OCI',
+      name: '오채영',
+      image: '',
+    },
+    {
+      id: 5,
+      parentId: 1,
+      content: '댓글 1의 대댓글 3',
+      createTime: '2023-08-09T11:11:07.357Z',
+      memberId: 5,
+      nickname: 'OCI',
+      name: '오채영',
+      image: '',
+    },
+    {
+      id: 6,
+      parentId: null,
+      content: '댓글 3',
+      createTime: '2023-08-09T11:11:07.357Z',
+      memberId: 6,
+      nickname: 'OCI',
+      name: '오채영',
+      image: '',
+    },
+    {
+      id: 7,
+      parentId: 2,
+      content: '댓글 2의 대댓글 1',
+      createTime: '2023-08-09T11:11:07.357Z',
+      memberId: 7,
+      nickname: 'OCI',
+      name: '오채영',
+      image: '',
+    },
+    {
+      id: 8,
+      parentId: 6,
+      content: '댓글 3의 대댓글 1',
+      createTime: '2023-08-09T11:11:07.357Z',
+      memberId: 8,
+      nickname: 'OCI',
+      name: '오채영',
+      image: '',
+    },
+    {
+      id: 9,
+      parentId: 2,
+      content: '댓글 2의 대댓글 2',
+      createTime: '2023-08-09T11:11:07.357Z',
+      memberId: 9,
+      nickname: 'OCI',
+      name: '오채영',
+      image: '',
+    },
+  ],
 });

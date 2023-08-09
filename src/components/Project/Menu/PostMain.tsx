@@ -8,8 +8,12 @@ import { formatCreteaDate } from '@/utils/fotmatCreateDate.ts';
 import { AiFillStar, AiOutlineStar } from 'react-icons/ai';
 import { GoKebabHorizontal } from 'react-icons/go';
 import PostComment from '@/components/Project/Post/PostComment.tsx';
+import DeleteDialog from '@/components/Common/DeleteDialog.tsx';
+import { useDisclosure } from '@chakra-ui/react';
 
 export default function PostMain() {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   //메뉴별로 Post 조회한 데이터
   const [postData, setPostListData] = useRecoilState(eachMenuPost);
 
@@ -48,6 +52,11 @@ export default function PostMain() {
     [isScrapClick]
   );
 
+  const onClickNotice = useCallback((postId: number) => {
+    // TODO : 해당 post id값으로 메뉴 공지글로 등록하는 api 요청 보내기
+    console.log(postId);
+  }, []);
+
   return (
     <section className={'flex-col-center justify-start w-[75%] h-auto mb-12 '}>
       {/*공지글이 존재할 때 확성기 추가*/}
@@ -61,7 +70,6 @@ export default function PostMain() {
       {/*TODO : noticePost는 따로 값 넣어주기*/}
       {/*posts 배열 map*/}
       {posts.map((post, index) => {
-        console.log(post.authorInfoDTO);
         return (
           <article
             key={index}
@@ -180,15 +188,24 @@ export default function PostMain() {
                       'absolute flex-col-center w-[4rem] h-[5.5rem] bottom-5 task-detail-border cursor-pointer text-[0.5rem] text-gray-dark'
                     }
                   >
-                    <div className={'flex-row-center w-full h-1/3 hover:bg-orange-light-sideBar'}>
+                    <button
+                      className={'flex-row-center w-full h-1/3 hover:bg-orange-light-sideBar'}
+                    >
                       수정
-                    </div>
-                    <div className={'flex-row-center w-full h-1/3 hover:bg-orange-light-sideBar'}>
+                    </button>
+                    <button
+                      className={'flex-row-center w-full h-1/3 hover:bg-orange-light-sideBar'}
+                      onClick={() => onClickNotice(post.id)}
+                    >
                       공지
-                    </div>
-                    <div className={'flex-row-center w-full h-1/3 hover:bg-orange-light-sideBar'}>
+                    </button>
+                    <button
+                      className={'flex-row-center w-full h-1/3 hover:bg-orange-light-sideBar'}
+                      onClick={() => onOpen()}
+                    >
                       삭제
-                    </div>
+                    </button>
+                    <DeleteDialog isOpen={isOpen} onClose={onClose} isTask={false} task={post.id} />
                   </section>
                 )}
               </div>

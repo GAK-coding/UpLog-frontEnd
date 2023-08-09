@@ -69,3 +69,14 @@ export interface Post {
 export interface Posts {
   [key: string]: Post[] | Post;
 }
+
+export interface CommentInfo {
+  id: number;
+  parentId: number | null;
+  content: string;
+  createTime: string;
+  memberId: number;
+  name: string;
+  nickname: string;
+  image: string;
+}
