@@ -24,9 +24,10 @@ import { postTagList } from '@/recoil/Project/Post.ts';
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+  post: number;
 }
 
-export default function CreatePost({ isOpen, onClose }: Props) {
+export default function CreatePost({ isOpen, onClose, post }: Props) {
   const { product, project, menutitle } = useParams();
   const { showMessage, contextHolder } = useMessage();
 

@@ -1,9 +1,9 @@
 import {
   AlertDialog,
   AlertDialogBody,
+  AlertDialogContent,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogContent,
   AlertDialogOverlay,
   Button,
 } from '@chakra-ui/react';
@@ -23,6 +23,7 @@ export default function DeleteDialog({ isOpen, onClose, task, post, isTask }: Pr
   const { product, project, menutitle } = useParams();
   const navigate = useNavigate();
 
+  console.log(isTask, post);
   const onClickDelete = useCallback(() => {
     // TODO : Task 삭제 api 연결
     if (isTask) {
