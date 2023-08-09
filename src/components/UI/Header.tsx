@@ -80,8 +80,10 @@ export default function Header() {
     const nowLogin = !!sessionStorage.getItem('userInfo');
     setIsLogin(nowLogin);
 
+    if (pathname === '/login' || pathname === '/signup') return;
+
     if (!nowLogin) {
-      navigate('/');
+      navigate('/', { replace: true });
     }
   }, [isLogin]);
 

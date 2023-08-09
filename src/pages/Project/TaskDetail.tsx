@@ -1,27 +1,70 @@
 import { IoIosArrowBack } from 'react-icons/io';
 import { Link, useParams } from 'react-router-dom';
-import { Select, Textarea } from '@chakra-ui/react';
+import { Select, Textarea, useDisclosure } from '@chakra-ui/react';
 import { AiFillCaretDown } from 'react-icons/ai';
 import TaskEditInfo from '@/components/Project/Task/TaskEditInfo.tsx';
-import { FormEventHandler, useCallback, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import { formatStatus } from '@/utils/formatStatus.ts';
+import { useRecoilValue } from 'recoil';
+import { taskAll } from '@/recoil/Project/Task.ts';
+import useInput from '@/hooks/useInput.ts';
+import { TaskStatus } from '@/typings/project.ts';
+import DeleteDialog from '@/components/Common/DeleteDialog.tsx';
 
 export default function TaskDetail() {
-  const { product, project, menutitle } = useParams();
+  const { product, project, menutitle, taskid } = useParams();
 
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  // 현재 task 데이터 가져오기
+  const taskData = useRecoilValue(taskAll);
+  const taskInfo = taskData.filter((task) => task.id === parseInt(taskid!));
+  const status = formatStatus(taskInfo[0].taskStatus);
+
+  // 수정 여부
   const [isEdit, setIsEdit] = useState<boolean>(false);
+
+  // 새로 수정한 task 데이터 값 저장
+  const [editTask, setEditTask] = useState(taskInfo[0]);
+
+  // taskname input 값
+  const [taskName, onChangeTaskName] = useInput(taskInfo[0].taskName);
+
+  console.log('taskInfo', taskInfo[0]);
+  console.log('edit', editTask);
 
   const onChangeEdit = useCallback(() => {
     setIsEdit(true);
   }, [isEdit]);
 
-  const handleClick = useCallback(() => {
-    if (isEdit) {
-      console.log('완료');
-      setIsEdit(false);
-    } else {
-      console.log('삭제');
-    }
-  }, [isEdit]);
+  // 수정한 task 상태 데이터 값 저장
+  const onChangeSelectedType = (e: ChangeEvent<HTMLSelectElement>) => {
+    const updatedTask = {
+      ...editTask,
+      taskStatus: e.target.value as TaskStatus,
+    };
+
+    setEditTask(updatedTask);
+  };
+
+  const onChangeTaskDescription = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    const updatedTask = {
+      ...editTask,
+      taskDetail: e.target.value,
+    };
+
+    setEditTask(updatedTask);
+  };
+
+  // input 값이 바뀔 때마다 editTask에 저장
+  useEffect(() => {
+    const updatedTask = {
+      ...editTask,
+      taskName: taskName,
+    };
+
+    setEditTask(updatedTask);
+  }, [taskName]);
 
   return (
     <section className={'flex w-full h-auto py-20'}>
@@ -46,54 +89,67 @@ export default function TaskDetail() {
           {/*task 제목, id*/}
           <div className={'flex items-center w-[70%] h-auto font-bold'}>
             {!isEdit ? (
-              <span className={'text-3xl mr-4'}>{`Task 제목`}</span>
+              <span className={'text-3xl mr-4'}>{taskInfo[0].taskName}</span>
             ) : (
               <input
-                className={'w-[70%] h-full text-3xl mr-4 border-b border-orange pb-2'}
+                className={'w-[70%] h-full text-3xl mr-4 pb-2'}
                 type="text"
                 placeholder="Task 제목을 입력해주세요."
-                value={`Task 제목asdfasdasdfasdfasfasdfdfdfdfdf`}
-                // onChange={saveUserId}
+                value={taskName}
+                onChange={onChangeTaskName}
+                maxLength={20}
               />
             )}
-            <span className={'text-[1.4rem] text-gray-light'}>{`task id`}</span>
+            <span className={'text-[1.4rem] text-gray-light'}>{`task ${taskid}`}</span>
           </div>
           {/*진행상태 select*/}
           <div className={'w-[30%] h-auto flex justify-end'}>
-            <Select
-              defaultValue={'hi'}
-              // onChange={onChangeSelectedType}
-              width={'10rem'}
-              height={'2rem'}
-              // backgroundColor={`var(--${selectedType})`}
-              fontSize={'1.2rem'}
-              border={'none'}
-              fontWeight={700}
-              color={'#292723'}
-              marginLeft={'0.5rem'}
-              icon={<AiFillCaretDown fill={'var(--gray-light)'} />}
-            >
-              <option value={'hi'}>hi</option>
-            </Select>
+            {isEdit ? (
+              <Select
+                onChange={onChangeSelectedType}
+                width={'8rem'}
+                height={'2rem'}
+                backgroundColor={`var(--${editTask.taskStatus})`}
+                fontSize={'1rem'}
+                border={'none'}
+                fontWeight={700}
+                color={'#292723'}
+                marginLeft={'0.5rem'}
+                icon={<AiFillCaretDown fill={'var(--gray-light)'} />}
+              >
+                <option value={'PROGRESS_BEFORE'}>진행 전</option>
+                <option value={'PROGRESS_IN'}>진행 중</option>
+                <option value={'PROGRESS_COMPLETE'}>진행 후</option>
+              </Select>
+            ) : (
+              <div
+                className={`flex-row-center w-[4.8rem] h-[1.7rem] rounded bg-status-${
+                  status === '진행 전' ? 'before' : status === '진행 중' ? 'going' : 'done'
+                }`}
+              >
+                <span className={'text-[0.93rem] text-[#292723]'}>{status}</span>
+              </div>
+            )}
           </div>
         </section>
         <div className={'w-[80%] border-b border-gray-spring my-4'}></div>
         {/*부가 내용 detail*/}
-        <TaskEditInfo isEdit={isEdit} />
+        <TaskEditInfo isEdit={isEdit} editTask={editTask} setEditTask={setEditTask} />
         <div className={'w-[80%] border-b border-gray-spring my-4'}></div>
         {/*세부 내용 */}
         <section className={'w-[70%] h-auto text-[2rem] pt-4 pb-8'}>
           {!isEdit ? (
-            <span className={'w-auto h-auto ml-4 text-2xl'}>{`Task 상세 내용`}</span>
+            <span className={'w-auto h-auto ml-4 text-2xl'}>{taskInfo[0].taskDetail}</span>
           ) : (
             <Textarea
-              value={'emails'}
-              // onChange={onChangeEmails}
+              defaultValue={editTask.taskDetail}
+              onChange={onChangeTaskDescription}
               border={'1px solid var(--border-line)'}
               height={'100%'}
               focusBorderColor={'none'}
-              placeholder="이메일은 쉼표(,)로 구분해 주세요."
-              isReadOnly={isEdit}
+              placeholder={'Task에 대한 상세 설명을 입력해주세요.'}
+              color={'var(--black)'}
+              maxLength={1000}
             />
           )}
         </section>
@@ -110,9 +166,19 @@ export default function TaskDetail() {
                 수정
               </button>
             )}
-            <button className={'w-[5rem] rounded h-9 bg-orange'} onClick={handleClick}>
+            <button
+              className={'w-[5rem] rounded h-9 bg-orange'}
+              onClick={() => {
+                if (!isEdit) {
+                  onOpen();
+                  return;
+                }
+                setIsEdit(!isEdit);
+              }}
+            >
               {isEdit ? '완료' : '삭제'}
             </button>
+            <DeleteDialog isOpen={isOpen} onClose={onClose} isTask={true} task={+taskid!} />
           </nav>
         </section>
       </article>

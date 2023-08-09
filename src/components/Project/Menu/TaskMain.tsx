@@ -1,6 +1,6 @@
 import { SelectMenu } from '@/typings/project.ts';
 import { Select } from 'antd';
-import { taskAll } from '@/recoil/Project/atom.ts';
+import { taskAll } from '@/recoil/Project/Task.ts';
 import { useRecoilState } from 'recoil';
 import { RiCheckboxLine } from 'react-icons/ri';
 import { FaUserCircle } from 'react-icons/fa';
@@ -43,7 +43,7 @@ export default function TaskMain() {
   };
 
   return (
-    <div className={'flex-col-center w-h-full'}>
+    <div className={'flex-col-center justify-start w-h-full'}>
       {/*상태별 개수 링 + 날짜, 상태 필터링*/}
       <section className={'flex-row-center justify-between w-full h-[4rem] mt-4 px-6'}>
         <div className={'flex justify-between w-[13rem] px-8'}>

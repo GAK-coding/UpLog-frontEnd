@@ -8,10 +8,10 @@ import styled from '@emotion/styled';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { Editable, EditableInput, EditablePreview, useDisclosure } from '@chakra-ui/react';
 import { useRecoilState } from 'recoil';
-import { menuListData } from '@/recoil/Project/atom.ts';
+import { menuListData } from '@/recoil/Project/Task.ts';
 import { useCallback, useState } from 'react';
 import { useMessage } from '@/hooks/useMessage.ts';
-import DeleteAlertDialog from '@/components/Project/Menu/DeleteAlertDialog.tsx';
+import DeleteMenuDialog from '@/components/Project/Menu/DeleteMenuDialog.tsx';
 
 interface Props {
   product: string;
@@ -145,7 +145,7 @@ export default function MenuSlider({ product, project, menuTitle }: Props) {
           {menuList[0].name}
           {contextHolder}
         </span>
-        <DeleteAlertDialog isOpen={isOpen} onClose={onClose} menu={deleteMenu} />
+        <DeleteMenuDialog isOpen={isOpen} onClose={onClose} menu={deleteMenu} />
       </NavLink>
 
       {/*menuList 데이터*/}
