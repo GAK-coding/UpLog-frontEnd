@@ -10,9 +10,11 @@ import { GoKebabHorizontal } from 'react-icons/go';
 import PostComment from '@/components/Project/Post/PostComment.tsx';
 import DeleteDialog from '@/components/Common/DeleteDialog.tsx';
 import { useDisclosure } from '@chakra-ui/react';
+import PostModal from '@/components/Project/Post/PostModal.tsx';
 
 export default function PostMain() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen: isOpenModal, onOpen: onOpenModal, onClose: onCloseModal } = useDisclosure();
+  const { isOpen: isOpenDialog, onOpen: onOpenDialog, onClose: onCloseDialog } = useDisclosure();
 
   //메뉴별로 Post 조회한 데이터
   const [postData, setPostListData] = useRecoilState(eachMenuPost);
@@ -190,9 +192,16 @@ export default function PostMain() {
                   >
                     <button
                       className={'flex-row-center w-full h-1/3 hover:bg-orange-light-sideBar'}
+                      onClick={() => onOpenModal()}
                     >
                       수정
                     </button>
+                    <PostModal
+                      isOpen={isOpenModal}
+                      onClose={onCloseModal}
+                      post={post.id}
+                      isEdit={true}
+                    />
                     <button
                       className={'flex-row-center w-full h-1/3 hover:bg-orange-light-sideBar'}
                       onClick={() => onClickNotice(post.id)}
@@ -201,11 +210,16 @@ export default function PostMain() {
                     </button>
                     <button
                       className={'flex-row-center w-full h-1/3 hover:bg-orange-light-sideBar'}
-                      onClick={() => onOpen()}
+                      onClick={() => onOpenDialog()}
                     >
                       삭제
                     </button>
-                    <DeleteDialog isOpen={isOpen} onClose={onClose} isTask={false} task={post.id} />
+                    <DeleteDialog
+                      isOpen={isOpenDialog}
+                      onClose={onCloseDialog}
+                      post={post.id}
+                      isTask={false}
+                    />
                   </section>
                 )}
               </div>

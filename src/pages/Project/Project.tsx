@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { BsChevronCompactDown } from 'react-icons/bs';
-import { SubGroup, Task, TaskStatus } from '@/typings/project.ts';
+import { SubGroup, TaskStatus } from '@/typings/project.ts';
 import { Progress, Select, Space } from 'antd';
 import StatusBoard from '@/components/Project/Board/StatusBoard.tsx';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
@@ -16,68 +16,6 @@ export default function Project() {
 
   // recoil에서 받아올 값
   const [taskStatusList, setTaskStatusList] = useRecoilState(taskState);
-  const taskList: Task[] = [
-    {
-      id: 0,
-      dragId: '0',
-      taskName: 'task1',
-      targetMember: {
-        id: 1,
-        name: '오채영',
-        nickname: 'OCI',
-        image: '',
-      },
-      menuId: 1,
-      menuName: '요구사항',
-      projectId: 1,
-      projectTeamName: '개발팀',
-      projectTeamParentId: null,
-      taskStatus: 'PROGRESS_BEFORE',
-      taskDetail: 'task1 입니다롱',
-      startTime: '2023-08-01',
-      endTime: '2023-08-04',
-    },
-    {
-      id: 1,
-      dragId: '1',
-      taskName: 'task2',
-      targetMember: {
-        id: 1,
-        name: '오채영',
-        nickname: 'OCI',
-        image: '',
-      },
-      menuId: 1,
-      menuName: '요구사항',
-      projectId: 1,
-      projectTeamName: '프론트엔드',
-      projectTeamParentId: 1,
-      taskStatus: 'PROGRESS_IN',
-      taskDetail: 'task2 입니다롱',
-      startTime: '2023-08-03',
-      endTime: '2023-08-10',
-    },
-    {
-      id: 3,
-      dragId: '3',
-      taskName: 'task3',
-      targetMember: {
-        id: 1,
-        name: '오채영',
-        nickname: 'OCI',
-        image: '',
-      },
-      menuId: 2,
-      menuName: '개발',
-      projectId: 1,
-      projectTeamName: '개발팀',
-      projectTeamParentId: null,
-      taskStatus: 'PROGRESS_COMPLETE',
-      taskDetail: 'task3 입니다롱',
-      startTime: '2023-08-01',
-      endTime: '2023-08-15',
-    },
-  ];
 
   // 진행률 퍼센트
   const [progress, setProgress] = useState(0);

@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { AiOutlinePlus } from 'react-icons/ai';
-import { Button, Collapse, Fade, useDisclosure } from '@chakra-ui/react';
+import { Collapse, useDisclosure } from '@chakra-ui/react';
 import { BsDot } from 'react-icons/bs';
 import { NavLink, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { IoIosArrowDown, IoMdSettings } from 'react-icons/io';

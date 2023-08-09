@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { Tbody, Td, Tr } from '@chakra-ui/react';
-import { changeType, Release } from '@/typings/product.ts';
+import { Release } from '@/typings/product.ts';
 import { GoKebabHorizontal } from 'react-icons/go';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { useNavigate, useParams } from 'react-router-dom';

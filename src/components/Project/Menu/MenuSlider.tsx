@@ -3,7 +3,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import Slider from 'react-slick';
 import { MenuInfo } from '@/typings/project.ts';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { IoIosArrowForward, IoIosArrowBack, IoIosClose } from 'react-icons/io';
+import { IoIosArrowBack, IoIosArrowForward, IoIosClose } from 'react-icons/io';
 import styled from '@emotion/styled';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { Editable, EditableInput, EditablePreview, useDisclosure } from '@chakra-ui/react';
