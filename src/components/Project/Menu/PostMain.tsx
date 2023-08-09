@@ -4,6 +4,7 @@ import { eachMenuPost } from '@/recoil/Project/Post.ts';
 import { useRecoilState } from 'recoil';
 import { Post } from '@/typings/project.ts';
 import { FaUserCircle } from 'react-icons/fa';
+import { formatCreteaDate } from '@/utils/fotmatCreateDate.ts';
 
 export default function PostMain() {
   const [postData, setPostListData] = useRecoilState(eachMenuPost);
@@ -42,23 +43,59 @@ export default function PostMain() {
                   className={'flex w-[3rem] fill-gray-dark'}
                 />
               )}
-              <div className={'flex-col w-full h-[3.8rem] ml-4 border border-red-400'}>
+              <div className={'flex-col w-auto h-[3.8rem] ml-4 border border-red-400'}>
                 <span
-                  className={'flex h-1/2 font-bold text-[1.4rem] mb-1.5'}
+                  className={'flex h-1/2 font-bold text-[1.2rem] mb-1.5'}
                 >{`${post.authorInfoDTO.nickname}(${post.authorInfoDTO.name})`}</span>
-                <span className={'flex h-1/2 text-[0.8rem]'}>{post.createTime}</span>
+                <span className={'flex h-1/2 text-[0.8rem]'}>
+                  {formatCreteaDate(post.createTime)}
+                </span>
               </div>
             </div>
+            <div className={'flex-col-center justify-start w-[75%] h-[5rem] py-2'}>
+              <div className={'flex-row-center justify-start w-full h-1/2 text-[1.1rem] font-bold'}>
+                <span className={'text-gray-light'}>Title</span>
+                <div
+                  className={'mx-3 h-4 border-solid border-r border-[0.5px] border-gray-light'}
+                />
+                {post.postType !== null && (
+                  <span className={'text-[1.3rem] text-orange mr-2'}>[{post.postType}]</span>
+                )}
+                <span className={'text-[1.3rem]'}>{post.title}</span>
+              </div>
+              <div className={'flex-row-center justify-start w-full h-1/2'}>
+                <div
+                  className={'flex-row-center justify-start w-full h-1/2 text-[1.1rem] font-bold'}
+                >
+                  <span className={'text-gray-light ml-1'}>메뉴</span>
+                  <div
+                    className={'mx-3 h-4 border-solid border-r border-[0.5px] border-gray-light'}
+                  />
+                  <span className={'text-[1.2rem]'}>{post.menuName}</span>
+                </div>
+              </div>
+            </div>
+            <div className={'w-[75%] border-b border-gray-spring'} />
+            <div
+              className={
+                'flex-col-center justify-start w-[75%] min-h-[7rem] h-auto my-6 text-[1.1rem]'
+              }
+            >
+              <div className={'w-[85%] h-auto mb-[2rem] font-bold'}>{post.content}</div>
+              <div className={'w-[90%] h-auto flex-row-center justify-start'}>
+                {post.tagList.map((tag, index) => {
+                  return (
+                    <div key={index} className={'w-auto h-auto text-gray-dark mx-3'}>
+                      #{tag}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+            <div className={'w-[75%] border-b border-gray-spring'} />
           </article>
         );
       })}
-
-      <article
-        className={'flex-col justify-start w-full h-auto border-base py-[1.8rem] px-[3.3rem]'}
-      >
-        <div className={''}>df</div>
-        <div className={''}>df</div>
-      </article>
     </section>
   );
 }

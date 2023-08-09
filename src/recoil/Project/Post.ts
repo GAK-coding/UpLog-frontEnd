@@ -27,6 +27,7 @@ export const eachMenuPost = atom<Posts>({
       postType: 'DEFAULT',
       content: 'string',
       createTime: 'dateTime',
+      tagList: [],
     },
     posts: [
       {
@@ -42,9 +43,10 @@ export const eachMenuPost = atom<Posts>({
         menuName: 'string',
         productName: 'string',
         projectName: 'string',
-        postType: 'DEFAULT',
-        content: 'string',
+        postType: null,
+        content: '안녕엉ㅇ안년ㅇ항ㄴ연ㅇ앎ㄴㅇㄴㅇ힌ㅇ힌ㅇㄹn',
         createTime: '2023-08-09T01:09:41.985Z',
+        tagList: ['1', '2', '3'],
       },
       {
         id: 1,
@@ -62,6 +64,7 @@ export const eachMenuPost = atom<Posts>({
         postType: 'DEFAULT',
         content: 'string',
         createTime: '2023-08-09T01:09:41.985Z',
+        tagList: ['123123', '1231231231'],
       },
     ],
   },

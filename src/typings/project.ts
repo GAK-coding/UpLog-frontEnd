@@ -60,7 +60,8 @@ export interface Post {
   projectName: string;
   postType: string | null;
   content: string;
-  createTime: string;
+  createTime: Date;
+  tagList: string[];
 }
 
 export interface Posts {
