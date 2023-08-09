@@ -44,7 +44,7 @@ export default function Menu() {
           {menutitle !== undefined ? (
             <div className={'flex-col-center justify-start w-full h-content overflow-y-auto'}>
               {/*post, task 선택*/}
-              <section className={'flex-row-center w-full min-h-[6rem]'}>
+              <section className={'flex-row-center w-full min-h-[6rem] bg-red-100'}>
                 <button type={'button'} onClick={() => setIsPost(true)}>
                   <span
                     className={`text-[1.4rem] ${
@@ -68,7 +68,9 @@ export default function Menu() {
               {isPost ? <PostMain /> : <TaskMain />}
             </div>
           ) : (
-            <PostMain />
+            <div className={'flex-col-center justify-start w-full h-content mt-12 overflow-y-auto'}>
+              <PostMain />
+            </div>
           )}
           {isPost && (
             <button
