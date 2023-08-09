@@ -7,6 +7,7 @@ import { FaUserCircle } from 'react-icons/fa';
 import { formatCreteaDate } from '@/utils/fotmatCreateDate.ts';
 import { AiFillStar, AiOutlineStar } from 'react-icons/ai';
 import { GoKebabHorizontal } from 'react-icons/go';
+import PostComment from '@/components/Project/Post/PostComment.tsx';
 
 export default function PostMain() {
   //메뉴별로 Post 조회한 데이터
@@ -19,6 +20,7 @@ export default function PostMain() {
   // TODO : 좋아요, 스크랩 클릭 초기 값 멤버마다 다르게 설정해서 해야함
   const [isLikeClick, setIsLikeClick] = useState<{ [key: number]: boolean }>({});
   const [isScrapClick, setIsScrapClick] = useState<{ [key: number]: boolean }>({});
+  const [isClickKebab, setIsClickKebab] = useState<{ [key: number]: boolean }>({});
 
   // 좋아요 눌렀을 때
   const onClickLike = useCallback(
@@ -64,7 +66,7 @@ export default function PostMain() {
           <article
             key={index}
             className={
-              'flex-col-center justify-start w-full h-auto border-base py-[1.8rem] px-[3.3rem] mb-12'
+              'flex-col-center justify-start w-full h-auto border-base py-[1.8rem] px-[3.3rem] mb-12 relative'
             }
           >
             {/*작성자 정보 + 작성일자 시간*/}
@@ -164,11 +166,36 @@ export default function PostMain() {
                   />
                 )}
                 <GoKebabHorizontal
-                  className={'flex text-[1.3rem] text-gray-light ml-1.5 relative'}
+                  className={'flex text-[1.3rem] text-gray-light ml-1.5'}
+                  onClick={() =>
+                    setIsClickKebab((prevState) => ({
+                      ...prevState,
+                      [post.id]: !prevState[post.id],
+                    }))
+                  }
                 />
-                <section className={'absolute w-[3.5rem] h-['}></section>
+                {isClickKebab[post.id] && (
+                  <section
+                    className={
+                      'absolute flex-col-center w-[4rem] h-[5.5rem] bottom-5 task-detail-border cursor-pointer text-[0.5rem] text-gray-dark'
+                    }
+                  >
+                    <div className={'flex-row-center w-full h-1/3 hover:bg-orange-light-sideBar'}>
+                      수정
+                    </div>
+                    <div className={'flex-row-center w-full h-1/3 hover:bg-orange-light-sideBar'}>
+                      공지
+                    </div>
+                    <div className={'flex-row-center w-full h-1/3 hover:bg-orange-light-sideBar'}>
+                      삭제
+                    </div>
+                  </section>
+                )}
               </div>
             </div>
+
+            {/*댓글*/}
+            <PostComment postId={post.id} />
           </article>
         );
       })}
