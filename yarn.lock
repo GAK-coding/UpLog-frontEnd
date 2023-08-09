@@ -3505,10 +3505,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@esbuild/linux-arm64@npm:0.18.11, @esbuild/linux-arm64@npm:^0.18.11":
+"@esbuild/linux-arm64@npm:0.18.11":
   version: 0.18.11
   resolution: "@esbuild/linux-arm64@npm:0.18.11"
-  checksum: 0b1699a342eafe30c995572395969cefe70e35d4bf87ed7c992f71fb41d93debf6cf3d86375410c05c6b707f357046285a6c0c883a345ac9f297595f07f5041b
   conditions: os=linux & cpu=arm64
   languageName: node
   linkType: hard
@@ -6600,7 +6599,6 @@ __metadata:
     "@emotion/babel-plugin-jsx-pragmatic": ^0.2.1
     "@emotion/react": ^11.11.1
     "@emotion/styled": ^11.11.0
-    "@esbuild/linux-arm64": ^0.18.11
     "@jest/globals": ^29.5.0
     "@loadable/component": ^5.15.3
     "@react-oauth/google": latest
