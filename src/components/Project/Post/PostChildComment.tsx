@@ -22,10 +22,15 @@ export default function PostChildComment({ commentList, commentId, isChildClick 
         [commentId]: !prevState[commentId],
       }));
 
-      setCountChildLike((prevCountChildLike) => ({
-        ...prevCountChildLike,
-        [commentId]: (prevCountChildLike[commentId] || 0) + 1, // 해당 댓글의 좋아요 수를 1 증가
-      }));
+      setCountChildLike((prevCountChildLike) => {
+        if (isLikeClick[commentId]) {
+          return {
+            ...prevCountChildLike,
+            [commentId]: (prevCountChildLike[commentId] || 0) + 1,
+          };
+        }
+        return prevCountChildLike; // 값이 true가 아닐 때는 변경하지 않음
+      });
       //TODO : 좋아요 취소, 좋아요 눌렀을 때 api 요청 보내기
     },
     [isLikeClick]
