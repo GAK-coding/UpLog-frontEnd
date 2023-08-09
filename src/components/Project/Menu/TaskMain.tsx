@@ -6,7 +6,6 @@ import { RiCheckboxLine } from 'react-icons/ri';
 import { FaUserCircle } from 'react-icons/fa';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useEffect } from 'react';
 import { useDisclosure } from '@chakra-ui/react';
 import CreateTask from '@/components/Project/Task/CreateTask.tsx';
 

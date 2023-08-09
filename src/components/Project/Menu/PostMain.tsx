@@ -10,7 +10,6 @@ import { GoKebabHorizontal } from 'react-icons/go';
 import PostComment from '@/components/Project/Post/PostComment.tsx';
 import DeleteDialog from '@/components/Common/DeleteDialog.tsx';
 import { useDisclosure } from '@chakra-ui/react';
-import EditPost from '@/components/Project/Post/EditPost.tsx';
 import PostModal from '@/components/Project/Post/PostModal.tsx';
 
 export default function PostMain() {

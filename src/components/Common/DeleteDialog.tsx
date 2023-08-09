@@ -7,7 +7,7 @@ import {
   AlertDialogOverlay,
   Button,
 } from '@chakra-ui/react';
-import { RefObject, useCallback, useRef } from 'react';
+import { useCallback, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 interface Props {
