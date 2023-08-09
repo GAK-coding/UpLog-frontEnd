@@ -36,7 +36,7 @@ export default function TagInput() {
   };
 
   // tagItem 삭제
-  const deleteTagItem = (e) => {
+  const deleteTagItem = (e: React.MouseEvent<SVGElement, MouseEvent>) => {
     const deleteTagItem = e.target.parentElement.firstChild.innerText;
     const filteredTagList = tagList.filter((tagItem) => tagItem !== deleteTagItem);
 
