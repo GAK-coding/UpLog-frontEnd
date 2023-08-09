@@ -9,26 +9,35 @@ import {
   ModalOverlay,
 } from '@chakra-ui/react';
 import { useMessage } from '@/hooks/useMessage.ts';
-import useInput from '@/hooks/useInput.ts';
-import { Select } from 'antd';
 import { menuListData } from '@/recoil/Project/Task.ts';
-import { SelectMenu } from '@/typings/project.ts';
+import { Post, SelectMenu } from '@/typings/project.ts';
+import { editorPost, themeState } from '@/recoil/Common/atom.ts';
+import useInput from '@/hooks/useInput.ts';
+import { eachMenuPost, postTagList } from '@/recoil/Project/Post.ts';
+import PostEditor from '@/components/Common/PostEditor.tsx';
+import TagInput from '@/components/Project/Post/TagInput.tsx';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
-import PostEditor from '@/components/Common/PostEditor.tsx';
 import { useNavigate, useParams } from 'react-router-dom';
-import TagInput from '@/components/Project/Post/TagInput.tsx';
-import { editorPost, themeState } from '@/recoil/Common/atom.ts';
-import { postTagList } from '@/recoil/Project/Post.ts';
+import { Select } from 'antd';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+  post: number;
 }
 
-export default function CreatePost({ isOpen, onClose, post }: Props) {
-  const { product, project, menutitle } = useParams();
+interface PostType {
+  postType: string | null;
+}
+
+export default function EditPost({ isOpen, onClose, post }: Props) {
   const { showMessage, contextHolder } = useMessage();
+
+  // TODO : post id로 post data 가져오는 api 연결해서 값 설정하는걸로 바꿀거임
+  const postData = useRecoilValue(eachMenuPost);
+  const posts = postData.posts as Post[];
+  const filteredPost = posts.filter((item) => item.id === post)[0];
 
   const navigate = useNavigate();
 
@@ -50,15 +59,15 @@ export default function CreatePost({ isOpen, onClose, post }: Props) {
   // 포스트 제목, 메뉴, 타입, 내용, 태그
   const [postName, onChangePostName, setPostName] = useInput('');
   const [postMenu, setPostMenu] = useState(-1);
-  const [postType, setPostType] = useState('');
+  const [postType, setPostType] = useState<PostType>({ postType: null });
   const [postContent, setPostContent] = useRecoilState(editorPost);
-  const postTag = useRecoilValue(postTagList);
+  const [postTag, setPostTag] = useRecoilState(postTagList);
 
   const handleChange = (type: string) => (value: { value: string; label: React.ReactNode }) => {
     if (type === 'menuId') {
       setPostMenu(+value.value);
     } else {
-      setPostType(value.label as string);
+      setPostType({ postType: value.label as string });
     }
   };
 
@@ -97,11 +106,13 @@ export default function CreatePost({ isOpen, onClose, post }: Props) {
 
   // 모달창이 새로 열릴 때 마다 값 초기화
   useEffect(() => {
-    setPostName('');
-    setPostType('');
-    setPostMenu(-1);
-    setPostContent('');
+    setPostName(filteredPost.title);
+    setPostType({ postType: filteredPost.postType });
+    setPostMenu(filteredPost.menuId);
+    setPostContent(filteredPost.content);
+    setPostTag(filteredPost.tagList);
   }, [isOpen]);
+
   return (
     <Modal isCentered onClose={onClose} isOpen={isOpen}>
       {contextHolder}

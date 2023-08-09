@@ -94,6 +94,7 @@ export default function PostEditor({ isPost }: Props) {
         hooks={{
           addImageBlobHook: onUploadImage,
         }}
+        initialValue={isPost ? editPost : editChangeLog}
       />
     </div>
   );

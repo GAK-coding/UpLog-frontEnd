@@ -10,7 +10,7 @@ import { GoKebabHorizontal } from 'react-icons/go';
 import PostComment from '@/components/Project/Post/PostComment.tsx';
 import DeleteDialog from '@/components/Common/DeleteDialog.tsx';
 import { useDisclosure } from '@chakra-ui/react';
-import CreatePost from '@/components/Project/Post/CreatePost.tsx';
+import EditPost from '@/components/Project/Post/EditPost.tsx';
 
 export default function PostMain() {
   const { isOpen: isOpenModal, onOpen: onOpenModal, onClose: onCloseModal } = useDisclosure();
@@ -196,7 +196,7 @@ export default function PostMain() {
                     >
                       수정
                     </button>
-                    <CreatePost isOpen={isOpenModal} onClose={onCloseModal} post={post.id} />
+                    <EditPost isOpen={isOpenModal} onClose={onCloseModal} post={post.id} />
                     <button
                       className={'flex-row-center w-full h-1/3 hover:bg-orange-light-sideBar'}
                       onClick={() => onClickNotice(post.id)}
