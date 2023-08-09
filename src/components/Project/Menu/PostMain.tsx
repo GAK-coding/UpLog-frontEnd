@@ -5,34 +5,50 @@ import { useRecoilState } from 'recoil';
 import { Post } from '@/typings/project.ts';
 import { FaUserCircle } from 'react-icons/fa';
 import { formatCreteaDate } from '@/utils/fotmatCreateDate.ts';
-import { AiFillStar, AiOutlineHeart, AiOutlineStar } from 'react-icons/ai';
+import { AiFillStar, AiOutlineStar } from 'react-icons/ai';
 import { GoKebabHorizontal } from 'react-icons/go';
 
 export default function PostMain() {
+  //메뉴별로 Post 조회한 데이터
   const [postData, setPostListData] = useRecoilState(eachMenuPost);
+
   // 공지글이 존재하는지
   const noticePostInfo = postData.noticePost as Post;
   const posts = postData.posts as Post[];
 
   // TODO : 좋아요, 스크랩 클릭 초기 값 멤버마다 다르게 설정해서 해야함
-  const [isLikeClick, setIsLikeClick] = useState(false);
-  const [isScrapClick, setIsScrapClick] = useState(false);
+  const [isLikeClick, setIsLikeClick] = useState<{ [key: number]: boolean }>({});
+  const [isScrapClick, setIsScrapClick] = useState<{ [key: number]: boolean }>({});
 
   // 좋아요 눌렀을 때
-  const onClickLike = useCallback(() => {
-    setIsLikeClick(!isLikeClick);
+  const onClickLike = useCallback(
+    (postId: number) => {
+      setIsLikeClick((prevState) => ({
+        ...prevState,
+        [postId]: !prevState[postId],
+      }));
 
-    //TODO : 좋아요 취소, 좋아요 눌렀을 때 api 요청 보내기
-  }, [isLikeClick]);
+      //TODO : 좋아요 취소, 좋아요 눌렀을 때 api 요청 보내기
+    },
+    [isLikeClick]
+  );
 
   // 스크랩 눌렀을 때
-  const onClickScrap = useCallback(() => {
-    setIsScrapClick(!isScrapClick);
+  const onClickScrap = useCallback(
+    (postId: number) => {
+      setIsScrapClick((prevState) => ({
+        ...prevState,
+        [postId]: !prevState[postId],
+      }));
 
-    //TODO : 스크랩 취소, 좋아요 눌렀을 때 api 요청 보내기
-  }, [isScrapClick]);
+      //TODO : 스크랩 취소, 좋아요 눌렀을 때 api 요청 보내기
+    },
+    [isScrapClick]
+  );
+
   return (
     <section className={'flex-col-center justify-start w-[75%] h-auto mb-12 '}>
+      {/*공지글이 존재할 때 확성기 추가*/}
       {noticePostInfo.id !== 0 && (
         <div className={'flex items-center w-full h-[4.8rem]'}>
           <BsFillMegaphoneFill className={'flex text-[2.5rem] text-gray-light'} />
@@ -71,6 +87,8 @@ export default function PostMain() {
                 </span>
               </div>
             </div>
+
+            {/*Post 제목 + 메뉴 정보*/}
             <div className={'flex-col-center justify-start w-[75%] h-[5rem] py-2'}>
               <div className={'flex-row-center justify-start w-full h-1/2 text-[1.1rem] font-bold'}>
                 <span className={'text-gray-light'}>Title</span>
@@ -95,6 +113,8 @@ export default function PostMain() {
               </div>
             </div>
             <div className={'w-[75%] border-b border-gray-spring'} />
+
+            {/*post content랑 태그 내용*/}
             <div
               className={
                 'flex-col-center justify-start w-[75%] min-h-[7rem] h-auto my-6 text-[1.1rem]'
@@ -112,21 +132,19 @@ export default function PostMain() {
               </div>
             </div>
             <div className={'w-[75%] border-b border-gray-spring'} />
+
+            {/*좋아요, 댓글, 스크랩, 케밥 버튼*/}
             <div className={'flex-row-center justify-between w-[75%] h-[2.5rem] px-2'}>
-              <div
-                className={
-                  'flex-row-center justify-start w-1/2 h-full text-gray-dark cursor-pointer'
-                }
-              >
-                {isLikeClick ? (
+              <div className={'flex-row-center justify-start w-1/2 h-full text-gray-dark'}>
+                {isLikeClick[post.id] ? (
                   <BsHeartFill
-                    className={'flex text-[1.5rem] text-[#FF5733] mr-1.5 mt-1'}
-                    onClick={onClickLike}
+                    className={'flex text-[1.5rem] text-[#FF5733] mr-1.5 mt-1 cursor-pointer'}
+                    onClick={() => onClickLike(post.id)}
                   />
                 ) : (
                   <BsHeart
-                    className={'flex text-[1.5rem] text-gray-light mr-1.5 mt-1'}
-                    onClick={onClickLike}
+                    className={'flex text-[1.5rem] text-gray-light mr-1.5 mt-1 cursor-pointer'}
+                    onClick={() => onClickLike(post.id)}
                   />
                 )}
                 <span className={'flex mr-4'}>{post.likeCount}</span>
@@ -134,20 +152,22 @@ export default function PostMain() {
                 <span className={'flex mr-3'}>{post.commentCount}</span>
               </div>
               <div className={'flex-row-center w-1/2 h-full justify-end cursor-pointer'}>
-                {isScrapClick ? (
+                {isScrapClick[post.id] ? (
                   <AiFillStar
                     className={'flex text-[1.5rem] text-[#FFA41B] ml-1.5'}
-                    onClick={onClickScrap}
+                    onClick={() => onClickScrap(post.id)}
                   />
                 ) : (
                   <AiOutlineStar
                     className={'flex text-[1.5rem] text-gray-light ml-1.5'}
-                    onClick={onClickScrap}
+                    onClick={() => onClickScrap(post.id)}
                   />
                 )}
-                <GoKebabHorizontal className={'flex text-[1.3rem] text-gray-light ml-1.5'} />
+                <GoKebabHorizontal
+                  className={'flex text-[1.3rem] text-gray-light ml-1.5 relative'}
+                />
+                <section className={'absolute w-[3.5rem] h-['}></section>
               </div>
-              <div></div>
             </div>
           </article>
         );
