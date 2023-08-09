@@ -54,7 +54,6 @@ export default function MenuSlider({ product, project, menuTitle }: Props) {
       );
 
       setMenuList(updatedMenuList);
-      // console.log(nextValue);
       setEditMenu(nextValue);
     },
     [editMenu]

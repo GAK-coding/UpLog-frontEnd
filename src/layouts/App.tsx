@@ -15,7 +15,6 @@ const Header = loadable(() => import('@/components/UI/Header'));
 const Home = loadable(() => import('@/pages/Home'));
 const Login = loadable(() => import('@/pages/Member/Login'));
 const SignUp = loadable(() => import('@/pages/Member/SignUp'));
-const Post = loadable(() => import('@/pages/Post'));
 const PwInquiry = loadable(() => import('@/pages/Member/PwInquiry'));
 const MyPage = loadable(() => import('@/pages/Member/MyPage'));
 const Workspace = loadable(() => import('@/layouts/Workspace.tsx'));
@@ -59,7 +58,6 @@ function App() {
                     <Route path={'/'} element={<Home />} />
                     <Route path={'/login'} element={<Login />} />
                     <Route path={'/signup'} element={<SignUp />} />
-                    <Route path={'/post'} element={<Post />} />
                     <Route path={'/pwinquiry'} element={<PwInquiry />} />
                     <Route path={'/mypage'} element={<MyPage />} />
                     <Route path={'/workspace'} element={<Workspace />}>

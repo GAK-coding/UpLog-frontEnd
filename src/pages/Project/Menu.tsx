@@ -68,7 +68,9 @@ export default function Menu() {
               {isPost ? <PostMain /> : <TaskMain />}
             </div>
           ) : (
-            <PostMain />
+            <div className={'flex-col-center justify-start w-full h-content mt-12 overflow-y-auto'}>
+              <PostMain />
+            </div>
           )}
           {isPost && (
             <button
