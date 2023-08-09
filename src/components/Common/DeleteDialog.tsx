@@ -35,7 +35,7 @@ export default function DeleteDialog({ isOpen, onClose, task, post, isTask }: Pr
     }
 
     navigate(`/workspace/${product}/${project}/menu/${menutitle}`);
-  }, []);
+  }, [post, task]);
 
   return (
     <AlertDialog

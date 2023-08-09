@@ -14,11 +14,11 @@ import { Select } from 'antd';
 import { menuListData } from '@/recoil/Project/Task.ts';
 import { SelectMenu } from '@/typings/project.ts';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import PostEditor from '@/components/Common/PostEditor.tsx';
 import { useNavigate, useParams } from 'react-router-dom';
 import TagInput from '@/components/Project/Post/TagInput.tsx';
-import { editorPost } from '@/recoil/Common/atom.ts';
+import { editorPost, themeState } from '@/recoil/Common/atom.ts';
 import { postTagList } from '@/recoil/Project/Post.ts';
 
 interface Props {
@@ -44,6 +44,8 @@ export default function CreatePost({ isOpen, onClose }: Props) {
     { value: '1', label: '요청' },
     { value: '2', label: '필독' },
   ];
+
+  const [darkMode, setDarkMode] = useRecoilState(themeState);
 
   // 포스트 제목, 메뉴, 타입, 내용, 태그
   const [postName, onChangePostName, setPostName] = useInput('');
@@ -76,6 +78,22 @@ export default function CreatePost({ isOpen, onClose }: Props) {
     // TODO: Post 생성 api 연결
     onClose();
   }, [postName, postMenu]);
+
+  // 자꾸 깜빡거리는거 방지
+  useLayoutEffect(() => {
+    const editorEl = document.getElementsByClassName('toastui-editor-defaultUI')[0];
+
+    if (editorEl) {
+      const shouldAddDarkClass = darkMode && !editorEl.classList.contains('toastui-editor-dark');
+      const shouldRemoveDarkClass = !darkMode && editorEl.classList.contains('toastui-editor-dark');
+
+      if (shouldAddDarkClass) {
+        editorEl.classList.add('toastui-editor-dark');
+      } else if (shouldRemoveDarkClass) {
+        editorEl.classList.remove('toastui-editor-dark');
+      }
+    }
+  }, [darkMode]);
 
   // 모달창이 새로 열릴 때 마다 값 초기화
   useEffect(() => {
