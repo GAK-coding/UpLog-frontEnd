@@ -28,6 +28,8 @@ export const eachMenuPost = atom<Posts>({
       content: 'string',
       createTime: 'dateTime',
       tagList: [],
+      likeCount: 2,
+      commentCount: 5,
     },
     posts: [
       {
@@ -47,6 +49,8 @@ export const eachMenuPost = atom<Posts>({
         content: '안녕엉ㅇ안년ㅇ항ㄴ연ㅇ앎ㄴㅇㄴㅇ힌ㅇ힌ㅇㄹn',
         createTime: '2023-08-09T01:09:41.985Z',
         tagList: ['1', '2', '3'],
+        likeCount: 4,
+        commentCount: 10,
       },
       {
         id: 1,
@@ -65,6 +69,8 @@ export const eachMenuPost = atom<Posts>({
         content: 'string',
         createTime: '2023-08-09T01:09:41.985Z',
         tagList: ['123123', '1231231231'],
+        likeCount: 0,
+        commentCount: 0,
       },
     ],
   },

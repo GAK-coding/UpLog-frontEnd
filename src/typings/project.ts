@@ -62,6 +62,8 @@ export interface Post {
   content: string;
   createTime: Date;
   tagList: string[];
+  likeCount: number;
+  commentCount: number;
 }
 
 export interface Posts {
