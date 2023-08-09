@@ -3,6 +3,8 @@ import { useMessage } from '@/hooks/useMessage.ts';
 import { MdOutlineMailOutline } from 'react-icons/md';
 import useInput from '@/hooks/useInput.ts';
 import { useNavigate } from 'react-router-dom';
+import { useMutation } from 'react-query';
+import { emailRequest } from '@/api/Members/Login-Signup.ts';
 
 export default function PwInquiry() {
   const navigate = useNavigate();
@@ -10,18 +12,33 @@ export default function PwInquiry() {
   const [isSend, setIsSend] = useState(false);
   const { showMessage, contextHolder } = useMessage();
 
+  const { mutate } = useMutation(emailRequest);
+
   const onSubmit = useCallback(
     (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
-      if (isSend) navigate('/login');
+      if (!isSend) {
+        const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+        if (!emailRegex.test(email)) {
+          showMessage('warning', '이메일이 유효하지 않습니다.');
+          return;
+        }
+
+        mutate({ email, type: 1 });
+        setIsSend(true);
+        return;
+      }
+
+      if (isSend) {
+        navigate('/login');
+        return;
+      }
 
       if (!email) {
         showMessage('warning', '이메일을 입력해주세요.');
         return;
       }
-
-      setIsSend((prev) => !prev);
     },
     [email, isSend]
   );
@@ -72,7 +89,7 @@ export default function PwInquiry() {
                       <MdOutlineMailOutline className={'fill-gray-light'} />
                     </span>
                     <input
-                      type="email"
+                      type="text"
                       value={email}
                       onChange={onChangeEmail}
                       placeholder={'이메일'}
