@@ -60,7 +60,7 @@ export interface Post {
   projectName: string;
   postType: string | null;
   content: string;
-  createTime: Date;
+  createTime: string;
   tagList: string[];
   likeCount: number;
   commentCount: number;
