@@ -49,3 +49,20 @@ export interface GroupInfo {
   id: number;
   name: string;
 }
+
+export interface Post {
+  id: number;
+  title: string;
+  authorInfoDTO: targetMemberInfo;
+  menuId: number;
+  menuName: string;
+  productName: string;
+  projectName: string;
+  postType: string | null;
+  content: string;
+  createTime: string;
+}
+
+export interface Posts {
+  [key: string]: Post[] | Post;
+}
