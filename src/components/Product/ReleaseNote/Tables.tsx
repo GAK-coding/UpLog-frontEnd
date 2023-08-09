@@ -125,7 +125,12 @@ export default function Tables({
               padding={'1.6rem 0'}
               textAlign={'center'}
               cursor={'pointer'}
-              onClick={() => navigate(`/workspace/${product}/${version.version}`)}
+              onClick={() => {
+                const url = encodeURI(`/workspace/${product}/${version.version}`);
+                console.log(url);
+
+                navigate(url);
+              }}
             >
               {version.version}
             </Td>

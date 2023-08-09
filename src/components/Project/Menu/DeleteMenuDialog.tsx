@@ -20,7 +20,7 @@ interface Props {
 export default function DeleteMenuDialog({ isOpen, onClose, menu }: Props) {
   const { product, project } = useParams();
   const navigate = useNavigate();
-  const cancelRef = useRef();
+  const cancelRef = useRef<HTMLButtonElement>(null);
   const [menuList, setMenuList] = useRecoilState(menuListData);
 
   const onClickDelete = useCallback(() => {

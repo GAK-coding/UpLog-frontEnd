@@ -7,7 +7,7 @@ import {
   AlertDialogOverlay,
   Button,
 } from '@chakra-ui/react';
-import { useCallback, useRef } from 'react';
+import { RefObject, useCallback, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 interface Props {
@@ -19,7 +19,7 @@ interface Props {
 }
 
 export default function DeleteDialog({ isOpen, onClose, task, post, isTask }: Props) {
-  const cancelRef = useRef();
+  const cancelRef = useRef<HTMLButtonElement>(null);
   const { product, project, menutitle } = useParams();
   const navigate = useNavigate();
 

@@ -26,7 +26,7 @@ export const emailRequest = async (data: EmailInfo) => {
   try {
     const res: AxiosResponse<{ message: string }> = await instance.post('/members/email-request', {
       email: data.email,
-      link: data.type,
+      type: data.type,
     });
 
     return res.data.message;

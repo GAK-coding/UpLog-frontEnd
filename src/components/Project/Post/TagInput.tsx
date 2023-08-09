@@ -36,11 +36,10 @@ export default function TagInput() {
   };
 
   // tagItem 삭제
-  const deleteTagItem = (e) => {
-    const deleteTagItem = e.target.parentElement.firstChild.innerText;
-    const filteredTagList = tagList.filter((tagItem) => tagItem !== deleteTagItem);
-
-    setTagList(filteredTagList);
+  const deleteTagItem = (num: number) => {
+    const temp: string[] = JSON.parse(JSON.stringify(tagList));
+    temp.splice(num, 1);
+    setTagList(temp);
   };
 
   return (
@@ -55,7 +54,7 @@ export default function TagInput() {
             <span className={'flex text-black'}>{tagItem}</span>
             <TiDelete
               className={'flex ml-1.5 text-[1.5rem] text-gray-dark cursor-pointer'}
-              onClick={deleteTagItem}
+              onClick={() => deleteTagItem(index)}
             />
           </div>
         );
