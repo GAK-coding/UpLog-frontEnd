@@ -6,7 +6,7 @@ import PostMain from '@/components/Project/Menu/PostMain.tsx';
 import { useRecoilState } from 'recoil';
 import { BiPencil } from 'react-icons/bi';
 import { useDisclosure } from '@chakra-ui/react';
-import CreatePost from '@/components/Project/Post/CreatePost.tsx';
+import PostModal from '@/components/Project/Post/PostModal.tsx';
 import { postMain } from '@/recoil/Project/Post.ts';
 
 export default function Menu() {
@@ -84,7 +84,7 @@ export default function Menu() {
             </button>
           )}
 
-          <CreatePost isOpen={isOpen} onClose={onClose} />
+          <PostModal isOpen={isOpen} onClose={onClose} isEdit={false} />
         </section>
       </section>
     </section>

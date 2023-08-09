@@ -12,25 +12,32 @@ import { useMessage } from '@/hooks/useMessage.ts';
 import useInput from '@/hooks/useInput.ts';
 import { Select } from 'antd';
 import { menuListData } from '@/recoil/Project/Task.ts';
-import { SelectMenu } from '@/typings/project.ts';
+import { Post, SelectMenu } from '@/typings/project.ts';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import PostEditor from '@/components/Common/PostEditor.tsx';
-import { useNavigate, useParams } from 'react-router-dom';
 import TagInput from '@/components/Project/Post/TagInput.tsx';
 import { editorPost, themeState } from '@/recoil/Common/atom.ts';
-import { postTagList } from '@/recoil/Project/Post.ts';
+import { eachMenuPost, postTagList } from '@/recoil/Project/Post.ts';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+  post?: number;
+  isEdit: boolean;
 }
 
-export default function CreatePost({ isOpen, onClose }: Props) {
-  const { product, project, menutitle } = useParams();
+interface PostType {
+  postType: string | null;
+}
+
+export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
   const { showMessage, contextHolder } = useMessage();
 
-  const navigate = useNavigate();
+  // TODO : post id로 post data 가져오는 api 연결해서 값 설정하는걸로 바꿀거임
+  const postData = useRecoilValue(eachMenuPost);
+  const posts = postData.posts as Post[];
+  const filteredPost = posts.filter((item) => item.id === post)[0];
 
   // 메뉴 list
   const menuList = useRecoilValue(menuListData);
@@ -50,15 +57,15 @@ export default function CreatePost({ isOpen, onClose }: Props) {
   // 포스트 제목, 메뉴, 타입, 내용, 태그
   const [postName, onChangePostName, setPostName] = useInput('');
   const [postMenu, setPostMenu] = useState(-1);
-  const [postType, setPostType] = useState('');
+  const [postType, setPostType] = useState<PostType>({ postType: null });
   const [postContent, setPostContent] = useRecoilState(editorPost);
-  const postTag = useRecoilValue(postTagList);
+  const [postTag, setPostTag] = useRecoilState(postTagList);
 
   const handleChange = (type: string) => (value: { value: string; label: React.ReactNode }) => {
     if (type === 'menuId') {
       setPostMenu(+value.value);
     } else {
-      setPostType(value.label as string);
+      setPostType({ postType: value.label as string });
     }
   };
 
@@ -75,7 +82,11 @@ export default function CreatePost({ isOpen, onClose }: Props) {
       return;
     }
 
-    // TODO: Post 생성 api 연결
+    if (isEdit) {
+      // TODO : Post 수정 api 연결
+    } else {
+      // TODO: Post 생성 api 연결
+    }
     onClose();
   }, [postName, postMenu]);
 
@@ -97,11 +108,22 @@ export default function CreatePost({ isOpen, onClose }: Props) {
 
   // 모달창이 새로 열릴 때 마다 값 초기화
   useEffect(() => {
+    if (isEdit) {
+      setPostName(filteredPost.title);
+      setPostType({ postType: filteredPost.postType });
+      setPostMenu(filteredPost.menuId);
+      setPostContent(filteredPost.content);
+      setPostTag(filteredPost.tagList);
+
+      return;
+    }
     setPostName('');
-    setPostType('');
+    setPostType({ postType: null });
     setPostMenu(-1);
     setPostContent('');
+    setPostTag([]);
   }, [isOpen]);
+
   return (
     <Modal isCentered onClose={onClose} isOpen={isOpen}>
       {contextHolder}
@@ -160,7 +182,14 @@ export default function CreatePost({ isOpen, onClose }: Props) {
                   </div>
                   <Select
                     labelInValue
-                    defaultValue={{ value: '-1', label: '메뉴 선택' }}
+                    defaultValue={
+                      isEdit
+                        ? {
+                            value: `${filteredPost.menuId}`,
+                            label: `${filteredPost.menuName}`,
+                          }
+                        : { value: '-1', label: '메뉴 선택' }
+                    }
                     onChange={handleChange('menuId')}
                     style={{ width: 100 }}
                     bordered={false}
@@ -187,7 +216,14 @@ export default function CreatePost({ isOpen, onClose }: Props) {
                   </div>
                   <Select
                     labelInValue
-                    defaultValue={{ value: '', label: '타입 선택' }}
+                    defaultValue={
+                      isEdit
+                        ? {
+                            value: `${filteredPost.postType}`,
+                            label: `${filteredPost.postType ?? '타입 선택'}`,
+                          }
+                        : { value: '', label: '타입 선택' }
+                    }
                     onChange={handleChange('type')}
                     style={{ width: 100 }}
                     bordered={false}
