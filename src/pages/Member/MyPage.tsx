@@ -34,7 +34,7 @@ export default function MyPage() {
       await nameChangeMutate({ id: userInfo.id, newName });
       setTimeout(() => {
         nicknameChangeMutate({ id: userInfo.id, newNickname });
-      }, 1);
+      }, 100);
 
       setUserInfo({ ...userInfo, nickname: newNickname, name: newName });
       sessionStorage.setItem(
