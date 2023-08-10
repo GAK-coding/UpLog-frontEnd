@@ -28,7 +28,11 @@ export const changePassword = async (data: {
   try {
     const { password, newPassword, id } = data;
 
-    await instance.patch(`/members/${id}/password`, { password, newPassword });
+    const res = await instance.patch(`/members/${id}/password`, { password, newPassword });
+
+    if ('message' in res.data) {
+      return res.data;
+    }
   } catch (err) {
     return 'change password fail';
   }

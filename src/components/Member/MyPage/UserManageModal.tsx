@@ -12,8 +12,7 @@ import {
 import { Link } from 'react-router-dom';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import useInput from '@/hooks/useInput.ts';
-
-import { useMessage } from '@/hooks/useMessage.ts';
+type MessageType = 'success' | 'error' | 'warning';
 import { useMutation } from 'react-query';
 import { changePassword } from '@/api/Members/mypage.ts';
 import { SaveUserInfo } from '@/typings/member.ts';
@@ -22,20 +21,28 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   isClickPwChange: boolean;
+  showMessage: (type: MessageType, content: string) => void;
 }
-export default function UserManageModal({ isOpen, onClose, isClickPwChange }: Props) {
+export default function UserManageModal({ isOpen, onClose, isClickPwChange, showMessage }: Props) {
   const userInfo: SaveUserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
   const [password, onChangePassword, setPassword] = useInput('');
   const [newPassword, onChangeNewPassword, setNewPassword] = useInput('');
   const [isCheckPw, setIsCheckPw] = useState(false);
   const [isPwVisible, setIsPwVisible] = useState(false);
-  const { showMessage, contextHolder } = useMessage();
 
   const { mutate } = useMutation(changePassword, {
-    onSuccess: () => {
-      showMessage('success', '비밀번호 변경 완료!');
+    onSuccess: (data) => {
+      if (data && 'message' in data) {
+        showMessage('warning', '현재 비밀번호가 일치하지 않습니다.');
+        return;
+      }
+
       onClose();
+      showMessage('success', '비밀번호 변경 완료!');
+      setPassword('');
+      setNewPassword('');
     },
+    onError: () => {},
   });
 
   const onClickChangePassword = useCallback(() => {
@@ -44,8 +51,13 @@ export default function UserManageModal({ isOpen, onClose, isClickPwChange }: Pr
       return;
     }
 
-    mutate({ id: userInfo.id, nowPassword: password, password: newPassword });
-  }, [password, newPassword, userInfo]);
+    if (!isCheckPw) {
+      showMessage('warning', '올바른 새로운 비밀번호를 입력해주세요.');
+      return;
+    }
+
+    mutate({ id: userInfo.id, newPassword, password });
+  }, [password, newPassword, userInfo, isCheckPw]);
   const onClickPwVisible = useCallback(() => setIsPwVisible((prev) => !prev), []);
 
   const resetPw = useCallback(() => {
@@ -62,7 +74,6 @@ export default function UserManageModal({ isOpen, onClose, isClickPwChange }: Pr
 
   return (
     <Modal isCentered onClose={resetPw} isOpen={isOpen}>
-      {contextHolder}
       <ModalOverlay />
 
       <ModalContent
