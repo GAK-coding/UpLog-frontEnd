@@ -99,9 +99,14 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
   }, [productName, masterEmail]);
 
   useEffect(() => {
-    setProductName('');
-    setClientEmail('');
-    setMasterEmail('');
+    // 모달창 껏다가 키면 정보 초기화
+    if (isCreateProduct) {
+      setProductName('');
+      setClientEmail('');
+      setMasterEmail('');
+    }
+
+    // 수정일 경우에 기존 post 정보로 값 채워넣기
   }, [isOpen]);
 
   return (
