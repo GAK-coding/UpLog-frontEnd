@@ -1,8 +1,8 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { BsChevronCompactUp } from 'react-icons/bs';
 import MenuSlider from '@/components/Project/Menu/MenuSlider.tsx';
-import TaskMain from '@/components/Project/Menu/TaskMain.tsx';
-import PostMain from '@/components/Project/Menu/PostMain.tsx';
+import TaskMain from '@/components/Project/Task/TaskMain.tsx';
+import PostMain from '@/components/Project/Post/PostMain.tsx';
 import { useRecoilState } from 'recoil';
 import { BiPencil } from 'react-icons/bi';
 import { useDisclosure } from '@chakra-ui/react';

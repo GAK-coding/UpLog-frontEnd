@@ -11,7 +11,7 @@ export const productListData = atom<ProductInfo[]>({
       draggableId: '1',
       name: 'Product1',
       image: '/images/test_userprofile.png',
-      master: 'master',
+      masterEmail: 'master',
       client: 'client',
     },
     {
@@ -19,7 +19,7 @@ export const productListData = atom<ProductInfo[]>({
       draggableId: '2',
       name: 'Product2',
       image: '/images/test_userprofile.png',
-      master: 'master',
+      masterEmail: 'master',
       client: 'client',
     },
     {
@@ -27,7 +27,7 @@ export const productListData = atom<ProductInfo[]>({
       draggableId: '3',
       name: 'Product3',
       image: '/images/test_userprofile.png',
-      master: 'master',
+      masterEmail: 'master',
       client: 'client',
     },
     {
@@ -35,7 +35,7 @@ export const productListData = atom<ProductInfo[]>({
       draggableId: '4',
       name: 'Product4',
       image: '/images/test_userprofile.png',
-      master: 'master',
+      masterEmail: 'master',
       client: 'client',
     },
     {
@@ -43,7 +43,7 @@ export const productListData = atom<ProductInfo[]>({
       draggableId: '5',
       name: 'Product5',
       image: '/images/test_userprofile.png',
-      master: 'master',
+      masterEmail: 'master',
       client: 'client',
     },
     {
@@ -51,7 +51,7 @@ export const productListData = atom<ProductInfo[]>({
       draggableId: '6',
       name: 'Product6',
       image: '/images/test_userprofile.png',
-      master: 'master',
+      masterEmail: 'master',
       client: 'client',
     },
   ],
