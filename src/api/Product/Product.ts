@@ -10,7 +10,7 @@ import { AxiosResponse } from 'axios';
 import { instance } from '@/api';
 
 // 제품 생성
-export const products = async (data: ProductBody, memberId: number) => {
+export const createProduct = async (data: ProductBody, memberId: number) => {
   try {
     const res: AxiosResponse<ProductData | FailProduct> = await instance.post(
       `/members/${memberId}/products`,
@@ -34,21 +34,22 @@ export const productEdit = async (data: ProductEditBody, productId: number) => {
 
     return res.data;
   } catch (error) {
-    return console.log(error);
+    console.log(error);
+    return 'edit product fail';
   }
 };
 
 // 제품 정보 조회
 export const eachProduct = async (productId: number) => {
   try {
-    const res: AxiosResponse<ProductEditData | FailProduct> = await instance.get(
+    const res: AxiosResponse<ProductData | FailProduct> = await instance.get(
       `/products/${productId}`
     );
 
     console.log(res.data);
     return res.data;
   } catch (error) {
-    // return 'get product info fail';
-    return console.log(error);
+    console.log(error);
+    return 'get product info fail';
   }
 };

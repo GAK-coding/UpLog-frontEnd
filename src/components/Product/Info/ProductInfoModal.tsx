@@ -16,7 +16,7 @@ import { UploadFile, UploadProps } from 'antd/lib';
 import { RcFile } from 'antd/es/upload';
 import { FiUpload } from 'react-icons/fi';
 import { useMutation, useQuery } from 'react-query';
-import { eachProduct, productEdit, products } from '@/api/Product/Product.ts';
+import { createProduct, eachProduct, productEdit } from '@/api/Product/Product.ts';
 import { ProductBody, ProductEditBody } from '@/typings/product.ts';
 import { SaveUserInfo } from '@/typings/member.ts';
 
@@ -56,23 +56,26 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
   const [imageSrc, setImageSrc] = useState('');
 
   // 제품 생성
-  const { mutate: createProduct } = useMutation(() => products(productInfo, userInfo.id), {
-    onSuccess: (data) => {
-      if (data === 'create product fail') {
-        showMessage('error', '중복된 제품 이름입니다.');
-        return;
-      } else {
-        if (typeof data === 'object' && 'message' in data) {
-          if (data.httpStatus === 'NOT_FOUND')
-            showMessage('warning', '마스터 정보가 올바르지 않습니다.');
-          else showMessage('error', '제품 생성 권한이 없습니다.');
+  const { mutate: createProductMutate } = useMutation(
+    () => createProduct(productInfo, userInfo.id),
+    {
+      onSuccess: (data) => {
+        if (data === 'create product fail') {
+          showMessage('error', '중복된 제품 이름입니다.');
+          return;
         } else {
-          showMessage('success', '제품이 생성되었습니다.');
-          setTimeout(() => onClose(), 2000);
+          if (typeof data === 'object' && 'message' in data) {
+            if (data.httpStatus === 'NOT_FOUND')
+              showMessage('warning', '마스터 정보가 올바르지 않습니다.');
+            else showMessage('error', '제품 생성 권한이 없습니다.');
+          } else {
+            showMessage('success', '제품이 생성되었습니다.');
+            setTimeout(() => onClose(), 2000);
+          }
         }
-      }
-    },
-  });
+      },
+    }
+  );
 
   // 제품 정보 조회
   const { data } = useQuery(['getProjectInfo', productId], () => eachProduct(productId), {
@@ -129,7 +132,7 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
     }
 
     // TODO : 제품 정보 생성 + 이메일로 초대하기
-    createProduct();
+    createProductMutate();
   }, [productName, masterEmail]);
 
   useEffect(() => {
