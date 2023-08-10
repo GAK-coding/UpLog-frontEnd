@@ -42,11 +42,9 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
     name: productName,
     masterEmail: masterEmail,
     link: 'www.naver.com',
-    memberId: userInfo.id,
   };
 
   const updateProductInfo: ProductEditBody = {
-    productId: productId,
     link: null,
     newName: productName,
     memberEmailList: [],
@@ -58,9 +56,9 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
   const [imageSrc, setImageSrc] = useState('');
 
   // 제품 생성
-  const { mutate: createProduct } = useMutation(products, {
+  const { mutate: createProduct } = useMutation(() => products(productInfo, userInfo.id), {
     onSuccess: (data) => {
-      if (data === undefined) {
+      if (data === 'create product fail') {
         showMessage('error', '중복된 제품 이름입니다.');
         return;
       } else {
@@ -84,11 +82,12 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
       } else if (typeof data !== 'string' && 'name' in data) {
         setProductName(data.name);
       }
+      console.log(productId);
     },
   });
 
   // 제품 정보 수정
-  const { mutate: updateProduct } = useMutation(productEdit, {
+  const { mutate: updateProduct } = useMutation(() => productEdit(updateProductInfo, productId), {
     onSuccess: (data) => {
       console.log(data);
     },
@@ -118,7 +117,8 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
         showMessage('warning', '제품 이름을 입력해주세요.');
         return;
       }
-      updateProduct(updateProductInfo);
+      updateProduct();
+      console.log('수정 요청 보냄 ', updateProductInfo);
       return;
     }
     // 필수 정보를 입력하지 않았을 때
@@ -129,7 +129,7 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
     }
 
     // TODO : 제품 정보 생성 + 이메일로 초대하기
-    createProduct(productInfo);
+    createProduct();
   }, [productName, masterEmail]);
 
   useEffect(() => {

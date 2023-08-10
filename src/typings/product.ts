@@ -10,7 +10,6 @@ export interface ProductInfo {
 
 export interface ProductBody extends Omit<ProductInfo, 'draggableId' | 'id' | 'client'> {
   link: string;
-  memberId: number;
 }
 export interface FailProduct {
   httpStatus: 'NOT_FOUND' | 'FORBIDDEN';
@@ -26,7 +25,6 @@ export interface ProductData {
 }
 
 export interface ProductEditBody {
-  productId: number;
   link: string | null;
   newName: string | null;
   memberEmailList: string[] | null;
@@ -34,7 +32,7 @@ export interface ProductEditBody {
 }
 
 export interface ProductEditData {
-  memberPowerListDTO: { productId: number; productName: 'newProductName1' };
+  memberPowerListDTO: { poductId: number; productName: 'newProductName1' };
 }
 
 // ReleaseNote.tsx에서 사용
