@@ -196,18 +196,6 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct }: P
                         'self-center w-[20.7rem] h-9 p-4 bg-transparent text-[1rem] text-black'
                       }
                     />
-                    <span
-                      className={
-                        'self-center bg-orange rounded font-bold text-xs text-white h-7 mr-2 w-[3.5rem]'
-                      }
-                    >
-                      <button
-                        type={'button'}
-                        className={'self-center font-bold text-xs text-white h-7 mr-2 w-[3.5rem]'}
-                      >
-                        확인
-                      </button>
-                    </span>
                   </div>
                 </div>
               )}
@@ -229,18 +217,6 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct }: P
                       'self-center w-[20.7rem] h-9 bg-transparent p-4 text-[1rem] text-black'
                     }
                   />
-                  <span
-                    className={
-                      'self-center bg-orange rounded font-bold text-xs text-white h-7 mr-2 w-[3.5rem]'
-                    }
-                  >
-                    <button
-                      type={'button'}
-                      className={'self-center font-bold text-xs text-white h-7 mr-2 w-[3.5rem]'}
-                    >
-                      확인
-                    </button>
-                  </span>
                 </div>
               </div>
             </section>
