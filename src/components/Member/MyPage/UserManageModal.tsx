@@ -25,8 +25,8 @@ interface Props {
 }
 export default function UserManageModal({ isOpen, onClose, isClickPwChange }: Props) {
   const userInfo: SaveUserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
-  const [nowPassword, onChangeNowPassword, setNowPassword] = useInput('');
   const [password, onChangePassword, setPassword] = useInput('');
+  const [newPassword, onChangeNewPassword, setNewPassword] = useInput('');
   const [isCheckPw, setIsCheckPw] = useState(false);
   const [isPwVisible, setIsPwVisible] = useState(false);
   const { showMessage, contextHolder } = useMessage();
@@ -39,26 +39,26 @@ export default function UserManageModal({ isOpen, onClose, isClickPwChange }: Pr
   });
 
   const onClickChangePassword = useCallback(() => {
-    if (!nowPassword || !password) {
+    if (!password || !newPassword) {
       showMessage('warning', '비밀번호를 입력해주세요.');
       return;
     }
 
-    mutate({ id: userInfo.id, nowPassword, password });
-  }, [nowPassword, password, userInfo]);
+    mutate({ id: userInfo.id, nowPassword: password, password: newPassword });
+  }, [password, newPassword, userInfo]);
   const onClickPwVisible = useCallback(() => setIsPwVisible((prev) => !prev), []);
 
   const resetPw = useCallback(() => {
-    setNowPassword('');
     setPassword('');
+    setNewPassword('');
     onClose();
   }, [onClose]);
 
   // 비밀번호 유효성 검사
   useEffect(() => {
     const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,15}$/;
-    setIsCheckPw(regex.test(password));
-  }, [password, isCheckPw]);
+    setIsCheckPw(regex.test(newPassword));
+  }, [newPassword, isCheckPw]);
 
   return (
     <Modal isCentered onClose={resetPw} isOpen={isOpen}>
@@ -95,8 +95,8 @@ export default function UserManageModal({ isOpen, onClose, isClickPwChange }: Pr
                 <span className={'text-gray-dark font-bold mb-[0.93rem]'}>현재 비밀번호</span>
                 <input
                   type="password"
-                  value={nowPassword}
-                  onChange={onChangeNowPassword}
+                  value={password}
+                  onChange={onChangePassword}
                   placeholder={'현재 비밀번호를 입력하세요.'}
                   maxLength={15}
                   className={
@@ -123,8 +123,8 @@ export default function UserManageModal({ isOpen, onClose, isClickPwChange }: Pr
                   >
                     <input
                       type={`${isPwVisible ? 'text' : 'password'}`}
-                      value={password}
-                      onChange={onChangePassword}
+                      value={newPassword}
+                      onChange={onChangeNewPassword}
                       placeholder={'새로운 비밀번호를 입력하세요.'}
                       maxLength={15}
                       className={'w-[90%] h-full text-[0.93rem] text-black'}
@@ -137,7 +137,7 @@ export default function UserManageModal({ isOpen, onClose, isClickPwChange }: Pr
                       )}
                     </span>
                   </span>
-                  {!isCheckPw && password && (
+                  {!isCheckPw && newPassword && (
                     <span className={'flex-row-center justify-start text-sm text-[#E06469] pl-4'}>
                       영문/숫자/특수문자 포함, 8~15자로 입력해주세요.
                     </span>

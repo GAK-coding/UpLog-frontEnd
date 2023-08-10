@@ -22,13 +22,13 @@ export const changeNickname = async (data: { id: number; newNickname: string }) 
 
 export const changePassword = async (data: {
   id: number;
-  nowPassword: string;
+  newPassword: string;
   password: string;
 }) => {
   try {
-    const { nowPassword, password, id } = data;
+    const { password, newPassword, id } = data;
 
-    await instance.patch(`/members/${id}/password`, { nowPassword, password });
+    await instance.patch(`/members/${id}/password`, { password, newPassword });
   } catch (err) {
     return 'change password fail';
   }
