@@ -89,7 +89,7 @@ export default function PostMain() {
           <article
             key={index}
             className={
-              'flex-col-center justify-start w-full h-auto border-base py-[1.8rem] px-[3.3rem] mb-12 relative'
+              'flex-col-center justify-start w-full h-auto border-base py-[1.8rem] px-[3.3rem] mb-12'
             }
           >
             {/*작성자 정보 + 작성일자 시간*/}
@@ -176,7 +176,7 @@ export default function PostMain() {
                 <BsChat className={'flex text-[1.5rem] text-gray-light mr-1.5'} />
                 <span className={'flex mr-3'}>{post.commentCount}</span>
               </div>
-              <div className={'flex-row-center w-1/2 h-full justify-end cursor-pointer'}>
+              <div className={'relative flex-row-center w-1/2 h-full justify-end cursor-pointer'}>
                 {isScrapClick[post.id] ? (
                   <AiFillStar
                     className={'flex text-[1.5rem] text-[#FFA41B] ml-1.5'}
@@ -200,7 +200,7 @@ export default function PostMain() {
                 {isClickKebab[post.id] && (
                   <section
                     className={
-                      'absolute flex-col-center w-[4rem] h-[5.5rem] bottom-5 task-detail-border cursor-pointer text-[0.5rem] text-gray-dark'
+                      'absolute top-[2.2rem] flex-col-center w-[4rem] h-[5.5rem] bottom-5 task-detail-border cursor-pointer text-[0.5rem] text-gray-dark'
                     }
                   >
                     <button
