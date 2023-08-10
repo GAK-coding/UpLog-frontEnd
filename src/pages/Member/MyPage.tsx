@@ -34,7 +34,7 @@ export default function MyPage() {
       await nameChangeMutate({ id: userInfo.id, newName });
       setTimeout(() => {
         nicknameChangeMutate({ id: userInfo.id, newNickname });
-      }, 100);
+      }, 1000);
 
       setUserInfo({ ...userInfo, nickname: newNickname, name: newName });
       sessionStorage.setItem(
@@ -209,7 +209,12 @@ export default function MyPage() {
         </div>
       </article>
 
-      <UserManageModal isOpen={isOpen} onClose={onClose} isClickPwChange={isClickPwChange} />
+      <UserManageModal
+        isOpen={isOpen}
+        onClose={onClose}
+        isClickPwChange={isClickPwChange}
+        showMessage={showMessage}
+      />
     </section>
   );
 }
