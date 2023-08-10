@@ -1,5 +1,6 @@
 import {
   FailCreateProduct,
+  FailProduct,
   ProductBody,
   ProductData,
   ProductEditBody,
@@ -11,7 +12,7 @@ import { instance } from '@/api';
 // 제품 생성
 export const products = async (data: ProductBody) => {
   try {
-    const res: AxiosResponse<ProductData | FailCreateProduct> = await instance.post(
+    const res: AxiosResponse<ProductData | FailProduct> = await instance.post(
       `/members/${data.memberId}/products`,
       data
     );
@@ -37,12 +38,16 @@ export const productEdit = async (data: ProductEditBody) => {
 };
 
 // 제품 정보 조회
-export const productInfo = async (productId: number) => {
+export const eachProduct = async (productId: number) => {
   try {
-    const res: AxiosResponse<ProductData> = await instance.get(`/products/${productId}`);
+    const res: AxiosResponse<ProductData | FailProduct> = await instance.get(
+      `/products/${productId}`
+    );
 
+    console.log(res.data);
     return res.data;
   } catch (error) {
+    console.log(error);
     return 'get product info fail';
   }
 };

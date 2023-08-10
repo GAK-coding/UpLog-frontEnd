@@ -15,10 +15,9 @@ import ImageCrop from '@/components/Member/MyPage/ImageCrop.tsx';
 import { UploadFile, UploadProps } from 'antd/lib';
 import { RcFile } from 'antd/es/upload';
 import { FiUpload } from 'react-icons/fi';
-import { useMutation } from 'react-query';
-import { products } from '@/api/Product/Product.ts';
-import { ProductBody } from '@/typings/product.ts';
-import show = Mocha.reporters.Base.cursor.show;
+import { useMutation, useQuery } from 'react-query';
+import { eachProduct, productEdit, products } from '@/api/Product/Product.ts';
+import { ProductBody, ProductEditBody } from '@/typings/product.ts';
 import { SaveUserInfo } from '@/typings/member.ts';
 
 interface Props {
@@ -46,10 +45,19 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
     memberId: userInfo.id,
   };
 
+  const updateProductInfo: ProductEditBody = {
+    productId: productId,
+    link: null,
+    newName: productName,
+    memberEmailList: [],
+    powerType: null,
+  };
+
   // 제품 이미지 업로드
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [imageSrc, setImageSrc] = useState('');
 
+  // 제품 생성
   const { mutate: createProduct } = useMutation(products, {
     onSuccess: (data) => {
       if (data === undefined) {
@@ -65,6 +73,24 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
           setTimeout(() => onClose(), 2000);
         }
       }
+    },
+  });
+
+  // 제품 정보 조회
+  const { data } = useQuery(['getProjectInfo', productId], () => eachProduct(productId), {
+    onSuccess: (data) => {
+      if (typeof data === 'object' && 'message' in data) {
+        showMessage('error', '제품 정보를 불러오는데 실패했습니다.');
+      } else if (typeof data !== 'string' && 'name' in data) {
+        setProductName(data.name);
+      }
+    },
+  });
+
+  // 제품 정보 수정
+  const { mutate: updateProduct } = useMutation(productEdit, {
+    onSuccess: (data) => {
+      console.log(data);
     },
   });
 
@@ -87,6 +113,14 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
 
   // 제품 추가 완료 버튼
   const onClickMakeProduct = useCallback(() => {
+    if (!isCreateProduct) {
+      if (!productName) {
+        showMessage('warning', '제품 이름을 입력해주세요.');
+        return;
+      }
+      updateProduct(updateProductInfo);
+      return;
+    }
     // 필수 정보를 입력하지 않았을 때
     if (!productName || !masterEmail) {
       showMessage('warning', '필수 정보를 입력해주세요.');
@@ -107,7 +141,11 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
     }
 
     // 수정일 경우에 기존 post 정보로 값 채워넣기
-  }, [isOpen]);
+    else {
+      console.log('get 요청 보냄 ', productId);
+      console.log(data);
+    }
+  }, [isOpen, isCreateProduct]);
 
   return (
     <Modal isCentered onClose={onClose} isOpen={isOpen}>
