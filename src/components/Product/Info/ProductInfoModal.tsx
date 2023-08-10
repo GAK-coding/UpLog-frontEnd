@@ -9,12 +9,15 @@ import {
   ModalOverlay,
 } from '@chakra-ui/react';
 import useInput from '@/hooks/useInput.ts';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useMessage } from '@/hooks/useMessage.ts';
 import ImageCrop from '@/components/Member/MyPage/ImageCrop.tsx';
 import { UploadFile, UploadProps } from 'antd/lib';
 import { RcFile } from 'antd/es/upload';
 import { FiUpload } from 'react-icons/fi';
+import { useMutation } from 'react-query';
+import { products } from '@/api/Product/Product.ts';
+import { ProductBody } from '@/typings/product.ts';
 
 interface Props {
   isOpen: boolean;
@@ -23,15 +26,35 @@ interface Props {
 }
 
 export default function ProductInfoModal({ isOpen, onClose, isCreateProduct }: Props) {
-  const [productName, onChangeProductName] = useInput('');
-  const [masterEmail, onChangeMasterEmail] = useInput('');
-  const [clientEmail, onChangeClientEmail] = useInput('');
+  const [productName, onChangeProductName, setProductName] = useInput('');
+  const [masterEmail, onChangeMasterEmail, setMasterEmail] = useInput('');
+  const [clientEmail, onChangeClientEmail, setClientEmail] = useInput('');
   const { showMessage, contextHolder } = useMessage();
+
+  // TODO : 링크 임베딩 된 링크로 다시 보내기
+  const productInfo: ProductBody = {
+    name: productName,
+    masterEmail: masterEmail,
+    link: 'www.naver.com',
+    memberId: 1,
+  };
 
   // 제품 이미지 업로드
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [imageSrc, setImageSrc] = useState('');
 
+  const { mutate: createProduct } = useMutation(products, {
+    onSuccess: (data) => {
+      if (typeof data !== 'string' && 'message' in data!) {
+        showMessage('error', '마스터 정보가 올바르지 않습니다.');
+      } else {
+        showMessage('success', '제품이 생성되었습니다.');
+        setTimeout(() => onClose(), 2000);
+      }
+    },
+  });
+
+  // 사진 업로드
   const encodeFileToBase64 = (fileBlob: RcFile): Promise<void> => {
     const reader: FileReader = new FileReader();
     reader.readAsDataURL(fileBlob);
@@ -47,6 +70,7 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct }: P
     await setFileList(newFileList);
     if (newFileList.length > 0) await encodeFileToBase64(newFileList?.[0]?.originFileObj!);
   };
+
   // 제품 추가 완료 버튼
   const onClickMakeProduct = useCallback(() => {
     // 필수 정보를 입력하지 않았을 때
@@ -57,13 +81,14 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct }: P
     }
 
     // TODO : 제품 정보 생성 + 이메일로 초대하기
-    onClose();
+    createProduct(productInfo);
   }, [productName, masterEmail]);
 
-  // 마스터, 의뢰인 설정 시 유효한 이메일인지 확인
-  const checkEmail = useCallback(() => {
-    // TODO : 유효한 이메일인지 확인하기 (가입이 되어있는 이메일만 입력하는걸로 할지?)
-  }, [clientEmail, masterEmail]);
+  useEffect(() => {
+    setProductName('');
+    setClientEmail('');
+    setMasterEmail('');
+  }, [isOpen]);
 
   return (
     <Modal isCentered onClose={onClose} isOpen={isOpen}>
@@ -173,7 +198,6 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct }: P
                       <button
                         type={'button'}
                         className={'self-center font-bold text-xs text-white h-7 mr-2 w-[3.5rem]'}
-                        onClick={checkEmail}
                       >
                         확인
                       </button>
@@ -207,7 +231,6 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct }: P
                     <button
                       type={'button'}
                       className={'self-center font-bold text-xs text-white h-7 mr-2 w-[3.5rem]'}
-                      onClick={checkEmail}
                     >
                       확인
                     </button>

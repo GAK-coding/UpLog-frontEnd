@@ -4,8 +4,25 @@ export interface ProductInfo {
   name: string;
   image?: string;
   // TODO : master, client type user info로 변경하기
-  master: string;
+  masterEmail: string;
   client: string;
+}
+
+export interface ProductBody extends Omit<ProductInfo, 'draggableId' | 'id' | 'client'> {
+  link: string;
+  memberId: number;
+}
+export interface FailCreateProduct {
+  httpStatus: 'NOT_FOUND';
+  message: '해당 이메일로 존재하는 객체를 찾을 수 없습니다.';
+}
+
+export interface ProductData {
+  id: number;
+  name: string;
+  company: string;
+  teamId: number;
+  projectListId: number[];
 }
 
 // ReleaseNote.tsx에서 사용
