@@ -11,6 +11,6 @@ export const products = async (data: ProductBody) => {
 
     return res.data;
   } catch (error) {
-    console.log(error.response.data);
+    return 'create product fail';
   }
 };

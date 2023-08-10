@@ -45,12 +45,18 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct }: P
 
   const { mutate: createProduct } = useMutation(products, {
     onSuccess: (data) => {
-      if (typeof data !== 'string' && 'message' in data!) {
-        showMessage('error', '마스터 정보가 올바르지 않습니다.');
+      if (data === undefined) {
+        showMessage('error', '중복된 제품 이름입니다.');
+        return;
       } else {
-        showMessage('success', '제품이 생성되었습니다.');
-        setTimeout(() => onClose(), 2000);
+        if (typeof data === 'object' && 'message' in data) {
+          showMessage('warning', '마스터 정보가 올바르지 않습니다.');
+        } else {
+          showMessage('success', '제품이 생성되었습니다.');
+          setTimeout(() => onClose(), 2000);
+        }
       }
+      console.log(data);
     },
   });
 
