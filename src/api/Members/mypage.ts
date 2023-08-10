@@ -1,4 +1,7 @@
 import { instance } from '@/api';
+import { GetUserInfo } from '@/typings/member.ts';
+import { AxiosResponse } from 'axios';
+import message from 'antd/lib/message';
 
 export const changeName = async (data: { id: number; newName: string }) => {
   try {
@@ -35,5 +38,27 @@ export const changePassword = async (data: {
     }
   } catch (err) {
     return 'change password fail';
+  }
+};
+
+export const deleteAccount = async (data: {
+  id: number;
+  accessToken: string;
+  refreshToken: string;
+  password: string;
+}) => {
+  try {
+    const { id, accessToken, refreshToken, password } = data;
+
+    const res: AxiosResponse<string | { message: string }> = await instance.delete(
+      `/members/${id}`,
+      {
+        data: { password, accessToken, refreshToken },
+      }
+    );
+
+    return res.data;
+  } catch (err) {
+    return 'delete account fail';
   }
 };

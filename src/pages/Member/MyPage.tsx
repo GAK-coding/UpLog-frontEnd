@@ -21,7 +21,11 @@ export default function MyPage() {
   const [newNickname, onChangeNewNickname, setNewNickname] = useInput('');
   const { showMessage, contextHolder } = useMessage();
 
-  const { mutate: nameChangeMutate } = useMutation(changeName);
+  const { mutate: nameChangeMutate } = useMutation(changeName, {
+    onError: () => {
+      showMessage('error', '이름 변경 실패!');
+    },
+  });
   const { mutate: nicknameChangeMutate } = useMutation(changeNickname);
 
   const onChangeProfile = useCallback(async () => {

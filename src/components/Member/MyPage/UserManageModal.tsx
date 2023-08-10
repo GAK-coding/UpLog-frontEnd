@@ -9,13 +9,16 @@ import {
   ModalHeader,
   ModalOverlay,
 } from '@chakra-ui/react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import useInput from '@/hooks/useInput.ts';
 type MessageType = 'success' | 'error' | 'warning';
 import { useMutation } from 'react-query';
-import { changePassword } from '@/api/Members/mypage.ts';
+import { changePassword, deleteAccount } from '@/api/Members/mypage.ts';
 import { SaveUserInfo } from '@/typings/member.ts';
+import { loginStatus } from '@/recoil/User/atom.ts';
+import { useSetRecoilState } from 'recoil';
+import { useCookies } from 'react-cookie';
 
 interface Props {
   isOpen: boolean;
@@ -29,20 +32,47 @@ export default function UserManageModal({ isOpen, onClose, isClickPwChange, show
   const [newPassword, onChangeNewPassword, setNewPassword] = useInput('');
   const [isCheckPw, setIsCheckPw] = useState(false);
   const [isPwVisible, setIsPwVisible] = useState(false);
+  const setIsLogin = useSetRecoilState(loginStatus);
+  const [cookies, setCookie, removeCookie] = useCookies();
+  const navigator = useNavigate();
 
-  const { mutate } = useMutation(changePassword, {
+  const resetPw = useCallback(() => {
+    setPassword('');
+    setNewPassword('');
+    onClose();
+  }, [onClose]);
+
+  const { mutate: changePasswordMutate } = useMutation(changePassword, {
     onSuccess: (data) => {
       if (data && 'message' in data) {
         showMessage('warning', '현재 비밀번호가 일치하지 않습니다.');
         return;
       }
 
-      onClose();
+      resetPw();
       showMessage('success', '비밀번호 변경 완료!');
-      setPassword('');
-      setNewPassword('');
     },
-    onError: () => {},
+    onError: () => {
+      showMessage('error', '다시 시도해주세요.');
+    },
+  });
+
+  const { mutate: deleteAccountMutate } = useMutation(deleteAccount, {
+    onSuccess: (data) => {
+      if (typeof data !== 'string') {
+        showMessage('warning', data.message);
+        return;
+      }
+
+      sessionStorage.removeItem('userInfo');
+      sessionStorage.removeItem('accessToken');
+      removeCookie('refreshToken', { path: '/' });
+      setIsLogin(false);
+      navigator('/');
+    },
+    onError: () => {
+      showMessage('error', '다시 시도해주세요.');
+    },
   });
 
   const onClickChangePassword = useCallback(() => {
@@ -56,15 +86,22 @@ export default function UserManageModal({ isOpen, onClose, isClickPwChange, show
       return;
     }
 
-    mutate({ id: userInfo.id, newPassword, password });
+    changePasswordMutate({ id: userInfo.id, newPassword, password });
   }, [password, newPassword, userInfo, isCheckPw]);
-  const onClickPwVisible = useCallback(() => setIsPwVisible((prev) => !prev), []);
 
-  const resetPw = useCallback(() => {
-    setPassword('');
-    setNewPassword('');
-    onClose();
-  }, [onClose]);
+  const onClickDeleteAccount = useCallback(() => {
+    if (!password) {
+      showMessage('warning', '비밀번호를 입력해주세요.');
+      return;
+    }
+
+    const accessToken = sessionStorage.getItem('accessToken')!;
+    const refreshToken = cookies.refreshToken;
+
+    deleteAccountMutate({ id: userInfo.id, password, accessToken, refreshToken });
+  }, [password, userInfo]);
+
+  const onClickPwVisible = useCallback(() => setIsPwVisible((prev) => !prev), []);
 
   // 비밀번호 유효성 검사
   useEffect(() => {
@@ -163,7 +200,10 @@ export default function UserManageModal({ isOpen, onClose, isClickPwChange, show
           <button
             className={`bg-orange rounded font-bold text-sm text-white
             ${isClickPwChange ? 'w-[4.5rem] h-9' : 'w-[6rem] h-9'}`}
-            onClick={onClickChangePassword}
+            // onClick={()=>{onClickChangePassword()}
+            onClick={() => {
+              isClickPwChange ? onClickChangePassword() : onClickDeleteAccount();
+            }}
           >
             {isClickPwChange ? '확인' : '계정 삭제'}
           </button>
