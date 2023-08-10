@@ -18,6 +18,8 @@ import { FiUpload } from 'react-icons/fi';
 import { useMutation } from 'react-query';
 import { products } from '@/api/Product/Product.ts';
 import { ProductBody } from '@/typings/product.ts';
+import show = Mocha.reporters.Base.cursor.show;
+import { SaveUserInfo } from '@/typings/member.ts';
 
 interface Props {
   isOpen: boolean;
@@ -31,12 +33,16 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct }: P
   const [clientEmail, onChangeClientEmail, setClientEmail] = useInput('');
   const { showMessage, contextHolder } = useMessage();
 
+  const [userInfo, setUserInfo] = useState<SaveUserInfo>(
+    JSON.parse(sessionStorage.getItem('userInfo')!)
+  );
+
   // TODO : 링크 임베딩 된 링크로 다시 보내기
   const productInfo: ProductBody = {
     name: productName,
     masterEmail: masterEmail,
     link: 'www.naver.com',
-    memberId: 1,
+    memberId: userInfo.id,
   };
 
   // 제품 이미지 업로드
@@ -50,13 +56,14 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct }: P
         return;
       } else {
         if (typeof data === 'object' && 'message' in data) {
-          showMessage('warning', '마스터 정보가 올바르지 않습니다.');
+          if (data.httpStatus === 'NOT_FOUND')
+            showMessage('warning', '마스터 정보가 올바르지 않습니다.');
+          else showMessage('error', '제품 생성 권한이 없습니다.');
         } else {
           showMessage('success', '제품이 생성되었습니다.');
           setTimeout(() => onClose(), 2000);
         }
       }
-      console.log(data);
     },
   });
 

@@ -13,8 +13,8 @@ export interface ProductBody extends Omit<ProductInfo, 'draggableId' | 'id' | 'c
   memberId: number;
 }
 export interface FailCreateProduct {
-  httpStatus: 'NOT_FOUND';
-  message: '해당 이메일로 존재하는 객체를 찾을 수 없습니다.';
+  httpStatus: 'NOT_FOUND' | 'FORBIDDEN';
+  message: '해당 이메일로 존재하는 객체를 찾을 수 없습니다.' | '제품 생성 권한이 없습니다.';
 }
 
 export interface ProductData {
