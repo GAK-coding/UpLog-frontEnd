@@ -25,9 +25,10 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   isCreateProduct: boolean;
+  productId: number;
 }
 
-export default function ProductInfoModal({ isOpen, onClose, isCreateProduct }: Props) {
+export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, productId }: Props) {
   const [productName, onChangeProductName, setProductName] = useInput('');
   const [masterEmail, onChangeMasterEmail, setMasterEmail] = useInput('');
   const [clientEmail, onChangeClientEmail, setClientEmail] = useInput('');

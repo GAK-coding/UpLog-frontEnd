@@ -25,6 +25,18 @@ export interface ProductData {
   projectListId: number[];
 }
 
+export interface ProductEditBody {
+  productId: number;
+  link: string | null;
+  newName: string | null;
+  memberEmailList: string[] | null;
+  powerType: string | null;
+}
+
+export interface ProductEditData {
+  memberPowerListDTO: { productId: number; productName: 'newProductName1' };
+}
+
 // ReleaseNote.tsx에서 사용
 export type changeType = 'Feature' | 'Changed' | 'Deprecated' | 'New' | 'Fixed';
 
