@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { ChangeEvent, KeyboardEventHandler, useCallback, useState } from 'react';
 import { BsChat, BsFillMegaphoneFill, BsHeart, BsHeartFill } from 'react-icons/bs';
 import { eachMenuPost } from '@/recoil/Project/Post.ts';
 import { useRecoilState } from 'recoil';
@@ -11,6 +11,7 @@ import PostComment from '@/components/Project/Post/PostComment.tsx';
 import DeleteDialog from '@/components/Common/DeleteDialog.tsx';
 import { useDisclosure } from '@chakra-ui/react';
 import PostModal from '@/components/Project/Post/PostModal.tsx';
+import useInput from '@/hooks/useInput.ts';
 
 export default function PostMain() {
   const { isOpen: isOpenModal, onOpen: onOpenModal, onClose: onCloseModal } = useDisclosure();
@@ -27,6 +28,8 @@ export default function PostMain() {
   const [isLikeClick, setIsLikeClick] = useState<{ [key: number]: boolean }>({});
   const [isScrapClick, setIsScrapClick] = useState<{ [key: number]: boolean }>({});
   const [isClickKebab, setIsClickKebab] = useState<{ [key: number]: boolean }>({});
+
+  const [commentValue, onChangeCommentValue, setCommentValue] = useInput('');
 
   // 좋아요 눌렀을 때
   const onClickLike = useCallback(
@@ -54,9 +57,19 @@ export default function PostMain() {
     [isScrapClick]
   );
 
+  // 공지글로 등록
   const onClickNotice = useCallback((postId: number) => {
     // TODO : 해당 post id값으로 메뉴 공지글로 등록하는 api 요청 보내기
     console.log(postId);
+  }, []);
+
+  // 댓글 작성
+  const onSubmit = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      // TODO : 댓글 작성 api 요청 보내기
+      console.log(commentValue);
+      setCommentValue('');
+    }
   }, []);
 
   return (
@@ -69,7 +82,7 @@ export default function PostMain() {
         </div>
       )}
 
-      {/*TODO : noticePost는 따로 값 넣어주기*/}
+      {/* TODO : noticePost는 따로 값 넣어주기*/}
       {/*posts 배열 map*/}
       {posts.map((post, index) => {
         return (

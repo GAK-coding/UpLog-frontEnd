@@ -9,9 +9,18 @@ import { useDisclosure } from '@chakra-ui/react';
 import ProductInfoModal from '@/components/Product/Info/ProductInfoModal.tsx';
 import { Scrollbars } from 'rc-scrollbars';
 import { useNavigate } from 'react-router-dom';
+import { SaveUserInfo } from '@/typings/member.ts';
 
 export default function ProductList() {
   const navigate = useNavigate();
+
+  const [userInfo, setUserInfo] = useState<SaveUserInfo>(
+    JSON.parse(sessionStorage.getItem('userInfo')!)
+  );
+
+  // 수정할 product id
+  const [productId, setProductId] = useState<number>(0);
+
   // ProductList 정보
   const [productList, setProductList] = useRecoilState(productListData);
 
@@ -115,6 +124,8 @@ export default function ProductList() {
                           >
                             {product.name}
                           </span>
+
+                          {/*TODO : 마스터만 수정가능하게 변경*/}
                           <BiPencil
                             className={
                               'flex-row-center w-20 text-xl mr-4 fill-gray-light cursor-pointer z-50'
@@ -122,6 +133,7 @@ export default function ProductList() {
                             onClick={() => {
                               onOpen();
                               onChangeIsCreateProduct(false);
+                              setProductId(product.id);
                             }}
                           />
                         </div>
@@ -136,22 +148,29 @@ export default function ProductList() {
         </Scrollbars>
       </DragDropContext>
 
-      {/*제품 추가하기*/}
-      <div
-        className={
-          'flex-row-center justify-between w-full h-[3.3rem] border-solid border-t border-gray-border'
-        }
-        onClick={() => {
-          onOpen();
-          onChangeIsCreateProduct(true);
-        }}
-      >
-        <AiOutlinePlus className={'flex items-center text-2xl ml-4 fill-gray-light'} />
-        <span className={'flex items-center w-full text-base ml-3 text-gray-light font-medium'}>
-          제품 추가하기
-        </span>
-      </div>
-      <ProductInfoModal isOpen={isOpen} onClose={onClose} isCreateProduct={isCreateProduct} />
+      {/*제품 추가하기, 기업만 생성버튼 보임*/}
+      {userInfo.position === 'COMPANY' && (
+        <div
+          className={
+            'flex-row-center justify-between w-full h-[3.3rem] border-solid border-t border-gray-border'
+          }
+          onClick={() => {
+            onOpen();
+            onChangeIsCreateProduct(true);
+          }}
+        >
+          <AiOutlinePlus className={'flex items-center text-2xl ml-4 fill-gray-light'} />
+          <span className={'flex items-center w-full text-base ml-3 text-gray-light font-medium'}>
+            제품 추가하기
+          </span>
+        </div>
+      )}
+      <ProductInfoModal
+        isOpen={isOpen}
+        onClose={onClose}
+        isCreateProduct={isCreateProduct}
+        productId={productId}
+      />
     </section>
   );
 }
