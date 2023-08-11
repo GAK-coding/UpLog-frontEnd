@@ -8,13 +8,25 @@ import { formatStatus } from '@/utils/formatStatus.ts';
 import useInput from '@/hooks/useInput.ts';
 import { TaskData, TaskStatus } from '@/typings/task.ts';
 import DeleteDialog from '@/components/Common/DeleteDialog.tsx';
-import { eachTask } from '@/api/Project/Task.ts';
-import { useQuery } from 'react-query';
+import {
+  eachTask,
+  editTaskContent,
+  editTaskDate,
+  editTaskMenu,
+  editTaskStatus,
+  editTaskTargetMember,
+  editTaskTeam,
+  editTaskTitle,
+} from '@/api/Project/Task.ts';
+import { useMutation, useQuery } from 'react-query';
+import { useMessage } from '@/hooks/useMessage.ts';
+import { checkTaskEditValue } from '@/utils/checkTaskEditValue.ts';
 
 export default function TaskDetail() {
   const { product, project, menutitle, taskid } = useParams();
-
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { showMessage, contextHolder } = useMessage();
+  const [editSuccess, setEditSuccess] = useState<boolean>(true);
 
   // 현재 task 데이터 가져오기
   const [taskInfo, setTaskInfo] = useState<TaskData>({
@@ -28,7 +40,7 @@ export default function TaskDetail() {
     },
     menuId: 0,
     menuName: '',
-    projectId: 0,
+    projectTeamId: 0,
     projectTeamName: '',
     projectTeamParentId: 0,
     taskStatus: 'PROGRESS_BEFORE',
@@ -39,7 +51,8 @@ export default function TaskDetail() {
   const status = formatStatus(taskInfo.taskStatus);
 
   // TODO : staleTime 확인 필요 + 시간 다시 설정하기
-  const getTaskData = useQuery(['task', taskid], () => eachTask(parseInt(taskid!)), {
+  // task 한개 데이터 get
+  const getTaskData = useQuery(['task', taskid], () => eachTask(+taskid!), {
     staleTime: 6000, // 1분
     cacheTime: 8000, // 1분 20초
     refetchOnMount: false, // 마운트(리렌더링)될 때 데이터를 다시 가져오지 않음
@@ -54,21 +67,134 @@ export default function TaskDetail() {
     }
   }
 
-  // 새로 수정한 task 데이터 값 저장
-  const [editTask, setEditTask] = useState(taskInfo);
-
-  // 수정 여부
-  const [isEdit, setIsEdit] = useState<boolean>(false);
   // taskname input 값
   const [taskName, onChangeTaskName] = useInput(taskInfo.taskName);
+  // 수정 여부
+  const [isEdit, setIsEdit] = useState<boolean>(false);
 
+  // 새로 수정한 task 데이터 값 저장
+  const [editTask, setEditTask] = useState(taskInfo);
   console.log('taskInfo', taskInfo);
   console.log('edit', editTask);
 
+  // task (date, title, taskTeam, target-Member, status, menu, content) update 요청
+  const { mutate: editDateMutate } = useMutation(
+    () => editTaskDate(+taskid!, editTask.startTime, editTask.endTime),
+    {
+      onSuccess: (data) => {
+        if (typeof data === 'string') {
+          setEditSuccess(false);
+        }
+      },
+    }
+  );
+
+  const { mutate: editTitleMutate } = useMutation(
+    () => editTaskTitle(+taskid!, editTask.taskName),
+    {
+      onSuccess: (data) => {
+        if (typeof data === 'string') {
+          setEditSuccess(false);
+        }
+      },
+    }
+  );
+
+  const { mutate: editTeamMutate } = useMutation(
+    () => editTaskTeam(+taskid!, +editTask.projectTeamId),
+    {
+      onSuccess: (data) => {
+        if (typeof data === 'string') {
+          setEditSuccess(false);
+        }
+      },
+    }
+  );
+
+  const { mutate: editTargetMemberMutate } = useMutation(
+    () => editTaskTargetMember(+taskid!, editTask.targetMember.id),
+    {
+      onSuccess: (data) => {
+        if (typeof data === 'string') {
+          setEditSuccess(false);
+        }
+      },
+    }
+  );
+
+  const { mutate: editStatusMutate } = useMutation(
+    () => editTaskStatus(+taskid!, editTask.taskStatus),
+    {
+      onSuccess: (data) => {
+        if (typeof data === 'string') {
+          setEditSuccess(false);
+        }
+      },
+    }
+  );
+
+  const { mutate: editMenuMutate } = useMutation(() => editTaskMenu(+taskid!, editTask.menuId), {
+    onSuccess: (data) => {
+      if (typeof data === 'string') {
+        setEditSuccess(false);
+      }
+    },
+  });
+
+  const { mutate: editContentMutate } = useMutation(
+    () => editTaskContent(+taskid!, editTask.taskDetail),
+    {
+      onSuccess: (data) => {
+        if (typeof data === 'string') {
+          setEditSuccess(false);
+        }
+      },
+    }
+  );
   // 수정 버튼 클릭 시
   const onChangeEdit = useCallback(() => {
     setIsEdit(true);
   }, [isEdit]);
+
+  // 수정 완료 버튼 클릭 시
+  const onSubmitEdit = useCallback(() => {
+    // 변경된 값이 비어있는 경우
+    const checkEmpty = checkTaskEditValue(editTask);
+
+    if (!checkEmpty) {
+      showMessage('warning', 'Task의 정보를 모두 작성해주세요');
+      return;
+    }
+
+    // 변경된 값만 task update요청 보냄
+    const handleMutate = (
+      newValue: TaskData[keyof TaskData],
+      originalValue: TaskData[keyof TaskData],
+      mutateFunction: () => void
+    ) => {
+      if (newValue !== originalValue) {
+        mutateFunction();
+      }
+    };
+
+    handleMutate(editTask.taskName, taskInfo.taskName, editTitleMutate);
+    handleMutate(editTask.startTime, taskInfo.startTime, editDateMutate);
+    handleMutate(editTask.endTime, taskInfo.endTime, editDateMutate);
+    handleMutate(editTask.projectTeamId, taskInfo.projectTeamId, editTeamMutate);
+    handleMutate(editTask.targetMember.id, taskInfo.targetMember.id, editTargetMemberMutate);
+    handleMutate(editTask.taskStatus, taskInfo.taskStatus, editStatusMutate);
+    handleMutate(editTask.menuId, taskInfo.menuId, editMenuMutate);
+    handleMutate(editTask.taskDetail, taskInfo.taskDetail, editContentMutate);
+
+    if (!editSuccess) {
+      showMessage('error', 'Task 수정에 실패했습니다.');
+      return;
+    }
+
+    showMessage('success', 'Task 수정에 성공했습니다.');
+    setTimeout(() => onClose(), 2000);
+    setIsEdit(false);
+  }, [isEdit, editTask, editSuccess]);
 
   // 수정한 task 상태 데이터 값 저장
   const onChangeSelectedType = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -80,6 +206,7 @@ export default function TaskDetail() {
     setEditTask(updatedTask);
   };
 
+  // taskDetail 내용 수정된 값 저장
   const onChangeTaskDetail = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const updatedTask = {
       ...editTask,
@@ -101,6 +228,7 @@ export default function TaskDetail() {
 
   return (
     <section className={'flex w-full h-auto py-20'}>
+      {contextHolder}
       {/*돌아가기 버튼*/}
       <article className={'pt-4 flex justify-center w-[10%] min-w-[6rem] lg:w-[16%]'}>
         <Link
@@ -206,7 +334,7 @@ export default function TaskDetail() {
                   onOpen();
                   return;
                 }
-                setIsEdit(!isEdit);
+                onSubmitEdit();
               }}
             >
               {isEdit ? '완료' : '삭제'}

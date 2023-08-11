@@ -10,7 +10,6 @@ import { useDisclosure } from '@chakra-ui/react';
 import CreateTask from '@/components/Project/Task/CreateTask.tsx';
 import { useQuery } from 'react-query';
 import { menuTaskList } from '@/api/Project/Task.ts';
-import { useEffect, useState } from 'react';
 import { MenuTasks, Task } from '@/typings/task.ts';
 
 export default function TaskMain() {

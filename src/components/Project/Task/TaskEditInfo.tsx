@@ -251,7 +251,7 @@ export default function TaskEditInfo({ isEdit, editTask, setEditTask }: Props) {
           <Select
             labelInValue
             defaultValue={{
-              value: '-1',
+              value: `${editTask.targetMember.id}`,
               label: `${editTask.targetMember.nickname}(${editTask.targetMember.name})`,
             }}
             onChange={handleChange('targetMember')}

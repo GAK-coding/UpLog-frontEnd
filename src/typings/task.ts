@@ -10,7 +10,7 @@ export interface Task {
   targetMember: targetMemberInfo;
   menuId: number;
   menuName: string;
-  projectId: number;
+  projectTeamId: number | string;
   projectTeamName: string;
   projectTeamParentId: number | null;
   taskStatus: TaskStatus;
