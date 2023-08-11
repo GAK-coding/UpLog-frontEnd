@@ -29,7 +29,7 @@ export interface StatusTaskData {
 
 export interface MenuTasks {
   menuInfo: MenuInfo;
-  tasks: Task[];
+  tasks: TaskData[];
 }
 
 export interface Tasks {

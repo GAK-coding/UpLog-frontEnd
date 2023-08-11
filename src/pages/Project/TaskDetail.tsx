@@ -21,6 +21,8 @@ import {
 import { useMutation, useQuery } from 'react-query';
 import { useMessage } from '@/hooks/useMessage.ts';
 import { checkTaskEditValue } from '@/utils/checkTaskEditValue.ts';
+import { useRecoilState } from 'recoil';
+import { eachTaskInfo } from '@/recoil/Project/Task.ts';
 
 export default function TaskDetail() {
   const { product, project, menutitle, taskid } = useParams();
@@ -29,25 +31,7 @@ export default function TaskDetail() {
   const [editSuccess, setEditSuccess] = useState<boolean>(true);
 
   // 현재 task 데이터 가져오기
-  const [taskInfo, setTaskInfo] = useState<TaskData>({
-    id: 0,
-    taskName: '',
-    targetMember: {
-      id: 0,
-      name: '',
-      image: '',
-      nickname: '',
-    },
-    menuId: 0,
-    menuName: '',
-    projectTeamId: 0,
-    projectTeamName: '',
-    projectTeamParentId: 0,
-    taskStatus: 'PROGRESS_BEFORE',
-    taskDetail: '',
-    startTime: '',
-    endTime: '',
-  });
+  const [taskInfo, setTaskInfo] = useRecoilState(eachTaskInfo);
   const status = formatStatus(taskInfo.taskStatus);
 
   // TODO : staleTime 확인 필요 + 시간 다시 설정하기

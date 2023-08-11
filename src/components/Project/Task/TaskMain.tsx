@@ -10,7 +10,7 @@ import { useDisclosure } from '@chakra-ui/react';
 import CreateTask from '@/components/Project/Task/CreateTask.tsx';
 import { useQuery } from 'react-query';
 import { menuTaskList } from '@/api/Project/Task.ts';
-import { MenuTasks, Task } from '@/typings/task.ts';
+import { MenuTasks, TaskData } from '@/typings/task.ts';
 
 export default function TaskMain() {
   const { product, project, menutitle } = useParams();
@@ -48,7 +48,7 @@ export default function TaskMain() {
   if (getMenuTaskList.isSuccess) {
     if (typeof getMenuTaskList.data !== 'string' && 'id' in getMenuTaskList.data) {
       const taskAllList: MenuTasks = getMenuTaskList.data;
-      const tasks: Task[] = taskAllList.tasks;
+      const tasks: TaskData[] = taskAllList.tasks;
       setTaskList(tasks);
     }
   }
