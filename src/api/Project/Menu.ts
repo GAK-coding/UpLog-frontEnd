@@ -14,7 +14,7 @@ export const projectMenuList = async (projectId: number) => {
 };
 
 // 메뉴 생성
-export const createMenu = async (projectId: string, menuName: string) => {
+export const createMenu = async (projectId: number, menuName: string) => {
   try {
     const res: AxiosResponse<MenuInfo> = await instance.post(`/menus/${projectId}`, menuName);
 
