@@ -1,5 +1,12 @@
 // Task 생성
-import { FailTask, MenuTasks, TaskBody, TaskData, TaskStatus } from '@/typings/task.ts';
+import {
+  FailTask,
+  MenuTasks,
+  StatusTaskData,
+  TaskBody,
+  TaskData,
+  TaskStatus,
+} from '@/typings/task.ts';
 import { AxiosResponse } from 'axios';
 import { instance } from '@/api';
 
@@ -55,7 +62,9 @@ export const eachTask = async (taskId: number) => {
 // task status 모두 조회
 export const allStatusTaskList = async (projectId: number) => {
   try {
-    const res: AxiosResponse<TaskData[]> = await instance.get(`/tasks/allByStatus/${projectId}`);
+    const res: AxiosResponse<StatusTaskData> = await instance.get(
+      `/tasks/allByStatus/${projectId}`
+    );
 
     return res.data;
   } catch (error) {

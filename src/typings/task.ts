@@ -21,6 +21,12 @@ export interface Task {
 
 export interface TaskData extends Omit<Task, 'dragId'> {}
 
+export interface StatusTaskData {
+  PROGRESS_BEFORE: TaskData[];
+  PROGRESS_IN: TaskData[];
+  PROGRESS_COMPLETE: TaskData[];
+}
+
 export interface MenuTasks {
   menuInfo: MenuInfo;
   tasks: Task[];
