@@ -188,7 +188,7 @@ export default function MenuSlider({ product, project, menuTitle }: Props) {
       </NavLink>
 
       {/*menuList 데이터*/}
-      {menuList.slice(1).map((menu, index) => (
+      {menuList.slice(1).map((menu) => (
         <NavLink
           to={`/workspace/${product}/${project}/menu/${menu.menuName}`}
           className={({ isActive }) =>
@@ -196,7 +196,7 @@ export default function MenuSlider({ product, project, menuTitle }: Props) {
               isActive && 'bg-orange text-black'
             }`
           }
-          key={index}
+          key={menu.id}
         >
           {menuTitle === menu.menuName && (
             <IoIosClose
