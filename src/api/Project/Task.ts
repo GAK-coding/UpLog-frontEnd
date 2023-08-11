@@ -48,13 +48,33 @@ export const eachTask = async (taskId: number) => {
     return res.data;
   } catch (error) {
     console.log(error);
-    return 'get task info fail';
+    return 'get each task fail';
   }
 };
 
 // task status 모두 조회
+export const allStatusTaskList = async (projectId: number) => {
+  try {
+    const res: AxiosResponse<TaskData[]> = await instance.get(`/tasks/allByStatus/${projectId}`);
+
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    return 'get all task status list fail';
+  }
+};
 
 // task status로 나누지 않고 모두 조회
+export const allTaskList = async (projectId: number) => {
+  try {
+    const res: AxiosResponse<TaskData[]> = await instance.get(`/tasks/allByStatus/${projectId}`);
+
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    return 'get all task list fail';
+  }
+};
 
 // task 수정 (date, title, taskTeam, target-Member, status, menu, content)
 export const editTaskDate = async (
