@@ -78,15 +78,20 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
   );
 
   // 제품 정보 조회
-  const { data } = useQuery(['getProjectInfo', productId], () => eachProduct(productId), {
+  const { refetch, data } = useQuery(['getProjectInfo'], () => eachProduct(productId), {
     onSuccess: (data) => {
       if (typeof data === 'object' && 'message' in data) {
         showMessage('error', '제품 정보를 불러오는데 실패했습니다.');
       } else if (typeof data !== 'string' && 'name' in data) {
         setProductName(data.name);
       }
-      console.log(productId);
     },
+    enabled: false,
+    staleTime: 6000, // 1분
+    cacheTime: 8000, // 1분 20초
+    refetchOnMount: false, // 마운트(리렌더링)될 때 데이터를 다시 가져오지 않음
+    refetchOnWindowFocus: false, // 브라우저를 포커싱했을때 데이터를 가져오지 않음
+    refetchOnReconnect: false, // 네트워크가 다시 연결되었을때 다시 가져오지 않음
   });
 
   // 제품 정보 수정
@@ -145,10 +150,10 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
 
     // 수정일 경우에 기존 post 정보로 값 채워넣기
     else {
+      refetch();
       console.log('get 요청 보냄 ', productId);
-      console.log(data);
     }
-  }, [isOpen, isCreateProduct]);
+  }, [isOpen, isCreateProduct, productId]);
 
   return (
     <Modal isCentered onClose={onClose} isOpen={isOpen}>
