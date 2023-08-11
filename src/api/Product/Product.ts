@@ -30,10 +30,9 @@ export const productEdit = async (data: ProductEditBody, productId: number) => {
       `/products/${productId}`,
       data
     );
-    console.log(res.data);
+
     return res.data;
   } catch (error) {
-    console.log(error);
     return 'edit product fail';
   }
 };
@@ -45,10 +44,8 @@ export const eachProduct = async (productId: number) => {
       `/products/${productId}`
     );
 
-    console.log(res.data);
     return res.data;
   } catch (error) {
-    console.log(error);
     return 'get product info fail';
   }
 };
