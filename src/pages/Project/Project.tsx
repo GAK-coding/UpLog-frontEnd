@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { BsChevronCompactDown } from 'react-icons/bs';
-import { SubGroup, TaskStatus } from '@/typings/project.ts';
+import { SubGroup } from '@/typings/project.ts';
 import { Progress, Select, Space } from 'antd';
 import StatusBoard from '@/components/Project/Board/StatusBoard.tsx';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 import { useRecoilState } from 'recoil';
 import { taskState } from '@/recoil/Project/Task.ts';
+import { TaskStatus } from '@/typings/task.ts';
 
 export default function Project() {
   const { product, project } = useParams();
