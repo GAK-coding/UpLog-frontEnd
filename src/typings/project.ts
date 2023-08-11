@@ -67,7 +67,8 @@ export interface Post {
 }
 
 export interface Posts {
-  [key: string]: Post[] | Post;
+  noticePost: Post;
+  posts: Post[];
 }
 
 export interface CommentInfo {
