@@ -78,7 +78,7 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
   );
 
   // 제품 정보 조회
-  const { refetch, data } = useQuery(['getProjectInfo'], () => eachProduct(productId), {
+  const { refetch } = useQuery(['getProjectInfo'], () => eachProduct(productId), {
     onSuccess: (data) => {
       if (typeof data === 'object' && 'message' in data) {
         showMessage('error', '제품 정보를 불러오는데 실패했습니다.');
@@ -97,7 +97,10 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
   // 제품 정보 수정
   const { mutate: updateProduct } = useMutation(() => productEdit(updateProductInfo, productId), {
     onSuccess: (data) => {
-      console.log(data);
+      if (typeof data === 'object') {
+        showMessage('success', '제품 정보가 변경되었습니다.');
+        setTimeout(() => onClose(), 2000);
+      }
     },
   });
 
@@ -125,6 +128,13 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
         showMessage('warning', '제품 이름을 입력해주세요.');
         return;
       }
+
+      // if ('name' in data && productName === data.name) {
+      //   showMessage('warning', '변경된 정보가 없습니다.');
+      //   return;
+      // }
+
+      // 수정 요청 보냄
       updateProduct();
       console.log('수정 요청 보냄 ', updateProductInfo);
       return;
@@ -136,7 +146,7 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
       return;
     }
 
-    // TODO : 제품 정보 생성 + 이메일로 초대하기
+    // 제품 생성
     createProductMutate();
   }, [productName, masterEmail]);
 
