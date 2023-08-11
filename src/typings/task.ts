@@ -1,4 +1,5 @@
 import { targetMemberInfo } from '@/typings/member.ts';
+import { MenuInfo } from '@/typings/menu.ts';
 
 export type TaskStatus = 'PROGRESS_BEFORE' | 'PROGRESS_IN' | 'PROGRESS_COMPLETE';
 
@@ -19,6 +20,11 @@ export interface Task {
 }
 
 export interface TaskData extends Omit<Task, 'dragId'> {}
+
+export interface MenuTasks {
+  menuInfo: MenuInfo;
+  tasks: Task[];
+}
 
 export interface Tasks {
   [key: string]: Task[];
