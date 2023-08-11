@@ -184,7 +184,7 @@ export default function MenuSlider({ product, project, menuTitle }: Props) {
           {menuList[0].menuName}
           {contextHolder}
         </span>
-        <DeleteMenuDialog isOpen={isOpen} onClose={onClose} menu={deleteMenuName} />
+        <DeleteMenuDialog isOpen={isOpen} onClose={onClose} menu={deleteMenuName} menuId={menuId} />
       </NavLink>
 
       {/*menuList 데이터*/}
@@ -205,6 +205,7 @@ export default function MenuSlider({ product, project, menuTitle }: Props) {
               }
               onClick={() => {
                 setDeleteMenuName(menu.menuName);
+                setMenuId(menu.id);
                 onOpen();
               }}
             />

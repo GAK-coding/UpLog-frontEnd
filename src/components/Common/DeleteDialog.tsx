@@ -23,8 +23,6 @@ export default function DeleteDialog({ isOpen, onClose, task, post, isTask }: Pr
   const { product, project, menutitle } = useParams();
   const navigate = useNavigate();
 
-  // menu delete
-
   console.log(isTask, post);
   const onClickDelete = useCallback(() => {
     // TODO : Task 삭제 api 연결

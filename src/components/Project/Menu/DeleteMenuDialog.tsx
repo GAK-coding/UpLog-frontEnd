@@ -11,21 +11,30 @@ import { useCallback, useRef } from 'react';
 import { menuListData } from '@/recoil/Project/Menu.ts';
 import { useRecoilState } from 'recoil';
 import { useNavigate, useParams } from 'react-router-dom';
+import { deleteMenu } from '@/api/Project/Menu.ts';
+import { useMutation } from 'react-query';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
   menu: string;
+  menuId: number;
 }
-export default function DeleteMenuDialog({ isOpen, onClose, menu }: Props) {
+export default function DeleteMenuDialog({ isOpen, onClose, menu, menuId }: Props) {
   const { product, project } = useParams();
   const navigate = useNavigate();
   const cancelRef = useRef<HTMLButtonElement>(null);
   const [menuList, setMenuList] = useRecoilState(menuListData);
 
+  // TODO : Delete 잘 되는지 확인하기
+  // menu delete
+  const { mutate: deleteMenuMutate } = useMutation(() => deleteMenu(menuId), {});
+
   const onClickDelete = useCallback(() => {
     const updatedMenuList = menuList.filter((eachMenu) => eachMenu.menuName !== menu);
     setMenuList(updatedMenuList);
+
+    // TODO : deleteMemuMutate
     onClose();
 
     navigate(`/workspace/${product}/${project}/menu/결과물`);
