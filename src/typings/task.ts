@@ -27,11 +27,6 @@ export interface StatusTaskData {
   PROGRESS_COMPLETE: TaskData[];
 }
 
-export interface MenuTasks {
-  menuInfo: MenuInfo;
-  tasks: TaskData[];
-}
-
 export interface Tasks {
   PROGRESS_BEFORE: Task[];
   PROGRESS_IN: Task[];
@@ -51,4 +46,8 @@ export interface TaskBody {
 export interface FailTask {
   httpStatus: string;
   message: string;
+}
+export interface MenuTasks {
+  menuInfo: MenuInfo;
+  tasks: TaskData[];
 }

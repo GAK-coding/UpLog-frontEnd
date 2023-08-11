@@ -9,14 +9,41 @@ import { useNavigate } from 'react-router-dom';
 import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 import { useRecoilState } from 'recoil';
 import { taskState } from '@/recoil/Project/Task.ts';
-import { TaskStatus } from '@/typings/task.ts';
+import { StatusTaskData, TaskStatus } from '@/typings/task.ts';
+import { allStatusTaskList } from '@/api/Project/Task.ts';
+import { useQuery } from 'react-query';
+import { convertAddDragId } from '@/utils/convertAddDragId.ts';
 
 export default function Project() {
   const { product, project } = useParams();
+  const projectId = 1;
   const navigate = useNavigate();
 
-  // recoil에서 받아올 값
+  // task 상태별로 묶어둔 데이터 (dragId 포함되어있음)
   const [taskStatusList, setTaskStatusList] = useRecoilState(taskState);
+
+  // task 상태별로 묶어둔 데이터 get 요청
+  const getTaskStatusList = useQuery(
+    ['getTaskStatusList', projectId],
+    () => allStatusTaskList(projectId),
+    {
+      staleTime: 60000, // 10분
+      cacheTime: 80000, // 12분
+      refetchOnMount: false, // 마운트(리렌더링)될 때 데이터를 다시 가져오지 않음
+      refetchOnWindowFocus: false, // 브라우저를 포커싱했을때 데이터를 가져오지 않음
+      refetchOnReconnect: false, // 네트워크가 다시 연결되었을때 다시 가져오지 않음
+    }
+  );
+
+  // get 요청 성공 시 dragId 값 추가
+  if (getTaskStatusList.isSuccess) {
+    // dragId 값 추가한 데이터로 변환
+    if (typeof getTaskStatusList.data !== 'string' && 'id' in getTaskStatusList.data) {
+      const statusList: StatusTaskData = getTaskStatusList.data;
+      const convertedData = convertAddDragId(statusList);
+      setTaskStatusList(convertedData);
+    }
+  }
 
   // 진행률 퍼센트
   const [progress, setProgress] = useState(0);
