@@ -139,6 +139,9 @@ export default function CreateTask({ isOpen, onClose }: Props) {
         showMessage('error', 'Task 생성에 실패했습니다.');
       } else if (data === 'create task fail') {
         showMessage('error', 'Task 생성에 실패했습니다.');
+      } else if (data === 'object' && 'id' in data) {
+        showMessage('success', 'Task가 생성되었습니다.');
+        setTimeout(() => onClose(), 2000);
       }
     },
   });
