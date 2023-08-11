@@ -9,60 +9,108 @@ import {
   ModalHeader,
   ModalOverlay,
 } from '@chakra-ui/react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import useInput from '@/hooks/useInput.ts';
-
-import { useMessage } from '@/hooks/useMessage.ts';
+type MessageType = 'success' | 'error' | 'warning';
 import { useMutation } from 'react-query';
-import { changePassword } from '@/api/Members/mypage.ts';
+import { changePassword, deleteAccount } from '@/api/Members/mypage.ts';
 import { SaveUserInfo } from '@/typings/member.ts';
+import { loginStatus } from '@/recoil/User/atom.ts';
+import { useSetRecoilState } from 'recoil';
+import { useCookies } from 'react-cookie';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
   isClickPwChange: boolean;
+  showMessage: (type: MessageType, content: string) => void;
 }
-export default function UserManageModal({ isOpen, onClose, isClickPwChange }: Props) {
+export default function UserManageModal({ isOpen, onClose, isClickPwChange, showMessage }: Props) {
   const userInfo: SaveUserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
-  const [nowPassword, onChangeNowPassword, setNowPassword] = useInput('');
   const [password, onChangePassword, setPassword] = useInput('');
+  const [newPassword, onChangeNewPassword, setNewPassword] = useInput('');
   const [isCheckPw, setIsCheckPw] = useState(false);
   const [isPwVisible, setIsPwVisible] = useState(false);
-  const { showMessage, contextHolder } = useMessage();
+  const setIsLogin = useSetRecoilState(loginStatus);
+  const [cookies, setCookie, removeCookie] = useCookies();
+  const navigator = useNavigate();
 
-  const { mutate } = useMutation(changePassword, {
-    onSuccess: () => {
+  const resetPw = useCallback(() => {
+    setPassword('');
+    setNewPassword('');
+    onClose();
+  }, [onClose]);
+
+  const { mutate: changePasswordMutate } = useMutation(changePassword, {
+    onSuccess: (data) => {
+      if (data && 'message' in data) {
+        showMessage('warning', '현재 비밀번호가 일치하지 않습니다.');
+        return;
+      }
+
+      resetPw();
       showMessage('success', '비밀번호 변경 완료!');
-      onClose();
+    },
+    onError: () => {
+      showMessage('error', '다시 시도해주세요.');
+    },
+  });
+
+  const { mutate: deleteAccountMutate } = useMutation(deleteAccount, {
+    onSuccess: (data) => {
+      if (typeof data !== 'string') {
+        showMessage('warning', data.message);
+        return;
+      }
+
+      sessionStorage.removeItem('userInfo');
+      sessionStorage.removeItem('accessToken');
+      removeCookie('refreshToken', { path: '/' });
+      setIsLogin(false);
+      navigator('/');
+    },
+    onError: () => {
+      showMessage('error', '다시 시도해주세요.');
     },
   });
 
   const onClickChangePassword = useCallback(() => {
-    if (!nowPassword || !password) {
+    if (!password || !newPassword) {
       showMessage('warning', '비밀번호를 입력해주세요.');
       return;
     }
 
-    mutate({ id: userInfo.id, nowPassword, password });
-  }, [nowPassword, password, userInfo]);
-  const onClickPwVisible = useCallback(() => setIsPwVisible((prev) => !prev), []);
+    if (!isCheckPw) {
+      showMessage('warning', '올바른 새로운 비밀번호를 입력해주세요.');
+      return;
+    }
 
-  const resetPw = useCallback(() => {
-    setNowPassword('');
-    setPassword('');
-    onClose();
-  }, [onClose]);
+    changePasswordMutate({ id: userInfo.id, newPassword, password });
+  }, [password, newPassword, userInfo, isCheckPw]);
+
+  const onClickDeleteAccount = useCallback(() => {
+    if (!password) {
+      showMessage('warning', '비밀번호를 입력해주세요.');
+      return;
+    }
+
+    const accessToken = sessionStorage.getItem('accessToken')!;
+    const refreshToken = cookies.refreshToken;
+
+    deleteAccountMutate({ id: userInfo.id, password, accessToken, refreshToken });
+  }, [password, userInfo]);
+
+  const onClickPwVisible = useCallback(() => setIsPwVisible((prev) => !prev), []);
 
   // 비밀번호 유효성 검사
   useEffect(() => {
     const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,15}$/;
-    setIsCheckPw(regex.test(password));
-  }, [password, isCheckPw]);
+    setIsCheckPw(regex.test(newPassword));
+  }, [newPassword, isCheckPw]);
 
   return (
     <Modal isCentered onClose={resetPw} isOpen={isOpen}>
-      {contextHolder}
       <ModalOverlay />
 
       <ModalContent
@@ -95,8 +143,8 @@ export default function UserManageModal({ isOpen, onClose, isClickPwChange }: Pr
                 <span className={'text-gray-dark font-bold mb-[0.93rem]'}>현재 비밀번호</span>
                 <input
                   type="password"
-                  value={nowPassword}
-                  onChange={onChangeNowPassword}
+                  value={password}
+                  onChange={onChangePassword}
                   placeholder={'현재 비밀번호를 입력하세요.'}
                   maxLength={15}
                   className={
@@ -123,8 +171,8 @@ export default function UserManageModal({ isOpen, onClose, isClickPwChange }: Pr
                   >
                     <input
                       type={`${isPwVisible ? 'text' : 'password'}`}
-                      value={password}
-                      onChange={onChangePassword}
+                      value={newPassword}
+                      onChange={onChangeNewPassword}
                       placeholder={'새로운 비밀번호를 입력하세요.'}
                       maxLength={15}
                       className={'w-[90%] h-full text-[0.93rem] text-black'}
@@ -137,7 +185,7 @@ export default function UserManageModal({ isOpen, onClose, isClickPwChange }: Pr
                       )}
                     </span>
                   </span>
-                  {!isCheckPw && password && (
+                  {!isCheckPw && newPassword && (
                     <span className={'flex-row-center justify-start text-sm text-[#E06469] pl-4'}>
                       영문/숫자/특수문자 포함, 8~15자로 입력해주세요.
                     </span>
@@ -152,7 +200,10 @@ export default function UserManageModal({ isOpen, onClose, isClickPwChange }: Pr
           <button
             className={`bg-orange rounded font-bold text-sm text-white
             ${isClickPwChange ? 'w-[4.5rem] h-9' : 'w-[6rem] h-9'}`}
-            onClick={onClickChangePassword}
+            // onClick={()=>{onClickChangePassword()}
+            onClick={() => {
+              isClickPwChange ? onClickChangePassword() : onClickDeleteAccount();
+            }}
           >
             {isClickPwChange ? '확인' : '계정 삭제'}
           </button>
