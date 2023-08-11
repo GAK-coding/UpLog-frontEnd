@@ -33,9 +33,7 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
   const [clientEmail, onChangeClientEmail, setClientEmail] = useInput('');
   const { showMessage, contextHolder } = useMessage();
 
-  const [userInfo, setUserInfo] = useState<SaveUserInfo>(
-    JSON.parse(sessionStorage.getItem('userInfo')!)
-  );
+  const userInfo: SaveUserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
 
   // TODO : 링크 임베딩 된 링크로 다시 보내기
   const productInfo: ProductBody = {
