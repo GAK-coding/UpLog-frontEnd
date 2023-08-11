@@ -11,8 +11,8 @@ import {
 import { useMessage } from '@/hooks/useMessage.ts';
 import useInput from '@/hooks/useInput.ts';
 import { Select } from 'antd';
-import { menuListData } from '@/recoil/Project/Task.ts';
-import { SelectMenu } from '@/typings/project.ts';
+import { menuListData } from '@/recoil/Project/Menu.ts';
+import { SelectMenu } from '@/typings/menu.ts';
 import { Post } from '@/typings/post.ts';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
@@ -44,7 +44,7 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
   const menuList = useRecoilValue(menuListData);
   const menuNameList: SelectMenu[] = menuList.map((menuItem) => ({
     value: menuItem.id.toString(),
-    label: menuItem.name,
+    label: menuItem.menuName,
   }));
 
   // 타입 data

@@ -1,4 +1,4 @@
-import { GroupMember, MenuInfo } from '@/typings/project.ts';
+import { GroupMember } from '@/typings/project.ts';
 import { Task, Tasks } from '@/typings/task.ts';
 import { atom } from 'recoil';
 
@@ -282,18 +282,6 @@ export const taskState = atom<Tasks>({
       },
     ],
   },
-});
-
-export const menuListData = atom<MenuInfo[]>({
-  key: 'menuList',
-  default: [
-    { id: 1, name: '결과물' },
-    { id: 2, name: '요구사항' },
-    { id: 3, name: '개발' },
-    { id: 4, name: '배포' },
-    { id: 5, name: '개발2' },
-    { id: 6, name: '배포2' },
-  ],
 });
 
 // 그룹 멤버 리스트

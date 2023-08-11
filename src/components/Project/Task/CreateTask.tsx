@@ -11,11 +11,12 @@ import {
 } from '@chakra-ui/react';
 import { useMessage } from '@/hooks/useMessage.ts';
 import useInput from '@/hooks/useInput.ts';
-import { SelectMenu, SubGroup } from '@/typings/project.ts';
+import { SubGroup } from '@/typings/project.ts';
+import { SelectMenu } from '@/typings/menu.ts';
 import { DatePicker, DatePickerProps, Select } from 'antd';
 import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { menuListData } from '@/recoil/Project/Task.ts';
+import { menuListData } from '@/recoil/Project/Menu.ts';
 import { productMemberList } from '@/recoil/Product/atom.ts';
 import { TaskBody } from '@/typings/task.ts';
 import { useMutation } from 'react-query';
@@ -57,9 +58,10 @@ export default function CreateTask({ isOpen, onClose }: Props) {
   type ChildGroup = keyof typeof cGroup;
 
   const menuList = useRecoilValue(menuListData);
+
   const menuNameList: SelectMenu[] = menuList.map((menuItem) => ({
     value: menuItem.id.toString(),
-    label: menuItem.name,
+    label: menuItem.menuName,
   }));
 
   const member = useRecoilValue(productMemberList);

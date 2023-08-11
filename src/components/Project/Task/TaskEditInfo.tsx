@@ -1,10 +1,11 @@
 import { DatePicker, DatePickerProps, Select } from 'antd';
-import { SelectMenu, SubGroup } from '@/typings/project.ts';
+import { SubGroup } from '@/typings/project.ts';
+import { SelectMenu } from '@/typings/menu.ts';
 import { Task } from '@/typings/task.ts';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 import * as dayjs from 'dayjs';
-import { menuListData } from '@/recoil/Project/Task.ts';
+import { menuListData } from '@/recoil/Project/Menu.ts';
 import { productMemberList } from '@/recoil/Product/atom.ts';
 import { useRecoilValue } from 'recoil';
 
@@ -29,7 +30,7 @@ export default function TaskEditInfo({ isEdit, editTask, setEditTask }: Props) {
   const menuList = useRecoilValue(menuListData);
   const menuNameList: SelectMenu[] = menuList.map((menuItem) => ({
     value: menuItem.id.toString(),
-    label: menuItem.name,
+    label: menuItem.menuName,
   }));
 
   const member = useRecoilValue(productMemberList);

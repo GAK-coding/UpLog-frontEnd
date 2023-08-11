@@ -1,4 +1,4 @@
-import { SelectMenu } from '@/typings/project.ts';
+import { SelectMenu } from '@/typings/menu.ts';
 import { Select } from 'antd';
 import { taskAll } from '@/recoil/Project/Task.ts';
 import { useRecoilState } from 'recoil';

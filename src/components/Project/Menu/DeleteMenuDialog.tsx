@@ -8,7 +8,7 @@ import {
   Button,
 } from '@chakra-ui/react';
 import { useCallback, useRef } from 'react';
-import { menuListData } from '@/recoil/Project/Task.ts';
+import { menuListData } from '@/recoil/Project/Menu.ts';
 import { useRecoilState } from 'recoil';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -24,7 +24,7 @@ export default function DeleteMenuDialog({ isOpen, onClose, menu }: Props) {
   const [menuList, setMenuList] = useRecoilState(menuListData);
 
   const onClickDelete = useCallback(() => {
-    const updatedMenuList = menuList.filter((eachMenu) => eachMenu.name !== menu);
+    const updatedMenuList = menuList.filter((eachMenu) => eachMenu.menuName !== menu);
     setMenuList(updatedMenuList);
     onClose();
 
