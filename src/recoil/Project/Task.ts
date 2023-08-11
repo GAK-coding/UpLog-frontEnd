@@ -1,4 +1,5 @@
-import { GroupMember, MenuInfo, Task, Tasks } from '@/typings/project.ts';
+import { GroupMember, MenuInfo } from '@/typings/project.ts';
+import { Task, Tasks } from '@/typings/task.ts';
 import { atom } from 'recoil';
 
 export const eachTask = atom<Task>({

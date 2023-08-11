@@ -1,4 +1,4 @@
-import { Task, TaskStatus } from '@/typings/project.ts';
+import { Task, TaskStatus } from '@/typings/task.ts';
 import { GoKebabHorizontal } from 'react-icons/go';
 import { FaUserCircle } from 'react-icons/fa';
 import { useState } from 'react';

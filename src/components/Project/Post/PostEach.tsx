@@ -1,4 +1,4 @@
-import { Post } from '@/typings/project.ts';
+import { Post } from '@/typings/post.ts';
 import { formatCreteaDate } from '@/utils/fotmatCreateDate.ts';
 import PostModal from '@/components/Project/Post/PostModal.tsx';
 import DeleteDialog from '@/components/Common/DeleteDialog.tsx';

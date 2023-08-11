@@ -1,27 +1,3 @@
-import { targetMemberInfo } from '@/typings/member.ts';
-
-export type TaskStatus = 'PROGRESS_BEFORE' | 'PROGRESS_IN' | 'PROGRESS_COMPLETE';
-
-export interface Task {
-  id: number;
-  dragId: string;
-  taskName: string;
-  targetMember: targetMemberInfo;
-  menuId: number;
-  menuName: string;
-  projectId: number;
-  projectTeamName: string;
-  projectTeamParentId: number | null;
-  taskStatus: TaskStatus;
-  taskDetail: string;
-  startTime: string;
-  endTime: string;
-}
-
-export interface Tasks {
-  [key: string]: Task[];
-}
-
 export interface SubGroup {
   [key: string]: string[];
 }
@@ -48,36 +24,4 @@ export interface GroupMember {
 export interface GroupInfo {
   id: number;
   name: string;
-}
-
-export interface Post {
-  id: number;
-  title: string;
-  authorInfoDTO: targetMemberInfo;
-  menuId: number;
-  menuName: string;
-  productName: string;
-  projectName: string;
-  postType: string | null;
-  content: string;
-  createTime: string;
-  tagList: string[];
-  likeCount: number;
-  commentCount: number;
-}
-
-export interface Posts {
-  noticePost: Post;
-  posts: Post[];
-}
-
-export interface CommentInfo {
-  id: number;
-  parentId: number | null;
-  content: string;
-  createTime: string;
-  memberId: number;
-  name: string;
-  nickname: string;
-  image: string;
 }

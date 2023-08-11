@@ -1,7 +1,7 @@
 import { BsFillMegaphoneFill } from 'react-icons/bs';
 import { eachMenuPost } from '@/recoil/Project/Post.ts';
 import { useRecoilState } from 'recoil';
-import { Post } from '@/typings/project.ts';
+import { Post } from '@/typings/post.ts';
 import PostEach from '@/components/Project/Post/PostEach.tsx';
 
 export default function PostMain() {

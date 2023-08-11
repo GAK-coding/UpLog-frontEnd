@@ -1,5 +1,6 @@
 import { DatePicker, DatePickerProps, Select } from 'antd';
-import { SelectMenu, SubGroup, Task } from '@/typings/project.ts';
+import { SelectMenu, SubGroup } from '@/typings/project.ts';
+import { Task } from '@/typings/task.ts';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 import * as dayjs from 'dayjs';

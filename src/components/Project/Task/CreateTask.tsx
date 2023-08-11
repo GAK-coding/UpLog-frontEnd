@@ -30,9 +30,9 @@ export default function CreateTask({ isOpen, onClose }: Props) {
     taskName: '',
     startTime: '',
     endTime: '',
-    menuId: -1,
+    menuId: 0,
     projectTeamId: '',
-    targetMemberId: -1,
+    targetMemberId: 0,
     taskDetail: '',
   });
 
