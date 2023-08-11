@@ -33,7 +33,9 @@ export interface MenuTasks {
 }
 
 export interface Tasks {
-  [key: string]: Task[];
+  PROGRESS_BEFORE: Task[];
+  PROGRESS_IN: Task[];
+  PROGRESS_COMPLETE: Task[];
 }
 
 export interface TaskBody {
