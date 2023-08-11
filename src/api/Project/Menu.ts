@@ -43,7 +43,7 @@ export const editMenu = async (menuId: number, updatemenuName: string) => {
 // 메뉴 삭제
 export const deleteMenu = async (menuId: number) => {
   try {
-    const res: AxiosResponse<MenuInfo> = await instance.delete(`/menus/${menuId}`);
+    const res: AxiosResponse<string> = await instance.delete(`/menus/${menuId}`);
 
     return res.data;
   } catch (error) {

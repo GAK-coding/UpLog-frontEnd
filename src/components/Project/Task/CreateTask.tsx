@@ -235,6 +235,7 @@ export default function CreateTask({ isOpen, onClose }: Props) {
     }
 
     //TODO : Task 생성 API 연결
+    createTaskMutate();
   }, [newTask]);
 
   // task 이름 newTask에 저장

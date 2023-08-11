@@ -8,7 +8,7 @@ import { formatStatus } from '@/utils/formatStatus.ts';
 import { useRecoilValue } from 'recoil';
 import { taskAll } from '@/recoil/Project/Task.ts';
 import useInput from '@/hooks/useInput.ts';
-import { TaskStatus } from '@/typings/project.ts';
+import { TaskStatus } from '@/typings/task.ts';
 import DeleteDialog from '@/components/Common/DeleteDialog.tsx';
 
 export default function TaskDetail() {

@@ -18,6 +18,8 @@ export interface Task {
   endTime: string;
 }
 
+export interface TaskData extends Omit<Task, 'dragId'> {}
+
 export interface Tasks {
   [key: string]: Task[];
 }
