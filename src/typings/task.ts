@@ -21,3 +21,18 @@ export interface Task {
 export interface Tasks {
   [key: string]: Task[];
 }
+
+export interface TaskBody {
+  taskName: string;
+  menuId: number;
+  projectTeamId: number | string;
+  taskDetail: string;
+  startTime: string;
+  endTime: string;
+  targetMemberId: number;
+}
+
+export interface FailTask {
+  httpStatus: string;
+  message: string;
+}

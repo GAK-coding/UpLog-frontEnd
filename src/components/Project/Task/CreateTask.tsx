@@ -17,6 +17,9 @@ import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { menuListData } from '@/recoil/Project/Task.ts';
 import { productMemberList } from '@/recoil/Product/atom.ts';
+import { TaskBody } from '@/typings/task.ts';
+import { useMutation } from 'react-query';
+import { createTask } from '@/api/Project/Task.ts';
 
 interface Props {
   isOpen: boolean;
@@ -26,7 +29,7 @@ export default function CreateTask({ isOpen, onClose }: Props) {
   const { showMessage, contextHolder } = useMessage();
 
   const [taskName, onChangeTaskName, setTaskName] = useInput('');
-  const [newTask, setNewTask] = useState({
+  const [newTask, setNewTask] = useState<TaskBody>({
     taskName: '',
     startTime: '',
     endTime: '',
@@ -126,6 +129,17 @@ export default function CreateTask({ isOpen, onClose }: Props) {
     }
     console.log(newTask);
   };
+
+  // task 생성 api
+  const { mutate: createTaskMutate } = useMutation(() => createTask(newTask), {
+    onSuccess: (data) => {
+      if (typeof data === 'object' && 'message' in data) {
+        showMessage('error', 'Task 생성에 실패했습니다.');
+      } else if (data === 'create task fail') {
+        showMessage('error', 'Task 생성에 실패했습니다.');
+      }
+    },
+  });
 
   // TODO : projectTeamId 값 group id 값으로 바꾸기
   // 상위그룹 select 선택 값
