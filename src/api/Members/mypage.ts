@@ -1,4 +1,7 @@
 import { instance } from '@/api';
+import { GetUserInfo } from '@/typings/member.ts';
+import { AxiosResponse } from 'axios';
+import message from 'antd/lib/message';
 
 export const changeName = async (data: { id: number; newName: string }) => {
   try {
@@ -22,14 +25,40 @@ export const changeNickname = async (data: { id: number; newNickname: string }) 
 
 export const changePassword = async (data: {
   id: number;
-  nowPassword: string;
+  newPassword: string;
   password: string;
 }) => {
   try {
-    const { nowPassword, password, id } = data;
+    const { password, newPassword, id } = data;
 
-    await instance.patch(`/members/${id}/password`, { nowPassword, password });
+    const res = await instance.patch(`/members/${id}/password`, { password, newPassword });
+
+    if ('message' in res.data) {
+      return res.data;
+    }
   } catch (err) {
     return 'change password fail';
+  }
+};
+
+export const deleteAccount = async (data: {
+  id: number;
+  accessToken: string;
+  refreshToken: string;
+  password: string;
+}) => {
+  try {
+    const { id, accessToken, refreshToken, password } = data;
+
+    const res: AxiosResponse<string | { message: string }> = await instance.delete(
+      `/members/${id}`,
+      {
+        data: { password, accessToken, refreshToken },
+      }
+    );
+
+    return res.data;
+  } catch (err) {
+    return 'delete account fail';
   }
 };

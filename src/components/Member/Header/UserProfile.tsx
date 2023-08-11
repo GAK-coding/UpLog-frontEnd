@@ -7,6 +7,8 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import { useCallback } from 'react';
 import { useCookies } from 'react-cookie';
 import { SaveUserInfo } from '@/typings/member.ts';
+import { logout } from '@/api/Members/Login-Signup.ts';
+import { useMutation } from 'react-query';
 
 export default function UserProfile() {
   // TODO: 실제 userprofile 값으로 변경하기
@@ -20,13 +22,19 @@ export default function UserProfile() {
   const setIsLogin = useSetRecoilState(loginStatus);
   const [cookies, setCookie, removeCookie] = useCookies();
 
+  const { mutate } = useMutation(logout);
+
   const onClickLogout = useCallback(() => {
+    const accessToken = sessionStorage.getItem('accessToken')!;
+    const refreshToken = cookies.refreshToken;
+    mutate({ accessToken, refreshToken });
+
     sessionStorage.removeItem('userInfo');
     sessionStorage.removeItem('accessToken');
     removeCookie('refreshToken', { path: '/' });
     setIsLogin(false);
     setIsProfileClick(false);
-  }, []);
+  }, [mutate]);
 
   return (
     <section
