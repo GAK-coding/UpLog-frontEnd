@@ -30,7 +30,8 @@ export default function PostEach({ post }: Props) {
         [postId]: !prevState[postId],
       }));
 
-      //TODO : 좋아요 취소, 좋아요 눌렀을 때 api 요청 보내기
+      // TODO : 좋아요 취소, 좋아요 눌렀을 때 api 요청 보내기
+      // TODO : 좋아요 취소, 좋아요 눌렀을 개수 변경된 값으로 get하기
     },
     [isLikeClick]
   );
@@ -43,7 +44,7 @@ export default function PostEach({ post }: Props) {
         [postId]: !prevState[postId],
       }));
 
-      //TODO : 스크랩 취소, 좋아요 눌렀을 때 api 요청 보내기
+      // TODO : 스크랩 취소, 좋아요 눌렀을 때 api 요청 보내기
     },
     [isScrapClick]
   );
@@ -53,6 +54,7 @@ export default function PostEach({ post }: Props) {
     // TODO : 해당 post id값으로 메뉴 공지글로 등록하는 api 요청 보내기
     console.log(postId);
   }, []);
+
   return (
     <article
       className={
