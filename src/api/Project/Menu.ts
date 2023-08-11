@@ -5,7 +5,7 @@ import { instance } from '@/api';
 // 프로젝트에 해당하는 메뉴 리스트 get
 export const projectMenuList = async (projectId: number) => {
   try {
-    const res: AxiosResponse<MenuInfo> = await instance.get(`/menus/${projectId}`);
+    const res: AxiosResponse<MenuInfo[]> = await instance.get(`/menus/${projectId}`);
     return res.data;
   } catch (error) {
     console.log(error);
