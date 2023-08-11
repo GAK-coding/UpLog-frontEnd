@@ -47,7 +47,7 @@ export default function TaskMain() {
 
   // 메뉴별 task get 데이터 가져오기 성공 시 데이터 지정함
   if (getMenuTaskList.isSuccess) {
-    if (typeof getMenuTaskList.data !== 'string' && 'object' in getMenuTaskList.data) {
+    if (typeof getMenuTaskList.data !== 'string' && 'id' in getMenuTaskList.data) {
       const taskAllList: MenuTasks = getMenuTaskList.data;
       const tasks: Task[] = taskAllList.tasks;
       setTaskList(tasks);
