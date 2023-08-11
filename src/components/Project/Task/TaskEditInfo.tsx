@@ -1,16 +1,18 @@
 import { DatePicker, DatePickerProps, Select } from 'antd';
-import { SelectMenu, SubGroup, Task } from '@/typings/project.ts';
+import { SubGroup } from '@/typings/project.ts';
+import { SelectMenu } from '@/typings/menu.ts';
+import { TaskData } from '@/typings/task.ts';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 import * as dayjs from 'dayjs';
-import { menuListData } from '@/recoil/Project/Task.ts';
+import { menuListData } from '@/recoil/Project/Menu.ts';
 import { productMemberList } from '@/recoil/Product/atom.ts';
 import { useRecoilValue } from 'recoil';
 
 interface Props {
   isEdit: boolean;
-  editTask: Task;
-  setEditTask: Dispatch<SetStateAction<Task>>;
+  editTask: TaskData;
+  setEditTask: Dispatch<SetStateAction<TaskData>>;
 }
 export default function TaskEditInfo({ isEdit, editTask, setEditTask }: Props) {
   const pGroup: string[] = ['그룹', '개발팀', '마케팅팀', '홍보팀'];
@@ -28,7 +30,7 @@ export default function TaskEditInfo({ isEdit, editTask, setEditTask }: Props) {
   const menuList = useRecoilValue(menuListData);
   const menuNameList: SelectMenu[] = menuList.map((menuItem) => ({
     value: menuItem.id.toString(),
-    label: menuItem.name,
+    label: menuItem.menuName,
   }));
 
   const member = useRecoilValue(productMemberList);
@@ -249,7 +251,7 @@ export default function TaskEditInfo({ isEdit, editTask, setEditTask }: Props) {
           <Select
             labelInValue
             defaultValue={{
-              value: '-1',
+              value: `${editTask.targetMember.id}`,
               label: `${editTask.targetMember.nickname}(${editTask.targetMember.name})`,
             }}
             onChange={handleChange('targetMember')}

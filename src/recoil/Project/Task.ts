@@ -1,21 +1,21 @@
-import { GroupMember, MenuInfo, Task, Tasks } from '@/typings/project.ts';
+import { GroupMember } from '@/typings/project.ts';
+import { TaskData, Tasks } from '@/typings/task.ts';
 import { atom } from 'recoil';
 
-export const eachTask = atom<Task>({
+export const eachTaskInfo = atom<TaskData>({
   key: 'eachTask',
   default: {
-    id: -1,
-    dragId: '1',
+    id: 0,
     taskName: '',
     targetMember: {
-      id: -1,
+      id: 0,
       name: '',
       nickname: '',
       image: '',
     },
-    menuId: -1,
+    menuId: 0,
     menuName: '',
-    projectId: -1,
+    projectTeamId: 0,
     projectTeamName: '',
     projectTeamParentId: null,
     taskStatus: 'PROGRESS_BEFORE',
@@ -25,12 +25,11 @@ export const eachTask = atom<Task>({
   },
 });
 
-export const taskAll = atom<Task[]>({
+export const taskAll = atom<TaskData[]>({
   key: 'taskAll',
   default: [
     {
       id: 0,
-      dragId: '0',
       taskName: 'task1',
       targetMember: {
         id: 1,
@@ -40,7 +39,7 @@ export const taskAll = atom<Task[]>({
       },
       menuId: 1,
       menuName: '요구사항',
-      projectId: 1,
+      projectTeamId: 1,
       projectTeamName: '개발팀',
       projectTeamParentId: null,
       taskStatus: 'PROGRESS_BEFORE',
@@ -50,7 +49,6 @@ export const taskAll = atom<Task[]>({
     },
     {
       id: 1,
-      dragId: '1',
       taskName: 'task2',
       targetMember: {
         id: 1,
@@ -60,7 +58,7 @@ export const taskAll = atom<Task[]>({
       },
       menuId: 1,
       menuName: '요구사항',
-      projectId: 1,
+      projectTeamId: 1,
       projectTeamName: '프론트엔드',
       projectTeamParentId: 1,
       taskStatus: 'PROGRESS_IN',
@@ -70,7 +68,6 @@ export const taskAll = atom<Task[]>({
     },
     {
       id: 1,
-      dragId: '1',
       taskName: 'task2',
       targetMember: {
         id: 1,
@@ -80,7 +77,7 @@ export const taskAll = atom<Task[]>({
       },
       menuId: 1,
       menuName: '요구사항',
-      projectId: 1,
+      projectTeamId: 1,
       projectTeamName: '프론트엔드',
       projectTeamParentId: 1,
       taskStatus: 'PROGRESS_IN',
@@ -90,7 +87,6 @@ export const taskAll = atom<Task[]>({
     },
     {
       id: 1,
-      dragId: '1',
       taskName: 'task2',
       targetMember: {
         id: 1,
@@ -100,7 +96,7 @@ export const taskAll = atom<Task[]>({
       },
       menuId: 1,
       menuName: '요구사항',
-      projectId: 1,
+      projectTeamId: 1,
       projectTeamName: '프론트엔드',
       projectTeamParentId: 1,
       taskStatus: 'PROGRESS_IN',
@@ -110,7 +106,6 @@ export const taskAll = atom<Task[]>({
     },
     {
       id: 1,
-      dragId: '1',
       taskName: 'task2',
       targetMember: {
         id: 1,
@@ -120,7 +115,7 @@ export const taskAll = atom<Task[]>({
       },
       menuId: 1,
       menuName: '요구사항',
-      projectId: 1,
+      projectTeamId: 1,
       projectTeamName: '프론트엔드',
       projectTeamParentId: 1,
       taskStatus: 'PROGRESS_IN',
@@ -130,7 +125,6 @@ export const taskAll = atom<Task[]>({
     },
     {
       id: 1,
-      dragId: '1',
       taskName: 'task2',
       targetMember: {
         id: 1,
@@ -140,47 +134,7 @@ export const taskAll = atom<Task[]>({
       },
       menuId: 1,
       menuName: '요구사항',
-      projectId: 1,
-      projectTeamName: '프론트엔드',
-      projectTeamParentId: 1,
-      taskStatus: 'PROGRESS_IN',
-      taskDetail: 'task2 입니다롱',
-      startTime: '2023-08-03',
-      endTime: '2023-08-10',
-    },
-    {
-      id: 1,
-      dragId: '1',
-      taskName: 'task2',
-      targetMember: {
-        id: 1,
-        name: '오채영',
-        nickname: 'OCI',
-        image: '',
-      },
-      menuId: 1,
-      menuName: '요구사항',
-      projectId: 1,
-      projectTeamName: '프론트엔드',
-      projectTeamParentId: 1,
-      taskStatus: 'PROGRESS_IN',
-      taskDetail: 'task2 입니다롱',
-      startTime: '2023-08-03',
-      endTime: '2023-08-10',
-    },
-    {
-      id: 1,
-      dragId: '1',
-      taskName: 'task2',
-      targetMember: {
-        id: 1,
-        name: '오채영',
-        nickname: 'OCI',
-        image: '',
-      },
-      menuId: 1,
-      menuName: '요구사항',
-      projectId: 1,
+      projectTeamId: 1,
       projectTeamName: '프론트엔드',
       projectTeamParentId: 1,
       taskStatus: 'PROGRESS_IN',
@@ -190,7 +144,6 @@ export const taskAll = atom<Task[]>({
     },
     {
       id: 3,
-      dragId: '3',
       taskName: 'task3',
       targetMember: {
         id: 1,
@@ -200,7 +153,7 @@ export const taskAll = atom<Task[]>({
       },
       menuId: 2,
       menuName: '개발',
-      projectId: 1,
+      projectTeamId: 1,
       projectTeamName: '개발팀',
       projectTeamParentId: null,
       taskStatus: 'PROGRESS_COMPLETE',
@@ -227,7 +180,7 @@ export const taskState = atom<Tasks>({
         },
         menuId: 1,
         menuName: '요구사항',
-        projectId: 1,
+        projectTeamId: 1,
         projectTeamName: '개발팀',
         projectTeamParentId: null,
         taskStatus: 'PROGRESS_BEFORE',
@@ -249,7 +202,7 @@ export const taskState = atom<Tasks>({
         },
         menuId: 1,
         menuName: '요구사항',
-        projectId: 1,
+        projectTeamId: 1,
         projectTeamName: '프론트엔드',
         projectTeamParentId: 1,
         taskStatus: 'PROGRESS_IN',
@@ -271,7 +224,7 @@ export const taskState = atom<Tasks>({
         },
         menuId: 2,
         menuName: '개발',
-        projectId: 1,
+        projectTeamId: 1,
         projectTeamName: '개발팀',
         projectTeamParentId: null,
         taskStatus: 'PROGRESS_COMPLETE',
@@ -281,18 +234,6 @@ export const taskState = atom<Tasks>({
       },
     ],
   },
-});
-
-export const menuListData = atom<MenuInfo[]>({
-  key: 'menuList',
-  default: [
-    { id: 1, name: '결과물' },
-    { id: 2, name: '요구사항' },
-    { id: 3, name: '개발' },
-    { id: 4, name: '배포' },
-    { id: 5, name: '개발2' },
-    { id: 6, name: '배포2' },
-  ],
 });
 
 // 그룹 멤버 리스트

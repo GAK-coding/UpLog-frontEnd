@@ -1,4 +1,4 @@
-import { SelectMenu } from '@/typings/project.ts';
+import { SelectMenu } from '@/typings/menu.ts';
 import { Select } from 'antd';
 import { taskAll } from '@/recoil/Project/Task.ts';
 import { useRecoilState } from 'recoil';
@@ -8,11 +8,20 @@ import { AiOutlinePlus } from 'react-icons/ai';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDisclosure } from '@chakra-ui/react';
 import CreateTask from '@/components/Project/Task/CreateTask.tsx';
+import { useQuery } from 'react-query';
+import { menuTaskList } from '@/api/Project/Task.ts';
+import { MenuTasks, TaskData } from '@/typings/task.ts';
 
 export default function TaskMain() {
   const { product, project, menutitle } = useParams();
   const navigate = useNavigate();
+  // task 추가 모달창
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const menuId = 1;
 
+  const [taskList, setTaskList] = useRecoilState(taskAll);
+
+  // 날짜, 상태 필터링 데이터
   const dateData: SelectMenu[] = [
     { value: '날짜', label: '날짜' },
     {
@@ -20,20 +29,29 @@ export default function TaskMain() {
       label: '최신순',
     },
   ];
-
   const statusData: SelectMenu[] = [
     { value: 'done', label: '완료' },
     { value: 'before', label: '완료 전' },
     { value: 'all', label: '전체' },
   ];
 
-  const userprofile = '';
-  // const [taskStatusList, setTaskStatusList] = useRecoilState(taskState);
+  // 메뉴별 task 데이터 가져오기
+  const getMenuTaskList = useQuery(['getMenuTaskList', menuId], () => menuTaskList(menuId), {
+    staleTime: 60000, // 10분
+    cacheTime: 80000, // 12분
+    refetchOnMount: false, // 마운트(리렌더링)될 때 데이터를 다시 가져오지 않음
+    refetchOnWindowFocus: false, // 브라우저를 포커싱했을때 데이터를 가져오지 않음
+    refetchOnReconnect: false, // 네트워크가 다시 연결되었을때 다시 가져오지 않음
+  });
 
-  const [taskList, setTaskList] = useRecoilState(taskAll);
-
-  // task 추가 모달창
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  // 메뉴별 task get 데이터 가져오기 성공 시 데이터 지정함
+  if (getMenuTaskList.isSuccess) {
+    if (typeof getMenuTaskList.data !== 'string' && 'id' in getMenuTaskList.data) {
+      const taskAllList: MenuTasks = getMenuTaskList.data;
+      const tasks: TaskData[] = taskAllList.tasks;
+      setTaskList(tasks);
+    }
+  }
 
   // 날짜, 상태 데이터 필터링 값
   const handleChange = (value: { value: string; label: React.ReactNode }) => {
@@ -51,33 +69,21 @@ export default function TaskMain() {
               'flex-row-center text-[0.9rem] text-gray-dark task-status-ring border-status-before'
             }
           >
-            {
-              taskList.filter(
-                (task) => task.menuName === menutitle && task.taskStatus === 'PROGRESS_BEFORE'
-              ).length
-            }
+            {taskList.filter((task) => task.taskStatus === 'PROGRESS_BEFORE').length}
           </div>
           <div
             className={
               'flex-row-center text-[0.9rem] text-gray-dark task-status-ring border-status-going'
             }
           >
-            {
-              taskList.filter(
-                (task) => task.menuName === menutitle && task.taskStatus === 'PROGRESS_IN'
-              ).length
-            }
+            {taskList.filter((task) => task.taskStatus === 'PROGRESS_IN').length}
           </div>
           <div
             className={
               'flex-row-center text-[0.9rem] text-gray-dark task-status-ring border-status-done'
             }
           >
-            {
-              taskList.filter(
-                (task) => task.menuName === menutitle && task.taskStatus === 'PROGRESS_COMPLETE'
-              ).length
-            }
+            {taskList.filter((task) => task.taskStatus === 'PROGRESS_COMPLETE').length}
           </div>
         </div>
         <div className={'flex-row-center justify-between w-[18rem] px-4 z-10'}>
@@ -118,66 +124,62 @@ export default function TaskMain() {
           }
         >
           {/*task 정보*/}
-          {taskList
-            .filter((task) => task.menuName === menutitle)
-            .map((task, index) => (
-              <section
-                key={index}
-                className={
-                  'flex-row-center justify-start w-full min-h-[3.5rem] px-4 border-b border-line cursor-pointer'
-                }
-                onClick={() =>
-                  navigate(`/workspace/${product}/${project}/menu/${menutitle}/task/${task.id}`)
-                }
-              >
-                {/*체크박스 + task 이름*/}
-                <div className={'flex-row-center justify-start w-[14rem] pr-1'}>
-                  <RiCheckboxLine
-                    className={`text-[1.7rem] ${
-                      task.taskStatus === 'PROGRESS_COMPLETE' ? 'text-orange' : 'text-gray-light'
-                    }`}
-                  />
-                  <span className={'ml-2 text-gray-light text-[1.1rem]'}>{`Task ${task.id}`}</span>
-                </div>
-                <div className={'w-[45rem] ml-1 text-[1.1rem] font-bold'}>{task.taskName}</div>
+          {taskList.map((task) => (
+            <section
+              key={task.id}
+              className={
+                'flex-row-center justify-start w-full min-h-[3.5rem] px-4 border-b border-line cursor-pointer'
+              }
+              onClick={() =>
+                navigate(`/workspace/${product}/${project}/menu/${menutitle}/task/${task.id}`)
+              }
+            >
+              {/*체크박스 + task 이름*/}
+              <div className={'flex-row-center justify-start w-[14rem] pr-1'}>
+                <RiCheckboxLine
+                  className={`text-[1.7rem] ${
+                    task.taskStatus === 'PROGRESS_COMPLETE' ? 'text-orange' : 'text-gray-light'
+                  }`}
+                />
+                <span className={'ml-2 text-gray-light text-[1.1rem]'}>{`Task ${task.id}`}</span>
+              </div>
+              <div className={'w-[45rem] ml-1 text-[1.1rem] font-bold'}>{task.taskName}</div>
 
-                {/*task 메뉴, 상태, 할당자*/}
-                <div
-                  className={'flex-row-center w-h-full justify-end text-gray-dark text-[0.93rem]'}
+              {/*task 메뉴, 상태, 할당자*/}
+              <div className={'flex-row-center w-h-full justify-end text-gray-dark text-[0.93rem]'}>
+                <span className={'mr-3'}>{task.projectTeamName}</span>
+                <span
+                  className={
+                    'flex items-center px-2 h-[1.5rem] rounded-[0.31rem] bg-orange-light-sideBar'
+                  }
                 >
-                  <span className={'mr-3'}>{task.projectTeamName}</span>
-                  <span
-                    className={
-                      'flex items-center px-2 h-[1.5rem] rounded-[0.31rem] bg-orange-light-sideBar'
-                    }
-                  >
-                    {task.menuName}
-                  </span>
-                  <div
-                    className={'mx-3 h-5 border-solid border-r border-[0.5px] border-gray-light'}
-                  />
-                  <span
-                    className={`flex items-center px-2 mr-3 h-[1.5rem] rounded-[0.31rem] text-[#292723] 
+                  {task.menuName}
+                </span>
+                <div
+                  className={'mx-3 h-5 border-solid border-r border-[0.5px] border-gray-light'}
+                />
+                <span
+                  className={`flex items-center px-2 mr-3 h-[1.5rem] rounded-[0.31rem] text-[#292723] 
                     ${task.taskStatus === 'PROGRESS_BEFORE' && 'bg-status-before'}
                   ${task.taskStatus === 'PROGRESS_IN' && 'bg-status-going'}
                   ${task.taskStatus === 'PROGRESS_COMPLETE' && 'bg-status-done'}`}
-                  >
-                    {task.taskStatus === 'PROGRESS_BEFORE' && '진행 전'}
-                    {task.taskStatus === 'PROGRESS_IN' && '진행 중'}
-                    {task.taskStatus === 'PROGRESS_COMPLETE' && '진행 후'}
-                  </span>
-                  {!userprofile ? (
-                    <FaUserCircle className={'flex text-[2.2rem] fill-gray-dark'} />
-                  ) : (
-                    <img
-                      src={userprofile}
-                      alt="userprofile"
-                      className={'flex w-[2.2rem] h-[2.2rem]'}
-                    />
-                  )}
-                </div>
-              </section>
-            ))}
+                >
+                  {task.taskStatus === 'PROGRESS_BEFORE' && '진행 전'}
+                  {task.taskStatus === 'PROGRESS_IN' && '진행 중'}
+                  {task.taskStatus === 'PROGRESS_COMPLETE' && '진행 후'}
+                </span>
+                {!task.targetMember.image ? (
+                  <FaUserCircle className={'flex text-[2.2rem] fill-gray-dark'} />
+                ) : (
+                  <img
+                    src={task.targetMember.image}
+                    alt="userprofile"
+                    className={'flex w-[2.2rem] h-[2.2rem]'}
+                  />
+                )}
+              </div>
+            </section>
+          ))}
           <section
             className={
               'flex-row-center justify-start w-full min-h-[3.5rem] px-4 text-gray-dark cursor-pointer'

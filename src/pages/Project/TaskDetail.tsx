@@ -5,37 +5,180 @@ import { AiFillCaretDown } from 'react-icons/ai';
 import TaskEditInfo from '@/components/Project/Task/TaskEditInfo.tsx';
 import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { formatStatus } from '@/utils/formatStatus.ts';
-import { useRecoilValue } from 'recoil';
-import { taskAll } from '@/recoil/Project/Task.ts';
 import useInput from '@/hooks/useInput.ts';
-import { TaskStatus } from '@/typings/project.ts';
+import { TaskData, TaskStatus } from '@/typings/task.ts';
 import DeleteDialog from '@/components/Common/DeleteDialog.tsx';
+import {
+  eachTask,
+  editTaskContent,
+  editTaskDate,
+  editTaskMenu,
+  editTaskStatus,
+  editTaskTargetMember,
+  editTaskTeam,
+  editTaskTitle,
+} from '@/api/Project/Task.ts';
+import { useMutation, useQuery } from 'react-query';
+import { useMessage } from '@/hooks/useMessage.ts';
+import { checkTaskEditValue } from '@/utils/checkTaskEditValue.ts';
+import { useRecoilState } from 'recoil';
+import { eachTaskInfo } from '@/recoil/Project/Task.ts';
 
 export default function TaskDetail() {
   const { product, project, menutitle, taskid } = useParams();
-
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { showMessage, contextHolder } = useMessage();
+  const [editSuccess, setEditSuccess] = useState<boolean>(true);
 
   // 현재 task 데이터 가져오기
-  const taskData = useRecoilValue(taskAll);
-  const taskInfo = taskData.filter((task) => task.id === parseInt(taskid!));
-  const status = formatStatus(taskInfo[0].taskStatus);
+  const [taskInfo, setTaskInfo] = useRecoilState(eachTaskInfo);
+  const status = formatStatus(taskInfo.taskStatus);
 
+  // TODO : staleTime 확인 필요 + 시간 다시 설정하기
+  // task 한개 데이터 get
+  const getTaskData = useQuery(['task', taskid], () => eachTask(+taskid!), {
+    staleTime: 6000, // 1분
+    cacheTime: 8000, // 1분 20초
+    refetchOnMount: false, // 마운트(리렌더링)될 때 데이터를 다시 가져오지 않음
+    refetchOnWindowFocus: false, // 브라우저를 포커싱했을때 데이터를 가져오지 않음
+    refetchOnReconnect: false, // 네트워크가 다시 연결되었을때 다시 가져오지 않음
+  });
+
+  // get 해온 데이터로 taskInfo 지정
+  if (getTaskData.isSuccess) {
+    if (typeof getTaskData.data !== 'string' && 'id' in getTaskData.data) {
+      setTaskInfo(getTaskData.data);
+    }
+  }
+
+  // taskname input 값
+  const [taskName, onChangeTaskName] = useInput(taskInfo.taskName);
   // 수정 여부
   const [isEdit, setIsEdit] = useState<boolean>(false);
 
   // 새로 수정한 task 데이터 값 저장
-  const [editTask, setEditTask] = useState(taskInfo[0]);
-
-  // taskname input 값
-  const [taskName, onChangeTaskName] = useInput(taskInfo[0].taskName);
-
-  console.log('taskInfo', taskInfo[0]);
+  const [editTask, setEditTask] = useState(taskInfo);
+  console.log('taskInfo', taskInfo);
   console.log('edit', editTask);
 
+  // task (date, title, taskTeam, target-Member, status, menu, content) update 요청
+  const { mutate: editDateMutate } = useMutation(
+    () => editTaskDate(+taskid!, editTask.startTime, editTask.endTime),
+    {
+      onSuccess: (data) => {
+        if (typeof data === 'string') {
+          setEditSuccess(false);
+        }
+      },
+    }
+  );
+
+  const { mutate: editTitleMutate } = useMutation(
+    () => editTaskTitle(+taskid!, editTask.taskName),
+    {
+      onSuccess: (data) => {
+        if (typeof data === 'string') {
+          setEditSuccess(false);
+        }
+      },
+    }
+  );
+
+  const { mutate: editTeamMutate } = useMutation(
+    () => editTaskTeam(+taskid!, +editTask.projectTeamId),
+    {
+      onSuccess: (data) => {
+        if (typeof data === 'string') {
+          setEditSuccess(false);
+        }
+      },
+    }
+  );
+
+  const { mutate: editTargetMemberMutate } = useMutation(
+    () => editTaskTargetMember(+taskid!, editTask.targetMember.id),
+    {
+      onSuccess: (data) => {
+        if (typeof data === 'string') {
+          setEditSuccess(false);
+        }
+      },
+    }
+  );
+
+  const { mutate: editStatusMutate } = useMutation(
+    () => editTaskStatus(+taskid!, editTask.taskStatus),
+    {
+      onSuccess: (data) => {
+        if (typeof data === 'string') {
+          setEditSuccess(false);
+        }
+      },
+    }
+  );
+
+  const { mutate: editMenuMutate } = useMutation(() => editTaskMenu(+taskid!, editTask.menuId), {
+    onSuccess: (data) => {
+      if (typeof data === 'string') {
+        setEditSuccess(false);
+      }
+    },
+  });
+
+  const { mutate: editContentMutate } = useMutation(
+    () => editTaskContent(+taskid!, editTask.taskDetail),
+    {
+      onSuccess: (data) => {
+        if (typeof data === 'string') {
+          setEditSuccess(false);
+        }
+      },
+    }
+  );
+  // 수정 버튼 클릭 시
   const onChangeEdit = useCallback(() => {
     setIsEdit(true);
   }, [isEdit]);
+
+  // 수정 완료 버튼 클릭 시
+  const onSubmitEdit = useCallback(() => {
+    // 변경된 값이 비어있는 경우
+    const checkEmpty = checkTaskEditValue(editTask);
+
+    if (!checkEmpty) {
+      showMessage('warning', 'Task의 정보를 모두 작성해주세요');
+      return;
+    }
+
+    // 변경된 값만 task update요청 보냄
+    const handleMutate = (
+      newValue: TaskData[keyof TaskData],
+      originalValue: TaskData[keyof TaskData],
+      mutateFunction: () => void
+    ) => {
+      if (newValue !== originalValue) {
+        mutateFunction();
+      }
+    };
+
+    handleMutate(editTask.taskName, taskInfo.taskName, editTitleMutate);
+    handleMutate(editTask.startTime, taskInfo.startTime, editDateMutate);
+    handleMutate(editTask.endTime, taskInfo.endTime, editDateMutate);
+    handleMutate(editTask.projectTeamId, taskInfo.projectTeamId, editTeamMutate);
+    handleMutate(editTask.targetMember.id, taskInfo.targetMember.id, editTargetMemberMutate);
+    handleMutate(editTask.taskStatus, taskInfo.taskStatus, editStatusMutate);
+    handleMutate(editTask.menuId, taskInfo.menuId, editMenuMutate);
+    handleMutate(editTask.taskDetail, taskInfo.taskDetail, editContentMutate);
+
+    if (!editSuccess) {
+      showMessage('error', 'Task 수정에 실패했습니다.');
+      return;
+    }
+
+    showMessage('success', 'Task 수정에 성공했습니다.');
+    setTimeout(() => onClose(), 2000);
+    setIsEdit(false);
+  }, [isEdit, editTask, editSuccess]);
 
   // 수정한 task 상태 데이터 값 저장
   const onChangeSelectedType = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -47,7 +190,8 @@ export default function TaskDetail() {
     setEditTask(updatedTask);
   };
 
-  const onChangeTaskDescription = (e: ChangeEvent<HTMLTextAreaElement>) => {
+  // taskDetail 내용 수정된 값 저장
+  const onChangeTaskDetail = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const updatedTask = {
       ...editTask,
       taskDetail: e.target.value,
@@ -68,6 +212,7 @@ export default function TaskDetail() {
 
   return (
     <section className={'flex w-full h-auto py-20'}>
+      {contextHolder}
       {/*돌아가기 버튼*/}
       <article className={'pt-4 flex justify-center w-[10%] min-w-[6rem] lg:w-[16%]'}>
         <Link
@@ -89,7 +234,7 @@ export default function TaskDetail() {
           {/*task 제목, id*/}
           <div className={'flex items-center w-[70%] h-auto font-bold'}>
             {!isEdit ? (
-              <span className={'text-3xl mr-4'}>{taskInfo[0].taskName}</span>
+              <span className={'text-3xl mr-4'}>{taskInfo.taskName}</span>
             ) : (
               <input
                 className={'w-[70%] h-full text-3xl mr-4 pb-2'}
@@ -139,11 +284,11 @@ export default function TaskDetail() {
         {/*세부 내용 */}
         <section className={'w-[70%] h-auto text-[2rem] pt-4 pb-8'}>
           {!isEdit ? (
-            <span className={'w-auto h-auto ml-4 text-2xl'}>{taskInfo[0].taskDetail}</span>
+            <span className={'w-auto h-auto ml-4 text-2xl'}>{taskInfo.taskDetail}</span>
           ) : (
             <Textarea
               defaultValue={editTask.taskDetail}
-              onChange={onChangeTaskDescription}
+              onChange={onChangeTaskDetail}
               border={'1px solid var(--border-line)'}
               height={'100%'}
               focusBorderColor={'none'}
@@ -173,7 +318,7 @@ export default function TaskDetail() {
                   onOpen();
                   return;
                 }
-                setIsEdit(!isEdit);
+                onSubmitEdit();
               }}
             >
               {isEdit ? '완료' : '삭제'}

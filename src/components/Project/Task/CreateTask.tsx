@@ -11,12 +11,16 @@ import {
 } from '@chakra-ui/react';
 import { useMessage } from '@/hooks/useMessage.ts';
 import useInput from '@/hooks/useInput.ts';
-import { SelectMenu, SubGroup } from '@/typings/project.ts';
+import { SubGroup } from '@/typings/project.ts';
+import { SelectMenu } from '@/typings/menu.ts';
 import { DatePicker, DatePickerProps, Select } from 'antd';
 import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { menuListData } from '@/recoil/Project/Task.ts';
+import { menuListData } from '@/recoil/Project/Menu.ts';
 import { productMemberList } from '@/recoil/Product/atom.ts';
+import { TaskBody } from '@/typings/task.ts';
+import { useMutation } from 'react-query';
+import { createTask } from '@/api/Project/Task.ts';
 
 interface Props {
   isOpen: boolean;
@@ -26,13 +30,13 @@ export default function CreateTask({ isOpen, onClose }: Props) {
   const { showMessage, contextHolder } = useMessage();
 
   const [taskName, onChangeTaskName, setTaskName] = useInput('');
-  const [newTask, setNewTask] = useState({
+  const [newTask, setNewTask] = useState<TaskBody>({
     taskName: '',
     startTime: '',
     endTime: '',
-    menuId: -1,
+    menuId: 0,
     projectTeamId: '',
-    targetMemberId: -1,
+    targetMemberId: 0,
     taskDetail: '',
   });
 
@@ -54,9 +58,10 @@ export default function CreateTask({ isOpen, onClose }: Props) {
   type ChildGroup = keyof typeof cGroup;
 
   const menuList = useRecoilValue(menuListData);
+
   const menuNameList: SelectMenu[] = menuList.map((menuItem) => ({
     value: menuItem.id.toString(),
-    label: menuItem.name,
+    label: menuItem.menuName,
   }));
 
   const member = useRecoilValue(productMemberList);
@@ -126,6 +131,20 @@ export default function CreateTask({ isOpen, onClose }: Props) {
     }
     console.log(newTask);
   };
+
+  // task 생성 api
+  const { mutate: createTaskMutate } = useMutation(() => createTask(newTask), {
+    onSuccess: (data) => {
+      if (typeof data === 'object' && 'message' in data) {
+        showMessage('error', 'Task 생성에 실패했습니다.');
+      } else if (data === 'create task fail') {
+        showMessage('error', 'Task 생성에 실패했습니다.');
+      } else if (data === 'object' && 'id' in data) {
+        showMessage('success', 'Task가 생성되었습니다.');
+        setTimeout(() => onClose(), 2000);
+      }
+    },
+  });
 
   // TODO : projectTeamId 값 group id 값으로 바꾸기
   // 상위그룹 select 선택 값
@@ -219,6 +238,7 @@ export default function CreateTask({ isOpen, onClose }: Props) {
     }
 
     //TODO : Task 생성 API 연결
+    createTaskMutate();
   }, [newTask]);
 
   // task 이름 newTask에 저장

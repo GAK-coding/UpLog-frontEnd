@@ -60,6 +60,8 @@ export default function ProductList() {
 
         // 상태 변경
         setProductList(updatedProduct);
+
+        // TODO : 여기에서 변경된 updatedProduct 값을 보내서 변경된 순서를 저장해야함
       }
     },
     [productList]
