@@ -75,6 +75,7 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
     }
   );
 
+  // TODO : staleTime 확인 필요
   // 제품 정보 조회
   const { refetch, data: productGetData } = useQuery(
     ['getProjectInfo'],
