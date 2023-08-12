@@ -94,7 +94,7 @@ export default function Header() {
       ${isNoneHeader ? 'bg-none-header' : 'border-solid border-b border-header-gray'}`}
     >
       {/*로고 + 글자 (메인페이지로 이동)*/}
-      <div className={'flex-row-center w-[40rem] md:w-auto ml-8 md:ml-32'}>
+      <div className={'flex-row-center justify-start w-[60%] h-full md:w-auto ml-8 md:ml-32'}>
         <nav className={'flex-row-center cursor-pointer'} onClick={() => navigate('/')}>
           <img className={'flex mr-4 h-10'} src={'/images/mainLogo.png'} alt={'main-logo'} />
           <span className={'flex font-logo text-[2.3rem] font-semibold text-gray-dark mt-2'}>
@@ -127,7 +127,9 @@ export default function Header() {
       {/*로그인 상태*/}
       {isLogin && (
         <div
-          className={'flex w-[26rem] h-full justify-between mr-4 md:mr-12 font-bold items-center '}
+          className={
+            'flex-row-center justify-end gap-6 w-[40%] h-full mr-4 md:mr-12 font-bold items-center '
+          }
         >
           {/*검색창*/}
           <div
