@@ -12,7 +12,7 @@ import { menuListData } from '@/recoil/Project/Menu.ts';
 import { useRecoilState } from 'recoil';
 import { useNavigate, useParams } from 'react-router-dom';
 import { deleteMenu } from '@/api/Project/Menu.ts';
-import { useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import { useMessage } from '@/hooks/useMessage.ts';
 
 interface Props {
@@ -27,10 +27,27 @@ export default function DeleteMenuDialog({ isOpen, onClose, menu, menuId }: Prop
   const { showMessage, contextHolder } = useMessage();
   const cancelRef = useRef<HTMLButtonElement>(null);
   const [menuList, setMenuList] = useRecoilState(menuListData);
+  const queryClient = useQueryClient();
 
   // TODO : Delete 잘 되는지 확인하기
   // menu delete
   const { mutate: deleteMenuMutate } = useMutation(() => deleteMenu(menuId), {
+    onMutate: async () => {
+      // optimistic update를 덮어쓰지 않기 위해 쿼리를 수동으로 삭제
+      await queryClient.cancelQueries(['menuList']);
+
+      // 이전 값 저장
+      const previousData = queryClient.getQueryData(['menuList']);
+
+      // 새로운 값으로 optimistic ui 적용
+      queryClient.setQueryData(
+        ['menuList'],
+        menuList.filter((eachMenu) => eachMenu.menuName !== menu)
+      );
+
+      // 에러가 난다면 원래것으로 설정
+      return () => queryClient.setQueryData(['menuList'], previousData);
+    },
     onSuccess: (data) => {
       if (data === 'delete menu fail') {
         showMessage('error', '메뉴 삭제에 실패했습니다.');
@@ -38,6 +55,19 @@ export default function DeleteMenuDialog({ isOpen, onClose, menu, menuId }: Prop
         showMessage('success', '해당 메뉴가 삭제되었습니다.');
         setTimeout(() => onClose(), 2000);
       }
+    },
+    onError: (error, value, rollback) => {
+      // rollback은 onMutate의 return값
+      if (rollback) {
+        rollback();
+        showMessage('error', '메뉴 삭제에 실패했습니다.');
+      } else {
+        showMessage('error', '메뉴 삭제에  실패했습니다.');
+      }
+    },
+    onSettled: () => {
+      // success or error, invalidate해서 새로 받아옴
+      return queryClient.invalidateQueries(['menuList']);
     },
   });
 
@@ -57,6 +87,7 @@ export default function DeleteMenuDialog({ isOpen, onClose, menu, menuId }: Prop
       onClose={onClose}
       isCentered={true}
     >
+      {contextHolder}
       <AlertDialogOverlay>
         <AlertDialogContent maxW={'30rem'}>
           <AlertDialogHeader bgColor={'var(--white)'} color={'var(--black)'}>
