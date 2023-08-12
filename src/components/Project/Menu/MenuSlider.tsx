@@ -12,7 +12,7 @@ import { menuListData } from '@/recoil/Project/Menu.ts';
 import { useCallback, useState } from 'react';
 import { useMessage } from '@/hooks/useMessage.ts';
 import DeleteMenuDialog from '@/components/Project/Menu/DeleteMenuDialog.tsx';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { createMenu, editMenu, projectMenuList } from '@/api/Project/Menu.ts';
 
 interface Props {
@@ -70,12 +70,40 @@ export default function MenuSlider({ product, project, menuTitle }: Props) {
     }
   }
 
+  const queryClient = useQueryClient();
+
   // menu create
   const { mutate: createMenuMutate } = useMutation(() => createMenu(projectId, createMenuName), {
+    onMutate: async () => {
+      // optimistic update를 덮어쓰지 않기 위해 쿼리를 수동으로 삭제
+      await queryClient.cancelQueries(['menuList']);
+
+      // 이전 값 저장
+      const previousData = queryClient.getQueryData(['menuList']);
+
+      // 새로운 값으로 optimistic ui 적용
+      queryClient.setQueryData(['menuList'], menuList);
+
+      // 에러가 난다면 원래것으로 설정
+      return () => queryClient.setQueryData(['menuList'], previousData);
+    },
     onSuccess: (data) => {
       if (typeof data !== 'string' && 'menuName' in data) {
         showMessage('success', '메뉴가 생성되었습니다.');
       }
+    },
+    onError: (error, value, rollback) => {
+      // rollback은 onMutate의 return값
+      if (rollback) {
+        rollback();
+        showMessage('error', '메뉴 생성에 실패했습니다.');
+      } else {
+        showMessage('error', '메뉴 생성에 실패했습니다.');
+      }
+    },
+    onSettled: () => {
+      // success or error, invalidate해서 새로 받아옴
+      return queryClient.invalidateQueries(['menuList']);
     },
   });
 
@@ -152,6 +180,9 @@ export default function MenuSlider({ product, project, menuTitle }: Props) {
         setCreateMenuName(nextValue);
         setMenuList(updatedMenuList);
         setPlusMenu(false);
+
+        // create post api 요청
+        createMenuMutate();
       }
     },
     [menuList, editMenuName]
