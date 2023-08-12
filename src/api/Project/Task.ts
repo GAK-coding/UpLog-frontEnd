@@ -13,7 +13,7 @@ import { instance } from '@/api';
 // task 생성
 export const createTask = async (data: TaskBody) => {
   try {
-    const res: AxiosResponse<FailTask> = await instance.post('/tasks', data);
+    const res: AxiosResponse<TaskData | FailTask> = await instance.post('/tasks', data);
 
     return res.data;
   } catch (error) {
@@ -88,7 +88,7 @@ export const allTaskList = async (projectId: number) => {
 // 메뉴별로 task 전체 조회
 export const menuTaskList = async (menuId: number) => {
   try {
-    const res: AxiosResponse<MenuTasks> = await instance.get(`/menu/${menuId}/tasks`);
+    const res: AxiosResponse<MenuTasks> = await instance.get(`/menus/${menuId}/tasks`);
 
     return res.data;
   } catch (error) {
