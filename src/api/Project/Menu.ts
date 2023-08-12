@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios';
-import { MenuInfo } from '@/typings/menu.ts';
+import { FailMenu, MenuInfo } from '@/typings/menu.ts';
 import { instance } from '@/api';
 
 // 프로젝트에 해당하는 메뉴 리스트 get
@@ -29,9 +29,12 @@ export const createMenu = async (projectId: number, menuName: string) => {
 // 메뉴 이름 수정
 export const editMenu = async (menuId: number, updatemenuName: string) => {
   try {
-    const res: AxiosResponse<MenuInfo> = await instance.patch(`/menus/${menuId}/menuname`, {
-      updatemenuName: updatemenuName,
-    });
+    const res: AxiosResponse<MenuInfo | FailMenu> = await instance.patch(
+      `/menus/${menuId}/menuname`,
+      {
+        updatemenuName: updatemenuName,
+      }
+    );
 
     return res.data;
   } catch (error) {
