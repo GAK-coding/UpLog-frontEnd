@@ -75,6 +75,7 @@ export default function MenuSlider({ product, project, menuTitle }: Props) {
   // menu create
   const { mutate: createMenuMutate } = useMutation(() => createMenu(projectId, createMenuName), {
     onMutate: async () => {
+      console.log('요청', menuList);
       // optimistic update를 덮어쓰지 않기 위해 쿼리를 수동으로 삭제
       await queryClient.cancelQueries(['menuList']);
 
@@ -82,7 +83,12 @@ export default function MenuSlider({ product, project, menuTitle }: Props) {
       const previousData = queryClient.getQueryData(['menuList']);
 
       // 새로운 값으로 optimistic ui 적용
-      queryClient.setQueryData(['menuList'], menuList);
+      queryClient.setQueryData(['menuList'], {
+        id: Math.max(...menuList.map((menu) => menu.id)) + 1,
+        menuName: createMenuName,
+        projectId: projectId,
+        version: '1.0.0',
+      });
 
       // 에러가 난다면 원래것으로 설정
       return () => queryClient.setQueryData(['menuList'], previousData);
@@ -109,10 +115,39 @@ export default function MenuSlider({ product, project, menuTitle }: Props) {
 
   // menu edit
   const { mutate: editMenuMutate } = useMutation(() => editMenu(menuId, editMenuName), {
+    onMutate: async () => {
+      // optimistic update를 덮어쓰지 않기 위해 쿼리를 수동으로 삭제
+      await queryClient.cancelQueries(['menuList']);
+
+      // 이전 값 저장
+      const previousData = queryClient.getQueryData(['menuList']);
+
+      // 새로운 값으로 optimistic ui 적용
+      queryClient.setQueryData(
+        ['menuEdit'],
+        menuList.map((menu) => (menu.id === menuId ? { ...menu, menuName: editMenuName } : menu))
+      );
+
+      // 에러가 난다면 원래것으로 설정
+      return () => queryClient.setQueryData(['menuList'], previousData);
+    },
     onSuccess: (data) => {
       if (typeof data !== 'string' && 'menuName' in data) {
         showMessage('success', '메뉴 이름이 변경되었습니다.');
       }
+    },
+    onError: (error, value, rollback) => {
+      // rollback은 onMutate의 return값
+      if (rollback) {
+        rollback();
+        showMessage('error', '메뉴 변경에 실패했습니다.');
+      } else {
+        showMessage('error', '메뉴 변경에  실패했습니다.');
+      }
+    },
+    onSettled: () => {
+      // success or error, invalidate해서 새로 받아옴
+      return queryClient.invalidateQueries(['menuList']);
     },
   });
 
@@ -152,8 +187,11 @@ export default function MenuSlider({ product, project, menuTitle }: Props) {
       );
 
       setMenuList(updatedMenuList);
+
       // 바뀐 menuName에 맞게 주소값도 다시 설정
       navigate(`/workspace/${product}/${project}/menu/${nextValue}`);
+      // menu edit api 요청
+      editMenuMutate();
     },
     [menuList, setMenuList]
   );
@@ -179,6 +217,7 @@ export default function MenuSlider({ product, project, menuTitle }: Props) {
 
         setCreateMenuName(nextValue);
         setMenuList(updatedMenuList);
+        console.log('변경함', menuList);
         setPlusMenu(false);
 
         // create post api 요청
