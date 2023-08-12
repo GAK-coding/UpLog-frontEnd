@@ -124,7 +124,7 @@ export default function MenuSlider({ product, project, menuTitle }: Props) {
 
       // 새로운 값으로 optimistic ui 적용
       queryClient.setQueryData(
-        ['menuEdit'],
+        ['menuList'],
         menuList.map((menu) => (menu.id === menuId ? { ...menu, menuName: editMenuName } : menu))
       );
 
