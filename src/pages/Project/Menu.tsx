@@ -3,20 +3,28 @@ import { BsChevronCompactUp } from 'react-icons/bs';
 import MenuSlider from '@/components/Project/Menu/MenuSlider.tsx';
 import TaskMain from '@/components/Project/Task/TaskMain.tsx';
 import PostMain from '@/components/Project/Post/PostMain.tsx';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { BiPencil } from 'react-icons/bi';
 import { useDisclosure } from '@chakra-ui/react';
 import PostModal from '@/components/Project/Post/PostModal.tsx';
 import { postMain } from '@/recoil/Project/Post.ts';
+import { useEffect } from 'react';
+import { menuListData } from '@/recoil/Project/Menu.ts';
 
 export default function Menu() {
   const { product, project, menutitle } = useParams();
   const navigate = useNavigate();
-
+  const menuList = useRecoilValue(menuListData);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   // post, task 구분
   const [isPost, setIsPost] = useRecoilState(postMain);
+
+  // 존재하지 않는 메뉴 페이지로 이동하면 결과물 페이지로 이동하게 수정
+  useEffect(() => {
+    if (menutitle === undefined || !menuList.some((menu) => menu.menuName === menutitle))
+      navigate(`/workspace/${product}/${project}/menu/결과물`);
+  }, [product, project, menutitle]);
 
   return (
     <section className={'flex-col-center justify-start w-full h-full'}>
@@ -38,7 +46,7 @@ export default function Menu() {
           {/*메뉴 list*/}
           <div className={'flex-row-center w-full h-[5rem] border-b border-gray-border '}>
             <div className={'w-full min-w-[70rem] h-full items-center justify-center'}>
-              <MenuSlider product={product!} project={project!} menuTitle={menutitle!} />
+              <MenuSlider product={product!} project={project!} menutitle={menutitle!} />
             </div>
           </div>
           {menutitle !== undefined ? (
