@@ -22,7 +22,6 @@ export const createMenu = async (projectId: number, menuName: string) => {
 
     return res.data;
   } catch (error) {
-    console.log(error);
     return 'create menu fail';
   }
 };

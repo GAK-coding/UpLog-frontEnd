@@ -28,32 +28,33 @@ export default function DeleteMenuDialog({ isOpen, onClose, menu, menuId }: Prop
   const cancelRef = useRef<HTMLButtonElement>(null);
   const [menuList, setMenuList] = useRecoilState(menuListData);
   const queryClient = useQueryClient();
+  const projectId = 9;
 
-  // TODO : Delete 잘 되는지 확인하기
   // menu delete
   const { mutate: deleteMenuMutate } = useMutation(() => deleteMenu(menuId), {
     onMutate: async () => {
       // optimistic update를 덮어쓰지 않기 위해 쿼리를 수동으로 삭제
-      await queryClient.cancelQueries(['menuList']);
+      await queryClient.cancelQueries(['menuList', projectId]);
 
       // 이전 값 저장
-      const previousData = queryClient.getQueryData(['menuList']);
+      const previousData = queryClient.getQueryData(['menuList', projectId]);
 
       // 새로운 값으로 optimistic ui 적용
       queryClient.setQueryData(
-        ['menuList'],
-        menuList.filter((eachMenu) => eachMenu.menuName !== menu)
+        ['menuList', projectId],
+        menuList.filter((eachMenu) => eachMenu.id !== menuId)
       );
 
       // 에러가 난다면 원래것으로 설정
-      return () => queryClient.setQueryData(['menuList'], previousData);
+      return () => queryClient.setQueryData(['menuList', projectId], previousData);
     },
     onSuccess: (data) => {
       if (data === 'delete menu fail') {
         showMessage('error', '메뉴 삭제에 실패했습니다.');
-      } else if (data === 'OK') {
+        setTimeout(() => onClose(), 1000);
+      } else if (data === 'delete') {
         showMessage('success', '해당 메뉴가 삭제되었습니다.');
-        setTimeout(() => onClose(), 2000);
+        setTimeout(() => onClose(), 1000);
       }
     },
     onError: (error, value, rollback) => {
@@ -75,7 +76,6 @@ export default function DeleteMenuDialog({ isOpen, onClose, menu, menuId }: Prop
     const updatedMenuList = menuList.filter((eachMenu) => eachMenu.menuName !== menu);
     setMenuList(updatedMenuList);
 
-    // TODO : deleteMenuMutate
     deleteMenuMutate();
     navigate(`/workspace/${product}/${project}/menu/결과물`);
   }, [menuList, setMenuList, menu]);
