@@ -41,6 +41,7 @@ export default function CreateTask({ isOpen, onClose }: Props) {
     targetMemberId: 2,
     taskDetail: '',
   });
+  const menuId = 56;
 
   const taskPeriod: SelectMenu[] = [
     { value: '7', label: '1주' },
@@ -84,18 +85,18 @@ export default function CreateTask({ isOpen, onClose }: Props) {
   const { mutate: createTaskMutate } = useMutation((newTask: TaskBody) => createTask(newTask), {
     onMutate: async (newData: TaskBody) => {
       // optimistic update를 덮어쓰지 않기 위해 쿼리를 수동으로 삭제
-      await queryClient.cancelQueries(['getMenuTaskList', newTask.menuId]);
+      await queryClient.cancelQueries(['getMenuTaskList', menuId]);
 
       // 이전 쿼리 데이터를 가져옴
       const previousTaskList: TaskData[] | undefined = queryClient.getQueryData([
         'getMenuTaskList',
-        newTask.menuId,
+        menuId,
       ]);
 
       // 새로운 task를 추가한 데이터를 쿼리에 추가
-      queryClient.setQueryData(['getMenuTaskList', newTask.menuId], newData);
+      queryClient.setQueryData(['getMenuTaskList', menuId], newData);
 
-      return () => queryClient.setQueryData(['getMenuTaskList', newTask.menuId], previousTaskList);
+      return () => queryClient.setQueryData(['getMenuTaskList', menuId], previousTaskList);
     },
     onSuccess: (data) => {
       if (typeof data === 'object' && 'message' in data) {
@@ -118,7 +119,7 @@ export default function CreateTask({ isOpen, onClose }: Props) {
     },
     onSettled: () => {
       // success or error, invalidate해서 새로 받아옴
-      return queryClient.invalidateQueries(['getMenuTaskList', newTask.menuId]);
+      return queryClient.invalidateQueries(['getMenuTaskList', menuId]);
     },
   });
 
