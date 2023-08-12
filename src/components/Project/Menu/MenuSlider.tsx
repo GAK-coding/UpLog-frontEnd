@@ -68,37 +68,13 @@ export default function MenuSlider({ product, project, menutitle }: Props) {
   const { mutate: createMenuMutate } = useMutation(
     (nextValue: string) => createMenu(projectId, nextValue),
     {
-      // onMutate: async () => {
-      //   console.log('요청', menuList);
-      //   // optimistic update를 덮어쓰지 않기 위해 쿼리를 수동으로 삭제
-      //   await queryClient.cancelQueries(['menuList', projectId]);
-      //
-      //   // 이전 값 저장
-      //   const previousData: MenuInfo[] | undefined = queryClient.getQueryData([
-      //     'menuList',
-      //     projectId,
-      //   ]);
-      //   const addData = menuList[menuList.length - 1];
-      //   // 새로운 값으로 optimistic ui 적용
-      //   queryClient.setQueryData(['menuList', projectId], { menuList });
-      //
-      //   // 에러가 난다면 원래것으로 설정
-      //   return () => queryClient.setQueryData(['menuList', projectId], previousData);
-      // },
       onSuccess: (data) => {
         if (typeof data === 'object' && 'menuName' in data) {
           showMessage('success', '메뉴가 생성되었습니다.');
+        } else {
+          showMessage('error', '메뉴 생성에 실패했습니다.');
         }
       },
-      // onError: (error, value, rollback) => {
-      //   // rollback은 onMutate의 return값
-      //   if (rollback) {
-      //     rollback();
-      //     showMessage('error', '메뉴 생성에 실패했습니다.');
-      //   } else {
-      //     showMessage('error', '메뉴 생성에 실패했습니다.');
-      //   }
-      // },
       onSettled: () => {
         // success or error, invalidate해서 새로 받아옴
         return queryClient.invalidateQueries(['menuList', projectId]);
@@ -204,15 +180,6 @@ export default function MenuSlider({ product, project, menutitle }: Props) {
 
       // 값을 입력했으면 새로운 값으로 메뉴 list에 추가
       if (editMenuName !== '') {
-        // const newMenu: MenuInfo = {
-        //   id: Math.max(...menuList.map((menu) => menu.id)) + 1,
-        //   menuName: nextValue,
-        //   projectId: 1,
-        //   version: '1.0.0',
-        // };
-        // const updatedMenuList = [...menuList, newMenu];
-        // console.log(nextValue);
-        // setMenuList(updatedMenuList);
         setPlusMenu(false);
 
         // create post api 요청
@@ -225,8 +192,6 @@ export default function MenuSlider({ product, project, menutitle }: Props) {
   useEffect(() => {
     if (getMenuList.data !== undefined) {
       if (typeof getMenuList.data !== 'string') {
-        console.log('성공함');
-        console.log(getMenuList.data, menuList);
         setMenuList(getMenuList.data);
       }
     }
@@ -254,31 +219,29 @@ export default function MenuSlider({ product, project, menutitle }: Props) {
   return (
     <StyledSlider {...settings} className={'w-h-full text-[1.25rem] font-bold text-gray-border'}>
       {/*결과물 menu (defult)*/}
-      {/*{menuList.length !== 0 && (*/}
-      {/*  <NavLink*/}
-      {/*    to={`/workspace/${product}/${project}/menu/결과물`}*/}
-      {/*    className={({ isActive }) =>*/}
-      {/*      `flex-row-center justify-start  m-auto h-[5rem] w-1/5 border-r border-gray-border ${*/}
-      {/*        isActive && 'bg-orange text-black'*/}
-      {/*      }`*/}
-      {/*    }*/}
-      {/*  >*/}
-      {/*    <span className={'flex-row-center h-full w-full'}>*/}
-      {/*      {menuList[0].menuName}*/}
-      {/*      {contextHolder}*/}
-      {/*    </span>*/}
-      {/*    <DeleteMenuDialog*/}
-      {/*      isOpen={isOpen}*/}
-      {/*      onClose={onClose}*/}
-      {/*      menu={deleteMenuName}*/}
-      {/*      menuId={menuId}*/}
-      {/*    />*/}
-      {/*  </NavLink>*/}
-      {/*)}*/}
-
-      {contextHolder}
+      {menuList.length !== 0 && (
+        <NavLink
+          to={`/workspace/${product}/${project}/menu/결과물`}
+          className={({ isActive }) =>
+            `flex-row-center justify-start  m-auto h-[5rem] w-1/5 border-r border-gray-border ${
+              isActive && 'bg-orange text-black'
+            }`
+          }
+        >
+          <span className={'flex-row-center h-full w-full'}>
+            {menuList[0].menuName}
+            {contextHolder}
+          </span>
+          <DeleteMenuDialog
+            isOpen={isOpen}
+            onClose={onClose}
+            menu={deleteMenuName}
+            menuId={menuId}
+          />
+        </NavLink>
+      )}
       {menuList.length !== 0 &&
-        menuList.map((menu) => (
+        menuList.slice(1).map((menu) => (
           <NavLink
             to={`/workspace/${product}/${project}/menu/${menu.menuName}`}
             className={({ isActive }) =>
@@ -288,12 +251,6 @@ export default function MenuSlider({ product, project, menutitle }: Props) {
             }
             key={menu.id}
           >
-            <DeleteMenuDialog
-              isOpen={isOpen}
-              onClose={onClose}
-              menu={deleteMenuName}
-              menuId={menuId}
-            />
             {menutitle === menu.menuName && (
               <IoIosClose
                 className={
