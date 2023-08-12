@@ -15,12 +15,13 @@ import { SubGroup } from '@/typings/project.ts';
 import { SelectMenu } from '@/typings/menu.ts';
 import { DatePicker, DatePickerProps, Select } from 'antd';
 import { ChangeEvent, useCallback, useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { menuListData } from '@/recoil/Project/Menu.ts';
 import { productMemberList } from '@/recoil/Product/atom.ts';
-import { TaskBody } from '@/typings/task.ts';
-import { useMutation } from 'react-query';
+import { TaskBody, TaskData } from '@/typings/task.ts';
+import { useMutation, useQueryClient } from 'react-query';
 import { createTask } from '@/api/Project/Task.ts';
+import { taskAll } from '@/recoil/Project/Task.ts';
 
 interface Props {
   isOpen: boolean;
@@ -28,6 +29,7 @@ interface Props {
 }
 export default function CreateTask({ isOpen, onClose }: Props) {
   const { showMessage, contextHolder } = useMessage();
+  const [taskList, setTaskList] = useRecoilState(taskAll);
 
   const [taskName, onChangeTaskName, setTaskName] = useInput('');
   const [newTask, setNewTask] = useState<TaskBody>({
@@ -75,6 +77,50 @@ export default function CreateTask({ isOpen, onClose }: Props) {
 
   const [parentGroup, setParentGroup] = useState(cGroup[pGroup[0] as ChildGroup]);
   const [childGroup, setChildGroup] = useState(cGroup[pGroup[0] as ChildGroup][0]);
+
+  const queryClient = useQueryClient();
+
+  // task 생성 api
+  const { mutate: createTaskMutate } = useMutation((newTask: TaskBody) => createTask(newTask), {
+    onMutate: async (newData: TaskBody) => {
+      // optimistic update를 덮어쓰지 않기 위해 쿼리를 수동으로 삭제
+      await queryClient.cancelQueries(['getMenuTaskList', newTask.menuId]);
+
+      // 이전 쿼리 데이터를 가져옴
+      const previousTaskList: TaskData[] | undefined = queryClient.getQueryData([
+        'getMenuTaskList',
+        newTask.menuId,
+      ]);
+
+      // 새로운 task를 추가한 데이터를 쿼리에 추가
+      queryClient.setQueryData(['getMenuTaskList', newTask.menuId], newData);
+
+      return () => queryClient.setQueryData(['getMenuTaskList', newTask.menuId], previousTaskList);
+    },
+    onSuccess: (data) => {
+      if (typeof data === 'object' && 'message' in data) {
+        showMessage('error', data.message);
+      } else if (data === 'create task fail') {
+        showMessage('error', 'Task 생성에 실패했습니다.');
+      } else {
+        showMessage('success', 'Task가 생성되었습니다.');
+        setTimeout(() => onClose(), 2000);
+      }
+    },
+    onError: (error, value, rollback) => {
+      // rollback은 onMutate의 return값
+      if (rollback) {
+        rollback();
+        showMessage('error', 'Task 생성에 실패했습니다.');
+      } else {
+        showMessage('error', 'Task 생성에 실패했습니다.');
+      }
+    },
+    onSettled: () => {
+      // success or error, invalidate해서 새로 받아옴
+      return queryClient.invalidateQueries(['getMenuTaskList', newTask.menuId]);
+    },
+  });
 
   // task 사용자 입력값으로 지정 (select인 경우)
   const handleChange = (type: string) => (value: { value: string; label: React.ReactNode }) => {
@@ -131,20 +177,6 @@ export default function CreateTask({ isOpen, onClose }: Props) {
     }
     console.log(newTask);
   };
-
-  // task 생성 api
-  const { mutate: createTaskMutate } = useMutation(() => createTask(newTask), {
-    onSuccess: (data) => {
-      if (typeof data === 'object' && 'message' in data) {
-        showMessage('error', data.message);
-      } else if (data === 'create task fail') {
-        showMessage('error', 'Task 생성에 실패했습니다.');
-      } else {
-        showMessage('success', 'Task가 생성되었습니다.');
-        setTimeout(() => onClose(), 2000);
-      }
-    },
-  });
 
   // TODO : TeamId 값 group id 값으로 바꾸기
   // 상위그룹 select 선택 값
@@ -239,7 +271,7 @@ export default function CreateTask({ isOpen, onClose }: Props) {
     //   return;
     // }
 
-    createTaskMutate();
+    createTaskMutate(newTask);
   }, [newTask]);
 
   // task 이름 newTask에 저장
@@ -250,7 +282,7 @@ export default function CreateTask({ isOpen, onClose }: Props) {
     };
 
     setNewTask(updatedTask);
-    console.log(newTask);
+    // console.log(newTask);
   }, [taskName]);
 
   // 선택한 그룹 값 바뀔때마다 타겟 멤버 id 초기화
@@ -261,7 +293,7 @@ export default function CreateTask({ isOpen, onClose }: Props) {
     };
 
     setNewTask(updatedTask);
-    console.log('멤버 다시', newTask);
+    // console.log('멤버 다시', newTask);
     // handleChange('targetMemberId')({ value: '-1', label: '할당자 선택' });
   }, [newTask.teamId]);
 
@@ -279,7 +311,7 @@ export default function CreateTask({ isOpen, onClose }: Props) {
     setIsCustom(true);
     setTaskName('');
     setIsGroup(false);
-    console.log(newTask);
+    // console.log(newTask);
   }, [isOpen]);
 
   return (
