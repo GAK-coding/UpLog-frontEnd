@@ -16,7 +16,9 @@ export const projectMenuList = async (projectId: number) => {
 // 메뉴 생성
 export const createMenu = async (projectId: number, menuName: string) => {
   try {
-    const res: AxiosResponse<MenuInfo> = await instance.post(`/menus/${projectId}`, menuName);
+    const res: AxiosResponse<MenuInfo> = await instance.post(`/menus/${projectId}`, {
+      menuName: menuName,
+    });
 
     return res.data;
   } catch (error) {
@@ -28,10 +30,9 @@ export const createMenu = async (projectId: number, menuName: string) => {
 // 메뉴 이름 수정
 export const editMenu = async (menuId: number, updatemenuName: string) => {
   try {
-    const res: AxiosResponse<MenuInfo> = await instance.patch(
-      `/menus/${menuId}/menuname`,
-      updatemenuName
-    );
+    const res: AxiosResponse<MenuInfo> = await instance.patch(`/menus/${menuId}/menuname`, {
+      updatemenuName: updatemenuName,
+    });
 
     return res.data;
   } catch (error) {

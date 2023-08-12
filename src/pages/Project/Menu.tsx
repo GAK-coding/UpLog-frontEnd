@@ -46,7 +46,7 @@ export default function Menu() {
           {/*메뉴 list*/}
           <div className={'flex-row-center w-full h-[5rem] border-b border-gray-border '}>
             <div className={'w-full min-w-[70rem] h-full items-center justify-center'}>
-              <MenuSlider product={product!} project={project!} menuTitle={menutitle!} />
+              <MenuSlider product={product!} project={project!} menutitle={menutitle!} />
             </div>
           </div>
           {menutitle !== undefined ? (
