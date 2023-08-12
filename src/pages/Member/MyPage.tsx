@@ -21,7 +21,11 @@ export default function MyPage() {
   const [newNickname, onChangeNewNickname, setNewNickname] = useInput('');
   const { showMessage, contextHolder } = useMessage();
 
-  const { mutate: nameChangeMutate } = useMutation(changeName);
+  const { mutate: nameChangeMutate } = useMutation(changeName, {
+    onError: () => {
+      showMessage('error', '이름 변경 실패!');
+    },
+  });
   const { mutate: nicknameChangeMutate } = useMutation(changeNickname);
 
   const onChangeProfile = useCallback(async () => {
@@ -34,7 +38,7 @@ export default function MyPage() {
       await nameChangeMutate({ id: userInfo.id, newName });
       setTimeout(() => {
         nicknameChangeMutate({ id: userInfo.id, newNickname });
-      }, 1);
+      }, 1000);
 
       setUserInfo({ ...userInfo, nickname: newNickname, name: newName });
       sessionStorage.setItem(
@@ -209,7 +213,12 @@ export default function MyPage() {
         </div>
       </article>
 
-      <UserManageModal isOpen={isOpen} onClose={onClose} isClickPwChange={isClickPwChange} />
+      <UserManageModal
+        isOpen={isOpen}
+        onClose={onClose}
+        isClickPwChange={isClickPwChange}
+        showMessage={showMessage}
+      />
     </section>
   );
 }

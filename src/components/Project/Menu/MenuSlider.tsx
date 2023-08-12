@@ -1,17 +1,19 @@
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Slider from 'react-slick';
-import { MenuInfo } from '@/typings/project.ts';
+import { MenuInfo } from '@/typings/menu.ts';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { IoIosArrowBack, IoIosArrowForward, IoIosClose } from 'react-icons/io';
 import styled from '@emotion/styled';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { Editable, EditableInput, EditablePreview, useDisclosure } from '@chakra-ui/react';
 import { useRecoilState } from 'recoil';
-import { menuListData } from '@/recoil/Project/Task.ts';
+import { menuListData } from '@/recoil/Project/Menu.ts';
 import { useCallback, useState } from 'react';
 import { useMessage } from '@/hooks/useMessage.ts';
 import DeleteMenuDialog from '@/components/Project/Menu/DeleteMenuDialog.tsx';
+import { useMutation, useQuery } from 'react-query';
+import { createMenu, editMenu, projectMenuList } from '@/api/Project/Menu.ts';
 
 interface Props {
   product: string;
@@ -42,30 +44,72 @@ export default function MenuSlider({ product, project, menuTitle }: Props) {
   const [menuList, setMenuList] = useRecoilState(menuListData);
   const [plusMenu, setPlusMenu] = useState(false);
   const navigate = useNavigate();
-  const [deleteMenu, setDeleteMenu] = useState('name');
-  const [editMenu, setEditMenu] = useState('menuName');
+  const [createMenuName, setCreateMenuName] = useState('');
+  const [deleteMenuName, setDeleteMenuName] = useState('menuName');
+  const [editMenuName, setEditMenuName] = useState('menuName');
+  const [menuId, setMenuId] = useState(0);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  // TODO : 현재 project id 값으로 바꾸기
+  const projectId = 1;
+
+  // menuList get
+  const getMenuList = useQuery(['menuList', project], () => projectMenuList(projectId), {
+    staleTime: 60000, // 10분
+    cacheTime: 80000,
+    refetchOnMount: false, // 마운트(리렌더링)될 때 데이터를 다시 가져오지 않음
+    refetchOnWindowFocus: false, // 브라우저를 포커싱했을때 데이터를 가져오지 않음
+    refetchOnReconnect: false, // 네트워크가 다시 연결되었을때 다시 가져오지 않음
+  });
+
+  if (getMenuList.isSuccess) {
+    if (typeof getMenuList.data !== 'string' && 'id' in getMenuList.data) {
+      const menuList: MenuInfo[] = getMenuList.data;
+      setMenuList(menuList);
+    }
+  }
+
+  // menu create
+  const { mutate: createMenuMutate } = useMutation(() => createMenu(projectId, createMenuName), {
+    onSuccess: (data) => {
+      if (typeof data !== 'string' && 'menuName' in data) {
+        showMessage('success', '메뉴가 생성되었습니다.');
+      }
+    },
+  });
+
+  // menu edit
+  const { mutate: editMenuMutate } = useMutation(() => editMenu(menuId, editMenuName), {
+    onSuccess: (data) => {
+      if (typeof data !== 'string' && 'menuName' in data) {
+        showMessage('success', '메뉴 이름이 변경되었습니다.');
+      }
+    },
+  });
+
+  // 메뉴 이름 수정 onChange
   const onChangeMenuName = useCallback(
     (menuId: number) => (nextValue: string) => {
       const updatedMenuList = menuList.map((menu) =>
-        menu.id === menuId ? { ...menu, name: nextValue } : menu
+        menu.id === menuId ? { ...menu, menuName: nextValue } : menu
       );
 
       setMenuList(updatedMenuList);
-      setEditMenu(nextValue);
+      setEditMenuName(nextValue);
+      setMenuId(menuId);
     },
-    [editMenu]
+    [editMenuName]
   );
 
+  // 메뉴 이름 수정 완료 onSubmit
   const onSubmitMenuName = useCallback(
     (menuId: number) => (nextValue: string) => {
       // 빈 문자열인 경우
-      if (editMenu === '') {
+      if (editMenuName === '') {
         showMessage('warning', '메뉴 이름을 입력해주세요.');
         const updatedMenuList = menuList.map((menu) =>
-          menu.id === menuId ? { ...menu, name: `menu ${menu.id}` } : menu
+          menu.id === menuId ? { ...menu, menuName: `menu ${menu.id}` } : menu
         );
 
         setMenuList(updatedMenuList);
@@ -76,11 +120,11 @@ export default function MenuSlider({ product, project, menuTitle }: Props) {
 
       // 변경된 값의 menu id랑 같은 menu 값을 찾기
       const updatedMenuList = menuList.map((menu) =>
-        menu.id === menuId ? { ...menu, name: nextValue } : menu
+        menu.id === menuId ? { ...menu, menuName: nextValue } : menu
       );
 
       setMenuList(updatedMenuList);
-      // 바뀐 name에 맞게 주소값도 다시 설정
+      // 바뀐 menuName에 맞게 주소값도 다시 설정
       navigate(`/workspace/${product}/${project}/menu/${nextValue}`);
     },
     [menuList, setMenuList]
@@ -96,18 +140,21 @@ export default function MenuSlider({ product, project, menuTitle }: Props) {
       }
 
       // 값을 입력했으면 새로운 값으로 메뉴 list에 추가
-      if (editMenu !== '') {
+      if (editMenuName !== '') {
         const newMenu: MenuInfo = {
           id: Math.max(...menuList.map((menu) => menu.id)) + 1,
-          name: nextValue,
+          menuName: nextValue,
+          projectId: 1,
+          version: '1.0.0',
         };
         const updatedMenuList = [...menuList, newMenu];
 
+        setCreateMenuName(nextValue);
         setMenuList(updatedMenuList);
         setPlusMenu(false);
       }
     },
-    [menuList, editMenu]
+    [menuList, editMenuName]
   );
 
   // slide settings 커스텀
@@ -141,30 +188,31 @@ export default function MenuSlider({ product, project, menuTitle }: Props) {
         }
       >
         <span className={'flex-row-center h-full w-full'}>
-          {menuList[0].name}
+          {menuList[0].menuName}
           {contextHolder}
         </span>
-        <DeleteMenuDialog isOpen={isOpen} onClose={onClose} menu={deleteMenu} />
+        <DeleteMenuDialog isOpen={isOpen} onClose={onClose} menu={deleteMenuName} menuId={menuId} />
       </NavLink>
 
       {/*menuList 데이터*/}
-      {menuList.slice(1).map((menu, index) => (
+      {menuList.slice(1).map((menu) => (
         <NavLink
-          to={`/workspace/${product}/${project}/menu/${menu.name}`}
+          to={`/workspace/${product}/${project}/menu/${menu.menuName}`}
           className={({ isActive }) =>
             `flex items-center justify-start self-start m-auto h-[5rem] w-1/5 relative border-r border-gray-border ${
               isActive && 'bg-orange text-black'
             }`
           }
-          key={index}
+          key={menu.id}
         >
-          {menuTitle === menu.name && (
+          {menuTitle === menu.menuName && (
             <IoIosClose
               className={
                 'absolute right-2 top-0.5 text-transparent text-[2rem] hover:text-gray-dark'
               }
               onClick={() => {
-                setDeleteMenu(menu.name);
+                setDeleteMenuName(menu.menuName);
+                setMenuId(menu.id);
                 onOpen();
               }}
             />
@@ -172,8 +220,8 @@ export default function MenuSlider({ product, project, menuTitle }: Props) {
           <span className={'flex-row-center h-full w-full'}>
             {/*클릭해서 값 변경*/}
             <Editable
-              value={menu.name}
-              placeholder={menu.name}
+              value={menu.menuName}
+              placeholder={menu.menuName}
               onChange={onChangeMenuName(menu.id)}
               onSubmit={onSubmitMenuName(menu.id)}
             >

@@ -4,8 +4,35 @@ export interface ProductInfo {
   name: string;
   image?: string;
   // TODO : master, client type user info로 변경하기
-  master: string;
+  masterEmail: string;
   client: string;
+}
+
+export interface ProductBody extends Omit<ProductInfo, 'draggableId' | 'id' | 'client'> {
+  link: string;
+}
+export interface FailProduct {
+  httpStatus: 'NOT_FOUND' | 'FORBIDDEN';
+  message: '해당 이메일로 존재하는 객체를 찾을 수 없습니다.' | '제품 생성 권한이 없습니다.';
+}
+
+export interface ProductData {
+  id: number;
+  name: string;
+  company: string;
+  teamId: number;
+  projectListId: number[];
+}
+
+export interface ProductEditBody {
+  link: string | null;
+  newName: string | null;
+  memberEmailList: string[] | null;
+  powerType: string | null;
+}
+
+export interface ProductEditData {
+  memberPowerListDTO: { poductId: number; productName: 'newProductName1' };
 }
 
 // ReleaseNote.tsx에서 사용

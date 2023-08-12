@@ -8,26 +8,45 @@ import {
   Button,
 } from '@chakra-ui/react';
 import { useCallback, useRef } from 'react';
-import { menuListData } from '@/recoil/Project/Task.ts';
+import { menuListData } from '@/recoil/Project/Menu.ts';
 import { useRecoilState } from 'recoil';
 import { useNavigate, useParams } from 'react-router-dom';
+import { deleteMenu } from '@/api/Project/Menu.ts';
+import { useMutation } from 'react-query';
+import { useMessage } from '@/hooks/useMessage.ts';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
   menu: string;
+  menuId: number;
 }
-export default function DeleteMenuDialog({ isOpen, onClose, menu }: Props) {
+export default function DeleteMenuDialog({ isOpen, onClose, menu, menuId }: Props) {
   const { product, project } = useParams();
   const navigate = useNavigate();
+  const { showMessage, contextHolder } = useMessage();
   const cancelRef = useRef<HTMLButtonElement>(null);
   const [menuList, setMenuList] = useRecoilState(menuListData);
 
-  const onClickDelete = useCallback(() => {
-    const updatedMenuList = menuList.filter((eachMenu) => eachMenu.name !== menu);
-    setMenuList(updatedMenuList);
-    onClose();
+  // TODO : Delete 잘 되는지 확인하기
+  // menu delete
+  const { mutate: deleteMenuMutate } = useMutation(() => deleteMenu(menuId), {
+    onSuccess: (data) => {
+      if (data === 'delete menu fail') {
+        showMessage('error', '메뉴 삭제에 실패했습니다.');
+      } else if (data === 'OK') {
+        showMessage('success', '해당 메뉴가 삭제되었습니다.');
+        setTimeout(() => onClose(), 2000);
+      }
+    },
+  });
 
+  const onClickDelete = useCallback(() => {
+    const updatedMenuList = menuList.filter((eachMenu) => eachMenu.menuName !== menu);
+    setMenuList(updatedMenuList);
+
+    // TODO : deleteMenuMutate
+    deleteMenuMutate();
     navigate(`/workspace/${product}/${project}/menu/결과물`);
   }, [menuList, setMenuList, menu]);
 

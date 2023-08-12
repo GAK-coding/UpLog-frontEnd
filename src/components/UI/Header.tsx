@@ -77,16 +77,16 @@ export default function Header() {
   }, [pathname]);
 
   // TODO : 최종 발표전에 풀어놓기
-  // useEffect(() => {
-  //   const nowLogin = !!sessionStorage.getItem('userInfo');
-  //   setIsLogin(nowLogin);
-  //
-  //   if (pathname === '/login' || pathname === '/signup') return;
-  //
-  //   if (!nowLogin) {
-  //     navigate('/', { replace: true });
-  //   }
-  // }, [isLogin]);
+  useEffect(() => {
+    const nowLogin = !!sessionStorage.getItem('userInfo');
+    setIsLogin(nowLogin);
+
+    if (pathname === '/login' || pathname === '/signup') return;
+
+    if (!nowLogin) {
+      navigate('/', { replace: true });
+    }
+  }, [isLogin]);
 
   return (
     <header

@@ -9,29 +9,105 @@ import {
   ModalOverlay,
 } from '@chakra-ui/react';
 import useInput from '@/hooks/useInput.ts';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useMessage } from '@/hooks/useMessage.ts';
 import ImageCrop from '@/components/Member/MyPage/ImageCrop.tsx';
 import { UploadFile, UploadProps } from 'antd/lib';
 import { RcFile } from 'antd/es/upload';
 import { FiUpload } from 'react-icons/fi';
+import { useMutation, useQuery } from 'react-query';
+import { createProduct, eachProduct, productEdit } from '@/api/Product/Product.ts';
+import { ProductBody, ProductEditBody } from '@/typings/product.ts';
+import { SaveUserInfo } from '@/typings/member.ts';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
   isCreateProduct: boolean;
+  productId: number;
 }
 
-export default function ProductInfoModal({ isOpen, onClose, isCreateProduct }: Props) {
-  const [productName, onChangeProductName] = useInput('');
-  const [masterEmail, onChangeMasterEmail] = useInput('');
-  const [clientEmail, onChangeClientEmail] = useInput('');
+export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, productId }: Props) {
+  const [productName, onChangeProductName, setProductName] = useInput('');
+  const [masterEmail, onChangeMasterEmail, setMasterEmail] = useInput('');
+  const [clientEmail, onChangeClientEmail, setClientEmail] = useInput('');
   const { showMessage, contextHolder } = useMessage();
+
+  const userInfo: SaveUserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
+
+  // TODO : 링크 임베딩 된 링크로 다시 보내기
+  const productInfo: ProductBody = {
+    name: productName,
+    masterEmail: masterEmail,
+    link: 'www.naver.com',
+  };
+
+  const updateProductInfo: ProductEditBody = {
+    link: null,
+    newName: productName,
+    memberEmailList: [],
+    powerType: null,
+  };
 
   // 제품 이미지 업로드
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [imageSrc, setImageSrc] = useState('');
 
+  // 제품 생성
+  const { mutate: createProductMutate } = useMutation(
+    () => createProduct(productInfo, userInfo.id),
+    {
+      onSuccess: (data) => {
+        if (data === 'create product fail') {
+          showMessage('error', '중복된 제품 이름입니다.');
+          return;
+        } else {
+          if (typeof data === 'object' && 'message' in data) {
+            if (data.httpStatus === 'NOT_FOUND')
+              showMessage('warning', '마스터 정보가 올바르지 않습니다.');
+            else showMessage('error', '제품 생성 권한이 없습니다.');
+          } else {
+            showMessage('success', '제품이 생성되었습니다.');
+            setTimeout(() => onClose(), 2000);
+          }
+        }
+      },
+    }
+  );
+
+  // TODO : staleTime 확인 필요
+  // 제품 정보 조회
+  const { refetch, data: productGetData } = useQuery(
+    ['getProjectInfo'],
+    () => eachProduct(productId),
+    {
+      onSuccess: (data) => {
+        if (typeof data === 'object' && 'message' in data) {
+          showMessage('error', '제품 정보를 불러오는데 실패했습니다.');
+        } else if (typeof data !== 'string' && 'name' in data) {
+          setProductName(data.name);
+        }
+      },
+      enabled: false,
+      staleTime: 6000, // 1분
+      cacheTime: 8000, // 1분 20초
+      refetchOnMount: false, // 마운트(리렌더링)될 때 데이터를 다시 가져오지 않음
+      refetchOnWindowFocus: false, // 브라우저를 포커싱했을때 데이터를 가져오지 않음
+      refetchOnReconnect: false, // 네트워크가 다시 연결되었을때 다시 가져오지 않음
+    }
+  );
+
+  // 제품 정보 수정
+  const { mutate: updateProduct } = useMutation(() => productEdit(updateProductInfo, productId), {
+    onSuccess: (data) => {
+      if (typeof data === 'object') {
+        showMessage('success', '제품 정보가 변경되었습니다.');
+        setTimeout(() => onClose(), 2000);
+      }
+    },
+  });
+
+  // 사진 업로드
   const encodeFileToBase64 = (fileBlob: RcFile): Promise<void> => {
     const reader: FileReader = new FileReader();
     reader.readAsDataURL(fileBlob);
@@ -47,23 +123,50 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct }: P
     await setFileList(newFileList);
     if (newFileList.length > 0) await encodeFileToBase64(newFileList?.[0]?.originFileObj!);
   };
+
   // 제품 추가 완료 버튼
   const onClickMakeProduct = useCallback(() => {
+    if (!isCreateProduct) {
+      if (!productName) {
+        showMessage('warning', '제품 이름을 입력해주세요.');
+        return;
+      }
+
+      // 변경된 사항이 없으면 수정 요청 보내지 않음
+      if (typeof productGetData === 'object' && productGetData !== null) {
+        if ('name' in productGetData && productName === productGetData.name) {
+          showMessage('warning', '변경된 정보가 없습니다.');
+          return;
+        }
+      }
+
+      // 수정 요청 보냄
+      updateProduct();
+      return;
+    }
     // 필수 정보를 입력하지 않았을 때
     if (!productName || !masterEmail) {
       showMessage('warning', '필수 정보를 입력해주세요.');
-      console.log(productName, masterEmail);
       return;
     }
 
-    // TODO : 제품 정보 생성 + 이메일로 초대하기
-    onClose();
+    // 제품 생성
+    createProductMutate();
   }, [productName, masterEmail]);
 
-  // 마스터, 의뢰인 설정 시 유효한 이메일인지 확인
-  const checkEmail = useCallback(() => {
-    // TODO : 유효한 이메일인지 확인하기 (가입이 되어있는 이메일만 입력하는걸로 할지?)
-  }, [clientEmail, masterEmail]);
+  useEffect(() => {
+    // 모달창 껏다가 키면 정보 초기화
+    if (isCreateProduct) {
+      setProductName('');
+      setClientEmail('');
+      setMasterEmail('');
+    }
+
+    // 수정일 경우에 기존 post 정보로 값 채워넣기
+    else {
+      refetch();
+    }
+  }, [isOpen, isCreateProduct, productId]);
 
   return (
     <Modal isCentered onClose={onClose} isOpen={isOpen}>
@@ -165,19 +268,6 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct }: P
                         'self-center w-[20.7rem] h-9 p-4 bg-transparent text-[1rem] text-black'
                       }
                     />
-                    <span
-                      className={
-                        'self-center bg-orange rounded font-bold text-xs text-white h-7 mr-2 w-[3.5rem]'
-                      }
-                    >
-                      <button
-                        type={'button'}
-                        className={'self-center font-bold text-xs text-white h-7 mr-2 w-[3.5rem]'}
-                        onClick={checkEmail}
-                      >
-                        확인
-                      </button>
-                    </span>
                   </div>
                 </div>
               )}
@@ -199,19 +289,6 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct }: P
                       'self-center w-[20.7rem] h-9 bg-transparent p-4 text-[1rem] text-black'
                     }
                   />
-                  <span
-                    className={
-                      'self-center bg-orange rounded font-bold text-xs text-white h-7 mr-2 w-[3.5rem]'
-                    }
-                  >
-                    <button
-                      type={'button'}
-                      className={'self-center font-bold text-xs text-white h-7 mr-2 w-[3.5rem]'}
-                      onClick={checkEmail}
-                    >
-                      확인
-                    </button>
-                  </span>
                 </div>
               </div>
             </section>

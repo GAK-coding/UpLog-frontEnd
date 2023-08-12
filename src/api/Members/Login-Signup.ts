@@ -1,6 +1,7 @@
 import { EmailInfo, FailLogin, GetUserInfo, LoginInfo, SignUpInfo } from '@/typings/member.ts';
 import { instance } from '@/api';
-import { AxiosResponse } from 'axios';
+import axios, { AxiosResponse } from 'axios';
+import { CustomError } from '@/typings';
 
 export const signUp = async (data: SignUpInfo) => {
   try {
@@ -32,5 +33,19 @@ export const emailRequest = async (data: EmailInfo) => {
     return res.data.message;
   } catch (err) {
     return 'email fail';
+  }
+};
+
+interface a {
+  response: { message: string };
+}
+
+export const logout = async (data: { accessToken: string; refreshToken: string }) => {
+  try {
+    const { accessToken, refreshToken } = data;
+    await instance.post('/members/logout', { accessToken, refreshToken });
+  } catch (err) {
+    // if (axios.isAxiosError(err) && err instanceof CustomError<a>) {
+    // }
   }
 };

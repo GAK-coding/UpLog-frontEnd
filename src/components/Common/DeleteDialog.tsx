@@ -9,6 +9,9 @@ import {
 } from '@chakra-ui/react';
 import { useCallback, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useMutation } from 'react-query';
+import { deleteTask } from '@/api/Project/Task.ts';
+import { useMessage } from '@/hooks/useMessage.ts';
 
 interface Props {
   isOpen: boolean;
@@ -21,12 +24,25 @@ interface Props {
 export default function DeleteDialog({ isOpen, onClose, task, post, isTask }: Props) {
   const cancelRef = useRef<HTMLButtonElement>(null);
   const { product, project, menutitle } = useParams();
+  const { showMessage, contextHolder } = useMessage();
   const navigate = useNavigate();
 
-  console.log(isTask, post);
+  // TODO : task 삭제 성공 데이터 값 맞는지 확인 필요
+  // task 삭제 api 연결
+  const { mutate: deleteTaskMutate } = useMutation(() => deleteTask(task!), {
+    onSuccess: (data) => {
+      if (data === 'delete task fail') {
+        showMessage('error', 'Task 삭제에 실패했습니다.');
+      } else if (data === 'OK') {
+        showMessage('success', 'Task가 삭제되었습니다.');
+        setTimeout(() => onClose(), 2000);
+      }
+    },
+  });
+
   const onClickDelete = useCallback(() => {
-    // TODO : Task 삭제 api 연결
     if (isTask) {
+      deleteTaskMutate();
       console.log('task 삭제', task);
     }
 
@@ -45,6 +61,7 @@ export default function DeleteDialog({ isOpen, onClose, task, post, isTask }: Pr
       onClose={onClose}
       isCentered={true}
     >
+      {contextHolder}
       <AlertDialogOverlay>
         <AlertDialogContent maxW={'30rem'}>
           <AlertDialogHeader bgColor={'var(--white)'} color={'var(--black)'}>
