@@ -1,6 +1,6 @@
 import { GroupMember } from '@/typings/project.ts';
-import { TaskData, Tasks } from '@/typings/task.ts';
 import { atom } from 'recoil';
+import { TaskData, Tasks } from '@/typings/task.ts';
 
 export const eachTaskInfo = atom<TaskData>({
   key: 'eachTask',

@@ -36,11 +36,11 @@ export interface Tasks {
 export interface TaskBody {
   taskName: string;
   menuId: number;
-  projectTeamId: number | string;
+  teamId: number;
   taskDetail: string;
+  targetMemberId: number;
   startTime: string;
   endTime: string;
-  targetMemberId: number;
 }
 
 export interface FailTask {

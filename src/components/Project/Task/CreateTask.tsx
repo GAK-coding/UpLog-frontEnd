@@ -35,8 +35,8 @@ export default function CreateTask({ isOpen, onClose }: Props) {
     startTime: '',
     endTime: '',
     menuId: 0,
-    projectTeamId: '',
-    targetMemberId: 0,
+    teamId: 13,
+    targetMemberId: 2,
     taskDetail: '',
   });
 
@@ -136,17 +136,17 @@ export default function CreateTask({ isOpen, onClose }: Props) {
   const { mutate: createTaskMutate } = useMutation(() => createTask(newTask), {
     onSuccess: (data) => {
       if (typeof data === 'object' && 'message' in data) {
-        showMessage('error', 'Task 생성에 실패했습니다.');
+        showMessage('error', data.message);
       } else if (data === 'create task fail') {
         showMessage('error', 'Task 생성에 실패했습니다.');
-      } else if (data === 'object' && 'id' in data) {
+      } else {
         showMessage('success', 'Task가 생성되었습니다.');
         setTimeout(() => onClose(), 2000);
       }
     },
   });
 
-  // TODO : projectTeamId 값 group id 값으로 바꾸기
+  // TODO : TeamId 값 group id 값으로 바꾸기
   // 상위그룹 select 선택 값
   const handleParentGroupChange = (value: string) => {
     // 선택한 상위그룹내용으로 하위 그룹 option으로 변경
@@ -157,7 +157,7 @@ export default function CreateTask({ isOpen, onClose }: Props) {
 
     const updatedTask = {
       ...newTask,
-      projectTeamId: value,
+      teamId: +value,
     };
 
     setNewTask(updatedTask);
@@ -170,7 +170,7 @@ export default function CreateTask({ isOpen, onClose }: Props) {
 
     const updatedTask = {
       ...newTask,
-      projectTeamId: value,
+      teamId: +value,
     };
 
     setNewTask(updatedTask);
@@ -222,22 +222,23 @@ export default function CreateTask({ isOpen, onClose }: Props) {
       return;
     }
 
-    if (newTask.projectTeamId === '') {
-      showMessage('warning', '그룹을 선택해주세요.');
-      return;
-    }
+    // TODO : 그룹, 할당자 정보 가져오면 주석 다시 풀기
+    // if (newTask.teamId === 0) {
+    //   showMessage('warning', '그룹을 선택해주세요.');
+    //   return;
+    // }
 
-    if (newTask.menuId === -1) {
+    if (newTask.menuId === 0) {
       showMessage('warning', '메뉴를 선택해주세요.');
       return;
     }
 
-    if (newTask.targetMemberId === -1) {
-      showMessage('warning', '할당자를 선택해주세요.');
-      return;
-    }
+    // TODO : 그룹, 할당자 정보 가져오면 주석 다시 풀기
+    // if (newTask.targetMemberId === 0) {
+    //   showMessage('warning', '할당자를 선택해주세요.');
+    //   return;
+    // }
 
-    //TODO : Task 생성 API 연결
     createTaskMutate();
   }, [newTask]);
 
@@ -256,13 +257,13 @@ export default function CreateTask({ isOpen, onClose }: Props) {
   useEffect(() => {
     const updatedTask = {
       ...newTask,
-      targetMemberId: -1,
+      targetMemberId: 0,
     };
 
     setNewTask(updatedTask);
     console.log('멤버 다시', newTask);
     // handleChange('targetMemberId')({ value: '-1', label: '할당자 선택' });
-  }, [newTask.projectTeamId]);
+  }, [newTask.teamId]);
 
   // 모달창이 새로 열릴 때 마다 값 초기화
   useEffect(() => {
@@ -270,9 +271,9 @@ export default function CreateTask({ isOpen, onClose }: Props) {
       taskName: '',
       startTime: '',
       endTime: '',
-      menuId: -1,
-      projectTeamId: '',
-      targetMemberId: -1,
+      menuId: 0,
+      teamId: 13,
+      targetMemberId: 2,
       taskDetail: '',
     });
     setIsCustom(true);
