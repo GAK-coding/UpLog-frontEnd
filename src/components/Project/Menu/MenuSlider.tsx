@@ -13,7 +13,6 @@ import { useMessage } from '@/hooks/useMessage.ts';
 import DeleteMenuDialog from '@/components/Project/Menu/DeleteMenuDialog.tsx';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { createMenu, editMenu, projectMenuList } from '@/api/Project/Menu.ts';
-import { MenuInfo } from '@/typings/menu.ts';
 
 interface Props {
   product: string;
@@ -49,6 +48,7 @@ export default function MenuSlider({ product, project, menutitle }: Props) {
   const [menuId, setMenuId] = useState(0);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const regex = /^[a-zA-Z가-힣\s]*$/;
 
   // TODO : 현재 project id 값으로 바꾸기
   const projectId = 9;
@@ -83,48 +83,27 @@ export default function MenuSlider({ product, project, menutitle }: Props) {
   );
 
   // menu edit
-  const { mutate: editMenuMutate } = useMutation(
-    () => editMenu(menuId, editMenuName === '' ? `menu ${menuId}` : editMenuName),
-    {
-      onMutate: async () => {
-        // optimistic update를 덮어쓰지 않기 위해 쿼리를 수동으로 삭제
-        await queryClient.cancelQueries(['menuList', projectId]);
-
-        // 이전 값 저장
-        const previousData = queryClient.getQueryData(['menuList', projectId]);
-
-        // 새로운 값으로 optimistic ui 적용
-        queryClient.setQueryData(
-          ['menuList', projectId],
-          menuList.map((menu) => (menu.id === menuId ? { ...menu, menuName: editMenuName } : menu))
-        );
-        // 에러가 난다면 원래것으로 설정
-        return () => queryClient.setQueryData(['menuList', projectId], previousData);
-      },
-      onSuccess: (data) => {
-        if (typeof data !== 'string' && 'menuName' in data) {
-          showMessage('success', '메뉴 이름이 변경되었습니다.');
-        }
-      },
-      onError: (error, value, rollback) => {
-        // rollback은 onMutate의 return값
-        if (rollback) {
-          rollback();
-          showMessage('error', '메뉴 변경에 실패했습니다.');
-        } else {
-          showMessage('error', '메뉴 변경에  실패했습니다.');
-        }
-      },
-      onSettled: () => {
-        // success or error, invalidate해서 새로 받아옴
-        return queryClient.invalidateQueries(['menuList']);
-      },
-    }
-  );
+  const { mutate: editMenuMutate } = useMutation((newName: string) => editMenu(menuId, newName), {
+    onSuccess: (data) => {
+      if (typeof data !== 'string' && 'menuName' in data) {
+        showMessage('success', '메뉴 이름이 변경되었습니다.');
+      }
+    },
+    onSettled: () => {
+      // success or error, invalidate해서 새로 받아옴
+      return queryClient.invalidateQueries(['menuList']);
+    },
+  });
 
   // 메뉴 이름 수정 onChange
   const onChangeMenuName = useCallback(
     (menuId: number) => (nextValue: string) => {
+      // 특수문자는 불가
+      if (!regex.test(nextValue)) {
+        showMessage('warning', '메뉴 이름은 한글, 영문만 가능합니다.');
+        return;
+      }
+
       const updatedMenuList = menuList.map((menu) =>
         menu.id === menuId ? { ...menu, menuName: nextValue } : menu
       );
@@ -142,29 +121,17 @@ export default function MenuSlider({ product, project, menutitle }: Props) {
       // 빈 문자열인 경우
       if (editMenuName === '') {
         showMessage('warning', '메뉴 이름을 입력해주세요.');
-        const updatedMenuList = menuList.map((menu) =>
-          menu.id === menuId ? { ...menu, menuName: `menu ${menu.id}` } : menu
-        );
-
-        setMenuList(updatedMenuList);
+        // 바뀐 menuName에 맞게 주소값도 다시 설정
         navigate(`/workspace/${product}/${project}/menu/menu ${menuId}`);
         // menu edit api 요청
-        editMenuMutate();
-
+        editMenuMutate(`menu ${menuId}`);
         return;
       }
-
-      // 변경된 값의 menu id랑 같은 menu 값을 찾기
-      const updatedMenuList = menuList.map((menu) =>
-        menu.id === menuId ? { ...menu, menuName: nextValue } : menu
-      );
-
-      setMenuList(updatedMenuList);
 
       // 바뀐 menuName에 맞게 주소값도 다시 설정
       navigate(`/workspace/${product}/${project}/menu/${nextValue}`);
       // menu edit api 요청
-      editMenuMutate();
+      editMenuMutate(nextValue);
     },
     [menuList, setMenuList]
   );
@@ -178,8 +145,15 @@ export default function MenuSlider({ product, project, menutitle }: Props) {
         return;
       }
 
-      // 값을 입력했으면 새로운 값으로 메뉴 list에 추가
+      // 특수문자는 불가
+      if (!regex.test(nextValue)) {
+        showMessage('warning', '메뉴 이름은 한글, 영문만 가능합니다.');
+        setPlusMenu(false);
+        return;
+      }
+
       if (editMenuName !== '') {
+        // 값을 입력했으면 새로운 값으로 메뉴 list에 추가
         setPlusMenu(false);
 
         // create post api 요청
