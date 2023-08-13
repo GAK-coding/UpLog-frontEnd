@@ -78,7 +78,7 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
   const [productGetData, refetch] = useGetEachProduct(productId, showMessage, setProductName, true);
 
   // 제품 정보 수정
-  const { mutate: updateProduct } = useMutation(() => productEdit(updateProductInfo, productId), {
+  const { mutate: updateProduct } = useMutation(productEdit, {
     onSuccess: (data) => {
       if (typeof data === 'object') {
         showMessage('success', '제품 정보가 변경되었습니다.');
@@ -121,7 +121,7 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
       }
 
       // 수정 요청 보냄
-      updateProduct();
+      updateProduct({ data: updateProductInfo, productId });
       return;
     }
     // 필수 정보를 입력하지 않았을 때
@@ -132,7 +132,7 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
 
     // 제품 생성
     createProductMutate();
-  }, [productName, masterEmail]);
+  }, [productName, masterEmail, updateProductInfo]);
 
   useEffect(() => {
     // 모달창 껏다가 키면 정보 초기화
@@ -144,7 +144,7 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
 
     // 수정일 경우에 기존 post 정보로 값 채워넣기
     else {
-      refetch();
+      refetch;
     }
   }, [isOpen, isCreateProduct, productId]);
 
