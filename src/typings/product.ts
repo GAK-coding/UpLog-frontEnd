@@ -28,7 +28,7 @@ export interface ProductEditBody {
   link: string | null;
   newName: string | null;
   memberEmailList: string[] | null;
-  powerType: string | null;
+  powerType: 'MASTER' | 'LEADER' | null;
 }
 
 export interface ProductEditData {

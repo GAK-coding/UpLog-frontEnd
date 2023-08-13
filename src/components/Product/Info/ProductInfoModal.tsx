@@ -19,6 +19,7 @@ import { useMutation, useQuery } from 'react-query';
 import { createProduct, eachProduct, productEdit } from '@/api/Product/Product.ts';
 import { ProductBody, ProductEditBody } from '@/typings/product.ts';
 import { SaveUserInfo } from '@/typings/member.ts';
+import { useGetEachProduct } from '@/components/Product/hooks/useGetEachProduct.ts';
 
 interface Props {
   isOpen: boolean;
@@ -74,25 +75,7 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
 
   // TODO : staleTime 확인 필요
   // 제품 정보 조회
-  const { refetch, data: productGetData } = useQuery(
-    ['getProjectInfo'],
-    () => eachProduct(productId),
-    {
-      onSuccess: (data) => {
-        if (typeof data === 'object' && 'message' in data) {
-          showMessage('error', '제품 정보를 불러오는데 실패했습니다.');
-        } else if (typeof data !== 'string' && 'name' in data) {
-          setProductName(data.name);
-        }
-      },
-      enabled: false,
-      staleTime: 6000, // 1분
-      cacheTime: 8000, // 1분 20초
-      refetchOnMount: false, // 마운트(리렌더링)될 때 데이터를 다시 가져오지 않음
-      refetchOnWindowFocus: false, // 브라우저를 포커싱했을때 데이터를 가져오지 않음
-      refetchOnReconnect: false, // 네트워크가 다시 연결되었을때 다시 가져오지 않음
-    }
-  );
+  const [productGetData, refetch] = useGetEachProduct(productId, showMessage, setProductName, true);
 
   // 제품 정보 수정
   const { mutate: updateProduct } = useMutation(() => productEdit(updateProductInfo, productId), {
