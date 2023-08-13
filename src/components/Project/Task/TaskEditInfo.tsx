@@ -2,20 +2,21 @@ import { DatePicker, DatePickerProps, Select } from 'antd';
 import { SubGroup } from '@/typings/project.ts';
 import { SelectMenu } from '@/typings/menu.ts';
 import { TaskData } from '@/typings/task.ts';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { useState } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 import * as dayjs from 'dayjs';
-import { menuListData } from '@/recoil/Project/Menu.ts';
 import { productMemberList } from '@/recoil/Product/atom.ts';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { useGetMenuList } from '@/components/Project/hooks/useGetMenuList.ts';
+import { editTaskInfo } from '@/recoil/Project/Task.ts';
 
 interface Props {
   isEdit: boolean;
   taskInfo: TaskData;
-  editTask: TaskData;
-  setEditTask: Dispatch<SetStateAction<TaskData>>;
 }
-export default function TaskEditInfo({ isEdit, taskInfo, editTask, setEditTask }: Props) {
+export default function TaskEditInfo({ isEdit, taskInfo }: Props) {
+  const projectId = 10;
+  const [editTask, setEditTask] = useRecoilState(editTaskInfo);
   const pGroup: string[] = ['그룹', '개발팀', '마케팅팀', '홍보팀'];
   const cGroup: SubGroup = {
     그룹: ['하위그룹'],
@@ -27,8 +28,10 @@ export default function TaskEditInfo({ isEdit, taskInfo, editTask, setEditTask }
 
   const [parentGroup, setParentGroup] = useState(cGroup[pGroup[0] as ChildGroup]);
   const [childGroup, setChildGroup] = useState(cGroup[pGroup[0] as ChildGroup][0]);
+  const [menuData] = useGetMenuList(projectId);
+  const menuList = menuData;
+  console.log(menuList);
 
-  const menuList = useRecoilValue(menuListData);
   const menuNameList: SelectMenu[] = menuList.map((menuItem) => ({
     value: menuItem.id.toString(),
     label: menuItem.menuName,
@@ -83,7 +86,6 @@ export default function TaskEditInfo({ isEdit, taskInfo, editTask, setEditTask }
         ...editTask,
         [type]: {
           id: +value.value,
-          image: '',
           name: name,
           nickname: nickName,
         },
@@ -102,7 +104,7 @@ export default function TaskEditInfo({ isEdit, taskInfo, editTask, setEditTask }
 
     const updatedTask = {
       ...editTask,
-      teamId: value,
+      teamId: +value,
     };
 
     setEditTask(updatedTask);
@@ -114,7 +116,7 @@ export default function TaskEditInfo({ isEdit, taskInfo, editTask, setEditTask }
 
     const updatedTask = {
       ...editTask,
-      teamId: value,
+      teamId: +value,
     };
 
     setEditTask(updatedTask);
@@ -239,7 +241,7 @@ export default function TaskEditInfo({ isEdit, taskInfo, editTask, setEditTask }
           <span>할당자</span>
           <div className={'ml-3 h-4 border-solid border-r border-[0.2px] border-gray-border'} />
         </div>
-        {/*{taskInfo.targetMember.image === '' ? (*/}
+        {/*{taskInfo.targetMemberInfoDTO.image && taskInfo.targetMemberInfoDTO.image === '' ? (*/}
         {/*  <FaUserCircle className={'ml-3 text-[2rem] fill-gray-dark'} />*/}
         {/*) : (*/}
         {/*  <img*/}
