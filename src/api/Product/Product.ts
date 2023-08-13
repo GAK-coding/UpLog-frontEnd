@@ -9,12 +9,9 @@ import { AxiosResponse } from 'axios';
 import { instance } from '@/api';
 
 // 제품 생성
-export const createProduct = async (data: ProductBody, memberId: number) => {
+export const createProduct = async (data: ProductBody) => {
   try {
-    const res: AxiosResponse<ProductData | FailProduct> = await instance.post(
-      `/members/${memberId}/products`,
-      data
-    );
+    const res: AxiosResponse<ProductData | FailProduct> = await instance.post(`/products`, data);
 
     return res.data;
   } catch (error) {

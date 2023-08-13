@@ -54,26 +54,23 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
   const [imageSrc, setImageSrc] = useState('');
 
   // 제품 생성
-  const { mutate: createProductMutate } = useMutation(
-    () => createProduct(productInfo, userInfo.id),
-    {
-      onSuccess: (data) => {
-        if (data === 'create product fail') {
-          showMessage('error', '중복된 제품 이름입니다.');
-          return;
+  const { mutate: createProductMutate } = useMutation(() => createProduct(productInfo), {
+    onSuccess: (data) => {
+      if (data === 'create product fail') {
+        showMessage('error', '중복된 제품 이름입니다.');
+        return;
+      } else {
+        if (typeof data === 'object' && 'message' in data) {
+          if (data.httpStatus === 'NOT_FOUND')
+            showMessage('warning', '마스터 정보가 올바르지 않습니다.');
+          else showMessage('error', '제품 생성 권한이 없습니다.');
         } else {
-          if (typeof data === 'object' && 'message' in data) {
-            if (data.httpStatus === 'NOT_FOUND')
-              showMessage('warning', '마스터 정보가 올바르지 않습니다.');
-            else showMessage('error', '제품 생성 권한이 없습니다.');
-          } else {
-            showMessage('success', '제품이 생성되었습니다.');
-            setTimeout(() => onClose(), 2000);
-          }
+          showMessage('success', '제품이 생성되었습니다.');
+          setTimeout(() => onClose(), 2000);
         }
-      },
-    }
-  );
+      }
+    },
+  });
 
   // TODO : staleTime 확인 필요
   // 제품 정보 조회
