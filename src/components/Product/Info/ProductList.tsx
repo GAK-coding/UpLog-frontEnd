@@ -70,7 +70,7 @@ export default function ProductList() {
   return (
     <section
       className={
-        'border-base w-[20rem] min-h-[3.3rem] max-h-[27.3rem] block absolute top-[4rem] right-[-8.5rem] shadow-sign-up z-40'
+        'border-base w-[20rem] min-h-[3.3rem] max-h-[27.3rem] block absolute top-[4.5rem] left-[11rem] shadow-sign-up z-40'
       }
       onClick={onChildClick}
     >
@@ -107,7 +107,8 @@ export default function ProductList() {
                             snapshot.isDragging ? 'shadow-2xl shadow-gray-400' : ''
                           }`}
                           onClick={() => {
-                            navigate(`/workspace/${product.name}`);
+                            const encodedProductName = encodeURIComponent(product.name);
+                            navigate(`/workspace/${encodedProductName}`);
                           }}
                         >
                           <RxDragHandleDots2
