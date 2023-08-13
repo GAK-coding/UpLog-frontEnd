@@ -9,7 +9,6 @@ import { useDisclosure } from '@chakra-ui/react';
 import CreateTask from '@/components/Project/Task/CreateTask.tsx';
 import { useQuery } from 'react-query';
 import { menuTaskList } from '@/api/Project/Task.ts';
-import { TaskData } from '@/typings/task.ts';
 import { useEffect } from 'react';
 
 export default function TaskMain() {
@@ -152,7 +151,7 @@ export default function TaskMain() {
 
               {/*task 메뉴, 상태, 할당자*/}
               <div className={'flex-row-center w-h-full justify-end text-gray-dark text-[0.93rem]'}>
-                <span className={'mr-3'}>{task.projectTeamName}</span>
+                <span className={'mr-3'}>{task.teamName}</span>
                 <span
                   className={
                     'flex items-center px-2 h-[1.5rem] rounded-[0.31rem] bg-orange-light-sideBar'
