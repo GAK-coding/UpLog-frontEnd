@@ -32,21 +32,76 @@ export default function Members() {
   // 방출인지 권한 위임인지
   const [isOut, setIsOut] = useState(false);
   const { showMessage, contextHolder } = useMessage();
-  const productId = 6;
+  const productId = 1;
 
   //  TODO: productId 하드 코딩 해둠
   const [data, refetch] = useGetEachProduct(productId, showMessage);
 
-  const { mutate } = useMutation(() =>
-    productEdit(
-      { link: 'string', newName: null, memberEmailList: ['1234'], powerType: 'LEADER' },
-      productId
-    )
-  );
+  // const { mutate } = useMutation(
+  //   () => {
+  //     let isEmailFormat = true;
+  //     const memberEmailList = emails.split(',').map((email) => {
+  //       const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+  //       if (!emailRegex.test(email.trim())) {
+  //         isEmailFormat = false;
+  //       }
+  //       return email.trim();
+  //     });
+  //
+  //     if (!isEmailFormat) {
+  //       showMessage('warning', '이메일 형식이 올바르지 않은 메일이 존재합니다.');
+  //       return;
+  //     }
+  //
+  //     return productEdit(
+  //       {
+  //         link: 'string',
+  //         newName: null,
+  //         memberEmailList: memberEmailList,
+  //         powerType: isLeader ? 'LEADER' : 'LEADER',
+  //       },
+  //       productId
+  //     );
+  //   },
+  //   {
+  //     onSuccess: (data) => {
+  //       console.log(data);
+  //     },
+  //   }
+  // );
+
+  const { mutate } = useMutation(productEdit, {
+    onSuccess: (data) => {
+      console.log(data);
+    },
+  });
 
   const onClickInvite = useCallback(() => {
-    mutate();
-  }, []);
+    let isEmailFormat = true;
+    const memberEmailList = emails.split(',').map((email) => {
+      const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+      if (!emailRegex.test(email.trim())) {
+        isEmailFormat = false;
+      }
+      return email.trim();
+    });
+
+    if (!isEmailFormat) {
+      showMessage('warning', '이메일 형식이 올바르지 않은 메일이 존재합니다.');
+      return;
+    }
+
+    mutate({
+      data: {
+        // TODO: 링크 적어야됨
+        link: 'string',
+        newName: null,
+        memberEmailList: memberEmailList,
+        powerType: isLeader ? 'LEADER' : 'DEFAULT',
+      },
+      productId,
+    });
+  }, [emails, isLeader]);
 
   const onChangeEmails = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {
     setEmails(e.target.value);
