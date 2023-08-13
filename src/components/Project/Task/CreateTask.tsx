@@ -15,21 +15,20 @@ import { SubGroup } from '@/typings/project.ts';
 import { SelectMenu } from '@/typings/menu.ts';
 import { DatePicker, DatePickerProps, Select } from 'antd';
 import { ChangeEvent, useCallback, useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { menuListData } from '@/recoil/Project/Menu.ts';
 import { productMemberList } from '@/recoil/Product/atom.ts';
 import { TaskBody, TaskData } from '@/typings/task.ts';
 import { useMutation, useQueryClient } from 'react-query';
 import { createTask } from '@/api/Project/Task.ts';
-import { taskAll } from '@/recoil/Project/Task.ts';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+  menuId: number;
 }
-export default function CreateTask({ isOpen, onClose }: Props) {
+export default function CreateTask({ isOpen, onClose, menuId }: Props) {
   const { showMessage, contextHolder } = useMessage();
-  const [taskList, setTaskList] = useRecoilState(taskAll);
 
   const [taskName, onChangeTaskName, setTaskName] = useInput('');
   const [newTask, setNewTask] = useState<TaskBody>({
@@ -60,7 +59,7 @@ export default function CreateTask({ isOpen, onClose }: Props) {
   type ChildGroup = keyof typeof cGroup;
 
   const menuList = useRecoilValue(menuListData);
-  const menuId = 56;
+  // const menuId = 56
   const menuNameList: SelectMenu[] = menuList.map((menuItem) => ({
     value: menuItem.id.toString(),
     label: menuItem.menuName,
