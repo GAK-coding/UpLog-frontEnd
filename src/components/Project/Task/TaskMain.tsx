@@ -50,9 +50,28 @@ export default function TaskMain() {
   });
 
   // 날짜, 상태 데이터 필터링 값
-  const handleChange = (value: { value: string; label: React.ReactNode }) => {
-    //TODO : Task 상태, 날짜별로 필터링해서 보여주기
-    console.log(value);
+  const handleChange = (type: string) => (value: { value: string; label: React.ReactNode }) => {
+    // TODO : Task 상태, 날짜별로 필터링해서 보여주기
+    if (type === 'status') {
+      switch (value.value) {
+        case 'done': {
+          setTaskList(
+            getMenuTaskList.data!.filter((task) => task.taskStatus === 'PROGRESS_COMPLETE')
+          );
+          break;
+        }
+        case 'before': {
+          setTaskList(
+            getMenuTaskList.data!.filter((task) => task.taskStatus === 'PROGRESS_BEFORE')
+          );
+          break;
+        }
+        default: {
+          setTaskList(getMenuTaskList.data!);
+          break;
+        }
+      }
+    }
   };
 
   useEffect(() => {
@@ -95,7 +114,7 @@ export default function TaskMain() {
           <Select
             labelInValue
             defaultValue={dateData[0]}
-            onChange={handleChange}
+            onChange={handleChange('date')}
             style={{ width: 90 }}
             options={dateData}
             dropdownStyle={{
@@ -107,7 +126,7 @@ export default function TaskMain() {
           <Select
             labelInValue
             defaultValue={statusData[2]}
-            onChange={handleChange}
+            onChange={handleChange('status')}
             style={{ width: 90 }}
             options={statusData}
             dropdownStyle={{
