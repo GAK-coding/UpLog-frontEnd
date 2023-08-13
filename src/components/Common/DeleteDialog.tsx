@@ -13,7 +13,7 @@ import { useMutation, useQueryClient } from 'react-query';
 import { deleteTask } from '@/api/Project/Task.ts';
 import { useMessage } from '@/hooks/useMessage.ts';
 import { taskAll } from '@/recoil/Project/Task.ts';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 
 interface Props {
   isOpen: boolean;
@@ -27,7 +27,7 @@ export default function DeleteDialog({ isOpen, onClose, task, post, isTask }: Pr
   const cancelRef = useRef<HTMLButtonElement>(null);
   const { product, project, menutitle } = useParams();
   const { showMessage, contextHolder } = useMessage();
-  const [taskList, setTaskList] = useRecoilState(taskAll);
+  const taskList = useRecoilValue(taskAll);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const taskId = task!;
@@ -81,8 +81,6 @@ export default function DeleteDialog({ isOpen, onClose, task, post, isTask }: Pr
     if (!isTask) {
       console.log('post 삭제', post);
     }
-
-    // navigate(`/workspace/${product}/${project}/menu/${menutitle}`);
   }, [post, task, isTask]);
 
   return (
