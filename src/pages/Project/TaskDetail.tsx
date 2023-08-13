@@ -44,15 +44,6 @@ export default function TaskDetail() {
     refetchOnReconnect: false, // 네트워크가 다시 연결되었을때 다시 가져오지 않음
   });
 
-  // get 해온 데이터로 taskInfo 지정
-  useEffect(() => {
-    // 메뉴별 task get 데이터 가져오기 성공 시 데이터 지정함
-    if (getTaskData.data !== undefined && typeof getTaskData.data !== 'string') {
-      setTaskInfo(getTaskData.data);
-      console.log('가져온 정보', getTaskData.data);
-    }
-  }, [getTaskData.data]);
-
   // taskname input 값
   const [taskName, onChangeTaskName] = useInput(taskInfo.taskName);
   // 수정 여부
@@ -86,19 +77,16 @@ export default function TaskDetail() {
     }
   );
 
-  const { mutate: editTeamMutate } = useMutation(
-    () => editTaskTeam(+taskid!, +editTask.projectTeamId),
-    {
-      onSuccess: (data) => {
-        if (typeof data === 'string') {
-          setEditSuccess(false);
-        }
-      },
-    }
-  );
+  const { mutate: editTeamMutate } = useMutation(() => editTaskTeam(+taskid!, +editTask.teamId), {
+    onSuccess: (data) => {
+      if (typeof data === 'string') {
+        setEditSuccess(false);
+      }
+    },
+  });
 
   const { mutate: editTargetMemberMutate } = useMutation(
-    () => editTaskTargetMember(+taskid!, editTask.targetMember.id),
+    () => editTaskTargetMember(+taskid!, editTask.targetMemberInfoDTO.id),
     {
       onSuccess: (data) => {
         if (typeof data === 'string') {
@@ -166,8 +154,12 @@ export default function TaskDetail() {
     handleMutate(editTask.taskName, taskInfo.taskName, editTitleMutate);
     handleMutate(editTask.startTime, taskInfo.startTime, editDateMutate);
     handleMutate(editTask.endTime, taskInfo.endTime, editDateMutate);
-    handleMutate(editTask.projectTeamId, taskInfo.projectTeamId, editTeamMutate);
-    handleMutate(editTask.targetMember.id, taskInfo.targetMember.id, editTargetMemberMutate);
+    handleMutate(editTask.teamId, taskInfo.teamId, editTeamMutate);
+    handleMutate(
+      editTask.targetMemberInfoDTO.id,
+      taskInfo.targetMemberInfoDTO.id,
+      editTargetMemberMutate
+    );
     handleMutate(editTask.taskStatus, taskInfo.taskStatus, editStatusMutate);
     handleMutate(editTask.menuId, taskInfo.menuId, editMenuMutate);
     handleMutate(editTask.taskDetail, taskInfo.taskDetail, editContentMutate);
@@ -212,6 +204,15 @@ export default function TaskDetail() {
     setEditTask(updatedTask);
   }, [taskName]);
 
+  // get 해온 데이터로 taskInfo 지정
+  useEffect(() => {
+    // 메뉴별 task get 데이터 가져오기 성공 시 데이터 지정함
+    if (getTaskData.data !== undefined && typeof getTaskData.data !== 'string') {
+      setTaskInfo(getTaskData.data);
+      console.log('가져온 정보', getTaskData.data);
+      console.log(taskName);
+    }
+  }, [getTaskData.data]);
   return (
     <section className={'flex w-full h-auto py-20'}>
       {contextHolder}
@@ -241,6 +242,7 @@ export default function TaskDetail() {
                 type="text"
                 placeholder="Task 제목을 입력해주세요."
                 value={taskName}
+                defaultValue={taskInfo.taskName}
                 onChange={onChangeTaskName}
                 maxLength={20}
               />
@@ -281,7 +283,12 @@ export default function TaskDetail() {
         </section>
         <div className={'w-[80%] border-b border-gray-spring my-4'}></div>
         {/*부가 내용 detail*/}
-        <TaskEditInfo isEdit={isEdit} editTask={editTask} setEditTask={setEditTask} />
+        <TaskEditInfo
+          isEdit={isEdit}
+          taskInfo={taskInfo}
+          editTask={editTask}
+          setEditTask={setEditTask}
+        />
         <div className={'w-[80%] border-b border-gray-spring my-4'}></div>
         {/*세부 내용 */}
         <section className={'w-[70%] h-auto text-[2rem] pt-4 pb-8'}>
@@ -289,7 +296,7 @@ export default function TaskDetail() {
             <span className={'w-auto h-auto ml-4 text-2xl'}>{taskInfo.taskDetail}</span>
           ) : (
             <Textarea
-              defaultValue={editTask.taskDetail}
+              defaultValue={taskInfo.taskDetail}
               onChange={onChangeTaskDetail}
               border={'1px solid var(--border-line)'}
               height={'100%'}

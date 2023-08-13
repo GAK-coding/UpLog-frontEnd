@@ -11,10 +11,11 @@ import { useRecoilValue } from 'recoil';
 
 interface Props {
   isEdit: boolean;
+  taskInfo: TaskData;
   editTask: TaskData;
   setEditTask: Dispatch<SetStateAction<TaskData>>;
 }
-export default function TaskEditInfo({ isEdit, editTask, setEditTask }: Props) {
+export default function TaskEditInfo({ isEdit, taskInfo, editTask, setEditTask }: Props) {
   const pGroup: string[] = ['그룹', '개발팀', '마케팅팀', '홍보팀'];
   const cGroup: SubGroup = {
     그룹: ['하위그룹'],
@@ -132,13 +133,13 @@ export default function TaskEditInfo({ isEdit, editTask, setEditTask }: Props) {
 
         {isEdit ? (
           <DatePicker
-            defaultValue={dayjs(editTask.startTime, 'YYYY.MM.DD')}
+            defaultValue={dayjs(taskInfo.startTime, 'YYYY.MM.DD')}
             onChange={onChangeStartTime}
             placement={'bottomLeft'}
             bordered={false}
           />
         ) : (
-          <span className={'ml-3 text-gray-dark'}>{editTask.startTime}</span>
+          <span className={'ml-3 text-gray-dark'}>{taskInfo.startTime}</span>
         )}
       </div>
 
@@ -152,13 +153,13 @@ export default function TaskEditInfo({ isEdit, editTask, setEditTask }: Props) {
         </div>
         {isEdit ? (
           <DatePicker
-            defaultValue={dayjs(editTask.endTime, 'YYYY.MM.DD')}
+            defaultValue={dayjs(taskInfo.endTime, 'YYYY.MM.DD')}
             onChange={onChangeEndTime}
             placement={'bottomLeft'}
             bordered={false}
           />
         ) : (
-          <span className={'ml-3 text-gray-dark'}>{editTask.endTime}</span>
+          <span className={'ml-3 text-gray-dark'}>{taskInfo.endTime}</span>
         )}
       </div>
       {/*메뉴*/}
@@ -172,7 +173,7 @@ export default function TaskEditInfo({ isEdit, editTask, setEditTask }: Props) {
         {isEdit ? (
           <Select
             labelInValue
-            defaultValue={{ value: '-1', label: editTask.menuName }}
+            defaultValue={{ value: '-1', label: taskInfo.menuName }}
             onChange={handleChange('menuId')}
             style={{ width: 120 }}
             bordered={false}
@@ -184,7 +185,7 @@ export default function TaskEditInfo({ isEdit, editTask, setEditTask }: Props) {
             }}
           />
         ) : (
-          <span className={'ml-3 text-gray-dark'}>{editTask.menuName}</span>
+          <span className={'ml-3 text-gray-dark'}>{taskInfo.menuName}</span>
         )}
       </div>
 
@@ -226,7 +227,7 @@ export default function TaskEditInfo({ isEdit, editTask, setEditTask }: Props) {
             />
           </div>
         ) : (
-          <span className={'ml-3 text-gray-dark'}>{editTask.teamName}</span>
+          <span className={'ml-3 text-gray-dark'}>{taskInfo.teamName}</span>
         )}
       </div>
 
@@ -238,11 +239,11 @@ export default function TaskEditInfo({ isEdit, editTask, setEditTask }: Props) {
           <span>할당자</span>
           <div className={'ml-3 h-4 border-solid border-r border-[0.2px] border-gray-border'} />
         </div>
-        {/*{editTask.targetMember.image === '' ? (*/}
+        {/*{taskInfo.targetMember.image === '' ? (*/}
         {/*  <FaUserCircle className={'ml-3 text-[2rem] fill-gray-dark'} />*/}
         {/*) : (*/}
         {/*  <img*/}
-        {/*    src={editTask.targetMemberInfoDTO.image}*/}
+        {/*    src={taskInfo.targetMemberInfoDTO.image}*/}
         {/*    className={'ml-3 w-[2rem] h-[2rem] rounded-full'}*/}
         {/*  />*/}
         {/*)}*/}
@@ -251,8 +252,8 @@ export default function TaskEditInfo({ isEdit, editTask, setEditTask }: Props) {
           <Select
             labelInValue
             defaultValue={{
-              value: `${editTask.targetMemberInfoDTO.id}`,
-              label: `${editTask.targetMemberInfoDTO.nickname}(${editTask.targetMemberInfoDTO.name})`,
+              value: `${taskInfo.targetMemberInfoDTO.id}`,
+              label: `${taskInfo.targetMemberInfoDTO.nickname}(${taskInfo.targetMemberInfoDTO.name})`,
             }}
             onChange={handleChange('targetMember')}
             style={{ width: 120 }}
@@ -266,7 +267,7 @@ export default function TaskEditInfo({ isEdit, editTask, setEditTask }: Props) {
           />
         ) : (
           <span className={'ml-2 text-gray-dark'}>
-            {`${editTask.targetMemberInfoDTO.nickname}(${editTask.targetMemberInfoDTO.name})`}
+            {/*{`${taskInfo.targetMemberInfoDTO.nickname}(${taskInfo.targetMemberInfoDTO.name})`}*/}
           </span>
         )}
       </div>
