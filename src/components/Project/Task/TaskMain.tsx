@@ -25,8 +25,8 @@ export default function TaskMain() {
   const dateData: SelectMenu[] = [
     { value: '날짜', label: '날짜' },
     {
-      value: '최신순',
-      label: '최신순',
+      value: '마감날짜',
+      label: '마감날짜',
     },
   ];
   const statusData: SelectMenu[] = [
@@ -52,6 +52,7 @@ export default function TaskMain() {
   // 날짜, 상태 데이터 필터링 값
   const handleChange = (type: string) => (value: { value: string; label: React.ReactNode }) => {
     // TODO : Task 상태, 날짜별로 필터링해서 보여주기
+    // task 상태
     if (type === 'status') {
       switch (value.value) {
         case 'done': {
@@ -64,6 +65,26 @@ export default function TaskMain() {
           setTaskList(
             getMenuTaskList.data!.filter((task) => task.taskStatus === 'PROGRESS_BEFORE')
           );
+          break;
+        }
+        default: {
+          setTaskList(getMenuTaskList.data!);
+          break;
+        }
+      }
+    } else {
+      switch (value.value) {
+        case '최신순': {
+          const sortedTaskList = taskList.slice().sort((taskA, taskB) => {
+            // endTime을 날짜 객체로 변환하여 시간 간격을 계산
+            const endTimeA = new Date(taskA.endTime);
+            const endTimeB = new Date(taskB.endTime);
+
+            // 시간 간격을 기준으로 정렬 순서를 결정
+            // 가장 마감일이 촉박한 순서대로 정렬함
+            return endTimeA.getTime() - endTimeB.getTime();
+          });
+          setTaskList(sortedTaskList);
           break;
         }
         default: {
@@ -214,7 +235,7 @@ export default function TaskMain() {
           </section>
         </div>
       </section>
-      <CreateTask isOpen={isOpen} onClose={onClose} />
+      <CreateTask isOpen={isOpen} onClose={onClose} menuId={menuId} />
     </div>
   );
 }

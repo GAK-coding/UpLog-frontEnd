@@ -109,6 +109,7 @@ export const editTaskDate = async (
       updateEndTime: updateEndTime,
     });
 
+    console.log('taskDate', updateStartTime, updateEndTime);
     return res.data;
   } catch (error) {
     console.log(error);
@@ -122,6 +123,7 @@ export const editTaskTitle = async (taskId: number, updatetaskName: string) => {
       updatetaskName: updatetaskName,
     });
 
+    console.log('taskTitle', updatetaskName);
     return res.data;
   } catch (error) {
     console.log(error);
@@ -135,6 +137,7 @@ export const editTaskTeam = async (taskId: number, updateTeamId: number) => {
       updateTeamId: updateTeamId,
     });
 
+    console.log('taskTeam', updateTeamId);
     return res.data;
   } catch (error) {
     console.log(error);
@@ -148,6 +151,7 @@ export const editTaskTargetMember = async (taskId: number, updateTargetMemberId:
       updateTargetMemberId: updateTargetMemberId,
     });
 
+    console.log('tasktargetMember', updateTargetMemberId);
     return res.data;
   } catch (error) {
     console.log(error);
@@ -161,6 +165,7 @@ export const editTaskStatus = async (taskId: number, taskStatus: TaskStatus) => 
       taskStatus: taskStatus,
     });
 
+    console.log('taskStatus', taskStatus);
     return res.data;
   } catch (error) {
     console.log(error);
@@ -174,6 +179,7 @@ export const editTaskMenu = async (taskId: number, updateMenuId: number) => {
       updateMenuId: updateMenuId,
     });
 
+    console.log('taskMenu', updateMenuId);
     return res.data;
   } catch (error) {
     console.log(error);
@@ -187,6 +193,7 @@ export const editTaskContent = async (taskId: number, updateContent: string) => 
       updateContent: updateContent,
     });
 
+    console.log('taskContent', updateContent);
     return res.data;
   } catch (error) {
     console.log(error);
