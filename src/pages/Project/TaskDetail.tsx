@@ -23,6 +23,7 @@ import { useMessage } from '@/hooks/useMessage.ts';
 import { checkTaskEditValue } from '@/utils/checkTaskEditValue.ts';
 import { useRecoilState } from 'recoil';
 import { eachTaskInfo } from '@/recoil/Project/Task.ts';
+import { useGetMenuList } from '@/components/Project/hooks/useGetMenuList.ts';
 
 export default function TaskDetail() {
   const { product, project, menutitle, taskid } = useParams();
@@ -51,7 +52,7 @@ export default function TaskDetail() {
 
   // 새로 수정한 task 데이터 값 저장
   const [editTask, setEditTask] = useState(taskInfo);
-  console.log('taskInfo', taskInfo);
+
   console.log('edit', editTask);
 
   // task (date, title, taskTeam, target-Member, status, menu, content) update 요청
@@ -243,7 +244,7 @@ export default function TaskDetail() {
                 className={'w-[70%] h-full text-3xl mr-4 pb-2'}
                 type="text"
                 placeholder="Task 제목을 입력해주세요."
-                value={taskName}
+                value={editTask.taskName}
                 onChange={onChangeTaskName}
                 maxLength={20}
               />
@@ -300,7 +301,7 @@ export default function TaskDetail() {
               defaultValue={taskInfo.taskDetail}
               onChange={onChangeTaskDetail}
               border={'1px solid var(--border-line)'}
-              height={'100%'}
+              minH={'10rem'}
               focusBorderColor={'none'}
               placeholder={'Task에 대한 상세 설명을 입력해주세요.'}
               color={'var(--black)'}
