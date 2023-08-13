@@ -23,6 +23,7 @@ import { useMessage } from '@/hooks/useMessage.ts';
 import { checkTaskEditValue } from '@/utils/checkTaskEditValue.ts';
 import { useRecoilState } from 'recoil';
 import { eachTaskInfo } from '@/recoil/Project/Task.ts';
+import { useGetMenuList } from '@/components/Project/hooks/useGetMenuList.ts';
 
 export default function TaskDetail() {
   const { product, project, menutitle, taskid } = useParams();
@@ -36,7 +37,7 @@ export default function TaskDetail() {
 
   // TODO : staleTime 확인 필요 + 시간 다시 설정하기
   // task 한개 데이터 get
-  const getTaskData = useQuery(['task', taskid], () => eachTask(+taskid!), {
+  const getTaskData = useQuery(['getTaskEach', taskid], () => eachTask(+taskid!), {
     staleTime: 6000, // 1분
     cacheTime: 8000, // 1분 20초
     refetchOnMount: false, // 마운트(리렌더링)될 때 데이터를 다시 가져오지 않음
@@ -44,21 +45,14 @@ export default function TaskDetail() {
     refetchOnReconnect: false, // 네트워크가 다시 연결되었을때 다시 가져오지 않음
   });
 
-  // get 해온 데이터로 taskInfo 지정
-  if (getTaskData.isSuccess) {
-    if (typeof getTaskData.data !== 'string' && 'id' in getTaskData.data) {
-      setTaskInfo(getTaskData.data);
-    }
-  }
-
   // taskname input 값
-  const [taskName, onChangeTaskName] = useInput(taskInfo.taskName);
+  const [taskName, onChangeTaskName, setTaskName] = useInput(taskInfo.taskName);
   // 수정 여부
   const [isEdit, setIsEdit] = useState<boolean>(false);
 
   // 새로 수정한 task 데이터 값 저장
   const [editTask, setEditTask] = useState(taskInfo);
-  console.log('taskInfo', taskInfo);
+
   console.log('edit', editTask);
 
   // task (date, title, taskTeam, target-Member, status, menu, content) update 요청
@@ -84,19 +78,16 @@ export default function TaskDetail() {
     }
   );
 
-  const { mutate: editTeamMutate } = useMutation(
-    () => editTaskTeam(+taskid!, +editTask.projectTeamId),
-    {
-      onSuccess: (data) => {
-        if (typeof data === 'string') {
-          setEditSuccess(false);
-        }
-      },
-    }
-  );
+  const { mutate: editTeamMutate } = useMutation(() => editTaskTeam(+taskid!, +editTask.teamId), {
+    onSuccess: (data) => {
+      if (typeof data === 'string') {
+        setEditSuccess(false);
+      }
+    },
+  });
 
   const { mutate: editTargetMemberMutate } = useMutation(
-    () => editTaskTargetMember(+taskid!, editTask.targetMember.id),
+    () => editTaskTargetMember(+taskid!, editTask.targetMemberInfoDTO.id),
     {
       onSuccess: (data) => {
         if (typeof data === 'string') {
@@ -135,9 +126,11 @@ export default function TaskDetail() {
       },
     }
   );
+
   // 수정 버튼 클릭 시
   const onChangeEdit = useCallback(() => {
     setIsEdit(true);
+    setTaskName(taskInfo.taskName);
   }, [isEdit]);
 
   // 수정 완료 버튼 클릭 시
@@ -164,8 +157,12 @@ export default function TaskDetail() {
     handleMutate(editTask.taskName, taskInfo.taskName, editTitleMutate);
     handleMutate(editTask.startTime, taskInfo.startTime, editDateMutate);
     handleMutate(editTask.endTime, taskInfo.endTime, editDateMutate);
-    handleMutate(editTask.projectTeamId, taskInfo.projectTeamId, editTeamMutate);
-    handleMutate(editTask.targetMember.id, taskInfo.targetMember.id, editTargetMemberMutate);
+    handleMutate(editTask.teamId, taskInfo.teamId, editTeamMutate);
+    handleMutate(
+      editTask.targetMemberInfoDTO.id,
+      taskInfo.targetMemberInfoDTO.id,
+      editTargetMemberMutate
+    );
     handleMutate(editTask.taskStatus, taskInfo.taskStatus, editStatusMutate);
     handleMutate(editTask.menuId, taskInfo.menuId, editMenuMutate);
     handleMutate(editTask.taskDetail, taskInfo.taskDetail, editContentMutate);
@@ -210,6 +207,15 @@ export default function TaskDetail() {
     setEditTask(updatedTask);
   }, [taskName]);
 
+  // get 해온 데이터로 taskInfo 지정
+  useEffect(() => {
+    // 메뉴별 task get 데이터 가져오기 성공 시 데이터 지정함
+    if (getTaskData.data !== undefined && typeof getTaskData.data !== 'string') {
+      setTaskInfo(getTaskData.data);
+      console.log('가져온 정보', getTaskData.data);
+      console.log(taskName);
+    }
+  }, [getTaskData.data]);
   return (
     <section className={'flex w-full h-auto py-20'}>
       {contextHolder}
@@ -233,19 +239,19 @@ export default function TaskDetail() {
         >
           {/*task 제목, id*/}
           <div className={'flex items-center w-[70%] h-auto font-bold'}>
-            {!isEdit ? (
-              <span className={'text-3xl mr-4'}>{taskInfo.taskName}</span>
-            ) : (
+            {isEdit ? (
               <input
                 className={'w-[70%] h-full text-3xl mr-4 pb-2'}
                 type="text"
                 placeholder="Task 제목을 입력해주세요."
-                value={taskName}
+                value={editTask.taskName}
                 onChange={onChangeTaskName}
                 maxLength={20}
               />
+            ) : (
+              <span className={'text-3xl mr-4'}>{taskInfo.taskName}</span>
             )}
-            <span className={'text-[1.4rem] text-gray-light'}>{`task ${taskid}`}</span>
+            <span className={'text-[1.4rem] text-gray-light'}>{`task ${taskInfo.id}`}</span>
           </div>
           {/*진행상태 select*/}
           <div className={'w-[30%] h-auto flex justify-end'}>
@@ -279,7 +285,12 @@ export default function TaskDetail() {
         </section>
         <div className={'w-[80%] border-b border-gray-spring my-4'}></div>
         {/*부가 내용 detail*/}
-        <TaskEditInfo isEdit={isEdit} editTask={editTask} setEditTask={setEditTask} />
+        <TaskEditInfo
+          isEdit={isEdit}
+          taskInfo={taskInfo}
+          editTask={editTask}
+          setEditTask={setEditTask}
+        />
         <div className={'w-[80%] border-b border-gray-spring my-4'}></div>
         {/*세부 내용 */}
         <section className={'w-[70%] h-auto text-[2rem] pt-4 pb-8'}>
@@ -287,10 +298,10 @@ export default function TaskDetail() {
             <span className={'w-auto h-auto ml-4 text-2xl'}>{taskInfo.taskDetail}</span>
           ) : (
             <Textarea
-              defaultValue={editTask.taskDetail}
+              defaultValue={taskInfo.taskDetail}
               onChange={onChangeTaskDetail}
               border={'1px solid var(--border-line)'}
-              height={'100%'}
+              minH={'10rem'}
               focusBorderColor={'none'}
               placeholder={'Task에 대한 상세 설명을 입력해주세요.'}
               color={'var(--black)'}

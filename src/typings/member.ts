@@ -27,7 +27,7 @@ export interface targetMemberInfo {
   id: number;
   name: string;
   nickname: string;
-  image: string;
+  image?: string;
 }
 
 export interface EmailInfo {

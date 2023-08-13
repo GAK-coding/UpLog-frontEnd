@@ -7,12 +7,12 @@ export interface Task {
   id: number;
   dragId: string;
   taskName: string;
-  targetMember: targetMemberInfo;
+  targetMemberInfoDTO: targetMemberInfo;
   menuId: number;
   menuName: string;
-  projectTeamId: number | string;
-  projectTeamName: string;
-  projectTeamParentId: number | null;
+  teamId: number | string;
+  teamName: string;
+  parentTeamId: number | null;
   taskStatus: TaskStatus;
   taskDetail: string;
   startTime: string;

@@ -105,8 +105,8 @@ export const editTaskDate = async (
 ) => {
   try {
     const res: AxiosResponse<TaskData> = await instance.patch(`/tasks/${taskId}/date`, {
-      updateStartTime,
-      updateEndTime,
+      updateStartTime: updateStartTime,
+      updateEndTime: updateEndTime,
     });
 
     return res.data;
@@ -118,10 +118,9 @@ export const editTaskDate = async (
 
 export const editTaskTitle = async (taskId: number, updatetaskName: string) => {
   try {
-    const res: AxiosResponse<TaskData> = await instance.patch(
-      `/tasks/${taskId}/title`,
-      updatetaskName
-    );
+    const res: AxiosResponse<TaskData> = await instance.patch(`/tasks/${taskId}/title`, {
+      updatetaskName: updatetaskName,
+    });
 
     return res.data;
   } catch (error) {
@@ -132,10 +131,9 @@ export const editTaskTitle = async (taskId: number, updatetaskName: string) => {
 
 export const editTaskTeam = async (taskId: number, updateTeamId: number) => {
   try {
-    const res: AxiosResponse<TaskData> = await instance.patch(
-      `/tasks/${taskId}/title`,
-      updateTeamId
-    );
+    const res: AxiosResponse<TaskData> = await instance.patch(`/tasks/${taskId}/title`, {
+      updateTeamId: updateTeamId,
+    });
 
     return res.data;
   } catch (error) {
@@ -146,10 +144,9 @@ export const editTaskTeam = async (taskId: number, updateTeamId: number) => {
 
 export const editTaskTargetMember = async (taskId: number, updateTargetMemberId: number) => {
   try {
-    const res: AxiosResponse<TaskData> = await instance.patch(
-      `/tasks/${taskId}/title`,
-      updateTargetMemberId
-    );
+    const res: AxiosResponse<TaskData> = await instance.patch(`/tasks/${taskId}/title`, {
+      updateTargetMemberId: updateTargetMemberId,
+    });
 
     return res.data;
   } catch (error) {
@@ -160,7 +157,9 @@ export const editTaskTargetMember = async (taskId: number, updateTargetMemberId:
 
 export const editTaskStatus = async (taskId: number, taskStatus: TaskStatus) => {
   try {
-    const res: AxiosResponse<TaskData> = await instance.patch(`/tasks/${taskId}/title`, taskStatus);
+    const res: AxiosResponse<TaskData> = await instance.patch(`/tasks/${taskId}/title`, {
+      taskStatus: taskStatus,
+    });
 
     return res.data;
   } catch (error) {
@@ -171,10 +170,9 @@ export const editTaskStatus = async (taskId: number, taskStatus: TaskStatus) => 
 
 export const editTaskMenu = async (taskId: number, updateMenuId: number) => {
   try {
-    const res: AxiosResponse<TaskData> = await instance.patch(
-      `/tasks/${taskId}/title`,
-      updateMenuId
-    );
+    const res: AxiosResponse<TaskData> = await instance.patch(`/tasks/${taskId}/title`, {
+      updateMenuId: updateMenuId,
+    });
 
     return res.data;
   } catch (error) {
@@ -185,10 +183,9 @@ export const editTaskMenu = async (taskId: number, updateMenuId: number) => {
 
 export const editTaskContent = async (taskId: number, updateContent: string) => {
   try {
-    const res: AxiosResponse<TaskData> = await instance.patch(
-      `/tasks/${taskId}/title`,
-      updateContent
-    );
+    const res: AxiosResponse<TaskData> = await instance.patch(`/tasks/${taskId}/title`, {
+      updateContent: updateContent,
+    });
 
     return res.data;
   } catch (error) {
