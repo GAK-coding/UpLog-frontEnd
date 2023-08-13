@@ -30,7 +30,6 @@ export default function TaskEditInfo({ isEdit, taskInfo }: Props) {
   const [childGroup, setChildGroup] = useState(cGroup[pGroup[0] as ChildGroup][0]);
   const [menuData] = useGetMenuList(projectId);
   const menuList = menuData;
-  console.log(menuList);
 
   const menuNameList: SelectMenu[] = menuList.map((menuItem) => ({
     value: menuItem.id.toString(),

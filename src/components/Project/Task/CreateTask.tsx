@@ -41,7 +41,6 @@ export default function CreateTask({ isOpen, onClose }: Props) {
     targetMemberId: 2,
     taskDetail: '',
   });
-  const menuId = 56;
 
   const taskPeriod: SelectMenu[] = [
     { value: '7', label: '1주' },
@@ -61,7 +60,7 @@ export default function CreateTask({ isOpen, onClose }: Props) {
   type ChildGroup = keyof typeof cGroup;
 
   const menuList = useRecoilValue(menuListData);
-
+  const menuId = 56;
   const menuNameList: SelectMenu[] = menuList.map((menuItem) => ({
     value: menuItem.id.toString(),
     label: menuItem.menuName,

@@ -58,7 +58,6 @@ export default function MenuSlider({ product, project, menutitle }: Props) {
 
   // menuList get
   const [getMenuList] = useGetMenuList(projectId);
-  setMenuList(getMenuList);
 
   // menu create
   const { mutate: createMenuMutate } = useMutation(
