@@ -4,7 +4,7 @@ export function checkTaskEditValue(editTask: TaskData): boolean {
   if (editTask.taskName === '') {
     return false;
   }
-  if (editTask.targetMemberInfoDTO.id === 0) {
+  if (editTask.targetMemberInfoDTO && editTask.targetMemberInfoDTO.id === 0) {
     return false;
   }
   if (editTask.menuId === 0) {
