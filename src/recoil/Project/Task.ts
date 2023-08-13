@@ -2,12 +2,12 @@ import { GroupMember } from '@/typings/project.ts';
 import { atom } from 'recoil';
 import { TaskData, Tasks } from '@/typings/task.ts';
 
-export const eachTaskInfo = atom<TaskData>({
-  key: 'eachTask',
+export const editTaskInfo = atom<TaskData>({
+  key: 'editTask',
   default: {
     id: 0,
     taskName: '',
-    targetMember: {
+    targetMemberInfoDTO: {
       id: 0,
       name: '',
       nickname: '',
@@ -15,9 +15,32 @@ export const eachTaskInfo = atom<TaskData>({
     },
     menuId: 0,
     menuName: '',
-    projectTeamId: 0,
-    projectTeamName: '',
-    projectTeamParentId: null,
+    teamId: 0,
+    teamName: '',
+    parentTeamId: null,
+    taskStatus: 'PROGRESS_BEFORE',
+    taskDetail: '',
+    startTime: '',
+    endTime: '',
+  },
+});
+
+export const eachTaskInfo = atom<TaskData>({
+  key: 'eachTask',
+  default: {
+    id: 0,
+    taskName: '',
+    targetMemberInfoDTO: {
+      id: 0,
+      name: '',
+      nickname: '',
+      image: '',
+    },
+    menuId: 0,
+    menuName: '',
+    teamId: 0,
+    teamName: '',
+    parentTeamId: null,
     taskStatus: 'PROGRESS_BEFORE',
     taskDetail: '',
     startTime: '',
@@ -177,7 +200,7 @@ export const taskState = atom<Tasks>({
         id: 0,
         dragId: '0',
         taskName: 'task1',
-        targetMember: {
+        targetMemberInfoDTO: {
           id: 1,
           name: '오채영',
           nickname: 'OCI',
@@ -185,9 +208,9 @@ export const taskState = atom<Tasks>({
         },
         menuId: 1,
         menuName: '요구사항',
-        projectTeamId: 1,
-        projectTeamName: '개발팀',
-        projectTeamParentId: null,
+        teamId: 1,
+        teamName: '개발팀',
+        parentTeamId: null,
         taskStatus: 'PROGRESS_BEFORE',
         taskDetail: 'task1 입니다롱',
         startTime: '2023-08-01',
@@ -199,7 +222,7 @@ export const taskState = atom<Tasks>({
         id: 1,
         dragId: '1',
         taskName: 'task2',
-        targetMember: {
+        targetMemberInfoDTO: {
           id: 1,
           name: '오채영',
           nickname: 'OCI',
@@ -207,9 +230,9 @@ export const taskState = atom<Tasks>({
         },
         menuId: 1,
         menuName: '요구사항',
-        projectTeamId: 1,
-        projectTeamName: '프론트엔드',
-        projectTeamParentId: 1,
+        teamId: 1,
+        teamName: '프론트엔드',
+        parentTeamId: 1,
         taskStatus: 'PROGRESS_IN',
         taskDetail: 'task2 입니다롱',
         startTime: '2023-08-03',
@@ -221,7 +244,7 @@ export const taskState = atom<Tasks>({
         id: 3,
         dragId: '3',
         taskName: 'task3',
-        targetMember: {
+        targetMemberInfoDTO: {
           id: 1,
           name: '오채영',
           nickname: 'OCI',
@@ -229,9 +252,9 @@ export const taskState = atom<Tasks>({
         },
         menuId: 2,
         menuName: '개발',
-        projectTeamId: 1,
-        projectTeamName: '개발팀',
-        projectTeamParentId: null,
+        teamId: 1,
+        teamName: '개발팀',
+        parentTeamId: null,
         taskStatus: 'PROGRESS_COMPLETE',
         taskDetail: 'task3 입니다롱',
         startTime: '2023-08-01',

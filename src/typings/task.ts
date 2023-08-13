@@ -10,7 +10,7 @@ export interface Task {
   targetMemberInfoDTO: targetMemberInfo;
   menuId: number;
   menuName: string;
-  teamId: number | string;
+  teamId: number;
   teamName: string;
   parentTeamId: number | null;
   taskStatus: TaskStatus;
