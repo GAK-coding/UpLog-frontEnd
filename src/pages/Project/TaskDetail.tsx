@@ -45,7 +45,7 @@ export default function TaskDetail() {
   });
 
   // taskname input 값
-  const [taskName, onChangeTaskName] = useInput(taskInfo.taskName);
+  const [taskName, onChangeTaskName, setTaskName] = useInput(taskInfo.taskName);
   // 수정 여부
   const [isEdit, setIsEdit] = useState<boolean>(false);
 
@@ -125,9 +125,11 @@ export default function TaskDetail() {
       },
     }
   );
+
   // 수정 버튼 클릭 시
   const onChangeEdit = useCallback(() => {
     setIsEdit(true);
+    setTaskName(taskInfo.taskName);
   }, [isEdit]);
 
   // 수정 완료 버튼 클릭 시
@@ -242,7 +244,6 @@ export default function TaskDetail() {
                 type="text"
                 placeholder="Task 제목을 입력해주세요."
                 value={taskName}
-                defaultValue={taskInfo.taskName}
                 onChange={onChangeTaskName}
                 maxLength={20}
               />
