@@ -13,6 +13,8 @@ import { useMessage } from '@/hooks/useMessage.ts';
 import DeleteMenuDialog from '@/components/Project/Menu/DeleteMenuDialog.tsx';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { createMenu, editMenu, projectMenuList } from '@/api/Project/Menu.ts';
+import { FailMenu, MenuInfo } from '@/typings/menu.ts';
+import { useGetMenuList } from '@/components/Project/hooks/useGetMenuList.ts';
 
 interface Props {
   product: string;
@@ -51,28 +53,23 @@ export default function MenuSlider({ product, project, menutitle }: Props) {
   const regex = /^[a-zA-Z가-힣\s]*$/;
 
   // TODO : 현재 project id 값으로 바꾸기
-  const projectId = 9;
+  const projectId = 10;
   const queryClient = useQueryClient();
 
   // menuList get
-  const getMenuList = useQuery(['menuList', projectId], () => projectMenuList(projectId), {
-    staleTime: 60000, // 10분
-    cacheTime: 80000,
-    refetchOnMount: false, // 마운트(리렌더링)될 때 데이터를 다시 가져오지 않음
-    refetchOnWindowFocus: false, // 브라우저를 포커싱했을때 데이터를 가져오지 않음
-    refetchOnReconnect: false, // 네트워크가 다시 연결되었을때 다시 가져오지 않음
-    enabled: true,
-  });
+  const [getMenuList] = useGetMenuList(projectId);
 
   // menu create
   const { mutate: createMenuMutate } = useMutation(
     (nextValue: string) => createMenu(projectId, nextValue),
     {
-      onSuccess: (data) => {
+      onSuccess: (data: FailMenu | MenuInfo | string) => {
         if (typeof data === 'object' && 'menuName' in data) {
           showMessage('success', '메뉴가 생성되었습니다.');
+        } else if (typeof data === 'object' && 'message' in data) {
+          showMessage('error', data.message);
         } else {
-          showMessage('error', '메뉴 생성에 실패했습니다.');
+          showMessage('error', '메뉴 생성에 실패하였습니다.');
         }
       },
       onSettled: () => {
@@ -98,17 +95,6 @@ export default function MenuSlider({ product, project, menutitle }: Props) {
   // 메뉴 이름 수정 onChange
   const onChangeMenuName = useCallback(
     (menuId: number) => (nextValue: string) => {
-      // 특수문자는 불가
-      if (!regex.test(nextValue)) {
-        showMessage('warning', '메뉴 이름은 한글, 영문만 가능합니다.');
-        return;
-      }
-
-      const updatedMenuList = menuList.map((menu) =>
-        menu.id === menuId ? { ...menu, menuName: nextValue } : menu
-      );
-
-      setMenuList(updatedMenuList);
       setEditMenuName(nextValue);
       setMenuId(menuId);
     },
@@ -128,6 +114,17 @@ export default function MenuSlider({ product, project, menutitle }: Props) {
         return;
       }
 
+      const checkDuplicate = menuList.some((menu) => menu.menuName === nextValue);
+      if (checkDuplicate) {
+        showMessage('warning', '중복된 메뉴 이름입니다.');
+
+        const updatedMenuList = menuList.map((menu) =>
+          menu.id === menuId ? { ...menu, menuName: nextValue } : menu
+        );
+
+        setMenuList(updatedMenuList);
+        return;
+      }
       // 바뀐 menuName에 맞게 주소값도 다시 설정
       navigate(`/workspace/${product}/${project}/menu/${nextValue}`);
       // menu edit api 요청
@@ -162,14 +159,6 @@ export default function MenuSlider({ product, project, menutitle }: Props) {
     },
     [menuList, editMenuName]
   );
-
-  useEffect(() => {
-    if (getMenuList.data !== undefined) {
-      if (typeof getMenuList.data !== 'string') {
-        setMenuList(getMenuList.data);
-      }
-    }
-  }, [getMenuList.data]);
 
   // slide settings 커스텀
   const settings = {
@@ -240,7 +229,6 @@ export default function MenuSlider({ product, project, menutitle }: Props) {
             <span className={'flex-row-center h-full w-full'}>
               {/*클릭해서 값 변경*/}
               <Editable
-                value={menu.menuName}
                 placeholder={menu.menuName}
                 onChange={onChangeMenuName(menu.id)}
                 onSubmit={onSubmitMenuName(menu.id)}

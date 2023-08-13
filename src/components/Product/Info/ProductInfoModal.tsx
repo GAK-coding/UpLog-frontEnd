@@ -54,26 +54,23 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
   const [imageSrc, setImageSrc] = useState('');
 
   // 제품 생성
-  const { mutate: createProductMutate } = useMutation(
-    () => createProduct(productInfo, userInfo.id),
-    {
-      onSuccess: (data) => {
-        if (data === 'create product fail') {
-          showMessage('error', '중복된 제품 이름입니다.');
-          return;
+  const { mutate: createProductMutate } = useMutation(() => createProduct(productInfo), {
+    onSuccess: (data) => {
+      if (data === 'create product fail') {
+        showMessage('error', '중복된 제품 이름입니다.');
+        return;
+      } else {
+        if (typeof data === 'object' && 'message' in data) {
+          if (data.httpStatus === 'NOT_FOUND')
+            showMessage('warning', '마스터 정보가 올바르지 않습니다.');
+          else showMessage('error', '제품 생성 권한이 없습니다.');
         } else {
-          if (typeof data === 'object' && 'message' in data) {
-            if (data.httpStatus === 'NOT_FOUND')
-              showMessage('warning', '마스터 정보가 올바르지 않습니다.');
-            else showMessage('error', '제품 생성 권한이 없습니다.');
-          } else {
-            showMessage('success', '제품이 생성되었습니다.');
-            setTimeout(() => onClose(), 2000);
-          }
+          showMessage('success', '제품이 생성되었습니다.');
+          setTimeout(() => onClose(), 2000);
         }
-      },
-    }
-  );
+      }
+    },
+  });
 
   // TODO : staleTime 확인 필요
   // 제품 정보 조회
@@ -91,9 +88,7 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
       enabled: false,
       staleTime: 6000, // 1분
       cacheTime: 8000, // 1분 20초
-      refetchOnMount: false, // 마운트(리렌더링)될 때 데이터를 다시 가져오지 않음
       refetchOnWindowFocus: false, // 브라우저를 포커싱했을때 데이터를 가져오지 않음
-      refetchOnReconnect: false, // 네트워크가 다시 연결되었을때 다시 가져오지 않음
     }
   );
 

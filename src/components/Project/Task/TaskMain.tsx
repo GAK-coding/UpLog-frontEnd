@@ -1,32 +1,32 @@
 import { SelectMenu } from '@/typings/menu.ts';
 import { Select } from 'antd';
 import { taskAll } from '@/recoil/Project/Task.ts';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { RiCheckboxLine } from 'react-icons/ri';
-import { FaUserCircle } from 'react-icons/fa';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDisclosure } from '@chakra-ui/react';
 import CreateTask from '@/components/Project/Task/CreateTask.tsx';
 import { useQuery } from 'react-query';
 import { menuTaskList } from '@/api/Project/Task.ts';
-import { MenuTasks, TaskData } from '@/typings/task.ts';
+import { useEffect } from 'react';
+import { menuListData } from '@/recoil/Project/Menu.ts';
 
 export default function TaskMain() {
   const { product, project, menutitle } = useParams();
   const navigate = useNavigate();
   // task 추가 모달창
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const menuId = 1;
-
+  const menuList = useRecoilValue(menuListData);
+  const menuId = menuList.find((menu) => menu.menuName === menutitle)?.id;
   const [taskList, setTaskList] = useRecoilState(taskAll);
 
   // 날짜, 상태 필터링 데이터
   const dateData: SelectMenu[] = [
     { value: '날짜', label: '날짜' },
     {
-      value: '최신순',
-      label: '최신순',
+      value: '마감날짜',
+      label: '마감날짜',
     },
   ];
   const statusData: SelectMenu[] = [
@@ -36,28 +36,72 @@ export default function TaskMain() {
   ];
 
   // 메뉴별 task 데이터 가져오기
-  const getMenuTaskList = useQuery(['getMenuTaskList', menuId], () => menuTaskList(menuId), {
-    staleTime: 60000, // 10분
+  const getMenuTaskList = useQuery(['getMenuTaskList', menuId], () => menuTaskList(menuId!), {
+    staleTime: 0, // 10분
     cacheTime: 80000, // 12분
-    refetchOnMount: false, // 마운트(리렌더링)될 때 데이터를 다시 가져오지 않음
     refetchOnWindowFocus: false, // 브라우저를 포커싱했을때 데이터를 가져오지 않음
-    refetchOnReconnect: false, // 네트워크가 다시 연결되었을때 다시 가져오지 않음
+    select: (data) => {
+      if (data !== undefined) {
+        if (typeof data !== 'string') {
+          return data.tasks;
+        }
+      }
+    },
   });
 
-  // 메뉴별 task get 데이터 가져오기 성공 시 데이터 지정함
-  if (getMenuTaskList.isSuccess) {
-    if (typeof getMenuTaskList.data !== 'string' && 'id' in getMenuTaskList.data) {
-      const taskAllList: MenuTasks = getMenuTaskList.data;
-      const tasks: TaskData[] = taskAllList.tasks;
-      setTaskList(tasks);
-    }
-  }
-
   // 날짜, 상태 데이터 필터링 값
-  const handleChange = (value: { value: string; label: React.ReactNode }) => {
-    //TODO : Task 상태, 날짜별로 필터링해서 보여주기
-    console.log(value);
+  const handleChange = (type: string) => (value: { value: string; label: React.ReactNode }) => {
+    // TODO : Task 상태, 날짜별로 필터링해서 보여주기
+    // task 상태
+    if (type === 'status') {
+      switch (value.value) {
+        case 'done': {
+          setTaskList(
+            getMenuTaskList.data!.filter((task) => task.taskStatus === 'PROGRESS_COMPLETE')
+          );
+          break;
+        }
+        case 'before': {
+          setTaskList(
+            getMenuTaskList.data!.filter((task) => task.taskStatus === 'PROGRESS_BEFORE')
+          );
+          break;
+        }
+        default: {
+          setTaskList(getMenuTaskList.data!);
+          break;
+        }
+      }
+    } else {
+      switch (value.value) {
+        case '최신순': {
+          const sortedTaskList = taskList.slice().sort((taskA, taskB) => {
+            // endTime을 날짜 객체로 변환하여 시간 간격을 계산
+            const endTimeA = new Date(taskA.endTime);
+            const endTimeB = new Date(taskB.endTime);
+
+            // 시간 간격을 기준으로 정렬 순서를 결정
+            // 가장 마감일이 촉박한 순서대로 정렬함
+            return endTimeA.getTime() - endTimeB.getTime();
+          });
+          setTaskList(sortedTaskList);
+          break;
+        }
+        default: {
+          setTaskList(getMenuTaskList.data!);
+          break;
+        }
+      }
+    }
   };
+
+  useEffect(() => {
+    // 메뉴별 task get 데이터 가져오기 성공 시 데이터 지정함
+    if (getMenuTaskList.data !== undefined) {
+      setTaskList(getMenuTaskList.data);
+      console.log(getMenuTaskList.data);
+    }
+  }, [getMenuTaskList.data]);
 
   return (
     <div className={'flex-col-center justify-start w-full h-auto mb-8'}>
@@ -91,7 +135,7 @@ export default function TaskMain() {
           <Select
             labelInValue
             defaultValue={dateData[0]}
-            onChange={handleChange}
+            onChange={handleChange('date')}
             style={{ width: 90 }}
             options={dateData}
             dropdownStyle={{
@@ -103,7 +147,7 @@ export default function TaskMain() {
           <Select
             labelInValue
             defaultValue={statusData[2]}
-            onChange={handleChange}
+            onChange={handleChange('status')}
             style={{ width: 90 }}
             options={statusData}
             dropdownStyle={{
@@ -147,7 +191,7 @@ export default function TaskMain() {
 
               {/*task 메뉴, 상태, 할당자*/}
               <div className={'flex-row-center w-h-full justify-end text-gray-dark text-[0.93rem]'}>
-                <span className={'mr-3'}>{task.projectTeamName}</span>
+                <span className={'mr-3'}>{task.teamName}</span>
                 <span
                   className={
                     'flex items-center px-2 h-[1.5rem] rounded-[0.31rem] bg-orange-light-sideBar'
@@ -168,15 +212,15 @@ export default function TaskMain() {
                   {task.taskStatus === 'PROGRESS_IN' && '진행 중'}
                   {task.taskStatus === 'PROGRESS_COMPLETE' && '진행 후'}
                 </span>
-                {!task.targetMember.image ? (
-                  <FaUserCircle className={'flex text-[2.2rem] fill-gray-dark'} />
-                ) : (
-                  <img
-                    src={task.targetMember.image}
-                    alt="userprofile"
-                    className={'flex w-[2.2rem] h-[2.2rem]'}
-                  />
-                )}
+                {/*{!task.targetMember.image ? (*/}
+                {/*  <FaUserCircle className={'flex text-[2.2rem] fill-gray-dark'} />*/}
+                {/*) : (*/}
+                {/*  <img*/}
+                {/*    src={task.targetMember.image}*/}
+                {/*    alt="userprofile"*/}
+                {/*    className={'flex w-[2.2rem] h-[2.2rem]'}*/}
+                {/*  />*/}
+                {/*)}*/}
               </div>
             </section>
           ))}
@@ -191,7 +235,7 @@ export default function TaskMain() {
           </section>
         </div>
       </section>
-      <CreateTask isOpen={isOpen} onClose={onClose} />
+      <CreateTask isOpen={isOpen} onClose={onClose} menuId={menuId!} />
     </div>
   );
 }

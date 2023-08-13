@@ -68,7 +68,7 @@ export default function DeleteMenuDialog({ isOpen, onClose, menu, menuId }: Prop
     },
     onSettled: () => {
       // success or error, invalidate해서 새로 받아옴
-      return queryClient.invalidateQueries(['menuList']);
+      return queryClient.invalidateQueries(['menuList', projectId]);
     },
   });
 
