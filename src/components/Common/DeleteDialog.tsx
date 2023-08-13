@@ -27,35 +27,34 @@ export default function DeleteDialog({ isOpen, onClose, task, post, isTask }: Pr
   const cancelRef = useRef<HTMLButtonElement>(null);
   const { product, project, menutitle } = useParams();
   const { showMessage, contextHolder } = useMessage();
-  const taskList = useRecoilValue(taskAll);
+  const [taskList, setTaskList] = useRecoilState(taskAll);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const taskId = task!;
 
   // TODO : task 삭제 성공 데이터 값 맞는지 확인 필요
   // task 삭제 api 연결
-  const { mutate: deleteTaskMutate } = useMutation(() => deleteTask(task!), {
+  const { mutate: deleteTaskMutate } = useMutation(() => deleteTask(taskId), {
     onMutate: async () => {
       // optimistic update를 덮어쓰지 않기 위해 쿼리를 수동으로 삭제
-      await queryClient.cancelQueries(['getTaskEach', task]);
+      await queryClient.cancelQueries(['getTaskEach', taskId]);
 
-      const previousData = queryClient.getQueryData(['getTaskEach', task]);
+      const previousData = queryClient.getQueryData(['getTaskEach', taskId]);
 
-      queryClient.setQueryData(
-        ['getTaskEach', task],
-        taskList.filter((eachTask) => eachTask.id !== task)
-      );
+      const newTaskData = taskList.filter((eachTask) => eachTask.id !== task);
+      queryClient.setQueryData(['getTaskEach', taskId], newTaskData);
 
-      return () => queryClient.setQueryData(['getTaskEach', task], previousData);
+      return () => queryClient.setQueryData(['getTaskEach', taskId], previousData);
     },
     onSuccess: (data) => {
       if (data === 'delete task fail') {
         showMessage('error', 'Task 삭제에 실패했습니다.');
+        setTimeout(() => onClose(), 2000);
       } else if (data === 'delete') {
         showMessage('success', 'Task가 삭제되었습니다.');
         setTimeout(() => {
           onClose();
-          const location = `/workspace/${product}/${project}/menu/${menutitle}`;
-          window.location.reload();
+          navigate(`/workspace/${product}/${project}/menu/${menutitle}`);
         }, 2000);
       }
     },
@@ -68,7 +67,7 @@ export default function DeleteDialog({ isOpen, onClose, task, post, isTask }: Pr
       }
     },
     onSettled: () => {
-      return queryClient.invalidateQueries(['getTaskEach', task]);
+      return queryClient.invalidateQueries(['getTaskEach', taskId]);
     },
   });
 
@@ -84,7 +83,7 @@ export default function DeleteDialog({ isOpen, onClose, task, post, isTask }: Pr
     }
 
     // navigate(`/workspace/${product}/${project}/menu/${menutitle}`);
-  }, [post, task]);
+  }, [post, task, isTask]);
 
   return (
     <AlertDialog

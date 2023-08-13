@@ -22,8 +22,7 @@ import { useMutation, useQuery } from 'react-query';
 import { useMessage } from '@/hooks/useMessage.ts';
 import { checkTaskEditValue } from '@/utils/checkTaskEditValue.ts';
 import { useRecoilState } from 'recoil';
-import { eachTaskInfo } from '@/recoil/Project/Task.ts';
-import { useGetMenuList } from '@/components/Project/hooks/useGetMenuList.ts';
+import { eachTaskInfo, editTaskInfo } from '@/recoil/Project/Task.ts';
 
 export default function TaskDetail() {
   const { product, project, menutitle, taskid } = useParams();
@@ -40,20 +39,17 @@ export default function TaskDetail() {
   const getTaskData = useQuery(['getTaskEach', taskid], () => eachTask(+taskid!), {
     staleTime: 6000, // 1분
     cacheTime: 8000, // 1분 20초
-    refetchOnMount: false, // 마운트(리렌더링)될 때 데이터를 다시 가져오지 않음
+    refetchOnMount: true, // 마운트(리렌더링)될 때 데이터를 다시 가져오지 않음
     refetchOnWindowFocus: false, // 브라우저를 포커싱했을때 데이터를 가져오지 않음
     refetchOnReconnect: false, // 네트워크가 다시 연결되었을때 다시 가져오지 않음
   });
 
   // taskname input 값
-  const [taskName, onChangeTaskName, setTaskName] = useInput(taskInfo.taskName);
+  const [taskName, onChangeTaskName] = useInput(taskInfo.taskName);
   // 수정 여부
   const [isEdit, setIsEdit] = useState<boolean>(false);
-
   // 새로 수정한 task 데이터 값 저장
-  const [editTask, setEditTask] = useState(taskInfo);
-
-  console.log('edit', editTask);
+  const [editTask, setEditTask] = useRecoilState(editTaskInfo);
 
   // task (date, title, taskTeam, target-Member, status, menu, content) update 요청
   const { mutate: editDateMutate } = useMutation(
@@ -130,7 +126,8 @@ export default function TaskDetail() {
   // 수정 버튼 클릭 시
   const onChangeEdit = useCallback(() => {
     setIsEdit(true);
-    setTaskName(taskInfo.taskName);
+    setEditTask(taskInfo);
+    console.log('여기', editTask);
   }, [isEdit]);
 
   // 수정 완료 버튼 클릭 시
@@ -156,7 +153,7 @@ export default function TaskDetail() {
 
     handleMutate(editTask.taskName, taskInfo.taskName, editTitleMutate);
     handleMutate(editTask.startTime, taskInfo.startTime, editDateMutate);
-    handleMutate(editTask.endTime, taskInfo.endTime, editDateMutate);
+    // handleMutate(editTask.endTime, taskInfo.endTime, editDateMutate);
     handleMutate(editTask.teamId, taskInfo.teamId, editTeamMutate);
     handleMutate(
       editTask.targetMemberInfoDTO.id,
@@ -213,9 +210,15 @@ export default function TaskDetail() {
     if (getTaskData.data !== undefined && typeof getTaskData.data !== 'string') {
       setTaskInfo(getTaskData.data);
       console.log('가져온 정보', getTaskData.data);
-      console.log(taskName);
+      setEditTask(getTaskData.data);
+      console.log(editTask);
     }
   }, [getTaskData.data]);
+
+  useEffect(() => {
+    getTaskData.refetch();
+  }, [onClose]);
+
   return (
     <section className={'flex w-full h-auto py-20'}>
       {contextHolder}
@@ -285,12 +288,7 @@ export default function TaskDetail() {
         </section>
         <div className={'w-[80%] border-b border-gray-spring my-4'}></div>
         {/*부가 내용 detail*/}
-        <TaskEditInfo
-          isEdit={isEdit}
-          taskInfo={taskInfo}
-          editTask={editTask}
-          setEditTask={setEditTask}
-        />
+        <TaskEditInfo isEdit={isEdit} taskInfo={taskInfo} />
         <div className={'w-[80%] border-b border-gray-spring my-4'}></div>
         {/*세부 내용 */}
         <section className={'w-[70%] h-auto text-[2rem] pt-4 pb-8'}>
