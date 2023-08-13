@@ -36,7 +36,7 @@ export default function TaskDetail() {
 
   // TODO : staleTime 확인 필요 + 시간 다시 설정하기
   // task 한개 데이터 get
-  const getTaskData = useQuery(['task', taskid], () => eachTask(+taskid!), {
+  const getTaskData = useQuery(['getTaskEach', taskid], () => eachTask(+taskid!), {
     staleTime: 6000, // 1분
     cacheTime: 8000, // 1분 20초
     refetchOnMount: false, // 마운트(리렌더링)될 때 데이터를 다시 가져오지 않음
@@ -45,11 +45,13 @@ export default function TaskDetail() {
   });
 
   // get 해온 데이터로 taskInfo 지정
-  if (getTaskData.isSuccess) {
-    if (typeof getTaskData.data !== 'string' && 'id' in getTaskData.data) {
+  useEffect(() => {
+    // 메뉴별 task get 데이터 가져오기 성공 시 데이터 지정함
+    if (getTaskData.data !== undefined && typeof getTaskData.data !== 'string') {
       setTaskInfo(getTaskData.data);
+      console.log('가져온 정보', getTaskData.data);
     }
-  }
+  }, [getTaskData.data]);
 
   // taskname input 값
   const [taskName, onChangeTaskName] = useInput(taskInfo.taskName);
@@ -233,9 +235,7 @@ export default function TaskDetail() {
         >
           {/*task 제목, id*/}
           <div className={'flex items-center w-[70%] h-auto font-bold'}>
-            {!isEdit ? (
-              <span className={'text-3xl mr-4'}>{taskInfo.taskName}</span>
-            ) : (
+            {isEdit ? (
               <input
                 className={'w-[70%] h-full text-3xl mr-4 pb-2'}
                 type="text"
@@ -244,6 +244,8 @@ export default function TaskDetail() {
                 onChange={onChangeTaskName}
                 maxLength={20}
               />
+            ) : (
+              <span className={'text-3xl mr-4'}>{taskInfo.taskName}</span>
             )}
             <span className={'text-[1.4rem] text-gray-light'}>{`task ${taskid}`}</span>
           </div>

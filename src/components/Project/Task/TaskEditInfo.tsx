@@ -101,7 +101,7 @@ export default function TaskEditInfo({ isEdit, editTask, setEditTask }: Props) {
 
     const updatedTask = {
       ...editTask,
-      projectTeamId: value,
+      teamId: value,
     };
 
     setEditTask(updatedTask);
@@ -113,7 +113,7 @@ export default function TaskEditInfo({ isEdit, editTask, setEditTask }: Props) {
 
     const updatedTask = {
       ...editTask,
-      projectTeamId: value,
+      teamId: value,
     };
 
     setEditTask(updatedTask);
@@ -129,7 +129,7 @@ export default function TaskEditInfo({ isEdit, editTask, setEditTask }: Props) {
           <span>시작날짜</span>
           <div className={'ml-3 h-4 border-solid border-r border-[0.2px] border-gray-border'} />
         </div>
-        {isEdit}
+
         {isEdit ? (
           <DatePicker
             defaultValue={dayjs(editTask.startTime, 'YYYY.MM.DD')}
@@ -226,7 +226,7 @@ export default function TaskEditInfo({ isEdit, editTask, setEditTask }: Props) {
             />
           </div>
         ) : (
-          <span className={'ml-3 text-gray-dark'}>{editTask.projectTeamName}</span>
+          <span className={'ml-3 text-gray-dark'}>{editTask.teamName}</span>
         )}
       </div>
 
@@ -238,21 +238,21 @@ export default function TaskEditInfo({ isEdit, editTask, setEditTask }: Props) {
           <span>할당자</span>
           <div className={'ml-3 h-4 border-solid border-r border-[0.2px] border-gray-border'} />
         </div>
-        {editTask.targetMember.image === '' ? (
-          <FaUserCircle className={'ml-3 text-[2rem] fill-gray-dark'} />
-        ) : (
-          <img
-            src={editTask.targetMember.image}
-            className={'ml-3 w-[2rem] h-[2rem] rounded-full'}
-          />
-        )}
+        {/*{editTask.targetMember.image === '' ? (*/}
+        {/*  <FaUserCircle className={'ml-3 text-[2rem] fill-gray-dark'} />*/}
+        {/*) : (*/}
+        {/*  <img*/}
+        {/*    src={editTask.targetMemberInfoDTO.image}*/}
+        {/*    className={'ml-3 w-[2rem] h-[2rem] rounded-full'}*/}
+        {/*  />*/}
+        {/*)}*/}
 
         {isEdit ? (
           <Select
             labelInValue
             defaultValue={{
-              value: `${editTask.targetMember.id}`,
-              label: `${editTask.targetMember.nickname}(${editTask.targetMember.name})`,
+              value: `${editTask.targetMemberInfoDTO.id}`,
+              label: `${editTask.targetMemberInfoDTO.nickname}(${editTask.targetMemberInfoDTO.name})`,
             }}
             onChange={handleChange('targetMember')}
             style={{ width: 120 }}
@@ -265,9 +265,9 @@ export default function TaskEditInfo({ isEdit, editTask, setEditTask }: Props) {
             }}
           />
         ) : (
-          <span
-            className={'ml-2 text-gray-dark'}
-          >{`${editTask.targetMember.nickname}(${editTask.targetMember.name})`}</span>
+          <span className={'ml-2 text-gray-dark'}>
+            {`${editTask.targetMemberInfoDTO.nickname}(${editTask.targetMemberInfoDTO.name})`}
+          </span>
         )}
       </div>
     </section>
