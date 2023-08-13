@@ -39,11 +39,12 @@ export default function TaskDetail() {
   const getTaskData = useQuery(['getTaskEach', taskid], () => eachTask(+taskid!), {
     staleTime: 6000, // 1분
     cacheTime: 8000, // 1분 20초
+    // refetchOnMount: false,
     refetchOnWindowFocus: false, // 브라우저를 포커싱했을때 데이터를 가져오지 않음
   });
 
   // taskname input 값
-  const [taskName, onChangeTaskName] = useInput(taskInfo.taskName);
+  const [taskName, onChangeTaskName, setTaskName] = useInput('');
   // 수정 여부
   const [isEdit, setIsEdit] = useState<boolean>(false);
   // 새로 수정한 task 데이터 값 저장
@@ -124,43 +125,40 @@ export default function TaskDetail() {
   // 수정 버튼 클릭 시
   const onChangeEdit = useCallback(() => {
     setIsEdit(true);
-    setEditTask(taskInfo);
-    console.log('여기', editTask);
+    console.log('여기', editTask, taskName);
   }, [isEdit]);
 
   // 수정 완료 버튼 클릭 시
   const onSubmitEdit = useCallback(() => {
     // 변경된 값이 비어있는 경우
-    const checkEmpty = checkTaskEditValue(editTask);
-
-    if (!checkEmpty) {
+    // const checkEmpty = checkTaskEditValue(editTask);
+    //
+    // if (!checkEmpty) {
+    //   showMessage('warning', 'Task의 정보를 모두 작성해주세요');
+    //   return;
+    // }
+    if (editTask.taskName === '') {
       showMessage('warning', 'Task의 정보를 모두 작성해주세요');
       return;
     }
 
     // 변경된 값만 task update요청 보냄
-    const handleMutate = (
-      newValue: TaskData[keyof TaskData],
-      originalValue: TaskData[keyof TaskData],
-      mutateFunction: () => void
-    ) => {
-      if (newValue !== originalValue) {
-        mutateFunction();
+    const handleMutate = (newValue: TaskData[keyof TaskData], mutateFunction: () => void) => {
+      if (typeof newValue === 'string') {
+        if (newValue !== '') mutateFunction();
+      } else if (typeof newValue === 'number') {
+        if (newValue !== 0) mutateFunction();
       }
     };
 
-    handleMutate(editTask.taskName, taskInfo.taskName, editTitleMutate);
-    handleMutate(editTask.startTime, taskInfo.startTime, editDateMutate);
-    // handleMutate(editTask.endTime, taskInfo.endTime, editDateMutate);
-    handleMutate(editTask.teamId, taskInfo.teamId, editTeamMutate);
-    handleMutate(
-      editTask.targetMemberInfoDTO.id,
-      taskInfo.targetMemberInfoDTO.id,
-      editTargetMemberMutate
-    );
-    handleMutate(editTask.taskStatus, taskInfo.taskStatus, editStatusMutate);
-    handleMutate(editTask.menuId, taskInfo.menuId, editMenuMutate);
-    handleMutate(editTask.taskDetail, taskInfo.taskDetail, editContentMutate);
+    handleMutate(editTask.taskName, editTitleMutate);
+    handleMutate(editTask.startTime, editDateMutate);
+    handleMutate(editTask.endTime, editDateMutate);
+    handleMutate(editTask.teamId, editTeamMutate);
+    handleMutate(editTask.targetMemberInfoDTO.id, editTargetMemberMutate);
+    handleMutate(editTask.taskStatus, editStatusMutate);
+    handleMutate(editTask.menuId, editMenuMutate);
+    handleMutate(editTask.taskDetail, editContentMutate);
 
     if (!editSuccess) {
       showMessage('error', 'Task 수정에 실패했습니다.');
@@ -188,7 +186,7 @@ export default function TaskDetail() {
       ...editTask,
       taskDetail: e.target.value,
     };
-
+    console.log(e.target.value);
     setEditTask(updatedTask);
   };
 
@@ -208,14 +206,10 @@ export default function TaskDetail() {
     if (getTaskData.data !== undefined && typeof getTaskData.data !== 'string') {
       setTaskInfo(getTaskData.data);
       console.log('가져온 정보', getTaskData.data);
-      setEditTask(getTaskData.data);
-      console.log(editTask);
+      // setEditTask(getTaskData.data);
+      setTaskName(getTaskData.data.taskName);
     }
   }, [getTaskData.data]);
-
-  useEffect(() => {
-    getTaskData.refetch();
-  }, [onClose]);
 
   return (
     <section className={'flex w-full h-auto py-20'}>
@@ -245,7 +239,7 @@ export default function TaskDetail() {
                 className={'w-[70%] h-full text-3xl mr-4 pb-2'}
                 type="text"
                 placeholder="Task 제목을 입력해주세요."
-                value={editTask.taskName}
+                value={taskName}
                 onChange={onChangeTaskName}
                 maxLength={20}
               />
@@ -309,15 +303,20 @@ export default function TaskDetail() {
         {/*수정 삭제 버튼*/}
         <section className={'flex-row-center justify-end w-full h-[4.5rem] mb-4'}>
           <nav
-            className={`flex-row-center ${
-              isEdit ? 'justify-end' : 'justify-between'
-            } w-[13rem] h-auto py-4 px-4 mr-6 font-bold text-white`}
+            className={
+              'flex-row-center justify-between w-[13rem] h-auto py-4 px-4 mr-6 font-bold text-white'
+            }
           >
-            {!isEdit && (
-              <button className={'w-[5rem] rounded h-9 bg-orange'} onClick={onChangeEdit}>
-                수정
-              </button>
-            )}
+            <button
+              className={'w-[5rem] rounded h-9 bg-orange'}
+              onClick={() => {
+                if (!isEdit) onChangeEdit();
+                else setIsEdit(false);
+              }}
+            >
+              {isEdit ? '취소' : '수정'}
+            </button>
+
             <button
               className={'w-[5rem] rounded h-9 bg-orange'}
               onClick={() => {
