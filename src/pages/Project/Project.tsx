@@ -9,14 +9,13 @@ import { useNavigate } from 'react-router-dom';
 import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 import { useRecoilState } from 'recoil';
 import { taskState } from '@/recoil/Project/Task.ts';
-import { StatusTaskData, TaskStatus } from '@/typings/task.ts';
+import { TaskStatus } from '@/typings/task.ts';
 import { allStatusTaskList } from '@/api/Project/Task.ts';
 import { useQuery } from 'react-query';
-import { convertAddDragId } from '@/utils/convertAddDragId.ts';
 
 export default function Project() {
   const { product, project } = useParams();
-  const projectId = 1;
+  const projectId = 10;
   const navigate = useNavigate();
 
   // task 상태별로 묶어둔 데이터 (dragId 포함되어있음)
@@ -33,15 +32,14 @@ export default function Project() {
     }
   );
 
-  // get 요청 성공 시 dragId 값 추가
-  if (getTaskStatusList.isSuccess) {
-    // dragId 값 추가한 데이터로 변환
-    if (typeof getTaskStatusList.data !== 'string' && 'id' in getTaskStatusList.data) {
-      const statusList: StatusTaskData = getTaskStatusList.data;
-      const convertedData = convertAddDragId(statusList);
-      setTaskStatusList(convertedData);
+  useEffect(() => {
+    if (getTaskStatusList.data !== undefined) {
+      if (typeof getTaskStatusList.data !== 'string') {
+        setTaskStatusList(getTaskStatusList);
+        console.log(getTaskStatusList.data);
+      }
     }
-  }
+  }, [getTaskStatusList.data]);
 
   // 진행률 퍼센트
   const [progress, setProgress] = useState(0);
@@ -106,16 +104,16 @@ export default function Project() {
   );
 
   // TODO : 그룹 필터링 되는거 확인하고 utils 함수로 빼기
-  useEffect(() => {
-    const totalTasks = [
-      ...taskStatusList.PROGRESS_BEFORE,
-      ...taskStatusList.PROGRESS_IN,
-      ...taskStatusList.PROGRESS_COMPLETE,
-    ].length;
-    const doneTasks = taskStatusList.PROGRESS_COMPLETE.length;
-    const percent = (doneTasks / totalTasks) * 100;
-    setProgress(Math.floor(percent));
-  }, [taskStatusList]);
+  // useEffect(() => {
+  //   if (taskStatusList !== undefined) {
+  //     const totalTasks = Object.keys(taskStatusList).reduce((acc, cur) => {
+  //       return acc + taskStatusList[cur].length;
+  //     }, 0);
+  //     const doneTasks = taskStatusList.PROGRESS_COMPLETE.length;
+  //     const percent = (doneTasks / totalTasks) * 100;
+  //     setProgress(Math.floor(percent));
+  //   }
+  // }, [taskStatusList]);
 
   // 필터링 된 페이지로 이동
   // useEffect(() => {

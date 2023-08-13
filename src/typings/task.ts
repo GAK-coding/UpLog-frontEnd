@@ -3,9 +3,8 @@ import { MenuInfo } from '@/typings/menu.ts';
 
 export type TaskStatus = 'PROGRESS_BEFORE' | 'PROGRESS_IN' | 'PROGRESS_COMPLETE';
 
-export interface Task {
+export interface TaskData {
   id: number;
-  dragId: string;
   taskName: string;
   targetMemberInfoDTO: targetMemberInfo;
   menuId: number;
@@ -19,18 +18,10 @@ export interface Task {
   endTime: string;
 }
 
-export interface TaskData extends Omit<Task, 'dragId'> {}
-
 export interface StatusTaskData {
   PROGRESS_BEFORE: TaskData[];
   PROGRESS_IN: TaskData[];
   PROGRESS_COMPLETE: TaskData[];
-}
-
-export interface Tasks {
-  PROGRESS_BEFORE: Task[];
-  PROGRESS_IN: Task[];
-  PROGRESS_COMPLETE: Task[];
 }
 
 export interface TaskBody {

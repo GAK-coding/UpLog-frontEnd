@@ -235,7 +235,7 @@ export default function TaskMain() {
           </section>
         </div>
       </section>
-      <CreateTask isOpen={isOpen} onClose={onClose} menuId={menuId} />
+      <CreateTask isOpen={isOpen} onClose={onClose} menuId={menuId!} />
     </div>
   );
 }

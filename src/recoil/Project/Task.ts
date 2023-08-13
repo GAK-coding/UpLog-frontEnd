@@ -192,6 +192,14 @@ export const taskAll = atom<TaskData[]>({
 //   ],
 // });
 
+// export const taskState = atom<Tasks>({
+//   key: 'allByStatusTask',
+//   default: {
+//     PROGRESS_BEFORE: [],
+//     PROGRESS_IN: [],
+//     PROGRESS_COMPLETE: [],
+//   },
+// });
 export const taskState = atom<Tasks>({
   key: 'task',
   default: {

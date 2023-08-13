@@ -11,7 +11,12 @@ import { instance } from '@/api';
 // 제품 생성
 export const createProduct = async (data: ProductBody) => {
   try {
-    const res: AxiosResponse<ProductData | FailProduct> = await instance.post(`/products`, data);
+    const res: AxiosResponse<ProductData | FailProduct> = await instance.post(
+      '/products',
+
+      data,
+      { withCredentials: true }
+    );
 
     return res.data;
   } catch (error) {
