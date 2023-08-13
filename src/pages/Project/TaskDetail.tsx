@@ -249,7 +249,7 @@ export default function TaskDetail() {
             ) : (
               <span className={'text-3xl mr-4'}>{taskInfo.taskName}</span>
             )}
-            <span className={'text-[1.4rem] text-gray-light'}>{`task ${taskid}`}</span>
+            <span className={'text-[1.4rem] text-gray-light'}>{`task ${taskInfo.id}`}</span>
           </div>
           {/*진행상태 select*/}
           <div className={'w-[30%] h-auto flex justify-end'}>

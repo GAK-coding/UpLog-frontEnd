@@ -267,7 +267,8 @@ export default function TaskEditInfo({ isEdit, taskInfo, editTask, setEditTask }
           />
         ) : (
           <span className={'ml-2 text-gray-dark'}>
-            {/*{`${taskInfo.targetMemberInfoDTO.nickname}(${taskInfo.targetMemberInfoDTO.name})`}*/}
+            {taskInfo.targetMemberInfoDTO &&
+              `${taskInfo.targetMemberInfoDTO.nickname}(${taskInfo.targetMemberInfoDTO.name})`}
           </span>
         )}
       </div>
