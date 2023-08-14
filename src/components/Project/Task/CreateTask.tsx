@@ -352,7 +352,10 @@ export default function CreateTask({ isOpen, onClose, menuId }: Props) {
 
               {/*Task 정보 입력 -> 제목*/}
               <div className={'w-full mt-4 mb-5 text-[1rem]'}>
-                <span className={'flex mb-[0.5rem] text-gray-dark font-bold'}>Task 제목</span>
+                <div className={'flex'}>
+                  <span className={'flex mb-[0.5rem] text-gray-dark font-bold'}>Task 제목</span>
+                  <span className={'text-[#E06469]'}>&nbsp;*</span>
+                </div>
                 <input
                   type="text"
                   value={taskName}
@@ -367,7 +370,10 @@ export default function CreateTask({ isOpen, onClose, menuId }: Props) {
 
               {/*Task 기간 지정*/}
               <div className={'w-full mb-5 text-[1rem]'}>
-                <span className={'flex mb-[0.5rem] text-gray-dark font-bold'}>기간 설정</span>
+                <div className={'flex'}>
+                  <span className={'flex mb-[0.5rem] text-gray-dark font-bold'}>기간 설정</span>
+                  <span className={'text-[#E06469]'}>&nbsp;*</span>
+                </div>
                 <div className={'w-h-full'}>
                   <Select
                     labelInValue
@@ -411,7 +417,10 @@ export default function CreateTask({ isOpen, onClose, menuId }: Props) {
 
               {/*그룹*/}
               <div className={'w-full mb-5 text-[1rem]'}>
-                <span className={'flex mb-[0.5rem] text-gray-dark font-bold'}>그룹</span>
+                <div className={'flex'}>
+                  <span className={'flex mb-[0.5rem] text-gray-dark font-bold'}>그룹</span>
+                  <span className={'text-[#E06469]'}>&nbsp;*</span>
+                </div>
                 <div className={'flex justify-between pr-7'}>
                   <Select
                     defaultValue={pGroup[0]}
@@ -442,7 +451,10 @@ export default function CreateTask({ isOpen, onClose, menuId }: Props) {
               {/*메뉴 + 할당자*/}
               <div className={'flex-row-center w-full mb-5 text-[1rem]'}>
                 <div className={'flex-col w-1/2'}>
-                  <span className={'flex mb-[0.5rem] text-gray-dark font-bold'}>메뉴</span>
+                  <div className={'flex'}>
+                    <span className={'flex mb-[0.5rem] text-gray-dark font-bold'}>메뉴</span>
+                    <span className={'text-[#E06469]'}>&nbsp;*</span>
+                  </div>
                   <Select
                     labelInValue
                     defaultValue={{ value: '-1', label: '메뉴 선택' }}
@@ -457,7 +469,10 @@ export default function CreateTask({ isOpen, onClose, menuId }: Props) {
                   />
                 </div>
                 <div className={'flex-col w-1/2 ml-16'}>
-                  <span className={'flex mb-[0.5rem] text-gray-dark font-bold'}>할당자</span>
+                  <div className={'flex'}>
+                    <span className={'flex mb-[0.5rem] text-gray-dark font-bold'}>할당자</span>
+                    <span className={'text-[#E06469]'}>&nbsp;*</span>
+                  </div>
                   <Select
                     labelInValue
                     defaultValue={{ value: '-1', label: '할당자 선택' }}
