@@ -1,11 +1,23 @@
-export interface ProductInfo {
+export interface Product {
   id: number;
-  draggableId: string;
   name: string;
+  company: string;
+}
+
+export interface GetProductList {
+  productId: number;
+  productName: string;
+  memberName: string;
+  powerType: 'MASTER' | 'LEADER' | 'DEFAULT' | 'CLIENT';
+  indexNum: number;
+}
+
+export interface ProductInfo extends Omit<GetProductList, 'memberName'> {
+  draggableId: string;
   image?: string;
   // TODO : master, client type user info로 변경하기
-  masterEmail: string;
-  client: string;
+  // masterEmail: string;
+  // client: string;
 }
 
 export interface ProductBody extends Omit<ProductInfo, 'draggableId' | 'id' | 'client'> {
@@ -16,10 +28,7 @@ export interface FailProduct {
   message: '해당 이메일로 존재하는 객체를 찾을 수 없습니다.' | '제품 생성 권한이 없습니다.';
 }
 
-export interface ProductData {
-  id: number;
-  name: string;
-  company: string;
+export interface ProductsData extends Product {
   teamId: number;
   projectListId: number[];
 }
