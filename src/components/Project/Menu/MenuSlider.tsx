@@ -184,7 +184,7 @@ export default function MenuSlider({ product, project, menutitle }: Props) {
       {/*결과물 menu (defult)*/}
       {menuList.length !== 0 && (
         <NavLink
-          to={`/workspace/${product}/${project}/menu/결과물`}
+          to={`/workspace/${product}/${project}/menu/${menuList[0].menuName}`}
           className={({ isActive }) =>
             `flex-row-center justify-start  m-auto h-[5rem] w-1/5 border-r border-gray-border ${
               isActive && 'bg-orange text-black'
