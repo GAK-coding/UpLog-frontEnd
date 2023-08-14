@@ -167,12 +167,17 @@ export default function TaskDetail() {
                 onChange={onChangeSelectedType}
                 width={'8rem'}
                 height={'2rem'}
-                backgroundColor={`var(--${editTaskData.updateTaskStatus})`}
+                backgroundColor={`${
+                  editTaskData.updateTaskStatus === null
+                    ? `var(--${taskInfo.taskStatus})`
+                    : `var(--${editTaskData.updateTaskStatus})`
+                } `}
                 fontSize={'1rem'}
                 border={'none'}
                 fontWeight={700}
                 color={'#292723'}
                 marginLeft={'0.5rem'}
+                defaultValue={taskInfo.taskStatus}
                 icon={<AiFillCaretDown fill={'var(--gray-light)'} />}
               >
                 <option value={'PROGRESS_BEFORE'}>진행 전</option>
