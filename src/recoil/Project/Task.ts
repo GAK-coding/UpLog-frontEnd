@@ -1,27 +1,19 @@
 import { GroupMember } from '@/typings/project.ts';
 import { atom } from 'recoil';
-import { StatusTaskData, TaskData } from '@/typings/task.ts';
+import { StatusTaskData, TaskData, UpdateTaskBody } from '@/typings/task.ts';
 
-export const editTaskInfo = atom<TaskData>({
-  key: 'editTask',
+export const editTaskInfo = atom<UpdateTaskBody>({
+  key: 'editTaskInfo',
   default: {
-    id: 0,
-    taskName: '',
-    targetMemberInfoDTO: {
-      id: 0,
-      name: '',
-      nickname: '',
-      image: '',
-    },
-    menuId: 0,
-    menuName: '',
-    teamId: 0,
-    teamName: '',
-    parentTeamId: null,
-    taskStatus: 'PROGRESS_BEFORE',
-    taskDetail: '',
-    startTime: '',
-    endTime: '',
+    updateTaskName: null,
+    updateTargetMemberId: null,
+    updateMenuId: null,
+    updateTeamId: null,
+    updateTeamName: null,
+    updateTaskStatus: null,
+    updateTaskDetail: null,
+    updateStartTime: null,
+    updateEndTime: null,
   },
 });
 

@@ -38,6 +38,19 @@ export interface FailTask {
   httpStatus: string;
   message: string;
 }
+
+export interface UpdateTaskBody {
+  updateTaskName: string | null;
+  updateTargetMemberId: number | null;
+  updateMenuId: number | null;
+  updateTeamId: number | null;
+  updateTeamName: string | null;
+  updateTaskStatus: TaskStatus | null;
+  updateTaskDetail: string | null;
+  updateStartTime: string | null;
+  updateEndTime: string | null;
+}
+
 export interface MenuTasks {
   menuInfo: MenuInfo;
   tasks: TaskData[];

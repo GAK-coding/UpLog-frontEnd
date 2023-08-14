@@ -145,7 +145,7 @@ export default function Header() {
               value={searchTag}
               onChange={onChangeSearchTag}
               onKeyDown={(e) => activeEnter(e)}
-              placeholder={'검색'}
+              placeholder={'태그 검색'}
               maxLength={20}
               required
               className={`w-[8.7rem] h-full font-medium text-gray-dark ${
