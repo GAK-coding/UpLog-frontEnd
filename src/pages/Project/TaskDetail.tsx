@@ -9,7 +9,7 @@ import useInput from '@/hooks/useInput.ts';
 import { TaskStatus, UpdateTaskBody } from '@/typings/task.ts';
 import DeleteDialog from '@/components/Common/DeleteDialog.tsx';
 import { eachTask, editTask } from '@/api/Project/Task.ts';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useMessage } from '@/hooks/useMessage.ts';
 import { checkTaskEditValue } from '@/utils/checkTaskEditValue.ts';
 import { useRecoilState } from 'recoil';
@@ -20,10 +20,18 @@ export default function TaskDetail() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { showMessage, contextHolder } = useMessage();
   const [editSuccess, setEditSuccess] = useState<boolean>(true);
+  const queryClient = useQueryClient();
 
   // 현재 task 데이터 가져오기
   const [taskInfo, setTaskInfo] = useRecoilState(eachTaskInfo);
   const status = formatStatus(taskInfo.taskStatus);
+
+  // taskname input 값
+  const [taskName, onChangeTaskName, setTaskName] = useInput<string | null>(null);
+  // 수정 여부
+  const [isEdit, setIsEdit] = useState<boolean>(false);
+  // 새로 수정한 task 데이터 값 저장
+  const [editTaskData, setEditTask] = useRecoilState(editTaskInfo);
 
   // TODO : staleTime 확인 필요 + 시간 다시 설정하기
   // task 한개 데이터 get
@@ -43,13 +51,6 @@ export default function TaskDetail() {
     // refetchOnWindowFocus: false, // 브라우저를 포커싱했을때 데이터를 가져오지 않음
   });
 
-  // taskname input 값
-  const [taskName, onChangeTaskName, setTaskName] = useInput<string | null>(null);
-  // 수정 여부
-  const [isEdit, setIsEdit] = useState<boolean>(false);
-  // 새로 수정한 task 데이터 값 저장
-  const [editTaskData, setEditTask] = useRecoilState(editTaskInfo);
-
   // task update
   const { mutate: editTaskMutate } = useMutation(
     (editTaskData: UpdateTaskBody) => editTask(editTaskData, +taskid!),
@@ -58,6 +59,9 @@ export default function TaskDetail() {
         if (typeof data === 'string') {
           setEditSuccess(false);
         }
+      },
+      onSettled: () => {
+        queryClient.invalidateQueries(['getTaskEach', taskid]);
       },
     }
   );
@@ -71,13 +75,12 @@ export default function TaskDetail() {
   // 수정 완료 버튼 클릭 시
   const onSubmitEdit = useCallback(() => {
     // 변경된 값이 비어있는 경우
-    // const checkEmpty = checkTaskEditValue(editTaskData);
-    //
-    // if (!checkEmpty) {
-    //   showMessage('warning', 'Task의 정보를 모두 작성해주세요');
-    //   return;
-    // }
+    const checkEmpty = checkTaskEditValue(editTaskData);
 
+    if (!checkEmpty) {
+      showMessage('warning', 'Task의 정보를 모두 작성해주세요');
+      return;
+    }
     editTaskMutate(editTaskData);
 
     if (!editSuccess) {
