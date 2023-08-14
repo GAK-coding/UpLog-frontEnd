@@ -1,7 +1,7 @@
 import { BsFillMegaphoneFill } from 'react-icons/bs';
 import { eachMenuPost } from '@/recoil/Project/Post.ts';
 import { useRecoilState } from 'recoil';
-import { Post } from '@/typings/post.ts';
+import { PostData } from '@/typings/postData.ts';
 import PostEach from '@/components/Project/Post/PostEach.tsx';
 
 export default function PostMain() {
@@ -9,8 +9,8 @@ export default function PostMain() {
   const [postData, setPostListData] = useRecoilState(eachMenuPost);
 
   // 공지글이 존재하는지
-  const noticePostInfo: Post = postData.noticePost;
-  const posts: Post[] = postData.posts;
+  const noticePostInfo: PostData = postData.noticePost;
+  const posts: PostData[] = postData.posts;
 
   return (
     <section className={'flex-col-center justify-start w-[75%] h-auto mb-12 '}>

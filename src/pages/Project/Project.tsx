@@ -9,17 +9,27 @@ import { useNavigate } from 'react-router-dom';
 import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 import { useRecoilState } from 'recoil';
 import { taskState } from '@/recoil/Project/Task.ts';
-import { TaskStatus } from '@/typings/task.ts';
-import { allStatusTaskList } from '@/api/Project/Task.ts';
-import { useQuery } from 'react-query';
+import { DragTaskIndexBody, TaskStatus } from '@/typings/task.ts';
+import { allStatusTaskList, updateTaskIndex } from '@/api/Project/Task.ts';
+import { useMutation, useQuery } from 'react-query';
 
+interface IndexID {
+  [key: number]: number;
+}
 export default function Project() {
   const { product, project } = useParams();
   const projectId = 10;
   const navigate = useNavigate();
+  const [taskStatus, setTaskStatus] = useState<TaskStatus>('PROGRESS_BEFORE');
+  const [dragUpdateData, setDragUpdateData] = useState<DragTaskIndexBody>({
+    beforeTaskStatus: null,
+    movedTaskId: null,
+    updateTaskIndexList: [],
+  });
 
   // task 상태별로 묶어둔 데이터
   const [taskStatusList, setTaskStatusList] = useRecoilState(taskState);
+  const [check, setCheck] = useState(false);
 
   // task 상태별로 묶어둔 데이터 get 요청
   const getTaskStatusList = useQuery(
@@ -30,7 +40,6 @@ export default function Project() {
         if (data !== undefined) {
           if (typeof data !== 'string') {
             setTaskStatusList(data);
-            console.log(getTaskStatusList.data);
           }
         }
       },
@@ -38,6 +47,10 @@ export default function Project() {
       cacheTime: 80000, // 12분
       refetchOnWindowFocus: false, // 브라우저를 포커싱했을때 데이터를 가져오지 않음
     }
+  );
+
+  const { mutate: updateTaskIndexMutate } = useMutation((dragUpdateData: DragTaskIndexBody) =>
+    updateTaskIndex(dragUpdateData, taskStatus)
   );
 
   // 진행률 퍼센트
@@ -84,7 +97,6 @@ export default function Project() {
     (result: DropResult) => {
       const { destination, source } = result;
 
-      console.log(result);
       // 이상한 곳에 드래그하면 return
       if (!destination) return;
 
@@ -94,13 +106,60 @@ export default function Project() {
 
       // 재정렬
       const items = JSON.parse(JSON.stringify(taskStatusList)) as typeof taskStatusList;
+      // console.log('정렬되지 않은 결과', taskStatusList[`${destinationKey}`]);
       const [targetItem] = items[sourceKey].splice(source.index, 1);
       items[destinationKey].splice(destination.index, 0, targetItem);
 
+      // 같은 board 내에서 이동한 경우
+      if (sourceKey === destinationKey) {
+        setTaskStatus(destinationKey);
+
+        // key(id) : value(index) 형태로 데이터를 저장
+        const indexMap: IndexID = {};
+        items[destinationKey].forEach((item, index) => {
+          indexMap[item.id] = index;
+        });
+
+        // dnd 완료된 데이터랑 기존 데이터랑 비교해서 index값 update
+        const newIndexData = taskStatusList[`${destinationKey}`].map((item) => indexMap[item.id]);
+
+        // 정렬된 인덱스 값을 request body data로 지정함
+        setDragUpdateData({ ...dragUpdateData, updateTaskIndexList: newIndexData });
+      } else {
+        // 다른 상태로 이동할 경우
+        setTaskStatus(destinationKey);
+        // 이동한 task를 이동한 상태값으로 값을 업데이트
+        const newDestinationData = [...taskStatusList[`${destinationKey}`], targetItem];
+
+        // key(id) : value(index) 형태로 데이터를 저장
+        const indexMap: IndexID = {};
+        items[destinationKey].forEach((item, index) => {
+          indexMap[item.id] = index;
+        });
+
+        // dnd 완료된 데이터랑 기존 데이터랑 비교해서 index값 update
+        const newIndexData = newDestinationData.map((item) => indexMap[item.id]);
+        // 정렬된 인덱스 값을 request body data로 지정함
+        setDragUpdateData({
+          beforeTaskStatus: sourceKey,
+          movedTaskId: +result.draggableId,
+          updateTaskIndexList: newIndexData,
+        });
+      }
       setTaskStatusList(items);
+      setCheck(true);
     },
     [taskStatusList]
   );
+
+  // dnd 관련 데이터 set이 완료됐으면 patch 요청 보냄 + data 초기화
+  useEffect(() => {
+    if (check) {
+      updateTaskIndexMutate(dragUpdateData);
+      setCheck(false);
+      setDragUpdateData({ beforeTaskStatus: null, movedTaskId: null, updateTaskIndexList: [] });
+    }
+  }, [check]);
 
   // TODO : 그룹 필터링 되는거 확인하고 utils 함수로 빼기
   useEffect(() => {

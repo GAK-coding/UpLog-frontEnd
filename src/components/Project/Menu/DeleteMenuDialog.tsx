@@ -28,7 +28,7 @@ export default function DeleteMenuDialog({ isOpen, onClose, menu, menuId }: Prop
   const cancelRef = useRef<HTMLButtonElement>(null);
   const [menuList, setMenuList] = useRecoilState(menuListData);
   const queryClient = useQueryClient();
-  const projectId = 9;
+  const projectId = 10;
 
   // menu delete
   const { mutate: deleteMenuMutate } = useMutation(() => deleteMenu(menuId), {

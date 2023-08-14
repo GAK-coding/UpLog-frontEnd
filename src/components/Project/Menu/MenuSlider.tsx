@@ -8,11 +8,11 @@ import { AiOutlinePlus } from 'react-icons/ai';
 import { Editable, EditableInput, EditablePreview, useDisclosure } from '@chakra-ui/react';
 import { useRecoilState } from 'recoil';
 import { menuListData } from '@/recoil/Project/Menu.ts';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useMessage } from '@/hooks/useMessage.ts';
 import DeleteMenuDialog from '@/components/Project/Menu/DeleteMenuDialog.tsx';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { createMenu, editMenu, projectMenuList } from '@/api/Project/Menu.ts';
+import { useMutation, useQueryClient } from 'react-query';
+import { createMenu, editMenu } from '@/api/Project/Menu.ts';
 import { FailMenu, MenuInfo } from '@/typings/menu.ts';
 import { useGetMenuList } from '@/components/Project/hooks/useGetMenuList.ts';
 

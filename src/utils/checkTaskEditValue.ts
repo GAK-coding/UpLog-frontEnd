@@ -1,19 +1,19 @@
-import { TaskData } from '@/typings/task.ts';
+import { UpdateTaskBody } from '@/typings/task.ts';
 
-export function checkTaskEditValue(editTask: TaskData): boolean {
-  if (editTask.taskName === '' || editTask.taskName === null) {
+export function checkTaskEditValue(editTask: UpdateTaskBody): boolean {
+  if (editTask.updateTaskName === '') {
     return false;
   }
-  if (editTask.targetMemberInfoDTO && editTask.targetMemberInfoDTO.id === 0) {
+  if (editTask.updateTargetMemberId && editTask.updateTargetMemberId === 0) {
     return false;
   }
-  if (editTask.menuId === 0) {
+  if (editTask.updateMenuId === 0) {
     return false;
   }
-  if (editTask.teamId === 0) {
+  if (editTask.updateTeamId === 0) {
     return false;
   }
-  if (editTask.startTime === '' || editTask.endTime === '') {
+  if (editTask.updateStartTime === '' || editTask.updateEndTime === '') {
     return false;
   }
 

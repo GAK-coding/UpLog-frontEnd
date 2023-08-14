@@ -73,8 +73,9 @@ export default function DeleteDialog({ isOpen, onClose, task, post, isTask }: Pr
 
   const onClickDelete = useCallback(() => {
     if (isTask) {
-      deleteTaskMutate();
       console.log('task 삭제', task);
+      console.log(taskList);
+      deleteTaskMutate();
     }
 
     // TODO : Post 삭제 api 연결

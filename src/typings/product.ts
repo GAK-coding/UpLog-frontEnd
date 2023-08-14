@@ -33,6 +33,8 @@ export interface ProductsData extends Product {
   projectListId: number[];
 }
 
+// export interface MemberProductData extends Pick<ProductData, 'id' | 'name' >
+
 export interface ProductEditBody {
   link: string | null;
   newName: string | null;

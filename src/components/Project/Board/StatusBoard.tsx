@@ -4,6 +4,9 @@ import { FaUserCircle } from 'react-icons/fa';
 import { useState } from 'react';
 import { formatStatus } from '@/utils/formatStatus.ts';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useMessage } from '@/hooks/useMessage.ts';
+import { setClipBoardUrl } from '@/utils/setClipBoardUrl.ts';
 
 interface Props {
   status: TaskStatus;
@@ -11,13 +14,27 @@ interface Props {
 }
 export default function StatusBoard({ status, tasks }: Props) {
   const convertStatus = formatStatus(status);
-
+  const navigate = useNavigate();
+  const { showMessage, contextHolder } = useMessage();
   // task detail 클릭 여부
   const [isClickTaskDetail, setIsClickTaskDetail] = useState<{ [key: number]: boolean }>({});
 
+  const location = useLocation();
+
+  // task 링크복사
+  const handleCopyClipBoard = (task: TaskData) => {
+    try {
+      navigator.clipboard.writeText(setClipBoardUrl(task, location.pathname));
+      showMessage('success', '링크가 복사되었습니다.');
+    } catch (error) {
+      console.log(error);
+      showMessage('error', '링크복사에 실패했습니다.');
+    }
+  };
+
+  // task 수정
   return (
     //TODO : 보드 max-w 적용시키기
-
     <Droppable droppableId={status} isDropDisabled={false}>
       {(provided) => (
         <section
@@ -25,6 +42,7 @@ export default function StatusBoard({ status, tasks }: Props) {
           ref={provided.innerRef}
           {...provided.droppableProps}
         >
+          {contextHolder}
           {/*제목, 개수*/}
           <div
             className={
@@ -48,46 +66,53 @@ export default function StatusBoard({ status, tasks }: Props) {
                       key={task.id}
                       className={`flex-col min-w-[19.5rem] w-[85%] h-[8rem] bg-white rounded-[10px] mx-auto my-[0.5rem] px-[1.12rem] py-[0.5rem]
                       ${snapshot.isDragging ? 'shadow-2xl shadow-gray-400' : ''}`}
+                      // onClick={(e) => {
+                      //   e.preventDefault();
+                      //   navigate(
+                      //     `/workspace/${product}/${project}/menu/${task.menuName}/task/${task.id}`
+                      //   );
+                      // }}
                     >
                       {/*케밥 버튼*/}
                       <div className={'flex justify-end h-[0.7rem] relative'}>
                         <GoKebabHorizontal
-                          className={'fill-gray-dark cursor-pointer'}
-                          onClick={() =>
+                          className={'fill-gray-dark cursor-pointer z-50'}
+                          onClick={(e) => {
+                            e.preventDefault();
                             setIsClickTaskDetail((prevState) => ({
                               ...prevState,
                               [task.id]: !prevState[task.id],
-                            }))
-                          }
+                            }));
+                          }}
                         />
+
                         {
                           /*케밥 버튼 클릭시*/
                           isClickTaskDetail[task.id] && (
                             <section
                               className={
-                                'absolute flex-col-center w-[5rem] h-[5.5rem] top-[1rem] task-detail-border cursor-pointer text-[0.5rem] text-gray-dark'
+                                'absolute flex-col-center w-[5rem] h-[4.5rem] top-[1rem] task-detail-border cursor-pointer text-[0.5rem] text-gray-dark'
                               }
                             >
                               <div
                                 className={
-                                  'flex-row-center w-full h-1/3 hover:bg-orange-light-sideBar'
+                                  'flex-row-center w-full h-1/2 hover:bg-orange-light-sideBar'
                                 }
+                                onClick={() => handleCopyClipBoard(task)}
                               >
                                 링크복사
                               </div>
                               <div
                                 className={
-                                  'flex-row-center w-full h-1/3 hover:bg-orange-light-sideBar'
+                                  'flex-row-center w-full h-1/2 hover:bg-orange-light-sideBar'
                                 }
+                                onClick={() => {
+                                  navigate(
+                                    `${location.pathname}/menu/${task.menuName}/task/${task.id}`
+                                  );
+                                }}
                               >
-                                수정
-                              </div>
-                              <div
-                                className={
-                                  'flex-row-center w-full h-1/3 hover:bg-orange-light-sideBar'
-                                }
-                              >
-                                삭제
+                                이동
                               </div>
                             </section>
                           )
