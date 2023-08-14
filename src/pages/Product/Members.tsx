@@ -32,10 +32,9 @@ export default function Members() {
   // 방출인지 권한 위임인지
   const [isOut, setIsOut] = useState(false);
   const { showMessage, contextHolder } = useMessage();
-  const productId = 1;
+  const productId = 8;
 
-  //  TODO: productId 하드 코딩 해둠
-  const [data, refetch] = useGetEachProduct(productId, showMessage);
+  // console.log(data);
 
   // const { mutate } = useMutation(
   //   () => {
