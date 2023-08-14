@@ -17,7 +17,7 @@ export interface PostData {
 }
 
 export interface Posts {
-  noticePost: PostData;
+  noticePost?: PostData;
   posts: PostData[];
 }
 

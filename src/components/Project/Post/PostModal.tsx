@@ -105,7 +105,6 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
       return;
     }
 
-    console.log(postContent);
     setCreateData({
       title: postName,
       menuId: postMenu,
