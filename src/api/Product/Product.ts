@@ -57,3 +57,10 @@ export const eachProduct = async (productId: number) => {
     return 'get product info fail';
   }
 };
+
+// 멤버별로 제품 리스트 조회
+// export const memberProductList = async () => {
+//   try {
+//     const res : AxiosResponse<>
+//   }
+// }
