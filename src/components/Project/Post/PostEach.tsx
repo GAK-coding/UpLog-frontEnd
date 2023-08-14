@@ -106,13 +106,14 @@ export default function PostEach({ post }: Props) {
       >
         <div className={'w-[85%] h-auto mb-[2rem] font-bold'}>{post.content}</div>
         <div className={'w-[90%] h-auto flex-row-center justify-start'}>
-          {post.tagList.map((tag, index) => {
-            return (
-              <div key={index} className={'w-auto h-auto text-gray-dark mx-3'}>
-                #{tag}
-              </div>
-            );
-          })}
+          {post.tagList &&
+            post.tagList.map((tag, index) => {
+              return (
+                <div key={index} className={'w-auto h-auto text-gray-dark mx-3'}>
+                  #{tag}
+                </div>
+              );
+            })}
         </div>
       </div>
       <div className={'w-[75%] border-b border-gray-spring'} />
