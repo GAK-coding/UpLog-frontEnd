@@ -25,8 +25,6 @@ export default function AuthorityModal({ isOpen, onClose }: Props) {
     setSelectedMember(e.target.value);
   }, []);
 
-  console.log(selectedMember);
-
   return (
     <Modal isCentered onClose={onClose} isOpen={isOpen}>
       <ModalOverlay />

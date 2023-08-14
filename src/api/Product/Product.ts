@@ -26,7 +26,13 @@ export const createProduct = async (data: ProductBody) => {
 };
 
 // 제품 정보 수정
-export const productEdit = async (data: ProductEditBody, productId: number) => {
+export const productEdit = async ({
+  data,
+  productId,
+}: {
+  data: ProductEditBody;
+  productId: number;
+}) => {
   try {
     const res: AxiosResponse<ProductEditData> = await instance.patch(
       `/products/${productId}`,

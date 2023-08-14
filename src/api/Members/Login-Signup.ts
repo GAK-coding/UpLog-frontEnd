@@ -1,7 +1,6 @@
 import { EmailInfo, FailLogin, GetUserInfo, LoginInfo, SignUpInfo } from '@/typings/member.ts';
 import { instance } from '@/api';
-import axios, { AxiosResponse } from 'axios';
-import { CustomError } from '@/typings';
+import { AxiosResponse } from 'axios';
 
 export const signUp = async (data: SignUpInfo) => {
   try {
@@ -13,7 +12,7 @@ export const signUp = async (data: SignUpInfo) => {
   }
 };
 
-export const loginUp = async (data: LoginInfo): Promise<GetUserInfo | string> => {
+export const loginAPI = async (data: LoginInfo): Promise<GetUserInfo | string> => {
   try {
     const res: AxiosResponse<GetUserInfo> = await instance.post('/members/login', data);
 
