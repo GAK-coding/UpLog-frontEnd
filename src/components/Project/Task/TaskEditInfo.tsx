@@ -85,14 +85,11 @@ export default function TaskEditInfo({ isEdit, taskInfo }: Props) {
     }
   };
 
-  // 시작 날짜, 종료날짜 범위 제한
-  const disabledDate: RangePickerProps['disabledDate'] = (current) => {
-    // Can not select days before today and today
-    return current && current < dayjs().endOf('day');
-  };
+  // 종료날짜 범위 제한
   const disabledDateEnd: RangePickerProps['disabledDate'] = (current) => {
-    // Can not select days before today and today
-    return current && current < dayjs(editTaskData.updateStartTime).endOf('day');
+    const updateStartTime =
+      editTaskData === null ? taskInfo.startTime : editTaskData.updateStartTime;
+    return current && current < dayjs(updateStartTime).startOf('day');
   };
 
   // TODO : projectTeamId 값 group id 값으로 바꾸기
@@ -143,7 +140,6 @@ export default function TaskEditInfo({ isEdit, taskInfo }: Props) {
             onChange={onChangeStartTime}
             placement={'bottomLeft'}
             bordered={false}
-            disabledDate={disabledDate}
           />
         ) : (
           <span className={'ml-3 text-gray-dark'}>{taskInfo.startTime}</span>

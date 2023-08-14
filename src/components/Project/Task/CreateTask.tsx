@@ -179,14 +179,9 @@ export default function CreateTask({ isOpen, onClose, menuId }: Props) {
     console.log(newTask);
   };
 
-  // 시작날짜, 종료날짜 제한
-  const disabledDate: RangePickerProps['disabledDate'] = (current) => {
-    // Can not select days before today and today
-    return current && current < dayjs().endOf('day');
-  };
+  // 종료날짜 제한
   const disabledDateEnd: RangePickerProps['disabledDate'] = (current) => {
-    // Can not select days before today and today
-    return current && current < dayjs(newTask.startTime).endOf('day');
+    return current && current < dayjs(newTask.startTime).startOf('day');
   };
 
   // TODO : TeamId 값 group id 값으로 바꾸기
@@ -395,11 +390,7 @@ export default function CreateTask({ isOpen, onClose, menuId }: Props) {
                   <span className={'flex mb-[0.5rem] text-gray-dark font-bold'}>시작 날짜</span>
 
                   {isCustom ? (
-                    <DatePicker
-                      onChange={onChangeStartTime}
-                      placement={'bottomLeft'}
-                      disabledDate={disabledDate}
-                    />
+                    <DatePicker onChange={onChangeStartTime} placement={'bottomLeft'} />
                   ) : (
                     <span className={'text-black ml-3'}>{newTask.startTime}</span>
                   )}
