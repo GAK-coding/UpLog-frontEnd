@@ -17,7 +17,7 @@ interface Props {
 }
 export default function TaskEditInfo({ isEdit, taskInfo }: Props) {
   const projectId = 10;
-  const [editTask, setEditTask] = useRecoilState(editTaskInfo);
+  const [editTaskData, setEditTask] = useRecoilState(editTaskInfo);
   const pGroup: string[] = ['그룹', '개발팀', '마케팅팀', '홍보팀'];
   const cGroup: SubGroup = {
     그룹: ['하위그룹'],
@@ -46,8 +46,8 @@ export default function TaskEditInfo({ isEdit, taskInfo }: Props) {
   // 시작 날짜 입력 값
   const onChangeStartTime: DatePickerProps['onChange'] = (date, dateString) => {
     const updatedTask = {
-      ...editTask,
-      startTime: dateString,
+      ...editTaskData,
+      updateStartTime: dateString,
     };
 
     setEditTask(updatedTask);
@@ -56,8 +56,8 @@ export default function TaskEditInfo({ isEdit, taskInfo }: Props) {
   // 종료 날짜 입력 값
   const onChangeEndTime: DatePickerProps['onChange'] = (date, dateString) => {
     const updatedTask = {
-      ...editTask,
-      endTime: dateString,
+      ...editTaskData,
+      updateEndTime: dateString,
     };
 
     setEditTask(updatedTask);
@@ -67,8 +67,8 @@ export default function TaskEditInfo({ isEdit, taskInfo }: Props) {
     // menuId
     if (type === 'menuId') {
       const updatedTask = {
-        ...editTask,
-        [type]: +value.value,
+        ...editTaskData,
+        updateMenuId: +value.value,
       };
       setEditTask(updatedTask);
       return;
@@ -76,19 +76,9 @@ export default function TaskEditInfo({ isEdit, taskInfo }: Props) {
 
     // targetMember
     if (type === 'targetMember') {
-      const nameValue = value.label as string;
-      const splitStrings = nameValue.split('(');
-
-      const nickName = splitStrings[0];
-      const name = splitStrings[1].replace(')', '');
-
       const updatedTask = {
-        ...editTask,
-        [type]: {
-          id: +value.value,
-          name: name,
-          nickname: nickName,
-        },
+        ...editTaskData,
+        updateTargetMemberId: +value.value,
       };
 
       setEditTask(updatedTask);
@@ -102,7 +92,7 @@ export default function TaskEditInfo({ isEdit, taskInfo }: Props) {
   };
   const disabledDateEnd: RangePickerProps['disabledDate'] = (current) => {
     // Can not select days before today and today
-    return current && current < dayjs(editTask.startTime).endOf('day');
+    return current && current < dayjs(editTaskData.updateStartTime).endOf('day');
   };
 
   // TODO : projectTeamId 값 group id 값으로 바꾸기
@@ -113,8 +103,9 @@ export default function TaskEditInfo({ isEdit, taskInfo }: Props) {
     setChildGroup(cGroup[value][0]);
 
     const updatedTask = {
-      ...editTask,
-      teamId: +value,
+      ...editTaskData,
+      updateTeamId: +value,
+      updateTeamName: value,
     };
 
     setEditTask(updatedTask);
@@ -125,12 +116,14 @@ export default function TaskEditInfo({ isEdit, taskInfo }: Props) {
     setChildGroup(value);
 
     const updatedTask = {
-      ...editTask,
-      teamId: +value,
+      ...editTaskData,
+      updateTeamId: +value,
+      updateTeamName: value,
     };
 
     setEditTask(updatedTask);
   };
+
   return (
     <section className={'flex-col justify-start items-start w-[80%] h-[15rem] pl-[3rem]'}>
       {/*시작날짜*/}

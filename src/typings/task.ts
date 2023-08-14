@@ -46,6 +46,7 @@ export interface UpdateTaskBody {
   updateTeamId: number | null;
   updateTeamName: string | null;
   updateTaskStatus: TaskStatus | null;
+  updateTaskDetail: string | null;
   updateStartTime: string | null;
   updateEndTime: string | null;
 }
