@@ -13,13 +13,15 @@ import useInput from '@/hooks/useInput.ts';
 import { Select } from 'antd';
 import { menuListData } from '@/recoil/Project/Menu.ts';
 import { SelectMenu } from '@/typings/menu.ts';
-import { PostData } from '@/typings/postData.ts';
+import { PostBody, PostData } from '@/typings/postData.ts';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import PostEditor from '@/components/Common/PostEditor.tsx';
 import TagInput from '@/components/Project/Post/TagInput.tsx';
 import { editorPost, themeState } from '@/recoil/Common/atom.ts';
 import { eachMenuPost, postTagList } from '@/recoil/Project/Post.ts';
+import { useMutation } from 'react-query';
+import { createPost } from '@/api/Project/Post.ts';
 
 interface Props {
   isOpen: boolean;
@@ -55,13 +57,33 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
 
   const [darkMode, setDarkMode] = useRecoilState(themeState);
 
+  const recoilPostcontent = useRecoilValue(editorPost);
   // 포스트 제목, 메뉴, 타입, 내용, 태그
   const [postName, onChangePostName, setPostName] = useInput('');
   const [postMenu, setPostMenu] = useState(-1);
   const [postType, setPostType] = useState<PostType>({ postType: null });
-  const [postContent, setPostContent] = useRecoilState(editorPost);
-  const [postTag, setPostTag] = useRecoilState(postTagList);
+  const [postContent, setPostContent] = useState<string>(recoilPostcontent);
+  // const [postTag, setPostTag] = useRecoilState(postTagList);
+  const [createData, setCreateData] = useState<PostBody>({
+    title: '',
+    menuId: -1,
+    postType: '',
+    content: '',
+    productId: -1,
+    projectId: -1,
+  });
+  const [check, setCheck] = useState(false);
 
+  // post 생성
+  const { mutate: createPostMutate } = useMutation((data: PostBody) => createPost(data), {
+    onSuccess: (data) => {
+      if (typeof data !== 'string' && 'id' in data) {
+        showMessage('success', 'Post 생성에 성공했습니다.');
+      } else if (typeof data !== 'string' && 'message' in data) {
+        showMessage('warning', data.message);
+      } else showMessage('error', 'Post 생성에 실패했습니다.');
+    },
+  });
   const handleChange = (type: string) => (value: { value: string; label: React.ReactNode }) => {
     if (type === 'menuId') {
       setPostMenu(+value.value);
@@ -71,7 +93,7 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
   };
 
   // 생성 버튼 클릭
-  const createPost = useCallback(() => {
+  const handleFinishClick = useCallback(() => {
     // 빈 값이 있는지 예외처리
     if (postName === '') {
       showMessage('warning', 'Post 제목을 입력해주세요.');
@@ -83,12 +105,16 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
       return;
     }
 
-    if (isEdit) {
-      // TODO : Post 수정 api 연결
-    } else {
-      // TODO: Post 생성 api 연결
-    }
-    onClose();
+    console.log(postContent);
+    setCreateData({
+      title: postName,
+      menuId: postMenu,
+      postType: postType.postType,
+      content: recoilPostcontent,
+      productId: 1,
+      projectId: 10,
+    });
+    setCheck(true);
   }, [postName, postMenu]);
 
   // 자꾸 깜빡거리는거 방지
@@ -107,6 +133,18 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
     }
   }, [darkMode]);
 
+  useEffect(() => {
+    if (check) {
+      if (isEdit) {
+        // TODO: Post 수정 api 연결
+      } else {
+        createPostMutate(createData);
+      }
+      setCheck(false);
+      setTimeout(() => onClose(), 2000);
+    }
+  }, [check]);
+
   // 모달창이 새로 열릴 때 마다 값 초기화
   useEffect(() => {
     if (isEdit) {
@@ -114,15 +152,15 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
       setPostType({ postType: filteredPost.postType });
       setPostMenu(filteredPost.menuId);
       setPostContent(filteredPost.content);
-      setPostTag(filteredPost.tagList);
+      // setPostTag(filteredPost.tagList);
 
       return;
     }
     setPostName('');
     setPostType({ postType: null });
     setPostMenu(-1);
-    setPostContent('');
-    setPostTag([]);
+    // setPostContent('');
+    // setPostTag([]);
   }, [isOpen]);
 
   return (
@@ -258,7 +296,7 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
         <ModalFooter>
           <button
             className={'absolute bottom-10 right-16 fix w-[5rem] h-9 rounded bg-orange text-white'}
-            onClick={createPost}
+            onClick={handleFinishClick}
           >
             완료
           </button>
