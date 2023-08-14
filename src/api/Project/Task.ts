@@ -6,6 +6,7 @@ import {
   TaskBody,
   TaskData,
   TaskStatus,
+  UpdateTaskBody,
 } from '@/typings/task.ts';
 import { AxiosResponse } from 'axios';
 import { instance } from '@/api';
@@ -94,6 +95,17 @@ export const menuTaskList = async (menuId: number) => {
   } catch (error) {
     console.log(error);
     return 'get menu task list fail';
+  }
+};
+
+// task 수정
+export const editTask = async (data: UpdateTaskBody, taskId: number) => {
+  try {
+    const res: AxiosResponse<TaskData> = await instance.patch(`/tasks/${taskId}`, data);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    return 'edit task fail';
   }
 };
 
