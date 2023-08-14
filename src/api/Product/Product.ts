@@ -1,9 +1,11 @@
 import {
   FailProduct,
   ProductBody,
-  ProductData,
+  ProductsData,
   ProductEditBody,
   ProductEditData,
+  Product,
+  GetProductList,
 } from '@/typings/product.ts';
 import { AxiosResponse } from 'axios';
 import { instance } from '@/api';
@@ -11,7 +13,7 @@ import { instance } from '@/api';
 // 제품 생성
 export const createProduct = async (data: ProductBody) => {
   try {
-    const res: AxiosResponse<ProductData | FailProduct> = await instance.post(
+    const res: AxiosResponse<ProductsData | FailProduct> = await instance.post(
       '/products',
 
       data,
@@ -48,7 +50,7 @@ export const productEdit = async ({
 // 제품 정보 조회
 export const eachProduct = async (productId: number) => {
   try {
-    const res: AxiosResponse<ProductData | FailProduct> = await instance.get(
+    const res: AxiosResponse<ProductsData | FailProduct> = await instance.get(
       `/products/${productId}`
     );
 
@@ -58,9 +60,20 @@ export const eachProduct = async (productId: number) => {
   }
 };
 
-// 멤버별로 제품 리스트 조회
-// export const memberProductList = async () => {
-//   try {
-//     const res : AxiosResponse<>
-//   }
-// }
+export const getMyProducts = async () => {
+  try {
+    const res: AxiosResponse<GetProductList[]> = await instance.get('/products');
+
+    return res.data;
+  } catch (err) {
+    return 'fail get my products';
+  }
+};
+
+export const changeProductsSequence = async (updateIndexList: number[]) => {
+  try {
+    await instance.patch('/products', { updateIndexList });
+  } catch (err) {
+    return 'fail change Products sequence';
+  }
+};
