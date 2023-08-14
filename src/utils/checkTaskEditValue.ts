@@ -1,7 +1,7 @@
 import { TaskData } from '@/typings/task.ts';
 
 export function checkTaskEditValue(editTask: TaskData): boolean {
-  if (editTask.taskName === '') {
+  if (editTask.taskName === '' || editTask.taskName === null) {
     return false;
   }
   if (editTask.targetMemberInfoDTO && editTask.targetMemberInfoDTO.id === 0) {

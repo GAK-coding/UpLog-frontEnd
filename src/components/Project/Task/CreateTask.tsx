@@ -21,6 +21,8 @@ import { productMemberList } from '@/recoil/Product/atom.ts';
 import { TaskBody, TaskData } from '@/typings/task.ts';
 import { useMutation, useQueryClient } from 'react-query';
 import { createTask } from '@/api/Project/Task.ts';
+import { RangePickerProps } from 'antd/es/date-picker';
+import dayjs from 'dayjs';
 
 interface Props {
   isOpen: boolean;
@@ -175,6 +177,16 @@ export default function CreateTask({ isOpen, onClose, menuId }: Props) {
       }
     }
     console.log(newTask);
+  };
+
+  // 시작날짜, 종료날짜 제한
+  const disabledDate: RangePickerProps['disabledDate'] = (current) => {
+    // Can not select days before today and today
+    return current && current < dayjs().endOf('day');
+  };
+  const disabledDateEnd: RangePickerProps['disabledDate'] = (current) => {
+    // Can not select days before today and today
+    return current && current < dayjs(newTask.startTime).endOf('day');
   };
 
   // TODO : TeamId 값 group id 값으로 바꾸기
@@ -383,7 +395,11 @@ export default function CreateTask({ isOpen, onClose, menuId }: Props) {
                   <span className={'flex mb-[0.5rem] text-gray-dark font-bold'}>시작 날짜</span>
 
                   {isCustom ? (
-                    <DatePicker onChange={onChangeStartTime} placement={'bottomLeft'} />
+                    <DatePicker
+                      onChange={onChangeStartTime}
+                      placement={'bottomLeft'}
+                      disabledDate={disabledDate}
+                    />
                   ) : (
                     <span className={'text-black ml-3'}>{newTask.startTime}</span>
                   )}
@@ -391,7 +407,11 @@ export default function CreateTask({ isOpen, onClose, menuId }: Props) {
                 <div className={'flex-col w-1/2 ml-16'}>
                   <span className={'flex mb-[0.5rem] text-gray-dark font-bold'}>종료 날짜</span>
                   {isCustom ? (
-                    <DatePicker onChange={onChangeEndTime} placement={'bottomLeft'} />
+                    <DatePicker
+                      onChange={onChangeEndTime}
+                      placement={'bottomLeft'}
+                      disabledDate={disabledDateEnd}
+                    />
                   ) : (
                     <span className={'text-black ml-3'}>{newTask.endTime}</span>
                   )}

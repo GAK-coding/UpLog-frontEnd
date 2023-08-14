@@ -18,7 +18,7 @@ export default function Project() {
   const projectId = 10;
   const navigate = useNavigate();
 
-  // task 상태별로 묶어둔 데이터 (dragId 포함되어있음)
+  // task 상태별로 묶어둔 데이터
   const [taskStatusList, setTaskStatusList] = useRecoilState(taskState);
 
   // task 상태별로 묶어둔 데이터 get 요청
@@ -26,20 +26,19 @@ export default function Project() {
     ['getTaskStatusList', projectId],
     () => allStatusTaskList(projectId),
     {
+      onSuccess: (data) => {
+        if (data !== undefined) {
+          if (typeof data !== 'string') {
+            setTaskStatusList(data);
+            console.log(getTaskStatusList.data);
+          }
+        }
+      },
       staleTime: 60000, // 10분
       cacheTime: 80000, // 12분
       refetchOnWindowFocus: false, // 브라우저를 포커싱했을때 데이터를 가져오지 않음
     }
   );
-
-  useEffect(() => {
-    if (getTaskStatusList.data !== undefined) {
-      if (typeof getTaskStatusList.data !== 'string') {
-        setTaskStatusList(getTaskStatusList);
-        console.log(getTaskStatusList.data);
-      }
-    }
-  }, [getTaskStatusList.data]);
 
   // 진행률 퍼센트
   const [progress, setProgress] = useState(0);
@@ -104,27 +103,16 @@ export default function Project() {
   );
 
   // TODO : 그룹 필터링 되는거 확인하고 utils 함수로 빼기
-  // useEffect(() => {
-  //   if (taskStatusList !== undefined) {
-  //     const totalTasks = Object.keys(taskStatusList).reduce((acc, cur) => {
-  //       return acc + taskStatusList[cur].length;
-  //     }, 0);
-  //     const doneTasks = taskStatusList.PROGRESS_COMPLETE.length;
-  //     const percent = (doneTasks / totalTasks) * 100;
-  //     setProgress(Math.floor(percent));
-  //   }
-  // }, [taskStatusList]);
-
-  // 필터링 된 페이지로 이동
-  // useEffect(() => {
-  //   if (filterGroup === '그룹') {
-  //     navigate(`/workspace/${product}/${project}`);
-  //   } else {
-  //     childGroup === '전체'
-  //       ? navigate(`/workspace/${product}/${project}/group/${filterGroup}`)
-  //       : navigate(`/workspace/${product}/${project}/group/${filterGroup}/${childGroup}`);
-  //   }
-  // }, [filterGroup, childGroup]);
+  useEffect(() => {
+    const totalTasks = [
+      ...taskStatusList.PROGRESS_BEFORE,
+      ...taskStatusList.PROGRESS_IN,
+      ...taskStatusList.PROGRESS_COMPLETE,
+    ].length;
+    const doneTasks = taskStatusList.PROGRESS_COMPLETE.length;
+    const percent = (doneTasks / totalTasks) * 100;
+    setProgress(Math.floor(percent));
+  }, [taskStatusList]);
 
   // task 데이터 필터링된 그룹에 맞게 필터링
   useEffect(() => {

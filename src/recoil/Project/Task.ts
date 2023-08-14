@@ -1,6 +1,6 @@
 import { GroupMember } from '@/typings/project.ts';
 import { atom } from 'recoil';
-import { TaskData, Tasks } from '@/typings/task.ts';
+import { StatusTaskData, TaskData } from '@/typings/task.ts';
 
 export const editTaskInfo = atom<TaskData>({
   key: 'editTask',
@@ -192,85 +192,85 @@ export const taskAll = atom<TaskData[]>({
 //   ],
 // });
 
-// export const taskState = atom<Tasks>({
-//   key: 'allByStatusTask',
-//   default: {
-//     PROGRESS_BEFORE: [],
-//     PROGRESS_IN: [],
-//     PROGRESS_COMPLETE: [],
-//   },
-// });
-export const taskState = atom<Tasks>({
-  key: 'task',
+export const taskState = atom<StatusTaskData>({
+  key: 'allByStatusTask',
   default: {
-    PROGRESS_BEFORE: [
-      {
-        id: 0,
-        dragId: '0',
-        taskName: 'task1',
-        targetMemberInfoDTO: {
-          id: 1,
-          name: '오채영',
-          nickname: 'OCI',
-          image: '',
-        },
-        menuId: 1,
-        menuName: '요구사항',
-        teamId: 1,
-        teamName: '개발팀',
-        parentTeamId: null,
-        taskStatus: 'PROGRESS_BEFORE',
-        taskDetail: 'task1 입니다롱',
-        startTime: '2023-08-01',
-        endTime: '2023-08-04',
-      },
-    ],
-    PROGRESS_IN: [
-      {
-        id: 1,
-        dragId: '1',
-        taskName: 'task2',
-        targetMemberInfoDTO: {
-          id: 1,
-          name: '오채영',
-          nickname: 'OCI',
-          image: '',
-        },
-        menuId: 1,
-        menuName: '요구사항',
-        teamId: 1,
-        teamName: '프론트엔드',
-        parentTeamId: 1,
-        taskStatus: 'PROGRESS_IN',
-        taskDetail: 'task2 입니다롱',
-        startTime: '2023-08-03',
-        endTime: '2023-08-10',
-      },
-    ],
-    PROGRESS_COMPLETE: [
-      {
-        id: 3,
-        dragId: '3',
-        taskName: 'task3',
-        targetMemberInfoDTO: {
-          id: 1,
-          name: '오채영',
-          nickname: 'OCI',
-          image: '',
-        },
-        menuId: 2,
-        menuName: '개발',
-        teamId: 1,
-        teamName: '개발팀',
-        parentTeamId: null,
-        taskStatus: 'PROGRESS_COMPLETE',
-        taskDetail: 'task3 입니다롱',
-        startTime: '2023-08-01',
-        endTime: '2023-08-15',
-      },
-    ],
+    PROGRESS_BEFORE: [],
+    PROGRESS_IN: [],
+    PROGRESS_COMPLETE: [],
   },
 });
+// export const taskState = atom<Tasks>({
+//   key: 'task',
+//   default: {
+//     PROGRESS_BEFORE: [
+//       {
+//         id: 0,
+//         dragId: '0',
+//         taskName: 'task1',
+//         targetMemberInfoDTO: {
+//           id: 1,
+//           name: '오채영',
+//           nickname: 'OCI',
+//           image: '',
+//         },
+//         menuId: 1,
+//         menuName: '요구사항',
+//         teamId: 1,
+//         teamName: '개발팀',
+//         parentTeamId: null,
+//         taskStatus: 'PROGRESS_BEFORE',
+//         taskDetail: 'task1 입니다롱',
+//         startTime: '2023-08-01',
+//         endTime: '2023-08-04',
+//       },
+//     ],
+//     PROGRESS_IN: [
+//       {
+//         id: 1,
+//         dragId: '1',
+//         taskName: 'task2',
+//         targetMemberInfoDTO: {
+//           id: 1,
+//           name: '오채영',
+//           nickname: 'OCI',
+//           image: '',
+//         },
+//         menuId: 1,
+//         menuName: '요구사항',
+//         teamId: 1,
+//         teamName: '프론트엔드',
+//         parentTeamId: 1,
+//         taskStatus: 'PROGRESS_IN',
+//         taskDetail: 'task2 입니다롱',
+//         startTime: '2023-08-03',
+//         endTime: '2023-08-10',
+//       },
+//     ],
+//     PROGRESS_COMPLETE: [
+//       {
+//         id: 3,
+//         dragId: '3',
+//         taskName: 'task3',
+//         targetMemberInfoDTO: {
+//           id: 1,
+//           name: '오채영',
+//           nickname: 'OCI',
+//           image: '',
+//         },
+//         menuId: 2,
+//         menuName: '개발',
+//         teamId: 1,
+//         teamName: '개발팀',
+//         parentTeamId: null,
+//         taskStatus: 'PROGRESS_COMPLETE',
+//         taskDetail: 'task3 입니다롱',
+//         startTime: '2023-08-01',
+//         endTime: '2023-08-15',
+//       },
+//     ],
+//   },
+// });
 
 // 그룹 멤버 리스트
 export const groupMemberList = atom<GroupMember[][]>({

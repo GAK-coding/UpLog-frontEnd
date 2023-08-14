@@ -9,6 +9,7 @@ import { productMemberList } from '@/recoil/Product/atom.ts';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useGetMenuList } from '@/components/Project/hooks/useGetMenuList.ts';
 import { editTaskInfo } from '@/recoil/Project/Task.ts';
+import { RangePickerProps } from 'antd/es/date-picker';
 
 interface Props {
   isEdit: boolean;
@@ -94,6 +95,16 @@ export default function TaskEditInfo({ isEdit, taskInfo }: Props) {
     }
   };
 
+  // 시작 날짜, 종료날짜 범위 제한
+  const disabledDate: RangePickerProps['disabledDate'] = (current) => {
+    // Can not select days before today and today
+    return current && current < dayjs().endOf('day');
+  };
+  const disabledDateEnd: RangePickerProps['disabledDate'] = (current) => {
+    // Can not select days before today and today
+    return current && current < dayjs(editTask.startTime).endOf('day');
+  };
+
   // TODO : projectTeamId 값 group id 값으로 바꾸기
   // 상위그룹 select 선택 값
   const handleParentGroupChange = (value: string) => {
@@ -132,12 +143,14 @@ export default function TaskEditInfo({ isEdit, taskInfo }: Props) {
           <div className={'ml-3 h-4 border-solid border-r border-[0.2px] border-gray-border'} />
         </div>
 
+        {/*시작날짜*/}
         {isEdit ? (
           <DatePicker
             defaultValue={dayjs(taskInfo.startTime, 'YYYY.MM.DD')}
             onChange={onChangeStartTime}
             placement={'bottomLeft'}
             bordered={false}
+            disabledDate={disabledDate}
           />
         ) : (
           <span className={'ml-3 text-gray-dark'}>{taskInfo.startTime}</span>
@@ -158,6 +171,7 @@ export default function TaskEditInfo({ isEdit, taskInfo }: Props) {
             onChange={onChangeEndTime}
             placement={'bottomLeft'}
             bordered={false}
+            disabledDate={disabledDateEnd}
           />
         ) : (
           <span className={'ml-3 text-gray-dark'}>{taskInfo.endTime}</span>
