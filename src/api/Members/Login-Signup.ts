@@ -24,10 +24,13 @@ export const loginAPI = async (data: LoginInfo): Promise<GetUserInfo | string> =
 
 export const emailRequest = async (data: EmailInfo) => {
   try {
-    const res: AxiosResponse<{ message: string }> = await instance.post('/members/email-request', {
-      email: data.email,
-      type: data.type,
-    });
+    const res: AxiosResponse<{ message: string }> = await instance.post(
+      '/api/members/email-request',
+      {
+        email: data.email,
+        type: data.type,
+      }
+    );
 
     return res.data.message;
   } catch (err) {
