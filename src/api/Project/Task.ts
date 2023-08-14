@@ -1,5 +1,6 @@
 // Task 생성
 import {
+  DragTaskIndexBody,
   FailTask,
   MenuTasks,
   StatusTaskData,
@@ -106,5 +107,16 @@ export const editTask = async (data: UpdateTaskBody, taskId: number) => {
   } catch (error) {
     console.log(error);
     return 'edit task fail';
+  }
+};
+
+export const updateTaskIndex = async (data: DragTaskIndexBody, taskStatus: TaskStatus) => {
+  try {
+    const res: AxiosResponse<TaskData[]> = await instance.patch(`/tasks/${taskStatus}/index`, data);
+    console.log(res.data);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    return 'update task index fail';
   }
 };

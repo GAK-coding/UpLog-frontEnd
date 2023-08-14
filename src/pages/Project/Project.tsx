@@ -9,17 +9,24 @@ import { useNavigate } from 'react-router-dom';
 import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 import { useRecoilState } from 'recoil';
 import { taskState } from '@/recoil/Project/Task.ts';
-import { TaskStatus } from '@/typings/task.ts';
-import { allStatusTaskList } from '@/api/Project/Task.ts';
-import { useQuery } from 'react-query';
+import { DragTaskIndexBody, TaskStatus } from '@/typings/task.ts';
+import { allStatusTaskList, updateTaskIndex } from '@/api/Project/Task.ts';
+import { useMutation, useQuery } from 'react-query';
 
 export default function Project() {
   const { product, project } = useParams();
   const projectId = 10;
   const navigate = useNavigate();
+  const [taskStatus, setTaskStatus] = useState<TaskStatus>('PROGRESS_BEFORE');
+  const [dragUpdateData, setDragUpdateData] = useState<DragTaskIndexBody>({
+    beforeTaskStatus: null,
+    movedTaskId: null,
+    updateTaskIndexList: [],
+  });
 
   // task 상태별로 묶어둔 데이터
   const [taskStatusList, setTaskStatusList] = useRecoilState(taskState);
+  const [check, setCheck] = useState(false);
 
   // task 상태별로 묶어둔 데이터 get 요청
   const getTaskStatusList = useQuery(
@@ -37,6 +44,10 @@ export default function Project() {
       cacheTime: 80000, // 12분
       refetchOnWindowFocus: false, // 브라우저를 포커싱했을때 데이터를 가져오지 않음
     }
+  );
+
+  const { mutate: updateTaskIndexMutate } = useMutation((dragUpdateData: DragTaskIndexBody) =>
+    updateTaskIndex(dragUpdateData, taskStatus)
   );
 
   // 진행률 퍼센트
@@ -93,15 +104,36 @@ export default function Project() {
 
       // 재정렬
       const items = JSON.parse(JSON.stringify(taskStatusList)) as typeof taskStatusList;
+      console.log('정렬되지 않은 결과', taskStatusList[`${destinationKey}`]);
       const [targetItem] = items[sourceKey].splice(source.index, 1);
       items[destinationKey].splice(destination.index, 0, targetItem);
-
       console.log('재정렬한 결과', items);
+      setTaskStatus(destinationKey);
+
+      // 같은 board 내에서 이동한 경우
+      if (sourceKey === destinationKey) {
+        // id 값을 기준으로 데이터 배열을 오름차순으로 정렬
+        const sortedData = items[destinationKey].slice().sort((a, b) => a.id - b.id);
+
+        // id 값을 기준으로 정렬된 순서에 따른 인덱스 순서를 구한다.
+        const indexOrder = sortedData.map((item) =>
+          items[destinationKey].findIndex((element) => element.id === item.id)
+        );
+        // 정렬된 인덱스 값을 request body data로 지정함
+        setDragUpdateData({ ...dragUpdateData, updateTaskIndexList: indexOrder });
+      }
       setTaskStatusList(items);
+      setCheck(true);
     },
     [taskStatusList]
   );
 
+  useEffect(() => {
+    if (check) {
+      updateTaskIndexMutate(dragUpdateData);
+      setCheck(false);
+    }
+  }, [check]);
   // TODO : 그룹 필터링 되는거 확인하고 utils 함수로 빼기
   useEffect(() => {
     const totalTasks = [

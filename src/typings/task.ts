@@ -16,6 +16,7 @@ export interface TaskData {
   taskDetail: string;
   startTime: string;
   endTime: string;
+  taskIndex: number;
 }
 
 export interface StatusTaskData {
@@ -54,4 +55,10 @@ export interface UpdateTaskBody {
 export interface MenuTasks {
   menuInfo: MenuInfo;
   tasks: TaskData[];
+}
+
+export interface DragTaskIndexBody {
+  beforeTaskStatus: TaskStatus | null;
+  movedTaskId: number | null;
+  updateTaskIndexList: number[];
 }
