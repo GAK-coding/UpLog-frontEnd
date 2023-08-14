@@ -6,7 +6,7 @@ const DEPLOYMENT_BACKEND_URL = import.meta.env.VITE_DEPLOYMENT_BACKEND_URL;
 
 const URL = isDeployment ? DEPLOYMENT_BACKEND_URL : DEV_BACKEND_URL;
 export const instance = axios.create({
-  baseURL: '/api/',
+  baseURL: '/api',
 });
 
 instance.interceptors.request.use(
