@@ -111,10 +111,11 @@ export default function Project() {
       const [targetItem] = items[sourceKey].splice(source.index, 1);
       items[destinationKey].splice(destination.index, 0, targetItem);
       console.log('재정렬한 결과', items);
-      setTaskStatus(destinationKey);
 
       // 같은 board 내에서 이동한 경우
       if (sourceKey === destinationKey) {
+        setTaskStatus(destinationKey);
+
         // key(id) : value(index) 형태로 데이터를 저장
         const indexMap: IndexID = {};
         items[destinationKey].forEach((item, index) => {
@@ -126,8 +127,30 @@ export default function Project() {
         const newIndexData = taskStatusList[`${destinationKey}`].map((item) => indexMap[item.id]);
 
         // 정렬된 인덱스 값을 request body data로 지정함
-        console.log('정렬한 인덱스', newIndexData);
         setDragUpdateData({ ...dragUpdateData, updateTaskIndexList: newIndexData });
+      } else {
+        // 다른 상태로 이동할 경우
+        setTaskStatus(destinationKey);
+        // 이동한 task를 이동한 상태값으로 값을 업데이트
+        const newDestinationData = [...taskStatusList[`${destinationKey}`], targetItem];
+        console.log('new!!!', newDestinationData);
+        console.log('!!!!', items[destinationKey]);
+        // key(id) : value(index) 형태로 데이터를 저장
+        const indexMap: IndexID = {};
+        items[destinationKey].forEach((item, index) => {
+          indexMap[item.id] = index;
+        });
+        console.log(indexMap);
+
+        // dnd 완료된 데이터랑 기존 데이터랑 비교해서 index값 update
+        const newIndexData = newDestinationData.map((item) => indexMap[item.id]);
+        // 정렬된 인덱스 값을 request body data로 지정함
+        console.log('정렬한 인덱스', newIndexData);
+        setDragUpdateData({
+          beforeTaskStatus: sourceKey,
+          movedTaskId: +result.draggableId,
+          updateTaskIndexList: newIndexData,
+        });
       }
       setTaskStatusList(items);
       setCheck(true);
