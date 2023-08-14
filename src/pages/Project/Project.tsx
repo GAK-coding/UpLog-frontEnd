@@ -97,7 +97,6 @@ export default function Project() {
     (result: DropResult) => {
       const { destination, source } = result;
 
-      console.log('드래그 완료했을 때 나오는 결과', result);
       // 이상한 곳에 드래그하면 return
       if (!destination) return;
 
@@ -110,7 +109,6 @@ export default function Project() {
       // console.log('정렬되지 않은 결과', taskStatusList[`${destinationKey}`]);
       const [targetItem] = items[sourceKey].splice(source.index, 1);
       items[destinationKey].splice(destination.index, 0, targetItem);
-      console.log('재정렬한 결과', items);
 
       // 같은 board 내에서 이동한 경우
       if (sourceKey === destinationKey) {
@@ -121,11 +119,9 @@ export default function Project() {
         items[destinationKey].forEach((item, index) => {
           indexMap[item.id] = index;
         });
-        // console.log(indexMap);
 
         // dnd 완료된 데이터랑 기존 데이터랑 비교해서 index값 update
         const newIndexData = taskStatusList[`${destinationKey}`].map((item) => indexMap[item.id]);
-        console.log('정렬한 인덱스', newIndexData);
 
         // 정렬된 인덱스 값을 request body data로 지정함
         setDragUpdateData({ ...dragUpdateData, updateTaskIndexList: newIndexData });
@@ -134,19 +130,16 @@ export default function Project() {
         setTaskStatus(destinationKey);
         // 이동한 task를 이동한 상태값으로 값을 업데이트
         const newDestinationData = [...taskStatusList[`${destinationKey}`], targetItem];
-        console.log('new!!!', newDestinationData);
-        console.log('!!!!', items[destinationKey]);
+
         // key(id) : value(index) 형태로 데이터를 저장
         const indexMap: IndexID = {};
         items[destinationKey].forEach((item, index) => {
           indexMap[item.id] = index;
         });
-        // console.log(indexMap);
 
         // dnd 완료된 데이터랑 기존 데이터랑 비교해서 index값 update
         const newIndexData = newDestinationData.map((item) => indexMap[item.id]);
         // 정렬된 인덱스 값을 request body data로 지정함
-        console.log('정렬한 인덱스', newIndexData);
         setDragUpdateData({
           beforeTaskStatus: sourceKey,
           movedTaskId: +result.draggableId,
@@ -159,6 +152,7 @@ export default function Project() {
     [taskStatusList]
   );
 
+  // dnd 관련 데이터 set이 완료됐으면 patch 요청 보냄 + data 초기화
   useEffect(() => {
     if (check) {
       updateTaskIndexMutate(dragUpdateData);
