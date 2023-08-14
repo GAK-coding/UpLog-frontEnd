@@ -37,8 +37,18 @@ export default function TaskDetail() {
   // TODO : staleTime 확인 필요 + 시간 다시 설정하기
   // task 한개 데이터 get
   const getTaskData = useQuery(['getTaskEach', taskid], () => eachTask(+taskid!), {
-    staleTime: 6000, // 1분
-    cacheTime: 8000, // 1분 20초
+    onSuccess: (data) => {
+      // 메뉴별 task get 데이터 가져오기 성공 시 데이터 지정함
+      if (typeof data !== 'string' && 'taskName' in data) {
+        setTaskInfo(data);
+        setEditTask(data);
+        setTaskName(data.taskName);
+        console.log('가져온 정보', data);
+        console.log(editTask, taskName);
+      }
+    },
+    // staleTime: 6000, // 1분
+    // cacheTime: 8000, // 1분 20초
     // refetchOnMount: false,
     refetchOnWindowFocus: false, // 브라우저를 포커싱했을때 데이터를 가져오지 않음
   });
@@ -68,6 +78,8 @@ export default function TaskDetail() {
       onSuccess: (data) => {
         if (typeof data === 'string') {
           setEditSuccess(false);
+        } else {
+          console.log(editTask.taskName);
         }
       },
     }
@@ -77,6 +89,8 @@ export default function TaskDetail() {
     onSuccess: (data) => {
       if (typeof data === 'string') {
         setEditSuccess(false);
+      } else {
+        setTaskInfo({ ...taskInfo, startTime: editTask.startTime, endTime: editTask.endTime });
       }
     },
   });
@@ -87,6 +101,8 @@ export default function TaskDetail() {
       onSuccess: (data) => {
         if (typeof data === 'string') {
           setEditSuccess(false);
+        } else {
+          setTaskInfo({ ...taskInfo, targetMemberInfoDTO: editTask.targetMemberInfoDTO });
         }
       },
     }
@@ -98,6 +114,8 @@ export default function TaskDetail() {
       onSuccess: (data) => {
         if (typeof data === 'string') {
           setEditSuccess(false);
+        } else {
+          setTaskInfo({ ...taskInfo, taskStatus: editTask.taskStatus });
         }
       },
     }
@@ -107,6 +125,8 @@ export default function TaskDetail() {
     onSuccess: (data) => {
       if (typeof data === 'string') {
         setEditSuccess(false);
+      } else {
+        setTaskInfo({ ...taskInfo, menuId: editTask.menuId });
       }
     },
   });
@@ -117,6 +137,8 @@ export default function TaskDetail() {
       onSuccess: (data) => {
         if (typeof data === 'string') {
           setEditSuccess(false);
+        } else {
+          setTaskInfo({ ...taskInfo, taskDetail: editTask.taskDetail });
         }
       },
     }
@@ -131,34 +153,37 @@ export default function TaskDetail() {
   // 수정 완료 버튼 클릭 시
   const onSubmitEdit = useCallback(() => {
     // 변경된 값이 비어있는 경우
-    // const checkEmpty = checkTaskEditValue(editTask);
-    //
-    // if (!checkEmpty) {
-    //   showMessage('warning', 'Task의 정보를 모두 작성해주세요');
-    //   return;
-    // }
-    if (editTask.taskName === '') {
+    const checkEmpty = checkTaskEditValue(editTask);
+
+    if (!checkEmpty) {
       showMessage('warning', 'Task의 정보를 모두 작성해주세요');
       return;
     }
 
     // 변경된 값만 task update요청 보냄
-    const handleMutate = (newValue: TaskData[keyof TaskData], mutateFunction: () => void) => {
-      if (typeof newValue === 'string') {
-        if (newValue !== '') mutateFunction();
-      } else if (typeof newValue === 'number') {
-        if (newValue !== 0) mutateFunction();
+    const handleMutate = (
+      newValue: TaskData[keyof TaskData],
+      originalValue: TaskData[keyof TaskData],
+      mutateFunction: () => void
+    ) => {
+      if (newValue !== originalValue && newValue !== null) {
+        mutateFunction();
       }
     };
 
-    handleMutate(editTask.taskName, editTitleMutate);
-    handleMutate(editTask.startTime, editDateMutate);
-    handleMutate(editTask.endTime, editDateMutate);
-    handleMutate(editTask.teamId, editTeamMutate);
-    handleMutate(editTask.targetMemberInfoDTO.id, editTargetMemberMutate);
-    handleMutate(editTask.taskStatus, editStatusMutate);
-    handleMutate(editTask.menuId, editMenuMutate);
-    handleMutate(editTask.taskDetail, editContentMutate);
+    console.log('변경되는 보내는 값', editTask);
+    handleMutate(editTask.taskName, taskInfo.taskName, editTitleMutate);
+    handleMutate(editTask.startTime, taskInfo.startTime, editDateMutate);
+    handleMutate(editTask.endTime, taskInfo.endTime, editDateMutate);
+    handleMutate(editTask.teamId, taskInfo.teamId, editTeamMutate);
+    handleMutate(
+      editTask.targetMemberInfoDTO.id,
+      taskInfo.targetMemberInfoDTO.id,
+      editTargetMemberMutate
+    );
+    handleMutate(editTask.taskStatus, taskInfo.taskStatus, editStatusMutate);
+    handleMutate(editTask.menuId, taskInfo.menuId, editMenuMutate);
+    handleMutate(editTask.taskDetail, taskInfo.taskDetail, editContentMutate);
 
     if (!editSuccess) {
       showMessage('error', 'Task 수정에 실패했습니다.');
@@ -170,7 +195,7 @@ export default function TaskDetail() {
     setIsEdit(false);
   }, [isEdit, editTask, editSuccess]);
 
-  // 수정한 task 상태 데이터 값 저장
+  // 수정한 task status 데이터 값 저장
   const onChangeSelectedType = (e: ChangeEvent<HTMLSelectElement>) => {
     const updatedTask = {
       ...editTask,
@@ -186,7 +211,6 @@ export default function TaskDetail() {
       ...editTask,
       taskDetail: e.target.value,
     };
-    console.log(e.target.value);
     setEditTask(updatedTask);
   };
 
@@ -200,16 +224,16 @@ export default function TaskDetail() {
     setEditTask(updatedTask);
   }, [taskName]);
 
-  // get 해온 데이터로 taskInfo 지정
-  useEffect(() => {
-    // 메뉴별 task get 데이터 가져오기 성공 시 데이터 지정함
-    if (getTaskData.data !== undefined && typeof getTaskData.data !== 'string') {
-      setTaskInfo(getTaskData.data);
-      console.log('가져온 정보', getTaskData.data);
-      // setEditTask(getTaskData.data);
-      setTaskName(getTaskData.data.taskName);
-    }
-  }, [getTaskData.data]);
+  // // get 해온 데이터로 taskInfo 지정
+  // useEffect(() => {
+  //   // 메뉴별 task get 데이터 가져오기 성공 시 데이터 지정함
+  //   if (getTaskData.data !== undefined && typeof getTaskData.data !== 'string') {
+  //     setTaskInfo(getTaskData.data);
+  //     console.log('가져온 정보', getTaskData.data);
+  //     // setEditTask(getTaskData.data);
+  //     setTaskName(getTaskData.data.taskName);
+  //   }
+  // }, [getTaskData.data]);
 
   return (
     <section className={'flex w-full h-auto py-20'}>
