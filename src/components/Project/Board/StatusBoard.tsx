@@ -7,9 +7,7 @@ import { Draggable, Droppable } from 'react-beautiful-dnd';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useMessage } from '@/hooks/useMessage.ts';
 import { setClipBoardUrl } from '@/utils/setClipBoardUrl.ts';
-import TaskDetail from '@/pages/Project/TaskDetail.tsx';
 import { useDisclosure } from '@chakra-ui/react';
-import DeleteDialog from '@/components/Common/DeleteDialog.tsx';
 
 interface Props {
   status: TaskStatus;
@@ -18,7 +16,6 @@ interface Props {
 export default function StatusBoard({ status, tasks }: Props) {
   const convertStatus = formatStatus(status);
   const navigate = useNavigate();
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const { showMessage, contextHolder } = useMessage();
   // task detail 클릭 여부
   const [isClickTaskDetail, setIsClickTaskDetail] = useState<{ [key: number]: boolean }>({});
@@ -156,12 +153,6 @@ export default function StatusBoard({ status, tasks }: Props) {
                           )}
                         </div>
                       </div>
-                      <DeleteDialog
-                        isOpen={isOpen}
-                        onClose={onClose}
-                        task={task.id}
-                        isTask={true}
-                      />
                     </section>
                   )}
                 </Draggable>
