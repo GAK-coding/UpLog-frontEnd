@@ -9,8 +9,9 @@ import { useDisclosure } from '@chakra-ui/react';
 import CreateTask from '@/components/Project/Task/CreateTask.tsx';
 import { useQuery } from 'react-query';
 import { menuTaskList } from '@/api/Project/Task.ts';
-import { useEffect } from 'react';
+import { useState } from 'react';
 import { menuListData } from '@/recoil/Project/Menu.ts';
+import { TaskData } from '@/typings/task.ts';
 
 export default function TaskMain() {
   const { product, project, menutitle } = useParams();
@@ -20,6 +21,7 @@ export default function TaskMain() {
   const menuList = useRecoilValue(menuListData);
   const menuId = menuList.find((menu) => menu.menuName === menutitle)?.id;
   const [taskList, setTaskList] = useRecoilState(taskAll);
+  const [firstTaskList, setFirstTaskList] = useState<TaskData[]>([]);
 
   // 날짜, 상태 필터링 데이터
   const dateData: SelectMenu[] = [
@@ -37,16 +39,16 @@ export default function TaskMain() {
 
   // 메뉴별 task 데이터 가져오기
   const getMenuTaskList = useQuery(['getMenuTaskList', menuId], () => menuTaskList(menuId!), {
+    onSuccess: (data) => {
+      if (typeof data === 'object' && 'tasks' in data) {
+        setTaskList(data.tasks);
+        setFirstTaskList(data.tasks);
+        console.log(data);
+      }
+    },
     staleTime: 0, // 10분
     cacheTime: 80000, // 12분
     refetchOnWindowFocus: false, // 브라우저를 포커싱했을때 데이터를 가져오지 않음
-    select: (data) => {
-      if (data !== undefined) {
-        if (typeof data !== 'string') {
-          return data.tasks;
-        }
-      }
-    },
   });
 
   // 날짜, 상태 데이터 필터링 값
@@ -56,31 +58,26 @@ export default function TaskMain() {
     if (type === 'status') {
       switch (value.value) {
         case 'done': {
-          setTaskList(
-            getMenuTaskList.data!.filter((task) => task.taskStatus === 'PROGRESS_COMPLETE')
-          );
+          setTaskList(firstTaskList.filter((task) => task.taskStatus === 'PROGRESS_COMPLETE'));
           break;
         }
         case 'before': {
-          setTaskList(
-            getMenuTaskList.data!.filter((task) => task.taskStatus === 'PROGRESS_BEFORE')
-          );
+          setTaskList(firstTaskList.filter((task) => task.taskStatus === 'PROGRESS_BEFORE'));
           break;
         }
         default: {
-          setTaskList(getMenuTaskList.data!);
+          setTaskList(firstTaskList);
           break;
         }
       }
     } else {
       switch (value.value) {
-        case '최신순': {
-          const sortedTaskList = taskList.slice().sort((taskA, taskB) => {
+        case '마감날짜': {
+          const sortedTaskList = firstTaskList.slice().sort((taskA, taskB) => {
             // endTime을 날짜 객체로 변환하여 시간 간격을 계산
             const endTimeA = new Date(taskA.endTime);
             const endTimeB = new Date(taskB.endTime);
 
-            // 시간 간격을 기준으로 정렬 순서를 결정
             // 가장 마감일이 촉박한 순서대로 정렬함
             return endTimeA.getTime() - endTimeB.getTime();
           });
@@ -88,20 +85,12 @@ export default function TaskMain() {
           break;
         }
         default: {
-          setTaskList(getMenuTaskList.data!);
+          setTaskList(firstTaskList!);
           break;
         }
       }
     }
   };
-
-  useEffect(() => {
-    // 메뉴별 task get 데이터 가져오기 성공 시 데이터 지정함
-    if (getMenuTaskList.data !== undefined) {
-      setTaskList(getMenuTaskList.data);
-      console.log(getMenuTaskList.data);
-    }
-  }, [getMenuTaskList.data]);
 
   return (
     <div className={'flex-col-center justify-start w-full h-auto mb-8'}>
