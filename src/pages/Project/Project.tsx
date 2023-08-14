@@ -107,7 +107,7 @@ export default function Project() {
 
       // 재정렬
       const items = JSON.parse(JSON.stringify(taskStatusList)) as typeof taskStatusList;
-      console.log('정렬되지 않은 결과', taskStatusList[`${destinationKey}`]);
+      // console.log('정렬되지 않은 결과', taskStatusList[`${destinationKey}`]);
       const [targetItem] = items[sourceKey].splice(source.index, 1);
       items[destinationKey].splice(destination.index, 0, targetItem);
       console.log('재정렬한 결과', items);
@@ -121,10 +121,11 @@ export default function Project() {
         items[destinationKey].forEach((item, index) => {
           indexMap[item.id] = index;
         });
-        console.log(indexMap);
+        // console.log(indexMap);
 
         // dnd 완료된 데이터랑 기존 데이터랑 비교해서 index값 update
         const newIndexData = taskStatusList[`${destinationKey}`].map((item) => indexMap[item.id]);
+        console.log('정렬한 인덱스', newIndexData);
 
         // 정렬된 인덱스 값을 request body data로 지정함
         setDragUpdateData({ ...dragUpdateData, updateTaskIndexList: newIndexData });
@@ -140,7 +141,7 @@ export default function Project() {
         items[destinationKey].forEach((item, index) => {
           indexMap[item.id] = index;
         });
-        console.log(indexMap);
+        // console.log(indexMap);
 
         // dnd 완료된 데이터랑 기존 데이터랑 비교해서 index값 update
         const newIndexData = newDestinationData.map((item) => indexMap[item.id]);
@@ -162,8 +163,10 @@ export default function Project() {
     if (check) {
       updateTaskIndexMutate(dragUpdateData);
       setCheck(false);
+      setDragUpdateData({ beforeTaskStatus: null, movedTaskId: null, updateTaskIndexList: [] });
     }
   }, [check]);
+
   // TODO : 그룹 필터링 되는거 확인하고 utils 함수로 빼기
   useEffect(() => {
     const totalTasks = [
