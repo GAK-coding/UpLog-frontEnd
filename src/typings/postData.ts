@@ -30,6 +30,8 @@ export interface FailPost {
   httpStatus: string;
   message: string;
 }
+
+export interface MenuPosts {}
 export interface CommentInfo {
   id: number;
   parentId: number | null;

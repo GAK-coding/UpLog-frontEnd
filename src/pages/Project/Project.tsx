@@ -84,7 +84,7 @@ export default function Project() {
     (result: DropResult) => {
       const { destination, source } = result;
 
-      console.log(result);
+      console.log('드래그 완료했을 때 나오는 결과', result);
       // 이상한 곳에 드래그하면 return
       if (!destination) return;
 
@@ -97,6 +97,7 @@ export default function Project() {
       const [targetItem] = items[sourceKey].splice(source.index, 1);
       items[destinationKey].splice(destination.index, 0, targetItem);
 
+      console.log('재정렬한 결과', items);
       setTaskStatusList(items);
     },
     [taskStatusList]
