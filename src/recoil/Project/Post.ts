@@ -1,5 +1,5 @@
 import { atom } from 'recoil';
-import { CommentInfo, Posts } from '@/typings/post.ts';
+import { CommentInfo, Posts } from '@/typings/postData.ts';
 
 export const postMain = atom({
   key: 'postMain',

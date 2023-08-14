@@ -13,7 +13,7 @@ import useInput from '@/hooks/useInput.ts';
 import { Select } from 'antd';
 import { menuListData } from '@/recoil/Project/Menu.ts';
 import { SelectMenu } from '@/typings/menu.ts';
-import { Post } from '@/typings/post.ts';
+import { PostData } from '@/typings/postData.ts';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import PostEditor from '@/components/Common/PostEditor.tsx';
@@ -37,7 +37,7 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
 
   // TODO : post id로 post data 가져오는 api 연결해서 값 설정하는걸로 바꿀거임
   const postData = useRecoilValue(eachMenuPost);
-  const posts = postData.posts as Post[];
+  const posts = postData.posts as PostData[];
   const filteredPost = posts.filter((item) => item.id === post)[0];
 
   // 메뉴 list

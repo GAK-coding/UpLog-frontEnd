@@ -1,6 +1,6 @@
 import { targetMemberInfo } from '@/typings/member.ts';
 
-export interface Post {
+export interface PostData {
   id: number;
   title: string;
   authorInfoDTO: targetMemberInfo;
@@ -11,16 +11,25 @@ export interface Post {
   postType: string | null;
   content: string;
   createTime: string;
-  tagList: string[];
+  tagList?: string[];
   likeCount: number;
   commentCount: number;
 }
 
 export interface Posts {
-  noticePost: Post;
-  posts: Post[];
+  noticePost: PostData;
+  posts: PostData[];
 }
 
+export interface PostBody extends Pick<PostData, 'title' | 'content' | 'menuId' | 'postType'> {
+  productId: number;
+  projectId: number;
+}
+
+export interface FailPost {
+  httpStatus: string;
+  message: string;
+}
 export interface CommentInfo {
   id: number;
   parentId: number | null;
