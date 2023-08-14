@@ -1,10 +1,9 @@
 import {
   FailProduct,
   ProductBody,
-  ProductsData,
   ProductEditBody,
   ProductEditData,
-  Product,
+  ProductsData,
   GetProductList,
 } from '@/typings/product.ts';
 import { AxiosResponse } from 'axios';

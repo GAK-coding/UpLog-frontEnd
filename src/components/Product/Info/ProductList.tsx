@@ -1,6 +1,6 @@
 import { AiOutlinePlus } from 'react-icons/ai';
-import React, { Suspense, useCallback, useState } from 'react';
-import { productListData, productOpen } from '@/recoil/Product/atom.ts';
+import React, { useCallback, useState } from 'react';
+import { productOpen } from '@/recoil/Product/atom.ts';
 import { useRecoilState } from 'recoil';
 import { RxDragHandleDots2 } from 'react-icons/rx';
 import { BiPencil } from 'react-icons/bi';
@@ -12,13 +12,11 @@ import { useNavigate } from 'react-router-dom';
 import { SaveUserInfo } from '@/typings/member.ts';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { changeProductsSequence, getMyProducts } from '@/api/Product/Product.ts';
-import { GetProductList, Product, ProductInfo } from '@/typings/product.ts';
+import { GetProductList, ProductInfo } from '@/typings/product.ts';
 
 export default function ProductList() {
   const navigate = useNavigate();
-  const [userInfo, setUserInfo] = useState<SaveUserInfo>(
-    JSON.parse(sessionStorage.getItem('userInfo')!)
-  );
+  const userInfo: SaveUserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
 
   // 수정할 product id
   const [productId, setProductId] = useState<number>(0);
