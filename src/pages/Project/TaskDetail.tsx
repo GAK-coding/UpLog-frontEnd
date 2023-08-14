@@ -128,13 +128,15 @@ export default function TaskDetail() {
       {contextHolder}
       {/*돌아가기 버튼*/}
       <article className={'pt-4 flex justify-center w-[10%] min-w-[6rem] lg:w-[16%]'}>
-        <Link
-          to={`/workspace/${product}/${project}/menu/${menutitle}`}
-          className={'flex justify-center text-[1.3rem] text-gray-dark font-bold'}
-        >
-          <IoIosArrowBack className={'text-[2.3rem] block'} />
+        <div className={'flex justify-center text-[1.3rem] text-gray-dark font-bold'}>
+          <IoIosArrowBack
+            className={'text-[2.3rem] block'}
+            onClick={() => {
+              history.back();
+            }}
+          />
           <span className={'hidden xl:block'}>돌아가기</span>
-        </Link>
+        </div>
       </article>
       <article
         className={
