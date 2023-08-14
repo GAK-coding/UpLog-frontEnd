@@ -13,6 +13,9 @@ import { DragTaskIndexBody, TaskStatus } from '@/typings/task.ts';
 import { allStatusTaskList, updateTaskIndex } from '@/api/Project/Task.ts';
 import { useMutation, useQuery } from 'react-query';
 
+interface IndexID {
+  [key: number]: number;
+}
 export default function Project() {
   const { product, project } = useParams();
   const projectId = 10;
@@ -112,15 +115,19 @@ export default function Project() {
 
       // 같은 board 내에서 이동한 경우
       if (sourceKey === destinationKey) {
-        // id 값을 기준으로 데이터 배열을 오름차순으로 정렬
-        const sortedData = items[destinationKey].slice().sort((a, b) => a.id - b.id);
+        // key(id) : value(index) 형태로 데이터를 저장
+        const indexMap: IndexID = {};
+        items[destinationKey].forEach((item, index) => {
+          indexMap[item.id] = index;
+        });
+        console.log(indexMap);
 
-        // id 값을 기준으로 정렬된 순서에 따른 인덱스 순서를 구한다.
-        const indexOrder = sortedData.map((item) =>
-          items[destinationKey].findIndex((element) => element.id === item.id)
-        );
+        // dnd 완료된 데이터랑 기존 데이터랑 비교해서 index값 update
+        const newIndexData = taskStatusList[`${destinationKey}`].map((item) => indexMap[item.id]);
+
         // 정렬된 인덱스 값을 request body data로 지정함
-        setDragUpdateData({ ...dragUpdateData, updateTaskIndexList: indexOrder });
+        console.log('정렬한 인덱스', newIndexData);
+        setDragUpdateData({ ...dragUpdateData, updateTaskIndexList: newIndexData });
       }
       setTaskStatusList(items);
       setCheck(true);
