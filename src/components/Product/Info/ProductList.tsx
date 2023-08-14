@@ -1,6 +1,6 @@
 import { AiOutlinePlus } from 'react-icons/ai';
 import React, { useCallback, useState } from 'react';
-import { productListData, productOpen } from '@/recoil/Product/atom.ts';
+import { productOpen } from '@/recoil/Product/atom.ts';
 import { useRecoilState } from 'recoil';
 import { RxDragHandleDots2 } from 'react-icons/rx';
 import { BiPencil } from 'react-icons/bi';
@@ -10,19 +10,19 @@ import ProductInfoModal from '@/components/Product/Info/ProductInfoModal.tsx';
 import { Scrollbars } from 'rc-scrollbars';
 import { useNavigate } from 'react-router-dom';
 import { SaveUserInfo } from '@/typings/member.ts';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { changeProductsSequence, getMyProducts } from '@/api/Product/Product.ts';
+import { GetProductList, ProductInfo } from '@/typings/product.ts';
 
 export default function ProductList() {
   const navigate = useNavigate();
-
-  const [userInfo, setUserInfo] = useState<SaveUserInfo>(
-    JSON.parse(sessionStorage.getItem('userInfo')!)
-  );
+  const userInfo: SaveUserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
 
   // 수정할 product id
   const [productId, setProductId] = useState<number>(0);
 
   // ProductList 정보
-  const [productList, setProductList] = useRecoilState(productListData);
+  // const [productList, setProductList] = useRecoilState(productListData);
 
   // 제품 List click
   const [isProductClick, setIsProductClick] = useRecoilState(productOpen);
@@ -30,6 +30,35 @@ export default function ProductList() {
   // 제품추가&정보수정 모달창
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isCreateProduct, setIsCreateProduct] = useState(true);
+
+  const { data: productList } = useQuery('myProductList', getMyProducts, {
+    select: (data) => {
+      console.log(data);
+
+      if (typeof data !== 'string') {
+        const list: ProductInfo[] = data.map((item: GetProductList) => {
+          return {
+            productId: item.productId,
+            productName: item.productName,
+            powerType: item.powerType,
+            indexNum: item.indexNum,
+            draggableId: item.productId.toString(),
+            // TODO: 이미지 수정 필요
+            image: '/images/test_userprofile.png',
+          };
+        });
+
+        return list;
+      }
+    },
+    // staleTime: 60000, // 1분
+    // cacheTime: 80000, // 1분 20초
+    // refetchOnMount: false, // 마운트(리렌더링)될 때 데이터를 다시 가져오지 않음
+    refetchOnWindowFocus: false, // 브라우저를 포커싱했을때 데이터를 가져오지 않음
+    refetchOnReconnect: false, // 네트워크가 다시 연결되었을때 다시 가져오지 않음
+  });
+
+  const { mutate } = useMutation(changeProductsSequence);
 
   // 제품 list 클릭해도 꺼지지않게함
   const onChildClick = (e: React.MouseEvent) => {
@@ -40,6 +69,8 @@ export default function ProductList() {
   const onChangeIsCreateProduct = useCallback((check: boolean) => {
     setIsCreateProduct(check);
   }, []);
+
+  const queryClient = useQueryClient();
 
   // dnd - 드래그 끝나면 실행되는 함수
   const onDragEnd = useCallback(
@@ -58,10 +89,11 @@ export default function ProductList() {
         // 기존 아이템을 새로운 위치에 삽입하기
         updatedProduct.splice(destination.index, 0, movedItem);
 
-        // 상태 변경
-        setProductList(updatedProduct);
+        const updateIndexList: number[] = updatedProduct.map((item) => item.productId);
+        mutate(updateIndexList);
 
-        // TODO : 여기에서 변경된 updatedProduct 값을 보내서 변경된 순서를 저장해야함
+        // 바로 쿼리에 업데이트
+        queryClient.setQueriesData('myProductList', updatedProduct);
       }
     },
     [productList]
@@ -70,7 +102,7 @@ export default function ProductList() {
   return (
     <section
       className={
-        'border-base w-[20rem] min-h-[3.3rem] max-h-[27.3rem] block absolute top-[4rem] right-[-8.5rem] shadow-sign-up z-40'
+        'border-base w-[20rem] min-h-[3.3rem] max-h-[27.3rem] block absolute top-[4.5rem] left-[11rem] shadow-sign-up z-40'
       }
       onClick={onChildClick}
     >
@@ -91,7 +123,7 @@ export default function ProductList() {
                 {...provided.droppableProps}
                 className={'flex-col-center justify-between w-full'}
               >
-                {productList.map((product, index) => {
+                {productList?.map((product, index) => {
                   return (
                     <Draggable
                       draggableId={product.draggableId}
@@ -107,7 +139,9 @@ export default function ProductList() {
                             snapshot.isDragging ? 'shadow-2xl shadow-gray-400' : ''
                           }`}
                           onClick={() => {
-                            navigate(`/workspace/${product.name}`);
+                            // TODO: url 인코딩하기
+                            const encodedProductName = encodeURIComponent(product.productName);
+                            navigate(`/workspace/${product.productName}`);
                           }}
                         >
                           <RxDragHandleDots2
@@ -124,20 +158,21 @@ export default function ProductList() {
                             className={'ml-3 text-xl font-bold w-full'}
                             onClick={() => setIsProductClick(!isProductClick)}
                           >
-                            {product.name}
+                            {product.productName}
                           </span>
 
-                          {/*TODO : 마스터만 수정가능하게 변경*/}
-                          <BiPencil
-                            className={
-                              'flex-row-center w-20 text-xl mr-4 fill-gray-light cursor-pointer z-50'
-                            }
-                            onClick={() => {
-                              onOpen();
-                              onChangeIsCreateProduct(false);
-                              setProductId(product.id);
-                            }}
-                          />
+                          {(product.powerType === 'MASTER' || product.powerType === 'LEADER') && (
+                            <BiPencil
+                              className={
+                                'flex-row-center w-20 text-xl mr-4 fill-gray-light cursor-pointer z-50'
+                              }
+                              onClick={() => {
+                                onOpen();
+                                onChangeIsCreateProduct(false);
+                                setProductId(product.productId);
+                              }}
+                            />
+                          )}
                         </div>
                       )}
                     </Draggable>

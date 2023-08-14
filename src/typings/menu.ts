@@ -5,6 +5,10 @@ export interface MenuInfo {
   version: string;
 }
 
+export interface FailMenu {
+  httpStatus: string;
+  message: string;
+}
 export interface SelectMenu {
   value: string;
   label: string;

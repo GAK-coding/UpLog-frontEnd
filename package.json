@@ -58,7 +58,6 @@
     "react-test-renderer": "^18.2.0",
     "recoil": "^0.7.7",
     "resolve": "^1.22.2",
-    "sharp": "^0.32.4",
     "tui-color-picker": "^2.2.8"
   },
   "devDependencies": {
@@ -69,7 +68,7 @@
     "@jest/globals": "^29.5.0",
     "@testing-library/cypress": "^9.0.0",
     "@testing-library/jest-dom": "^5.17.0",
-    "@toast-ui/editor": "^3.2.2",
+    "@toast-ui/editor": "^3.1.8",
     "@toast-ui/editor-plugin-code-syntax-highlight": "^3.1.0",
     "@toast-ui/editor-plugin-color-syntax": "^3.1.0",
     "@toast-ui/react-editor": "^3.1.1",
@@ -111,6 +110,9 @@
     "vite-plugin-favicon": "^1.0.8",
     "vite-plugin-image-optimizer": "^1.1.6",
     "vitest": "^0.32.4"
+  },
+  "resolutions": {
+    "@toast-ui/editor": "3.1.8"
   },
   "babelMacros": {
     "twin": {

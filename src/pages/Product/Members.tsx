@@ -13,6 +13,10 @@ import { IoMdClose } from 'react-icons/io';
 import { Scrollbars } from 'rc-scrollbars';
 import AuthorityModal from '@/components/Product/Members/AuthorityModal.tsx';
 import MemberListManageAlert from '@/components/Product/Members/MemberListManageAlert.tsx';
+import { useGetEachProduct } from '@/components/Product/hooks/useGetEachProduct.ts';
+import { useMessage } from '@/hooks/useMessage.ts';
+import { useMutation } from 'react-query';
+import { productEdit } from '@/api/Product/Product.ts';
 
 export default function Members() {
   const [emails, , setEmails] = useInput('');
@@ -27,6 +31,76 @@ export default function Members() {
   const [nowSelectedMember, setNowSelectedMember] = useState('');
   // 방출인지 권한 위임인지
   const [isOut, setIsOut] = useState(false);
+  const { showMessage, contextHolder } = useMessage();
+  const productId = 8;
+
+  // console.log(data);
+
+  // const { mutate } = useMutation(
+  //   () => {
+  //     let isEmailFormat = true;
+  //     const memberEmailList = emails.split(',').map((email) => {
+  //       const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+  //       if (!emailRegex.test(email.trim())) {
+  //         isEmailFormat = false;
+  //       }
+  //       return email.trim();
+  //     });
+  //
+  //     if (!isEmailFormat) {
+  //       showMessage('warning', '이메일 형식이 올바르지 않은 메일이 존재합니다.');
+  //       return;
+  //     }
+  //
+  //     return productEdit(
+  //       {
+  //         link: 'string',
+  //         newName: null,
+  //         memberEmailList: memberEmailList,
+  //         powerType: isLeader ? 'LEADER' : 'LEADER',
+  //       },
+  //       productId
+  //     );
+  //   },
+  //   {
+  //     onSuccess: (data) => {
+  //       console.log(data);
+  //     },
+  //   }
+  // );
+
+  const { mutate } = useMutation(productEdit, {
+    onSuccess: (data) => {
+      console.log(data);
+    },
+  });
+
+  const onClickInvite = useCallback(() => {
+    let isEmailFormat = true;
+    const memberEmailList = emails.split(',').map((email) => {
+      const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+      if (!emailRegex.test(email.trim())) {
+        isEmailFormat = false;
+      }
+      return email.trim();
+    });
+
+    if (!isEmailFormat) {
+      showMessage('warning', '이메일 형식이 올바르지 않은 메일이 존재합니다.');
+      return;
+    }
+
+    mutate({
+      data: {
+        // TODO: 링크 적어야됨
+        link: 'string',
+        newName: null,
+        memberEmailList: memberEmailList,
+        powerType: isLeader ? 'LEADER' : 'DEFAULT',
+      },
+      productId,
+    });
+  }, [emails, isLeader]);
 
   const onChangeEmails = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {
     setEmails(e.target.value);
@@ -82,6 +156,7 @@ export default function Members() {
       className={'w-full min-w-[50em] flex-col-center justify-start px-[30rem] py-14'}
       onClick={onCloseMemberKebab}
     >
+      {contextHolder}
       <article className={'mb-20'}>
         <h1 className={'text-3xl font-bold mb-7'}>멤버 추가</h1>
         <div
@@ -99,12 +174,16 @@ export default function Members() {
                   onChange={onChangeEmails}
                   border={'1px solid var(--border-line)'}
                   height={'100%'}
+                  maxLength={1000}
                   focusBorderColor={'none'}
                   placeholder="이메일은 쉼표(,)로 구분해 주세요."
                 />
               </div>
-              <div className={'w-1/5 flex-col-center gap-2.5'}>
-                <button className={'bg-orange rounded font-bold text-sm text-white w-[4.5rem] h-9'}>
+              <div className={'w-1/5 flex-col-center justify-end gap-2.5'}>
+                <button
+                  className={'bg-orange rounded font-bold text-sm text-white w-[4.5rem] h-9'}
+                  onClick={onClickInvite}
+                >
                   전송
                 </button>
                 <span

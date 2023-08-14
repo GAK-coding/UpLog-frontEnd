@@ -2,7 +2,7 @@ import { formatCreteaDate } from '@/utils/fotmatCreateDate.ts';
 import { FaUserCircle } from 'react-icons/fa';
 import { BsHeart, BsHeartFill } from 'react-icons/bs';
 import { useCallback, useState } from 'react';
-import { CommentInfo } from '@/typings/post.ts';
+import { CommentInfo } from '@/typings/postData.ts';
 
 interface Props {
   commentList: CommentInfo[];

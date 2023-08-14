@@ -9,9 +9,11 @@ import {
 } from '@chakra-ui/react';
 import { useCallback, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import { deleteTask } from '@/api/Project/Task.ts';
 import { useMessage } from '@/hooks/useMessage.ts';
+import { taskAll } from '@/recoil/Project/Task.ts';
+import { useRecoilValue } from 'recoil';
 
 interface Props {
   isOpen: boolean;
@@ -25,34 +27,62 @@ export default function DeleteDialog({ isOpen, onClose, task, post, isTask }: Pr
   const cancelRef = useRef<HTMLButtonElement>(null);
   const { product, project, menutitle } = useParams();
   const { showMessage, contextHolder } = useMessage();
+  const taskList = useRecoilValue(taskAll);
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const taskId = task!;
 
   // TODO : task 삭제 성공 데이터 값 맞는지 확인 필요
   // task 삭제 api 연결
-  const { mutate: deleteTaskMutate } = useMutation(() => deleteTask(task!), {
+  const { mutate: deleteTaskMutate } = useMutation(() => deleteTask(taskId), {
+    onMutate: async () => {
+      // optimistic update를 덮어쓰지 않기 위해 쿼리를 수동으로 삭제
+      await queryClient.cancelQueries(['getTaskEach', taskId]);
+
+      const previousData = queryClient.getQueryData(['getTaskEach', taskId]);
+
+      const newTaskData = taskList.filter((eachTask) => eachTask.id !== task);
+      queryClient.setQueryData(['getTaskEach', taskId], newTaskData);
+
+      return () => queryClient.setQueryData(['getTaskEach', taskId], previousData);
+    },
     onSuccess: (data) => {
       if (data === 'delete task fail') {
         showMessage('error', 'Task 삭제에 실패했습니다.');
-      } else if (data === 'OK') {
-        showMessage('success', 'Task가 삭제되었습니다.');
         setTimeout(() => onClose(), 2000);
+      } else if (data === 'delete') {
+        showMessage('success', 'Task가 삭제되었습니다.');
+        setTimeout(() => {
+          onClose();
+          navigate(`/workspace/${product}/${project}/menu/${menutitle}`);
+        }, 2000);
       }
+    },
+    onError: (error, value, rollback) => {
+      if (rollback) {
+        rollback();
+        showMessage('error', 'Task 삭제에 실패했습니다.');
+      } else {
+        showMessage('error', 'Task 삭제에 실패했습니다.');
+      }
+    },
+    onSettled: () => {
+      return queryClient.invalidateQueries(['getTaskEach', taskId]);
     },
   });
 
   const onClickDelete = useCallback(() => {
     if (isTask) {
-      deleteTaskMutate();
       console.log('task 삭제', task);
+      console.log(taskList);
+      deleteTaskMutate();
     }
 
     // TODO : Post 삭제 api 연결
     if (!isTask) {
       console.log('post 삭제', post);
     }
-
-    navigate(`/workspace/${product}/${project}/menu/${menutitle}`);
-  }, [post, task]);
+  }, [post, task, isTask]);
 
   return (
     <AlertDialog

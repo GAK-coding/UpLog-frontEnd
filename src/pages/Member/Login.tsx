@@ -6,11 +6,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useGoogleLogin } from '@react-oauth/google';
 import { useMessage } from '@/hooks/useMessage.ts';
 import { GetUserInfo, LoginInfo, SaveUserInfo } from '@/typings/member.ts';
-import { loginUp } from '@/api/Members/Login-Signup.ts';
 import { useMutation } from 'react-query';
 import { useRecoilState } from 'recoil';
 import { loginStatus } from '@/recoil/User/atom.ts';
 import { useCookies } from 'react-cookie';
+import { loginAPI } from '@/api/Members/Login-Signup.ts';
 
 export default function Login() {
   const { showMessage, contextHolder } = useMessage();
@@ -20,7 +20,7 @@ export default function Login() {
   const [isLogin, setIsLogin] = useRecoilState(loginStatus);
   const [cookies, setCookie, removeCookie] = useCookies();
 
-  const { mutate } = useMutation(loginUp, {
+  const { mutate } = useMutation(loginAPI, {
     onSuccess: (data: GetUserInfo | string) => {
       if (typeof data === 'string') {
         showMessage('error', '아이디 또는 비밀번호를 잘못 입력하셨습니다.');
@@ -36,11 +36,11 @@ export default function Login() {
         email,
       };
 
-      navigate('/workspace/product');
       sessionStorage.setItem('accessToken', accessToken);
       setCookie('refreshToken', refreshToken, { path: '/' });
       sessionStorage.setItem('userInfo', JSON.stringify(userInfo));
       setIsLogin(true);
+      navigate('/');
     },
     onError: () => {
       showMessage('error', '아이디 또는 비밀번호를 잘못 입력하셨습니다.');

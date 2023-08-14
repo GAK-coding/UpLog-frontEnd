@@ -76,7 +76,6 @@ export default function Header() {
     setIsNoneHeader(pathname === '/login' || pathname === '/signup' || pathname === '/pwinquiry');
   }, [pathname]);
 
-  // TODO : 최종 발표전에 풀어놓기
   useEffect(() => {
     const nowLogin = !!sessionStorage.getItem('userInfo');
     setIsLogin(nowLogin);
@@ -94,7 +93,9 @@ export default function Header() {
       ${isNoneHeader ? 'bg-none-header' : 'border-solid border-b border-header-gray'}`}
     >
       {/*로고 + 글자 (메인페이지로 이동)*/}
-      <div className={'flex-row-center w-[40rem] md:w-auto ml-8 md:ml-32'}>
+      <div
+        className={'relative flex-row-center justify-start w-[60%] h-full md:w-auto ml-8 md:ml-32'}
+      >
         <nav className={'flex-row-center cursor-pointer'} onClick={() => navigate('/')}>
           <img className={'flex mr-4 h-10'} src={'/images/mainLogo.png'} alt={'main-logo'} />
           <span className={'flex font-logo text-[2.3rem] font-semibold text-gray-dark mt-2'}>
@@ -106,7 +107,7 @@ export default function Header() {
           <div className={'flex-row-center ml-4'} ref={productRef}>
             <div className={'flex-row-center h-9 border-solid border-r border-gray-light'} />
             <div
-              className={'flex-row-center cursor-pointer relative'}
+              className={'flex-row-center cursor-pointer '}
               onClick={() => {
                 setIsProductClick(!isProductClick);
               }}
@@ -127,7 +128,9 @@ export default function Header() {
       {/*로그인 상태*/}
       {isLogin && (
         <div
-          className={'flex w-[26rem] h-full justify-between mr-4 md:mr-12 font-bold items-center '}
+          className={
+            'flex-row-center justify-end gap-6 w-[40%] h-full mr-4 md:mr-12 font-bold items-center '
+          }
         >
           {/*검색창*/}
           <div
@@ -142,7 +145,7 @@ export default function Header() {
               value={searchTag}
               onChange={onChangeSearchTag}
               onKeyDown={(e) => activeEnter(e)}
-              placeholder={'검색'}
+              placeholder={'태그 검색'}
               maxLength={20}
               required
               className={`w-[8.7rem] h-full font-medium text-gray-dark ${

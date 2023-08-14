@@ -1,11 +1,13 @@
 // Task 생성
 import {
+  DragTaskIndexBody,
   FailTask,
   MenuTasks,
   StatusTaskData,
   TaskBody,
   TaskData,
   TaskStatus,
+  UpdateTaskBody,
 } from '@/typings/task.ts';
 import { AxiosResponse } from 'axios';
 import { instance } from '@/api';
@@ -13,7 +15,7 @@ import { instance } from '@/api';
 // task 생성
 export const createTask = async (data: TaskBody) => {
   try {
-    const res: AxiosResponse<FailTask> = await instance.post('/tasks', data);
+    const res: AxiosResponse<TaskData | FailTask> = await instance.post('/tasks', data);
 
     return res.data;
   } catch (error) {
@@ -88,7 +90,7 @@ export const allTaskList = async (projectId: number) => {
 // 메뉴별로 task 전체 조회
 export const menuTaskList = async (menuId: number) => {
   try {
-    const res: AxiosResponse<MenuTasks> = await instance.get(`/menu/${menuId}/tasks`);
+    const res: AxiosResponse<MenuTasks> = await instance.get(`/menus/${menuId}/tasks`);
 
     return res.data;
   } catch (error) {
@@ -97,102 +99,24 @@ export const menuTaskList = async (menuId: number) => {
   }
 };
 
-// task 수정 (date, title, taskTeam, target-Member, status, menu, content)
-export const editTaskDate = async (
-  taskId: number,
-  updateStartTime: string,
-  updateEndTime: string
-) => {
+// task 수정
+export const editTask = async (data: UpdateTaskBody, taskId: number) => {
   try {
-    const res: AxiosResponse<TaskData> = await instance.patch(`/tasks/${taskId}/date`, {
-      updateStartTime,
-      updateEndTime,
-    });
-
+    const res: AxiosResponse<TaskData> = await instance.patch(`/tasks/${taskId}`, data);
     return res.data;
   } catch (error) {
     console.log(error);
-    return 'edit task date fail';
+    return 'edit task fail';
   }
 };
 
-export const editTaskTitle = async (taskId: number, updatetaskName: string) => {
+export const updateTaskIndex = async (data: DragTaskIndexBody, taskStatus: TaskStatus) => {
   try {
-    const res: AxiosResponse<TaskData> = await instance.patch(
-      `/tasks/${taskId}/title`,
-      updatetaskName
-    );
-
+    const res: AxiosResponse<TaskData[]> = await instance.patch(`/tasks/${taskStatus}/index`, data);
+    console.log(res.data);
     return res.data;
   } catch (error) {
     console.log(error);
-    return 'edit task title fail';
-  }
-};
-
-export const editTaskTeam = async (taskId: number, updateTeamId: number) => {
-  try {
-    const res: AxiosResponse<TaskData> = await instance.patch(
-      `/tasks/${taskId}/title`,
-      updateTeamId
-    );
-
-    return res.data;
-  } catch (error) {
-    console.log(error);
-    return 'edit task team fail';
-  }
-};
-
-export const editTaskTargetMember = async (taskId: number, updateTargetMemberId: number) => {
-  try {
-    const res: AxiosResponse<TaskData> = await instance.patch(
-      `/tasks/${taskId}/title`,
-      updateTargetMemberId
-    );
-
-    return res.data;
-  } catch (error) {
-    console.log(error);
-    return 'edit task target member fail';
-  }
-};
-
-export const editTaskStatus = async (taskId: number, taskStatus: TaskStatus) => {
-  try {
-    const res: AxiosResponse<TaskData> = await instance.patch(`/tasks/${taskId}/title`, taskStatus);
-
-    return res.data;
-  } catch (error) {
-    console.log(error);
-    return 'edit task status fail';
-  }
-};
-
-export const editTaskMenu = async (taskId: number, updateMenuId: number) => {
-  try {
-    const res: AxiosResponse<TaskData> = await instance.patch(
-      `/tasks/${taskId}/title`,
-      updateMenuId
-    );
-
-    return res.data;
-  } catch (error) {
-    console.log(error);
-    return 'edit task menu fail';
-  }
-};
-
-export const editTaskContent = async (taskId: number, updateContent: string) => {
-  try {
-    const res: AxiosResponse<TaskData> = await instance.patch(
-      `/tasks/${taskId}/title`,
-      updateContent
-    );
-
-    return res.data;
-  } catch (error) {
-    console.log(error);
-    return 'edit task content fail';
+    return 'update task index fail';
   }
 };

@@ -2,19 +2,22 @@ import { DatePicker, DatePickerProps, Select } from 'antd';
 import { SubGroup } from '@/typings/project.ts';
 import { SelectMenu } from '@/typings/menu.ts';
 import { TaskData } from '@/typings/task.ts';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { useState } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 import * as dayjs from 'dayjs';
-import { menuListData } from '@/recoil/Project/Menu.ts';
 import { productMemberList } from '@/recoil/Product/atom.ts';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { useGetMenuList } from '@/components/Project/hooks/useGetMenuList.ts';
+import { editTaskInfo } from '@/recoil/Project/Task.ts';
+import { RangePickerProps } from 'antd/es/date-picker';
 
 interface Props {
   isEdit: boolean;
-  editTask: TaskData;
-  setEditTask: Dispatch<SetStateAction<TaskData>>;
+  taskInfo: TaskData;
 }
-export default function TaskEditInfo({ isEdit, editTask, setEditTask }: Props) {
+export default function TaskEditInfo({ isEdit, taskInfo }: Props) {
+  const projectId = 10;
+  const [editTaskData, setEditTask] = useRecoilState(editTaskInfo);
   const pGroup: string[] = ['그룹', '개발팀', '마케팅팀', '홍보팀'];
   const cGroup: SubGroup = {
     그룹: ['하위그룹'],
@@ -26,8 +29,9 @@ export default function TaskEditInfo({ isEdit, editTask, setEditTask }: Props) {
 
   const [parentGroup, setParentGroup] = useState(cGroup[pGroup[0] as ChildGroup]);
   const [childGroup, setChildGroup] = useState(cGroup[pGroup[0] as ChildGroup][0]);
+  const [menuData] = useGetMenuList(projectId);
+  const menuList = menuData;
 
-  const menuList = useRecoilValue(menuListData);
   const menuNameList: SelectMenu[] = menuList.map((menuItem) => ({
     value: menuItem.id.toString(),
     label: menuItem.menuName,
@@ -42,8 +46,8 @@ export default function TaskEditInfo({ isEdit, editTask, setEditTask }: Props) {
   // 시작 날짜 입력 값
   const onChangeStartTime: DatePickerProps['onChange'] = (date, dateString) => {
     const updatedTask = {
-      ...editTask,
-      startTime: dateString,
+      ...editTaskData,
+      updateStartTime: dateString,
     };
 
     setEditTask(updatedTask);
@@ -52,8 +56,8 @@ export default function TaskEditInfo({ isEdit, editTask, setEditTask }: Props) {
   // 종료 날짜 입력 값
   const onChangeEndTime: DatePickerProps['onChange'] = (date, dateString) => {
     const updatedTask = {
-      ...editTask,
-      endTime: dateString,
+      ...editTaskData,
+      updateEndTime: dateString,
     };
 
     setEditTask(updatedTask);
@@ -63,8 +67,8 @@ export default function TaskEditInfo({ isEdit, editTask, setEditTask }: Props) {
     // menuId
     if (type === 'menuId') {
       const updatedTask = {
-        ...editTask,
-        [type]: +value.value,
+        ...editTaskData,
+        updateMenuId: +value.value,
       };
       setEditTask(updatedTask);
       return;
@@ -72,24 +76,20 @@ export default function TaskEditInfo({ isEdit, editTask, setEditTask }: Props) {
 
     // targetMember
     if (type === 'targetMember') {
-      const nameValue = value.label as string;
-      const splitStrings = nameValue.split('(');
-
-      const nickName = splitStrings[0];
-      const name = splitStrings[1].replace(')', '');
-
       const updatedTask = {
-        ...editTask,
-        [type]: {
-          id: +value.value,
-          image: '',
-          name: name,
-          nickname: nickName,
-        },
+        ...editTaskData,
+        updateTargetMemberId: +value.value,
       };
 
       setEditTask(updatedTask);
     }
+  };
+
+  // 종료날짜 범위 제한
+  const disabledDateEnd: RangePickerProps['disabledDate'] = (current) => {
+    const updateStartTime =
+      editTaskData === null ? taskInfo.startTime : editTaskData.updateStartTime;
+    return current && current < dayjs(updateStartTime).startOf('day');
   };
 
   // TODO : projectTeamId 값 group id 값으로 바꾸기
@@ -100,8 +100,9 @@ export default function TaskEditInfo({ isEdit, editTask, setEditTask }: Props) {
     setChildGroup(cGroup[value][0]);
 
     const updatedTask = {
-      ...editTask,
-      projectTeamId: value,
+      ...editTaskData,
+      updateTeamId: +value,
+      updateTeamName: value,
     };
 
     setEditTask(updatedTask);
@@ -112,12 +113,14 @@ export default function TaskEditInfo({ isEdit, editTask, setEditTask }: Props) {
     setChildGroup(value);
 
     const updatedTask = {
-      ...editTask,
-      projectTeamId: value,
+      ...editTaskData,
+      updateTeamId: +value,
+      updateTeamName: value,
     };
 
     setEditTask(updatedTask);
   };
+
   return (
     <section className={'flex-col justify-start items-start w-[80%] h-[15rem] pl-[3rem]'}>
       {/*시작날짜*/}
@@ -129,16 +132,17 @@ export default function TaskEditInfo({ isEdit, editTask, setEditTask }: Props) {
           <span>시작날짜</span>
           <div className={'ml-3 h-4 border-solid border-r border-[0.2px] border-gray-border'} />
         </div>
-        {isEdit}
+
+        {/*시작날짜*/}
         {isEdit ? (
           <DatePicker
-            defaultValue={dayjs(editTask.startTime, 'YYYY.MM.DD')}
+            defaultValue={dayjs(taskInfo.startTime, 'YYYY.MM.DD')}
             onChange={onChangeStartTime}
             placement={'bottomLeft'}
             bordered={false}
           />
         ) : (
-          <span className={'ml-3 text-gray-dark'}>{editTask.startTime}</span>
+          <span className={'ml-3 text-gray-dark'}>{taskInfo.startTime}</span>
         )}
       </div>
 
@@ -152,13 +156,14 @@ export default function TaskEditInfo({ isEdit, editTask, setEditTask }: Props) {
         </div>
         {isEdit ? (
           <DatePicker
-            defaultValue={dayjs(editTask.endTime, 'YYYY.MM.DD')}
+            defaultValue={dayjs(taskInfo.endTime, 'YYYY.MM.DD')}
             onChange={onChangeEndTime}
             placement={'bottomLeft'}
             bordered={false}
+            disabledDate={disabledDateEnd}
           />
         ) : (
-          <span className={'ml-3 text-gray-dark'}>{editTask.endTime}</span>
+          <span className={'ml-3 text-gray-dark'}>{taskInfo.endTime}</span>
         )}
       </div>
       {/*메뉴*/}
@@ -172,7 +177,7 @@ export default function TaskEditInfo({ isEdit, editTask, setEditTask }: Props) {
         {isEdit ? (
           <Select
             labelInValue
-            defaultValue={{ value: '-1', label: editTask.menuName }}
+            defaultValue={{ value: '-1', label: taskInfo.menuName }}
             onChange={handleChange('menuId')}
             style={{ width: 120 }}
             bordered={false}
@@ -184,7 +189,7 @@ export default function TaskEditInfo({ isEdit, editTask, setEditTask }: Props) {
             }}
           />
         ) : (
-          <span className={'ml-3 text-gray-dark'}>{editTask.menuName}</span>
+          <span className={'ml-3 text-gray-dark'}>{taskInfo.menuName}</span>
         )}
       </div>
 
@@ -226,7 +231,7 @@ export default function TaskEditInfo({ isEdit, editTask, setEditTask }: Props) {
             />
           </div>
         ) : (
-          <span className={'ml-3 text-gray-dark'}>{editTask.projectTeamName}</span>
+          <span className={'ml-3 text-gray-dark'}>{taskInfo.teamName}</span>
         )}
       </div>
 
@@ -238,21 +243,21 @@ export default function TaskEditInfo({ isEdit, editTask, setEditTask }: Props) {
           <span>할당자</span>
           <div className={'ml-3 h-4 border-solid border-r border-[0.2px] border-gray-border'} />
         </div>
-        {editTask.targetMember.image === '' ? (
-          <FaUserCircle className={'ml-3 text-[2rem] fill-gray-dark'} />
-        ) : (
-          <img
-            src={editTask.targetMember.image}
-            className={'ml-3 w-[2rem] h-[2rem] rounded-full'}
-          />
-        )}
+        {/*{taskInfo.targetMemberInfoDTO.image && taskInfo.targetMemberInfoDTO.image === '' ? (*/}
+        {/*  <FaUserCircle className={'ml-3 text-[2rem] fill-gray-dark'} />*/}
+        {/*) : (*/}
+        {/*  <img*/}
+        {/*    src={taskInfo.targetMemberInfoDTO.image}*/}
+        {/*    className={'ml-3 w-[2rem] h-[2rem] rounded-full'}*/}
+        {/*  />*/}
+        {/*)}*/}
 
         {isEdit ? (
           <Select
             labelInValue
             defaultValue={{
-              value: `${editTask.targetMember.id}`,
-              label: `${editTask.targetMember.nickname}(${editTask.targetMember.name})`,
+              value: `${taskInfo.targetMemberInfoDTO.id}`,
+              label: `${taskInfo.targetMemberInfoDTO.nickname}(${taskInfo.targetMemberInfoDTO.name})`,
             }}
             onChange={handleChange('targetMember')}
             style={{ width: 120 }}
@@ -265,9 +270,10 @@ export default function TaskEditInfo({ isEdit, editTask, setEditTask }: Props) {
             }}
           />
         ) : (
-          <span
-            className={'ml-2 text-gray-dark'}
-          >{`${editTask.targetMember.nickname}(${editTask.targetMember.name})`}</span>
+          <span className={'ml-2 text-gray-dark'}>
+            {taskInfo.targetMemberInfoDTO &&
+              `${taskInfo.targetMemberInfoDTO.nickname}(${taskInfo.targetMemberInfoDTO.name})`}
+          </span>
         )}
       </div>
     </section>
