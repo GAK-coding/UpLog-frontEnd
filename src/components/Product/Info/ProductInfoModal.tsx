@@ -19,6 +19,7 @@ import { useMutation, useQuery } from 'react-query';
 import { createProduct, eachProduct, productEdit } from '@/api/Product/Product.ts';
 import { ProductBody, ProductEditBody } from '@/typings/product.ts';
 import { SaveUserInfo } from '@/typings/member.ts';
+import { useGetEachProduct } from '@/components/Product/hooks/useGetEachProduct.ts';
 
 interface Props {
   isOpen: boolean;
@@ -74,26 +75,10 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
 
   // TODO : staleTime 확인 필요
   // 제품 정보 조회
-  const { refetch, data: productGetData } = useQuery(
-    ['getProjectInfo'],
-    () => eachProduct(productId),
-    {
-      onSuccess: (data) => {
-        if (typeof data === 'object' && 'message' in data) {
-          showMessage('error', '제품 정보를 불러오는데 실패했습니다.');
-        } else if (typeof data !== 'string' && 'name' in data) {
-          setProductName(data.name);
-        }
-      },
-      enabled: false,
-      staleTime: 6000, // 1분
-      cacheTime: 8000, // 1분 20초
-      refetchOnWindowFocus: false, // 브라우저를 포커싱했을때 데이터를 가져오지 않음
-    }
-  );
+  const [productGetData, refetch] = useGetEachProduct(productId, showMessage, setProductName, true);
 
   // 제품 정보 수정
-  const { mutate: updateProduct } = useMutation(() => productEdit(updateProductInfo, productId), {
+  const { mutate: updateProduct } = useMutation(productEdit, {
     onSuccess: (data) => {
       if (typeof data === 'object') {
         showMessage('success', '제품 정보가 변경되었습니다.');
@@ -136,7 +121,7 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
       }
 
       // 수정 요청 보냄
-      updateProduct();
+      updateProduct({ data: updateProductInfo, productId });
       return;
     }
     // 필수 정보를 입력하지 않았을 때
@@ -147,7 +132,7 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
 
     // 제품 생성
     createProductMutate();
-  }, [productName, masterEmail]);
+  }, [productName, masterEmail, updateProductInfo]);
 
   useEffect(() => {
     // 모달창 껏다가 키면 정보 초기화
@@ -159,7 +144,7 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
 
     // 수정일 경우에 기존 post 정보로 값 채워넣기
     else {
-      refetch();
+      refetch;
     }
   }, [isOpen, isCreateProduct, productId]);
 
