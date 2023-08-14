@@ -7,7 +7,6 @@ import { Draggable, Droppable } from 'react-beautiful-dnd';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useMessage } from '@/hooks/useMessage.ts';
 import { setClipBoardUrl } from '@/utils/setClipBoardUrl.ts';
-import { useDisclosure } from '@chakra-ui/react';
 
 interface Props {
   status: TaskStatus;
