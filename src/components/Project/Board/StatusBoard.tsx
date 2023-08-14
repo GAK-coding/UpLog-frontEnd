@@ -6,6 +6,8 @@ import { formatStatus } from '@/utils/formatStatus.ts';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useMessage } from '@/hooks/useMessage.ts';
+import { setClipBoardUrl } from '@/utils/setClipBoardUrl.ts';
+import TaskDetail from '@/pages/Project/TaskDetail.tsx';
 
 interface Props {
   status: TaskStatus;
@@ -20,17 +22,10 @@ export default function StatusBoard({ status, tasks }: Props) {
 
   const location = useLocation();
 
-  const isDeployment: boolean = import.meta.env.VITE_IS_DEPLOYMENT === 'true';
-  const DEV_FRONTEND_URL = import.meta.env.VITE_DEV_FRONTEND_URL;
-  const DEPLOYMENT_FRONTEND_URL = import.meta.env.VITE_DEPLOYMENT_FRONTEND_URL;
-
+  // task 링크복사
   const handleCopyClipBoard = (task: TaskData) => {
     try {
-      const beseURL = isDeployment ? DEPLOYMENT_FRONTEND_URL : DEV_FRONTEND_URL;
-
-      navigator.clipboard.writeText(
-        `${beseURL}${location.pathname}/menu/${task.menuName}/task/${task.id}`
-      );
+      navigator.clipboard.writeText(setClipBoardUrl(task, location.pathname));
       showMessage('success', '링크가 복사되었습니다.');
     } catch (error) {
       console.log(error);
@@ -38,6 +33,7 @@ export default function StatusBoard({ status, tasks }: Props) {
     }
   };
 
+  // task 수정
   return (
     //TODO : 보드 max-w 적용시키기
     <Droppable droppableId={status} isDropDisabled={false}>
@@ -110,6 +106,11 @@ export default function StatusBoard({ status, tasks }: Props) {
                                 className={
                                   'flex-row-center w-full h-1/3 hover:bg-orange-light-sideBar'
                                 }
+                                onClick={() => {
+                                  navigate(
+                                    `${location.pathname}/menu/${task.menuName}/task/${task.id}`
+                                  );
+                                }}
                               >
                                 수정
                               </div>

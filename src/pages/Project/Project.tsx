@@ -30,7 +30,6 @@ export default function Project() {
         if (data !== undefined) {
           if (typeof data !== 'string') {
             setTaskStatusList(data);
-            console.log(getTaskStatusList.data);
           }
         }
       },
