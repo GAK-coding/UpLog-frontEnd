@@ -8,6 +8,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useMessage } from '@/hooks/useMessage.ts';
 import { setClipBoardUrl } from '@/utils/setClipBoardUrl.ts';
 import TaskDetail from '@/pages/Project/TaskDetail.tsx';
+import { useDisclosure } from '@chakra-ui/react';
+import DeleteDialog from '@/components/Common/DeleteDialog.tsx';
 
 interface Props {
   status: TaskStatus;
@@ -16,6 +18,7 @@ interface Props {
 export default function StatusBoard({ status, tasks }: Props) {
   const convertStatus = formatStatus(status);
   const navigate = useNavigate();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const { showMessage, contextHolder } = useMessage();
   // task detail 클릭 여부
   const [isClickTaskDetail, setIsClickTaskDetail] = useState<{ [key: number]: boolean }>({});
@@ -86,17 +89,18 @@ export default function StatusBoard({ status, tasks }: Props) {
                             }));
                           }}
                         />
+
                         {
                           /*케밥 버튼 클릭시*/
                           isClickTaskDetail[task.id] && (
                             <section
                               className={
-                                'absolute flex-col-center w-[5rem] h-[5.5rem] top-[1rem] task-detail-border cursor-pointer text-[0.5rem] text-gray-dark'
+                                'absolute flex-col-center w-[5rem] h-[4.5rem] top-[1rem] task-detail-border cursor-pointer text-[0.5rem] text-gray-dark'
                               }
                             >
                               <div
                                 className={
-                                  'flex-row-center w-full h-1/3 hover:bg-orange-light-sideBar'
+                                  'flex-row-center w-full h-1/2 hover:bg-orange-light-sideBar'
                                 }
                                 onClick={() => handleCopyClipBoard(task)}
                               >
@@ -104,7 +108,7 @@ export default function StatusBoard({ status, tasks }: Props) {
                               </div>
                               <div
                                 className={
-                                  'flex-row-center w-full h-1/3 hover:bg-orange-light-sideBar'
+                                  'flex-row-center w-full h-1/2 hover:bg-orange-light-sideBar'
                                 }
                                 onClick={() => {
                                   navigate(
@@ -112,14 +116,7 @@ export default function StatusBoard({ status, tasks }: Props) {
                                   );
                                 }}
                               >
-                                수정
-                              </div>
-                              <div
-                                className={
-                                  'flex-row-center w-full h-1/3 hover:bg-orange-light-sideBar'
-                                }
-                              >
-                                삭제
+                                이동
                               </div>
                             </section>
                           )
@@ -159,6 +156,12 @@ export default function StatusBoard({ status, tasks }: Props) {
                           )}
                         </div>
                       </div>
+                      <DeleteDialog
+                        isOpen={isOpen}
+                        onClose={onClose}
+                        task={task.id}
+                        isTask={true}
+                      />
                     </section>
                   )}
                 </Draggable>
