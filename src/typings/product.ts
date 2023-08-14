@@ -20,7 +20,9 @@ export interface ProductInfo extends Omit<GetProductList, 'memberName'> {
   // client: string;
 }
 
-export interface ProductBody extends Omit<ProductInfo, 'draggableId' | 'id' | 'client'> {
+export interface ProductBody {
+  name: string;
+  masterEmail: string;
   link: string;
 }
 export interface FailProduct {
