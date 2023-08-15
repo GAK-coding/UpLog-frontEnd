@@ -1,4 +1,4 @@
-import { Post, PostLikeList } from '@/typings/post.ts';
+import { CommentLikeList, Post, PostLikeList } from '@/typings/post.ts';
 import { formatCreteaDate } from '@/utils/fotmatCreateDate.ts';
 import PostModal from '@/components/Project/Post/PostModal.tsx';
 import DeleteDialog from '@/components/Common/DeleteDialog.tsx';
@@ -18,9 +18,10 @@ interface Props {
   post: Post;
   menuId: number;
   likeList: PostLikeList[];
+  commentLike: CommentLikeList[];
   noticeId?: number;
 }
-export default function PostEach({ post, menuId, likeList, noticeId }: Props) {
+export default function PostEach({ post, menuId, likeList, commentLike, noticeId }: Props) {
   const { showMessage, contextHolder } = useMessage();
   const { isOpen: isOpenModal, onOpen: onOpenModal, onClose: onCloseModal } = useDisclosure();
   const { isOpen: isOpenDialog, onOpen: onOpenDialog, onClose: onCloseDialog } = useDisclosure();
@@ -261,7 +262,7 @@ export default function PostEach({ post, menuId, likeList, noticeId }: Props) {
         </div>
       </div>
       {/*댓글*/}
-      <PostComment postId={post.id} />
+      <PostComment postId={post.id} commentLikeData={commentLike} />
     </article>
   );
 }

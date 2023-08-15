@@ -5,16 +5,24 @@ import { BsHeart, BsHeartFill } from 'react-icons/bs';
 import useInput from '@/hooks/useInput.ts';
 import PostChildComment from '@/components/Project/Post/PostChildComment.tsx';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { createComment, deleteComment, postCommentList } from '@/api/Project/Post.ts';
-import { CommentBody, CommentInfo } from '@/typings/post.ts';
+import {
+  commentLike,
+  commentLikeCount,
+  commentLikeList,
+  createComment,
+  deleteComment,
+  postCommentList,
+} from '@/api/Project/Post.ts';
+import { CommentBody, CommentInfo, CommentLikeList } from '@/typings/post.ts';
 import { useMessage } from '@/hooks/useMessage.ts';
 import { SaveUserInfo } from '@/typings/member.ts';
 
 interface Props {
   postId: number;
+  commentLikeData: CommentLikeList[];
 }
 
-export default function PostComment({ postId }: Props) {
+export default function PostComment({ postId, commentLikeData }: Props) {
   const { showMessage, contextHolder } = useMessage();
   const userInfo: SaveUserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
 
@@ -28,10 +36,10 @@ export default function PostComment({ postId }: Props) {
   });
 
   const [commentList, setCommentList] = useState<CommentInfo[]>();
+  const [commentId, setCommentId] = useState<number>(0);
 
   const [isLikeClick, setIsLikeClick] = useState<{ [key: number]: boolean }>({});
   const [isChildClick, setIsChildClick] = useState<{ [key: number]: boolean }>({});
-  const [countChildLike, setCountChildLike] = useState<{ [key: number]: number }>({});
   const [childCommentValue, setChildCommentValue] = useState<{ [key: number]: string }>({});
 
   const queryClient = useQueryClient();
@@ -117,24 +125,27 @@ export default function PostComment({ postId }: Props) {
     }
   );
 
+  // 댓글 좋아요
+  const { mutate: commentLikeMutate } = useMutation(
+    (commentId: number) => commentLike(commentId),
+    {}
+  );
+
+  // 댓글 좋아요 개수
+  const { data: commentLikeCnt } = useQuery(
+    ['commentLikeCount', commentId],
+    () => commentLikeCount(commentId),
+    {}
+  );
+
   // 댓글 좋아요 눌렀을 때
   const onClickLike = useCallback(
     (commentId: number) => {
-      // TODO : 좋아요 누른건지, 취소한건지 구별어떻게하지
       setIsLikeClick((prevState) => ({
         ...prevState,
         [commentId]: !prevState[commentId],
       }));
 
-      setCountChildLike((prevCountChildLike) => {
-        if (isLikeClick[commentId]) {
-          return {
-            ...prevCountChildLike,
-            [commentId]: (prevCountChildLike[commentId] || 0) + 1,
-          };
-        }
-        return prevCountChildLike; // 값이 true가 아닐 때는 변경하지 않음
-      });
       //TODO : 좋아요 취소, 좋아요 눌렀을 때 api 요청 보내기
     },
     [isLikeClick]
@@ -237,7 +248,17 @@ export default function PostComment({ postId }: Props) {
                     onClick={() => onClickLike(comment.id)}
                   >
                     <span className={'flex text-gray-light text-[0.7rem] mr-1'}>좋아요</span>
-                    {isLikeClick[comment.id] ? (
+                    {/*{isLikeClick[comment.id] ? (*/}
+                    {/*  <BsHeartFill*/}
+                    {/*    className={'flex text-[0.8rem] text-[#FF5733] mr-1.5 mt-1 cursor-pointer'}*/}
+                    {/*  />*/}
+                    {/*) : (*/}
+                    {/*  <BsHeart*/}
+                    {/*    className={'flex text-[0.8rem] text-gray-light mr-1.5 mt-1 cursor-pointer'}*/}
+                    {/*  />*/}
+                    {/*)}*/}
+
+                    {commentLikeData.some((like) => like.id === comment.id) ? (
                       <BsHeartFill
                         className={'flex text-[0.8rem] text-[#FF5733] mr-1.5 mt-1 cursor-pointer'}
                       />
@@ -246,11 +267,14 @@ export default function PostComment({ postId }: Props) {
                         className={'flex text-[0.8rem] text-gray-light mr-1.5 mt-1 cursor-pointer'}
                       />
                     )}
-                    {countChildLike[comment.id] !== undefined && (
-                      <span className={'text-[0.8rem] text-gray-light ml-0.5'}>{`${
-                        countChildLike[comment.id]
-                      }개`}</span>
-                    )}
+                    <span className={'text-[0.8rem] text-gray-light ml-0.5'}>
+                      {commentLikeCnt === 0 ? '' : commentLikeCnt}
+                    </span>
+                    {/*{countChildLike[comment.id] !== undefined && (*/}
+                    {/*  <span className={'text-[0.8rem] text-gray-light ml-0.5'}>{`${*/}
+                    {/*    countChildLike[comment.id]*/}
+                    {/*  }개`}</span>*/}
+                    {/*)}*/}
                   </div>
                   <span
                     className={'flex text-gray-light ml-2 text-[0.7rem] cursor-pointer'}
