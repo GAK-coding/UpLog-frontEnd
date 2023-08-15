@@ -9,6 +9,7 @@ import { GoKebabHorizontal } from 'react-icons/go';
 import { useCallback, useState } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 import { useDisclosure } from '@chakra-ui/react';
+import { Viewer } from '@toast-ui/react-editor';
 
 interface Props {
   post: Post;
@@ -104,7 +105,9 @@ export default function PostEach({ post }: Props) {
       <div
         className={'flex-col-center justify-start w-[75%] min-h-[7rem] h-auto my-6 text-[1.1rem]'}
       >
-        <div className={'w-[85%] h-auto mb-[2rem] font-bold'}>{post.content}</div>
+        <div className={'w-[85%] h-auto mb-[2rem] font-bold'}>
+          <Viewer initialValue={post.content} />
+        </div>
         <div className={'w-[90%] h-auto flex-row-center justify-start'}>
           {post.tagList &&
             post.tagList.map((tag, index) => {
