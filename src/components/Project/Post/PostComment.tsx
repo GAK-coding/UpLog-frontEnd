@@ -35,12 +35,38 @@ export default function PostComment({ postId }: Props) {
 
   // 댓글 생성
   const { mutate: createCommentMutate } = useMutation(() => createComment(postId, createData), {
+    onMutate: async () => {
+      await queryClient.cancelQueries(['commentList', postId]);
+
+      const previousData: CommentInfo | undefined = queryClient.getQueryData([
+        'commentList',
+        postId,
+      ]);
+
+      const newCommentData = {
+        ...previousData,
+        content: createData.content,
+      };
+      queryClient.setQueryData(['commentList', postId], newCommentData);
+
+      return () => queryClient.setQueryData(['commentList', postId], previousData);
+    },
     onSuccess: (data) => {
       if (typeof data !== 'string') {
         showMessage('success', '댓글이 등록되었습니다.');
       } else showMessage('error', '댓글 등록에 실패했습니다.');
     },
-    onSettled: () => {},
+    onError: (error, value, rollback) => {
+      if (rollback) {
+        rollback();
+        showMessage('error', '댓글 등록에 실패했습니다.');
+      } else {
+        showMessage('error', '댓글 등록에 실패했습니다.');
+      }
+    },
+    onSettled: () => {
+      return queryClient.invalidateQueries(['commentList', postId]);
+    },
   });
 
   // 댓글 조회
@@ -48,8 +74,6 @@ export default function PostComment({ postId }: Props) {
     onSuccess: (data) => {
       if (typeof data !== 'string') {
         setCommentList(data);
-
-        console.log(data);
       }
     },
   });
