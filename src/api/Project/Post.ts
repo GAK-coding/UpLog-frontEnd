@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios';
-import { FailPost, PostBody, Post, Posts } from '@/typings/post.ts';
+import { FailPost, PostBody, Post, Posts, UpdatePostBody } from '@/typings/post.ts';
 import { instance } from '@/api';
 
 // post 생성
@@ -34,6 +34,7 @@ export const menuPostList = async (menuId: number) => {
     return 'get menu posts fail';
   }
 };
+
 // post 삭제
 export const deletePost = async (postId: number) => {
   try {
@@ -42,5 +43,16 @@ export const deletePost = async (postId: number) => {
   } catch (error) {
     console.log(error);
     return 'delete post fail';
+  }
+};
+
+// post 수정
+export const updatePost = async (postId: number, data: UpdatePostBody) => {
+  try {
+    const res: AxiosResponse<Post | FailPost> = await instance.patch(`/posts/${postId}`, data);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    return 'update post fail';
   }
 };

@@ -31,7 +31,13 @@ export interface FailPost {
   message: string;
 }
 
-export interface MenuPosts {}
+export interface UpdatePostBody {
+  updatePostTitle: string | null;
+  updatePostContent: string | null;
+  updatePostType: string | null;
+  updateMenuId: number | null;
+}
+
 export interface CommentInfo {
   id: number;
   parentId: number | null;
