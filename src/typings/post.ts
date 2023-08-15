@@ -57,7 +57,7 @@ export interface NoticeMenu {
   version: string;
 }
 
-export interface PostLike {
+export interface LikeInfo {
   id: number;
   memberNickname: string;
   cnt: number;
@@ -66,6 +66,11 @@ export interface PostLike {
 export interface PostLikeList {
   id: number;
   postTitle: string;
+}
+
+export interface CommentLikeList {
+  id: number;
+  content: string;
 }
 
 export interface CommentBody {

@@ -6,10 +6,11 @@ import {
   NoticeMenu,
   Post,
   PostBody,
-  PostLike,
+  LikeInfo,
   PostLikeList,
   Posts,
   UpdatePostBody,
+  CommentLikeList,
 } from '@/typings/post.ts';
 import { instance } from '@/api';
 
@@ -98,7 +99,7 @@ export const unNoticePost = async (menuId: number) => {
 // post 좋아요 & 좋아요 취소
 export const postLike = async (postId: number) => {
   try {
-    const res: AxiosResponse<PostLike | FailPost> = await instance.post(`/posts/${postId}/likes`);
+    const res: AxiosResponse<LikeInfo | FailPost> = await instance.post(`/posts/${postId}/likes`);
     return res.data;
   } catch (error) {
     console.log(error);
@@ -174,5 +175,40 @@ export const updateComment = async (commentId: number, content: string) => {
   } catch (error) {
     console.log(error);
     return 'update comment fail';
+  }
+};
+
+// comment like & like 취소
+export const commentLike = async (commentId: number) => {
+  try {
+    const res: AxiosResponse<LikeInfo | FailPost> = await instance.post(
+      `/comments/${commentId}/likes`
+    );
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    return 'comment like fail';
+  }
+};
+
+// comment like 개수
+export const commentLikeCount = async (commentId: number) => {
+  try {
+    const res: AxiosResponse<number> = await instance.get(`/comments/${commentId}/likes`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    return 'comment like count fail';
+  }
+};
+
+// comment each member like 리스트
+export const commentLikeList = async () => {
+  try {
+    const res: AxiosResponse<CommentLikeList[]> = await instance.get(`/comments/likes`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    return 'comment like list fail';
   }
 };
