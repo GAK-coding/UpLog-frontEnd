@@ -15,6 +15,7 @@ import { themeState } from '@/recoil/Common/atom.ts';
 export default function Header() {
   const navigate = useNavigate();
   const [darkMode, setDarkMode] = useRecoilState(themeState);
+  const nowProduct = JSON.parse(sessionStorage.getItem('nowProduct')!);
 
   // TODO: 실제 userprofile 값으로 변경하기
   const userprofile = '';
@@ -63,9 +64,14 @@ export default function Header() {
     setDarkMode(!darkMode);
   }, [isChecked, darkMode]);
 
-  // 제품 list clickRef
-  const productRef = useRef<HTMLDivElement>(null);
-  useOutsideAlerter(productRef, 'product');
+  // 제품 list click
+  const onClickProductList = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      e.stopPropagation();
+      setIsProductClick(!isProductClick);
+    },
+    [isProductClick]
+  );
 
   // 프로필 clickRef
   const profileRef = useRef<HTMLDivElement>(null);
@@ -104,7 +110,7 @@ export default function Header() {
         </nav>
 
         {isLogin && product !== '' && (
-          <div className={'flex-row-center ml-4 h-full'} ref={productRef}>
+          <div className={'flex-row-center ml-4 h-full'} onClick={onClickProductList}>
             <div className={'flex-row-center h-9 border-solid border-r border-gray-light'} />
             <div
               className={'flex-row-center cursor-pointer '}
@@ -112,9 +118,11 @@ export default function Header() {
                 setIsProductClick(!isProductClick);
               }}
             >
-              <span className={'flex-row-center font-logo text-[2.3rem] font-semibold ml-4 mt-3'}>
-                {decodeURI(product)}
-              </span>
+              {pathname !== '/' && (
+                <span className={'flex-row-center font-logo text-[2.3rem] font-semibold ml-4 mt-3'}>
+                  {decodeURI(nowProduct?.productName)}
+                </span>
+              )}
               <PiCaretUpDownLight
                 className={'flex-row-center text-[1.4rem] fill-gray-light ml-2'}
               />

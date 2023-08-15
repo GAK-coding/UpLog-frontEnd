@@ -27,6 +27,9 @@ export default function ProductList() {
 
   // 제품 List click
   const [isProductClick, setIsProductClick] = useRecoilState(productOpen);
+  const onCloseProduct = useCallback(() => {
+    setIsProductClick(false);
+  }, []);
 
   // 제품추가&정보수정 모달창
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -78,7 +81,7 @@ export default function ProductList() {
   return (
     <section
       className={
-        'border-base w-[20rem] min-h-[3.3rem] max-h-[27.3rem] block absolute top-[4.5rem] left-[11rem] shadow-sign-up z-40'
+        'border-base w-[20rem] min-h-[3.3rem] max-h-[27.3rem] block absolute top-[4.5rem] left-[11rem] shadow-sign-up z-50'
       }
       onClick={onChildClick}
     >
@@ -114,40 +117,49 @@ export default function ProductList() {
                           className={`flex-row-center justify-between w-full h-[4.5rem] hover:bg-hover ${
                             snapshot.isDragging ? 'shadow-2xl shadow-gray-400' : ''
                           }`}
-                          onClick={() => {
-                            // TODO: url 인코딩하기
-                            navigate(`/workspace/${product.productName}`);
-                            sessionStorage.setItem('nowProduct', JSON.stringify(product));
-                          }}
                         >
-                          <RxDragHandleDots2
-                            className={'flex w-[2.6rem] items-center text-4xl ml-4 fill-gray-light'}
-                            onClick={() => setIsProductClick(!isProductClick)}
-                          />
-                          <img
-                            src={product.image}
-                            alt="userprofile"
-                            className={'ml-2 w-[2rem] h-[2rem]'}
-                            onClick={() => setIsProductClick(!isProductClick)}
-                          />
-                          <span
-                            className={'ml-3 text-xl font-bold w-full'}
-                            onClick={() => setIsProductClick(!isProductClick)}
+                          <div
+                            className={'flex-row-center h-full w-[85%]'}
+                            onClick={() => {
+                              // TODO: url 인코딩하기
+                              navigate(`/workspace/${product.productName}`);
+                              sessionStorage.setItem('nowProduct', JSON.stringify(product));
+                              onCloseProduct();
+                            }}
                           >
-                            {product.productName}
-                          </span>
+                            <RxDragHandleDots2
+                              className={
+                                'flex w-[2.6rem] items-center text-4xl ml-4 fill-gray-light'
+                              }
+                              onClick={() => setIsProductClick(!isProductClick)}
+                            />
+                            <img
+                              src={product.image}
+                              alt="userprofile"
+                              className={'ml-2 w-[2rem] h-[2rem]'}
+                              onClick={() => setIsProductClick(!isProductClick)}
+                            />
+                            <span
+                              className={'ml-3 text-xl font-bold w-full'}
+                              onClick={() => setIsProductClick(!isProductClick)}
+                            >
+                              {product.productName}
+                            </span>
+                          </div>
 
                           {(product.powerType === 'MASTER' || product.powerType === 'LEADER') && (
-                            <BiPencil
-                              className={
-                                'flex-row-center w-20 text-xl mr-4 fill-gray-light cursor-pointer z-50'
-                              }
+                            <span
+                              className={'flex-row-center w-[15%] h-full'}
                               onClick={() => {
                                 onOpen();
                                 onChangeIsCreateProduct(false);
                                 setProductId(product.productId);
                               }}
-                            />
+                            >
+                              <BiPencil
+                                className={'text-xl fill-gray-light cursor-pointer z-50 '}
+                              />
+                            </span>
                           )}
                         </div>
                       )}
