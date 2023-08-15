@@ -86,8 +86,10 @@ export default function PostEach({ post }: Props) {
         <div className={'flex-row-center justify-start w-full h-1/2 text-[1.1rem] font-bold'}>
           <span className={'text-gray-light'}>Title</span>
           <div className={'mx-3 h-4 border-solid border-r border-[0.5px] border-gray-light'} />
-          {post.postType !== null && (
-            <span className={'text-[1.2rem] text-orange mr-2'}>[{post.postType}]</span>
+          {post.postType !== 'DEFAULT' && (
+            <span className={'text-[1.2rem] text-orange mr-2'}>
+              {post.postType === 'REQUEST_READ' ? '[필독]' : '[요청]'}
+            </span>
           )}
           <span className={'text-[1.2rem]'}>{post.title}</span>
         </div>

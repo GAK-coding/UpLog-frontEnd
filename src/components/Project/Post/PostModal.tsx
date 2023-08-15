@@ -13,7 +13,7 @@ import useInput from '@/hooks/useInput.ts';
 import { Select } from 'antd';
 import { menuListData } from '@/recoil/Project/Menu.ts';
 import { SelectMenu } from '@/typings/menu.ts';
-import { Post, PostBody, Posts, UpdatePostBody } from '@/typings/post.ts';
+import { Post, PostBody, Posts, PostType, UpdatePostBody } from '@/typings/post.ts';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import PostEditor from '@/components/Common/PostEditor.tsx';
@@ -30,10 +30,6 @@ interface Props {
   isEdit: boolean;
 }
 
-interface PostType {
-  postType: string | null;
-}
-
 export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
   const { product, project, menutitle } = useParams();
   const { showMessage, contextHolder } = useMessage();
@@ -47,8 +43,15 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
 
   // 타입 data
   const typeList: SelectMenu[] = [
-    { value: '1', label: '요청' },
-    { value: '2', label: '필독' },
+    // {value : 'DEFAULT'}
+    { value: 'REQUEST_REQUIREMENT', label: '요청' },
+    { value: 'REQUEST_READ', label: '필독' },
+  ];
+
+  const updateTypeList: SelectMenu[] = [
+    { value: 'DEFAULT', label: '기본' },
+    { value: 'REQUEST_REQUIREMENT', label: '요청' },
+    { value: 'REQUEST_READ', label: '필독' },
   ];
 
   const [darkMode, setDarkMode] = useRecoilState(themeState);
@@ -59,13 +62,13 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
   // 포스트 제목, 메뉴, 타입, 내용, 태그
   const [postName, onChangePostName, setPostName] = useInput('');
   const [postMenu, setPostMenu] = useState(-1);
-  const [postType, setPostType] = useState<PostType>({ postType: null });
+  const [postType, setPostType] = useState<PostType>(null);
   const [postContent, setPostContent] = useRecoilState(editorPost);
   // const [postTag, setPostTag] = useRecoilState(postTagList);
   const [createData, setCreateData] = useState<PostBody>({
     title: '',
     menuId: -1,
-    postType: '',
+    postType: null,
     content: '',
     productId: -1,
     projectId: -1,
@@ -121,7 +124,7 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
         setPostData(data);
         setPostName(data.title);
         setPostMenu(data.menuId);
-        setPostType({ postType: data.postType });
+        setPostType(data.postType);
         setPostContent(data.content);
         // setPostTag(data.tagList);
       }
@@ -167,10 +170,14 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
   const handleChange = (type: string) => (value: { value: string; label: React.ReactNode }) => {
     if (type === 'menuId') {
       setPostMenu(+value.value);
-      setCreateData({ ...createData, menuId: +value.value });
+      isEdit
+        ? setUpdateData({ ...updateData, updateMenuId: +value.value })
+        : setCreateData({ ...createData, menuId: +value.value });
     } else {
-      setPostType({ postType: value.label as string });
-      setCreateData({ ...createData, postType: value.label as string });
+      setPostType(value.value as PostType);
+      isEdit
+        ? setUpdateData({ ...updateData, updatePostType: value.value as PostType })
+        : setCreateData({ ...createData, postType: value.value as PostType });
     }
   };
 
@@ -190,7 +197,7 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
     setCreateData({
       title: postName,
       menuId: postMenu,
-      postType: postType.postType,
+      postType: postType,
       content: postContent,
       productId: 1,
       projectId: 10,
@@ -248,7 +255,7 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
   // 모달창이 닫히면 입력했던 내용이 사라짐
   useEffect(() => {
     setPostName('');
-    setPostType({ postType: null });
+    setPostType('DEFAULT');
     setPostMenu(-1);
     setPostContent('');
     // setPostTag([]);
@@ -257,7 +264,7 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
     setCreateData({
       title: '',
       menuId: -1,
-      postType: '',
+      postType: 'DEFAULT',
       content: '',
       productId: -1,
       projectId: -1,
@@ -381,12 +388,18 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
                       labelInValue
                       defaultValue={{
                         value: `${postData!.postType}`,
-                        label: `${postData!.postType ?? '타입 선택'}`,
+                        label: `${
+                          postData!.postType === 'DEFAULT'
+                            ? '타입 선택'
+                            : postData!.postType === 'REQUEST_READ'
+                            ? '필독'
+                            : '요청'
+                        }`,
                       }}
                       onChange={handleChange('type')}
                       style={{ width: 100 }}
                       bordered={false}
-                      options={typeList}
+                      options={updateTypeList}
                       dropdownStyle={{
                         backgroundColor: 'var(--gray-sideBar)',
                         color: 'var(--black)',
