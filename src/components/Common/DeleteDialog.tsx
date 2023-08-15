@@ -50,7 +50,6 @@ export default function DeleteDialog({ isOpen, onClose, task, post, menuId, isTa
     onSuccess: (data) => {
       if (data === 'delete task fail') {
         showMessage('error', 'Task 삭제에 실패했습니다.');
-        setTimeout(() => onClose(), 2000);
       } else if (typeof data !== 'string' && 'message' in data) {
         showMessage('error', 'Task 삭제에 실패했습니다.');
       } else if (data === 'delete') {

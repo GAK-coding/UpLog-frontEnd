@@ -10,7 +10,7 @@ import { useCallback, useState } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 import { useDisclosure } from '@chakra-ui/react';
 import { Viewer } from '@toast-ui/react-editor';
-import { useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import { noticePost } from '@/api/Project/Post.ts';
 import { useMessage } from '@/hooks/useMessage.ts';
 
@@ -27,12 +27,17 @@ export default function PostEach({ post, menuId }: Props) {
   const [isScrapClick, setIsScrapClick] = useState<{ [key: number]: boolean }>({});
   const [isClickKebab, setIsClickKebab] = useState<{ [key: number]: boolean }>({});
 
+  const queryClient = useQueryClient();
+
   const { mutate: noticePostMutate } = useMutation(() => noticePost(menuId, post.id), {
     onSuccess: (data) => {
       if (typeof data !== 'string' && 'id' in data) {
         console.log('.');
         showMessage('success', '공지글로 등록되었습니다.');
       } else showMessage('error', '공지글 등록에 실패했습니다.');
+    },
+    onSettled: () => {
+      return queryClient.invalidateQueries(['menuPostData', menuId], { refetchInactive: true });
     },
   });
   // TODO : 좋아요, 스크랩 클릭 초기 값 멤버마다 다르게 설정해서 해야함
