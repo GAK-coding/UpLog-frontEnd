@@ -9,6 +9,8 @@ import { useCookies } from 'react-cookie';
 import { SaveUserInfo } from '@/typings/member.ts';
 import { logout } from '@/api/Members/Login-Signup.ts';
 import { useMutation } from 'react-query';
+import { Simulate } from 'react-dom/test-utils';
+import seeking = Simulate.seeking;
 
 export default function UserProfile() {
   // TODO: 실제 userprofile 값으로 변경하기
@@ -31,6 +33,7 @@ export default function UserProfile() {
 
     sessionStorage.removeItem('userInfo');
     sessionStorage.removeItem('accessToken');
+    sessionStorage.removeItem('nowProduct');
     removeCookie('refreshToken', { path: '/' });
     setIsLogin(false);
     setIsProfileClick(false);
