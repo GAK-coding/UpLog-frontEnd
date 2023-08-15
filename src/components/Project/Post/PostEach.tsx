@@ -11,15 +11,16 @@ import { FaUserCircle } from 'react-icons/fa';
 import { useDisclosure } from '@chakra-ui/react';
 import { Viewer } from '@toast-ui/react-editor';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { noticePost, postLike, postLikeCount } from '@/api/Project/Post.ts';
+import { noticePost, postLike, postLikeCount, unNoticePost } from '@/api/Project/Post.ts';
 import { useMessage } from '@/hooks/useMessage.ts';
 
 interface Props {
   post: Post;
   menuId: number;
   likeList: PostLikeList[];
+  noticeId?: number;
 }
-export default function PostEach({ post, menuId, likeList }: Props) {
+export default function PostEach({ post, menuId, likeList, noticeId }: Props) {
   const { showMessage, contextHolder } = useMessage();
   const { isOpen: isOpenModal, onOpen: onOpenModal, onClose: onCloseModal } = useDisclosure();
   const { isOpen: isOpenDialog, onOpen: onOpenDialog, onClose: onCloseDialog } = useDisclosure();
@@ -35,9 +36,20 @@ export default function PostEach({ post, menuId, likeList }: Props) {
   const { mutate: noticePostMutate } = useMutation(() => noticePost(menuId, post.id), {
     onSuccess: (data) => {
       if (typeof data !== 'string' && 'id' in data) {
-        console.log('.');
         showMessage('success', '공지글로 등록되었습니다.');
       } else showMessage('error', '공지글 등록에 실패했습니다.');
+    },
+    onSettled: () => {
+      return queryClient.invalidateQueries(['menuPostData', menuId], { refetchInactive: true });
+    },
+  });
+
+  // 공지글 해제
+  const { mutate: unNoticePostMutate } = useMutation(() => unNoticePost(menuId), {
+    onSuccess: (data) => {
+      if (typeof data !== 'string' && 'id' in data) {
+        showMessage('success', '공지글이 해제 되었습니다..');
+      } else showMessage('error', '공지글 해제에 실패했습니다.');
     },
     onSettled: () => {
       return queryClient.invalidateQueries(['menuPostData', menuId], { refetchInactive: true });
@@ -103,8 +115,7 @@ export default function PostEach({ post, menuId, likeList }: Props) {
 
   // 공지글로 등록
   const onClickNotice = useCallback((postId: number) => {
-    noticePostMutate();
-    console.log(menuId, postId);
+    noticeId === postId ? unNoticePostMutate() : noticePostMutate();
   }, []);
 
   return (
@@ -234,7 +245,7 @@ export default function PostEach({ post, menuId, likeList }: Props) {
                 className={'flex-row-center w-full h-1/3 hover:bg-orange-light-sideBar'}
                 onClick={() => onClickNotice(post.id)}
               >
-                공지
+                {noticeId === post.id ? '공지 해제' : '공지'}
               </button>
               <button
                 className={'flex-row-center w-full h-1/3 hover:bg-orange-light-sideBar'}

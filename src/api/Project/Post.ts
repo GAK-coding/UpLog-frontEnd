@@ -81,6 +81,17 @@ export const noticePost = async (menuId: number, updateNoticePostId: number) => 
 };
 
 // post 공지 해제
+export const unNoticePost = async (menuId: number) => {
+  try {
+    const res: AxiosResponse<NoticeMenu | FailPost> = await instance.delete(
+      `/menus/${menuId}/reset-notice`
+    );
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    return 'unNotice post fail';
+  }
+};
 
 // post 좋아요 & 좋아요 취소
 export const postLike = async (postId: number) => {

@@ -54,14 +54,27 @@ export default function PostMain() {
           <span className={'ml-4 font-bold text-[1.5rem] text-gray-dark'}>공지</span>
         </div>
       )}
-      {noticePostInfo && <PostEach post={noticePostInfo} menuId={menuId!} likeList={likeList!} />}
+      {noticePostInfo && (
+        <PostEach
+          post={noticePostInfo}
+          menuId={menuId!}
+          likeList={likeList!}
+          noticeId={noticePostInfo.id}
+        />
+      )}
 
       {/*noticePost id가 맨 첫번째 id와 같다면 보여주지 않음 posts 배열 map*/}
       {noticePostInfo &&
         posts &&
         posts.map((post, index) =>
           index === 0 && post.id === noticePostInfo.id ? null : (
-            <PostEach key={post.id} post={post} menuId={menuId!} likeList={likeList!} />
+            <PostEach
+              key={post.id}
+              post={post}
+              menuId={menuId!}
+              likeList={likeList!}
+              noticeId={noticePostInfo.id}
+            />
           )
         )}
 
