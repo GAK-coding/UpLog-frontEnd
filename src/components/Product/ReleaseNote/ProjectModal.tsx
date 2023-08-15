@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { useMessage } from '@/hooks/useMessage.ts';
 import {
   Modal,
@@ -13,18 +13,119 @@ import {
 import useInput from '@/hooks/useInput.ts';
 import { BsQuestionCircle } from 'react-icons/bs';
 import CompleteModalTooltip from '@/components/Member/MyPage/CompleteModalTooltip.tsx';
+import { completeProject, createProject } from '@/api/Project/Version.ts';
+import { useMutation, useQueryClient } from 'react-query';
+import { ProductInfo } from '@/typings/product.ts';
+import { eachProductProjects } from '@/recoil/Project/atom.ts';
+import { useRecoilState } from 'recoil';
+import { Release } from '@/typings/project.ts';
+type MessageType = 'success' | 'error' | 'warning';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
   isAdd: boolean;
   versionName: string;
+  showMessage: (type: MessageType, content: string) => void;
+  nowProjectId: number;
 }
-export default function ProjectModal({ isOpen, onClose, isAdd, versionName }: Props) {
-  const { showMessage, contextHolder } = useMessage();
+export default function ProjectModal({
+  isOpen,
+  onClose,
+  isAdd,
+  versionName,
+  showMessage,
+  nowProjectId,
+}: Props) {
+  const { productId }: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
+  const queryClient = useQueryClient();
 
   // 프로젝트 추가에서는 프로젝트 이름, 완료에서는 최종 버전
   const [text, onChangeText, setText] = useInput('');
+  const [projects, setProjects] = useRecoilState(eachProductProjects);
+  const newProjectId = useRef(-1);
+
+  const { mutate: createProjectMutate } = useMutation(createProject, {
+    onSuccess: (data) => {
+      if (typeof data !== 'string') {
+        newProjectId.current = data.id;
+      }
+    },
+    onMutate: async ({ version }) => {
+      await queryClient.cancelQueries(['getAllProductProjects', productId]);
+
+      const snapshot = queryClient.getQueryData(['getAllProductProjects', productId]);
+
+      queryClient.setQueriesData(['getAllProductProjects', productId], () => {
+        const temp: Release[] = [...projects, { version, projectStatus: 'PROGRESS_IN', id: -1 }];
+
+        return temp;
+      });
+
+      return { snapshot };
+    },
+    onError: (error, newTodo, context) => {
+      queryClient.setQueriesData(['getAllProductProjects', productId], context?.snapshot);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['getAllProductProjects', productId] });
+    },
+  });
+
+  const { mutate: completeProjectMutate } = useMutation(completeProject, {
+    onMutate: async ({ version, projectId }) => {
+      await queryClient.cancelQueries(['getAllProductProjects', productId]);
+
+      const snapshot = queryClient.getQueryData(['getAllProductProjects', productId]);
+
+      queryClient.setQueriesData(['getAllProductProjects', productId], () => {
+        const temp: Release[] = projects.map((project) => {
+          if (project.id === projectId) {
+            return { ...project, version, projectStatus: 'PROGRESS_COMPLETE' };
+          } else return project;
+        });
+
+        setProjects(temp);
+        return temp;
+      });
+
+      return { snapshot };
+    },
+    onError: (error, newTodo, context) => {
+      queryClient.setQueriesData(['getAllProductProjects', productId], context?.snapshot);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['getAllProductProjects', productId] });
+    },
+  });
+
+  const onClickCreateProject = useCallback(() => {
+    if (projects.some((project) => project.version === text)) {
+      showMessage('error', '이미 존재하는 버전입니다!');
+      return;
+    }
+
+    //TODO: url 수정 필요
+    createProjectMutate({ productId, version: `${text}(임시)`, link: '/' });
+    showMessage('success', '프로젝트가 생성되었습니다!');
+    onClose();
+    setText('');
+  }, [text]);
+
+  const onClickCompleteProject = useCallback(() => {
+    if (projects.some((project) => project.version === text)) {
+      showMessage('error', '이미 존재하는 버전입니다!');
+      return;
+    }
+
+    completeProjectMutate({
+      projectId: nowProjectId === -1 ? newProjectId.current : nowProjectId,
+      version: text,
+    });
+    showMessage('success', '프로젝트 완료!');
+    onClose();
+    setText('');
+  }, [text, newProjectId]);
 
   useEffect(() => {
     if (versionName && !isAdd) {
@@ -34,7 +135,6 @@ export default function ProjectModal({ isOpen, onClose, isAdd, versionName }: Pr
 
   return (
     <Modal isCentered onClose={onClose} isOpen={isOpen}>
-      {contextHolder}
       <ModalOverlay />
 
       <ModalContent
@@ -110,7 +210,9 @@ export default function ProjectModal({ isOpen, onClose, isAdd, versionName }: Pr
         <ModalFooter>
           <button
             className={'bg-orange rounded font-bold text-sm text-white w-[4.5rem] h-9'}
-            onClick={() => {}}
+            onClick={() => {
+              isAdd ? onClickCreateProject() : onClickCompleteProject();
+            }}
           >
             완료
           </button>

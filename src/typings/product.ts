@@ -64,13 +64,6 @@ export interface changeLog {
   content: string;
 }
 
-export interface Release {
-  status: string;
-  version: string;
-  date: string;
-  contents: changeLog[];
-}
-
 export interface ProductMember {
   powerType: 'MASTER' | 'LEADER' | 'DEFAULT' | 'CLIENT';
   memberId: number;

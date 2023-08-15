@@ -1,11 +1,11 @@
 import React, { useCallback, useState } from 'react';
 import { Tbody, Td, Tr } from '@chakra-ui/react';
-import { Release } from '@/typings/product.ts';
 import { GoKebabHorizontal } from 'react-icons/go';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { typeBgColors } from '@/recoil/Product/ReleaseNote.ts';
+import { eachProductProjects } from '@/recoil/Project/atom.ts';
 
 interface Props {
   isClickKebab: boolean;
@@ -13,6 +13,7 @@ interface Props {
   onClickKebab: (e: React.MouseEvent<HTMLButtonElement>) => void;
   onClickComplete: (modalType: 'add' | 'complete') => void;
   setTempVersion: React.Dispatch<React.SetStateAction<string>>;
+  setNowProjectId: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export default function Tables({
@@ -21,75 +22,11 @@ export default function Tables({
   onClickKebab,
   onClickComplete,
   setTempVersion,
+  setNowProjectId,
 }: Props) {
   const bgColor = useRecoilValue(typeBgColors);
 
-  // TODO: 리코일에서 받아 올 값
-  const dummy: Release[] = [
-    {
-      status: 'going',
-      version: 'v.1.1.4(임시)',
-      date: '진행중',
-      contents: [],
-    },
-    {
-      status: 'done',
-      version: 'v.1.1.3',
-      date: '2023.06.15',
-      contents: [
-        { type: 'Feature', content: '채널 통신 응답 중 발생할 수 있는 오류 코드 추가' },
-        {
-          type: 'Changed',
-          content: '공통 Request Protocol',
-        },
-        {
-          type: 'Fixed',
-          content: '고침',
-        },
-        {
-          type: 'New',
-          content: '새거',
-        },
-        {
-          type: 'Deprecated',
-          content: '이제 못 씀',
-        },
-      ],
-    },
-    {
-      status: 'done',
-      version: 'v.1.1.2',
-      date: '2023.06.12',
-      contents: [
-        { type: 'Feature', content: '채널 통신 응답 중 발생할 수 있는 오류 코드 추가' },
-        {
-          type: 'Changed',
-          content: '공통 Request Protocol 추가',
-        },
-      ],
-    },
-    {
-      status: 'done',
-      version: 'v.1.1.1',
-      date: '2023.05.12',
-      contents: [{ type: 'Deprecated', content: '미사용 필드 삭제' }],
-    },
-    {
-      status: 'done',
-      version: 'v.1.1.0',
-      date: '2023.03.25',
-      contents: [{ type: 'Feature', content: 'Service Argent 채널 연결과 통신 관련 설명' }],
-    },
-    {
-      status: 'done',
-      version: 'v.1.0.0',
-      date: '2023.02.18',
-      contents: [
-        { type: 'New', content: 'AI Service 기술 상세 설명' },
-        { type: 'Fixed', content: '채널 통신 응답 기능 수정' },
-      ],
-    },
-  ];
+  const [projects, setProjects] = useRecoilState(eachProductProjects);
 
   const navigate = useNavigate();
   const { product, project } = useParams();
@@ -98,11 +35,11 @@ export default function Tables({
   const [isHovering, setIsHovering] = useState(false);
 
   const handleMouseEnter = useCallback((status: string) => {
-    if (status === 'going') setIsHovering(true);
+    if (status === 'PROGRESS_IN') setIsHovering(true);
   }, []);
 
   const handleMouseLeave = useCallback((status: string) => {
-    if (status === 'going') {
+    if (status === 'PROGRESS_IN') {
       setIsHovering(false);
       setIsClickKebab(false);
     }
@@ -110,14 +47,14 @@ export default function Tables({
 
   return (
     <Tbody>
-      {dummy.map((version, index) => {
+      {projects?.map((version, index) => {
         return (
           <Tr
             key={index}
-            color={version.status === 'going' ? 'var(--gray-dark)' : ''}
+            color={version.projectStatus === 'PROGRESS_IN' ? 'var(--gray-dark)' : ''}
             position={'relative'}
-            onMouseEnter={() => handleMouseEnter(version.status)}
-            onMouseLeave={() => handleMouseLeave(version.status)}
+            onMouseEnter={() => handleMouseEnter(version.projectStatus)}
+            onMouseLeave={() => handleMouseLeave(version.projectStatus)}
           >
             <Td
               borderTop={'1px solid var(--gray-table)'}
@@ -147,8 +84,8 @@ export default function Tables({
               marginY={'auto'}
               fontSize={'1.1rem'}
             >
-              {version.contents.length > 0 ? (
-                version.contents.map((content, idx) => {
+              {version?.contents?.length > 0 ? (
+                version?.contents?.map((content, idx) => {
                   return (
                     <div
                       key={idx}
@@ -168,6 +105,9 @@ export default function Tables({
                   );
                 })
               ) : (
+                // TODO: 콘텐츠 완료되면 처리하기
+                // {
+                //  version.projectStatus === 'PROGRESS_IN' &&
                 <button
                   className={
                     'flex items-center text-[1.2rem] text-gray-light font-bold cursor-pointer'
@@ -176,11 +116,12 @@ export default function Tables({
                 >
                   <AiOutlinePlus className={'text-[1.6rem] mr-3'} /> 변경이력 추가
                 </button>
+                // }
               )}
             </Td>
 
             {/* Buttons for the "going" status */}
-            {version.status === 'going' && isHovering && (
+            {version.projectStatus === 'PROGRESS_IN' && isHovering && (
               <Td
                 position={'absolute'}
                 top={'-0.5rem'}
@@ -208,6 +149,7 @@ export default function Tables({
                       onClick={() => {
                         onClickComplete('complete');
                         setTempVersion(version.version);
+                        setNowProjectId(version.id);
                       }}
                     >
                       완료
