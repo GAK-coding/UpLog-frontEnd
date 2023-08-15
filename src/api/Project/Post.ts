@@ -1,5 +1,14 @@
 import { AxiosResponse } from 'axios';
-import { FailPost, PostBody, Post, Posts, UpdatePostBody } from '@/typings/post.ts';
+import {
+  FailPost,
+  PostBody,
+  Post,
+  Posts,
+  UpdatePostBody,
+  NoticeMenu,
+  PostLike,
+  PostLikeList,
+} from '@/typings/post.ts';
 import { instance } from '@/api';
 
 // post 생성
@@ -38,7 +47,7 @@ export const menuPostList = async (menuId: number) => {
 // post 삭제
 export const deletePost = async (postId: number) => {
   try {
-    const res: AxiosResponse<string> = await instance.delete(`/posts/${postId}`);
+    const res: AxiosResponse<string | FailPost> = await instance.delete(`/posts/${postId}`);
     return res.data;
   } catch (error) {
     console.log(error);
@@ -54,5 +63,65 @@ export const updatePost = async (postId: number, data: UpdatePostBody) => {
   } catch (error) {
     console.log(error);
     return 'update post fail';
+  }
+};
+
+// post 공지 등록
+export const noticePost = async (menuId: number, updateNoticePostId: number) => {
+  try {
+    const res: AxiosResponse<NoticeMenu | FailPost> = await instance.patch(
+      `/menus/${menuId}/notice-post`,
+      { updateNoticePostId: updateNoticePostId }
+    );
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    return 'notice post fail';
+  }
+};
+
+// post 공지 해제
+export const unNoticePost = async (menuId: number) => {
+  try {
+    const res: AxiosResponse<NoticeMenu | FailPost> = await instance.delete(
+      `/menus/${menuId}/reset-notice`
+    );
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    return 'unNotice post fail';
+  }
+};
+
+// post 좋아요 & 좋아요 취소
+export const postLike = async (postId: number) => {
+  try {
+    const res: AxiosResponse<PostLike | FailPost> = await instance.post(`/posts/${postId}/likes`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    return 'post like fail';
+  }
+};
+
+// post 좋아요 개수
+export const postLikeCount = async (postId: number) => {
+  try {
+    const res: AxiosResponse<number> = await instance.get(`/posts/${postId}/likes`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    return 'post like count fail';
+  }
+};
+
+// post each member 좋아요 리스트
+export const postLikeList = async () => {
+  try {
+    const res: AxiosResponse<PostLikeList[]> = await instance.get(`/posts/likes`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    return 'post like list fail';
   }
 };

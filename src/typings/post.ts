@@ -49,3 +49,21 @@ export interface CommentInfo {
   nickname: string;
   image: string;
 }
+
+export interface NoticeMenu {
+  id: number;
+  menuName: string;
+  projectId: number;
+  version: string;
+}
+
+export interface PostLike {
+  id: number;
+  memberNickname: string;
+  cnt: number;
+}
+
+export interface PostLikeList {
+  id: number;
+  postTitle: string;
+}

@@ -27,7 +27,7 @@ export const createTask = async (data: TaskBody) => {
 // task 삭제
 export const deleteTask = async (taskId: number) => {
   try {
-    const res: AxiosResponse<string> = await instance.delete(`/tasks/${taskId}`);
+    const res: AxiosResponse<string | FailTask> = await instance.delete(`/tasks/${taskId}`);
 
     return res.data;
   } catch (error) {

@@ -22,6 +22,7 @@ import { editorPost, themeState } from '@/recoil/Common/atom.ts';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { createPost, eachPost, updatePost } from '@/api/Project/Post.ts';
 import { useParams } from 'react-router-dom';
+import { ProductInfo } from '@/typings/product.ts';
 
 interface Props {
   isOpen: boolean;
@@ -33,7 +34,7 @@ interface Props {
 export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
   const { product, project, menutitle } = useParams();
   const { showMessage, contextHolder } = useMessage();
-
+  const productInfo: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
   // 메뉴 list
   const menuList = useRecoilValue(menuListData);
   const menuNameList: SelectMenu[] = menuList.map((menuItem) => ({
@@ -199,12 +200,18 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
       menuId: postMenu,
       postType: postType === 'DEFAULT' ? null : postType,
       content: postContent,
-      productId: 1,
+      productId: productInfo.productId,
       projectId: 10,
     });
 
+    setUpdateData({
+      ...updateData,
+      updatePostContent: postContent,
+    });
+
+    console.log('내용', postContent);
     setCheck(true);
-  }, [postName, postMenu]);
+  }, [postName, postMenu, postType, postContent]);
 
   // 자꾸 깜빡거리는거 방지
   useLayoutEffect(() => {
@@ -239,8 +246,10 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
       }
 
       setCheck(false);
-      setPostContent('');
-      setTimeout(() => onClose(), 2000);
+      setTimeout(() => {
+        onClose();
+        setPostContent('');
+      }, 2000);
     }
   }, [check]);
 
@@ -249,35 +258,22 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
     if (isEdit) {
       // post 정보 get (1개)
       refetch();
+
+      setCreateData({
+        title: '',
+        menuId: -1,
+        postType: null,
+        content: '',
+        productId: -1,
+        projectId: -1,
+      });
+    } else {
+      setPostName('');
+      setPostType(null);
+      setPostMenu(-1);
+      setPostContent('');
     }
-  }, [isOpen, isEdit, post]);
-
-  // 모달창이 닫히면 입력했던 내용이 사라짐
-  useEffect(() => {
-    setPostName('');
-    setPostType('DEFAULT');
-    setPostMenu(-1);
-    setPostContent('');
-    // setPostTag([]);
-
-    // 생성관련
-    setCreateData({
-      title: '',
-      menuId: -1,
-      postType: 'DEFAULT',
-      content: '',
-      productId: -1,
-      projectId: -1,
-    });
-
-    // 수정관련
-    setUpdateData({
-      updatePostTitle: null,
-      updatePostContent: null,
-      updatePostType: null,
-      updateMenuId: null,
-    });
-  }, [onClose, isEdit]);
+  }, [isOpen, isEdit]);
 
   return (
     <Modal isCentered onClose={onClose} isOpen={isOpen}>

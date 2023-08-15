@@ -1,4 +1,4 @@
-import { Post } from '@/typings/post.ts';
+import { Post, PostLikeList } from '@/typings/post.ts';
 import { formatCreteaDate } from '@/utils/fotmatCreateDate.ts';
 import PostModal from '@/components/Project/Post/PostModal.tsx';
 import DeleteDialog from '@/components/Common/DeleteDialog.tsx';
@@ -10,17 +10,80 @@ import { useCallback, useState } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 import { useDisclosure } from '@chakra-ui/react';
 import { Viewer } from '@toast-ui/react-editor';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { noticePost, postLike, postLikeCount, unNoticePost } from '@/api/Project/Post.ts';
+import { useMessage } from '@/hooks/useMessage.ts';
 
 interface Props {
   post: Post;
+  menuId: number;
+  likeList: PostLikeList[];
+  noticeId?: number;
 }
-export default function PostEach({ post }: Props) {
+export default function PostEach({ post, menuId, likeList, noticeId }: Props) {
+  const { showMessage, contextHolder } = useMessage();
   const { isOpen: isOpenModal, onOpen: onOpenModal, onClose: onCloseModal } = useDisclosure();
   const { isOpen: isOpenDialog, onOpen: onOpenDialog, onClose: onCloseDialog } = useDisclosure();
 
   const [isLikeClick, setIsLikeClick] = useState<{ [key: number]: boolean }>({});
   const [isScrapClick, setIsScrapClick] = useState<{ [key: number]: boolean }>({});
   const [isClickKebab, setIsClickKebab] = useState<{ [key: number]: boolean }>({});
+
+  const [isInList, setIsInList] = useState<{ [key: number]: boolean }>({});
+  const queryClient = useQueryClient();
+
+  // 공지글 등록
+  const { mutate: noticePostMutate } = useMutation(() => noticePost(menuId, post.id), {
+    onSuccess: (data) => {
+      if (typeof data !== 'string' && 'id' in data) {
+        showMessage('success', '공지글로 등록되었습니다.');
+      } else showMessage('error', '공지글 등록에 실패했습니다.');
+    },
+    onSettled: () => {
+      return queryClient.invalidateQueries(['menuPostData', menuId], { refetchInactive: true });
+    },
+  });
+
+  // 공지글 해제
+  const { mutate: unNoticePostMutate } = useMutation(() => unNoticePost(menuId), {
+    onSuccess: (data) => {
+      if (typeof data !== 'string' && 'id' in data) {
+        showMessage('success', '공지글이 해제 되었습니다..');
+      } else showMessage('error', '공지글 해제에 실패했습니다.');
+    },
+    onSettled: () => {
+      return queryClient.invalidateQueries(['menuPostData', menuId], { refetchInactive: true });
+    },
+  });
+
+  // 좋아요 클릭
+  const { mutate: postLikeMutate } = useMutation(() => postLike(post.id), {
+    onMutate: async () => {
+      await queryClient.cancelQueries(['postLike', post.id]);
+
+      const previousData = queryClient.getQueryData(['postLike', post.id]);
+
+      const newPostData = {
+        cnt: isLikeClick[post.id] ? post.likeCount - 1 : post.likeCount + 1,
+      };
+
+      queryClient.setQueryData(['postLike', post.id], newPostData);
+
+      return () => queryClient.setQueryData(['postLike', post.id], previousData);
+    },
+    onSuccess: (data) => {
+      if (typeof data !== 'string' && 'cnt' in data)
+        isLikeClick[post.id] ? showMessage('success', '🥲🥲') : showMessage('success', '😍️😍');
+    },
+    onSettled: () => {
+      return queryClient.invalidateQueries(['postLike', post.id], { refetchInactive: true });
+    },
+  });
+
+  // 좋아요 개수 get
+  const { data, refetch } = useQuery(['postLike', post.id], () => postLikeCount(post.id), {
+    enabled: false,
+  });
 
   // TODO : 좋아요, 스크랩 클릭 초기 값 멤버마다 다르게 설정해서 해야함
   // 좋아요 눌렀을 때
@@ -31,8 +94,8 @@ export default function PostEach({ post }: Props) {
         [postId]: !prevState[postId],
       }));
 
-      // TODO : 좋아요 취소, 좋아요 눌렀을 때 api 요청 보내기
-      // TODO : 좋아요 취소, 좋아요 눌렀을 개수 변경된 값으로 get하기
+      postLikeMutate();
+      refetch;
     },
     [isLikeClick]
   );
@@ -52,8 +115,7 @@ export default function PostEach({ post }: Props) {
 
   // 공지글로 등록
   const onClickNotice = useCallback((postId: number) => {
-    // TODO : 해당 post id값으로 메뉴 공지글로 등록하는 api 요청 보내기
-    console.log(postId);
+    noticeId === postId ? unNoticePostMutate() : noticePostMutate();
   }, []);
 
   return (
@@ -62,6 +124,7 @@ export default function PostEach({ post }: Props) {
         'flex-col-center justify-start w-full h-auto border-base py-[1.8rem] px-[3.3rem] mb-12'
       }
     >
+      {contextHolder}
       {/*작성자 정보 + 작성일자 시간*/}
       <div className={'flex-row-center justify-start w-full h-[5.8rem]'}>
         {/*{post.authorInfoDTO.image === '' ? (*/}
@@ -126,18 +189,22 @@ export default function PostEach({ post }: Props) {
       {/*좋아요, 댓글, 스크랩, 케밥 버튼*/}
       <div className={'flex-row-center justify-between w-[75%] h-[2.5rem] px-2'}>
         <div className={'flex-row-center justify-start w-1/2 h-full text-gray-dark'}>
-          {isLikeClick[post.id] ? (
+          {likeList.some((likePost) => likePost.id === post.id) || isLikeClick[post.id] ? (
             <BsHeartFill
-              className={'flex text-[1.5rem] text-[#FF5733] mr-1.5 mt-1 cursor-pointer'}
+              className={'flex text-[1.5rem] text-[#FF5733] mr-1.5 mt-1 cursor-pointer scale-110'}
               onClick={() => onClickLike(post.id)}
             />
           ) : (
             <BsHeart
-              className={'flex text-[1.5rem] text-gray-light mr-1.5 mt-1 cursor-pointer'}
+              className={
+                'flex text-[1.5rem] text-gray-light mr-1.5 mt-1 cursor-pointer hover:scale-110'
+              }
               onClick={() => onClickLike(post.id)}
             />
           )}
-          <span className={'flex mr-4'}>{post.likeCount}</span>
+          <span className={'flex mr-4'}>
+            {isLikeClick[post.id] ? post.likeCount + 1 : post.likeCount}
+          </span>
           <BsChat className={'flex text-[1.5rem] text-gray-light mr-1.5'} />
           <span className={'flex mr-3'}>{post.commentCount}</span>
         </div>
@@ -165,7 +232,7 @@ export default function PostEach({ post }: Props) {
           {isClickKebab[post.id] && (
             <section
               className={
-                'absolute top-[2.2rem] flex-col-center w-[4rem] h-[5.5rem] bottom-5 task-detail-border cursor-pointer text-[0.5rem] text-gray-dark'
+                'absolute top-[2.2rem] flex-col-center w-[5rem] h-[6rem] bottom-5 task-detail-border cursor-pointer text-[0.5rem] text-gray-dark'
               }
             >
               <button
@@ -178,7 +245,7 @@ export default function PostEach({ post }: Props) {
                 className={'flex-row-center w-full h-1/3 hover:bg-orange-light-sideBar'}
                 onClick={() => onClickNotice(post.id)}
               >
-                공지
+                {noticeId === post.id ? '공지 해제' : '공지'}
               </button>
               <button
                 className={'flex-row-center w-full h-1/3 hover:bg-orange-light-sideBar'}
@@ -191,6 +258,7 @@ export default function PostEach({ post }: Props) {
                 isOpen={isOpenDialog}
                 onClose={onCloseDialog}
                 post={post.id}
+                menuId={menuId}
                 isTask={false}
               />
             </section>

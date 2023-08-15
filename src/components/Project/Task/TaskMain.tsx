@@ -62,7 +62,11 @@ export default function TaskMain() {
           break;
         }
         case 'before': {
-          setTaskList(firstTaskList.filter((task) => task.taskStatus === 'PROGRESS_BEFORE'));
+          setTaskList(
+            firstTaskList.filter(
+              (task) => task.taskStatus === 'PROGRESS_BEFORE' || task.taskStatus === 'PROGRESS_IN'
+            )
+          );
           break;
         }
         default: {
