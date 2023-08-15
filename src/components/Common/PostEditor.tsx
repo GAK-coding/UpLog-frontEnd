@@ -17,9 +17,7 @@ import Prism from 'prismjs';
 import 'prismjs/themes/prism.css';
 import 'prismjs/themes/prism-okaidia.css'; // 다크 모드 테마를 추가합니다
 import '@toast-ui/editor/dist/theme/toastui-editor-dark.css'; // Toast UI 에디터 다크 모드 테마를 추가합니다
-
 import 'prismjs/components/prism-jsx.min'; // JSX 언어 지원을 포함합니다 (선택 사항)
-
 import 'prismjs/plugins/line-numbers/prism-line-numbers.css'; // 코드 블럭에 줄 번호를 추가하기 위해 이 줄을 추가합니다
 import 'prismjs/plugins/line-numbers/prism-line-numbers.min';
 import { useRecoilState } from 'recoil';
