@@ -37,6 +37,7 @@ export const eachTaskInfo = atom<TaskData>({
     taskDetail: '',
     startTime: '',
     endTime: '',
+    taskIndex: 0,
   },
 });
 
