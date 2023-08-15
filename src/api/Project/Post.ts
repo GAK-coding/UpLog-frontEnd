@@ -1,13 +1,15 @@
 import { AxiosResponse } from 'axios';
 import {
+  CommentBody,
+  CommentInfo,
   FailPost,
-  PostBody,
-  Post,
-  Posts,
-  UpdatePostBody,
   NoticeMenu,
+  Post,
+  PostBody,
   PostLike,
   PostLikeList,
+  Posts,
+  UpdatePostBody,
 } from '@/typings/post.ts';
 import { instance } from '@/api';
 
@@ -123,5 +125,56 @@ export const postLikeList = async () => {
   } catch (error) {
     console.log(error);
     return 'post like list fail';
+  }
+};
+
+// comment 생성
+export const createComment = async (postId: number, data: CommentBody) => {
+  try {
+    const res: AxiosResponse<Comment | FailPost> = await instance.post(`/comments/postId`, data);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    return 'create comment fail';
+  }
+};
+
+// post comment 조회
+export const postCommentList = async (postId: number) => {
+  try {
+    const res: AxiosResponse<CommentInfo[] | FailPost> = await instance.get(
+      `/comments/${postId}/post`
+    );
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    return 'post comment list fail';
+  }
+};
+
+// comment 삭제
+export const deleteComment = async (commentId: number) => {
+  try {
+    const res: AxiosResponse<string | FailPost> = await instance.delete(`/comments/${commentId}`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    return 'delete comment fail';
+  }
+};
+
+// comment 수정
+export const updateComment = async (commentId: number, content: string) => {
+  try {
+    const res: AxiosResponse<CommentInfo | FailPost> = await instance.patch(
+      `/comments/${commentId}/content`,
+      {
+        content: content,
+      }
+    );
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    return 'update comment fail';
   }
 };

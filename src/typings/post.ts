@@ -41,13 +41,13 @@ export interface UpdatePostBody {
 
 export interface CommentInfo {
   id: number;
+  memberId: number;
   parentId: number | null;
   content: string;
-  createTime: string;
-  memberId: number;
   name: string;
   nickname: string;
-  image: string;
+  image?: string;
+  createTime: string;
 }
 
 export interface NoticeMenu {
@@ -66,4 +66,9 @@ export interface PostLike {
 export interface PostLikeList {
   id: number;
   postTitle: string;
+}
+
+export interface CommentBody {
+  parentId: number | null;
+  content: string;
 }
