@@ -1,4 +1,4 @@
-import { Post } from '@/typings/post.ts';
+import { Post, PostLikeList } from '@/typings/post.ts';
 import { formatCreteaDate } from '@/utils/fotmatCreateDate.ts';
 import PostModal from '@/components/Project/Post/PostModal.tsx';
 import DeleteDialog from '@/components/Common/DeleteDialog.tsx';
@@ -10,15 +10,16 @@ import { useCallback, useState } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 import { useDisclosure } from '@chakra-ui/react';
 import { Viewer } from '@toast-ui/react-editor';
-import { useMutation, useQueryClient } from 'react-query';
-import { noticePost, postLike } from '@/api/Project/Post.ts';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { noticePost, postLike, postLikeCount } from '@/api/Project/Post.ts';
 import { useMessage } from '@/hooks/useMessage.ts';
 
 interface Props {
   post: Post;
   menuId: number;
+  likeList: PostLikeList[];
 }
-export default function PostEach({ post, menuId }: Props) {
+export default function PostEach({ post, menuId, likeList }: Props) {
   const { showMessage, contextHolder } = useMessage();
   const { isOpen: isOpenModal, onOpen: onOpenModal, onClose: onCloseModal } = useDisclosure();
   const { isOpen: isOpenDialog, onOpen: onOpenDialog, onClose: onCloseDialog } = useDisclosure();
@@ -27,6 +28,7 @@ export default function PostEach({ post, menuId }: Props) {
   const [isScrapClick, setIsScrapClick] = useState<{ [key: number]: boolean }>({});
   const [isClickKebab, setIsClickKebab] = useState<{ [key: number]: boolean }>({});
 
+  const [isInList, setIsInList] = useState<{ [key: number]: boolean }>({});
   const queryClient = useQueryClient();
 
   // 공지글 등록
@@ -44,13 +46,31 @@ export default function PostEach({ post, menuId }: Props) {
 
   // 좋아요 클릭
   const { mutate: postLikeMutate } = useMutation(() => postLike(post.id), {
+    onMutate: async () => {
+      await queryClient.cancelQueries(['postLike', post.id]);
+
+      const previousData = queryClient.getQueryData(['postLike', post.id]);
+
+      const newPostData = {
+        cnt: isLikeClick[post.id] ? post.likeCount - 1 : post.likeCount + 1,
+      };
+
+      queryClient.setQueryData(['postLike', post.id], newPostData);
+
+      return () => queryClient.setQueryData(['postLike', post.id], previousData);
+    },
     onSuccess: (data) => {
       if (typeof data !== 'string' && 'cnt' in data)
-        isLikeClick[post.id] ? showMessage('success', '🥲') : showMessage('success', '😍️');
+        isLikeClick[post.id] ? showMessage('success', '🥲🥲') : showMessage('success', '😍️😍');
     },
     onSettled: () => {
-      return queryClient.invalidateQueries(['getEachPost', post.id], { refetchInactive: true });
+      return queryClient.invalidateQueries(['postLike', post.id], { refetchInactive: true });
     },
+  });
+
+  // 좋아요 개수 get
+  const { data, refetch } = useQuery(['postLike', post.id], () => postLikeCount(post.id), {
+    enabled: false,
   });
 
   // TODO : 좋아요, 스크랩 클릭 초기 값 멤버마다 다르게 설정해서 해야함
@@ -63,8 +83,7 @@ export default function PostEach({ post, menuId }: Props) {
       }));
 
       postLikeMutate();
-      // TODO : 좋아요 취소, 좋아요 눌렀을 때 api 요청 보내기
-      // TODO : 좋아요 취소, 좋아요 눌렀을 개수 변경된 값으로 get하기
+      refetch;
     },
     [isLikeClick]
   );
@@ -159,7 +178,7 @@ export default function PostEach({ post, menuId }: Props) {
       {/*좋아요, 댓글, 스크랩, 케밥 버튼*/}
       <div className={'flex-row-center justify-between w-[75%] h-[2.5rem] px-2'}>
         <div className={'flex-row-center justify-start w-1/2 h-full text-gray-dark'}>
-          {isLikeClick[post.id] ? (
+          {likeList.some((likePost) => likePost.id === post.id) || isLikeClick[post.id] ? (
             <BsHeartFill
               className={'flex text-[1.5rem] text-[#FF5733] mr-1.5 mt-1 cursor-pointer scale-110'}
               onClick={() => onClickLike(post.id)}
@@ -172,7 +191,9 @@ export default function PostEach({ post, menuId }: Props) {
               onClick={() => onClickLike(post.id)}
             />
           )}
-          <span className={'flex mr-4'}>{post.likeCount}</span>
+          <span className={'flex mr-4'}>
+            {isLikeClick[post.id] ? post.likeCount + 1 : post.likeCount}
+          </span>
           <BsChat className={'flex text-[1.5rem] text-gray-light mr-1.5'} />
           <span className={'flex mr-3'}>{post.commentCount}</span>
         </div>
