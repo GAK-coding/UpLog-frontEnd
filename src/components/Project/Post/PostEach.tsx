@@ -122,6 +122,7 @@ export default function PostEach({ post, menuId, likeList, noticeId }: Props) {
       {contextHolder}
       {/*작성자 정보 + 작성일자 시간*/}
       <div className={'flex-row-center justify-start w-full h-[5.8rem]'}>
+        <FaUserCircle className={'flex text-[3rem] fill-gray-dark'} />
         {/*{post.authorInfoDTO.image === '' ? (*/}
         {/*  <FaUserCircle className={'flex text-[3rem] fill-gray-dark'} />*/}
         {/*) : (*/}

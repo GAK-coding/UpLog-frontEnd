@@ -142,9 +142,7 @@ export const createComment = async (postId: number, data: CommentBody) => {
 // post comment 조회
 export const postCommentList = async (postId: number) => {
   try {
-    const res: AxiosResponse<CommentInfo[] | FailPost> = await instance.get(
-      `/comments/${postId}/post`
-    );
+    const res: AxiosResponse<CommentInfo[]> = await instance.get(`/comments/${postId}/post`);
     return res.data;
   } catch (error) {
     console.log(error);
