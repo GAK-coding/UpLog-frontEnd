@@ -104,7 +104,7 @@ export default function Header() {
         </nav>
 
         {isLogin && product !== '' && (
-          <div className={'flex-row-center ml-4'} ref={productRef}>
+          <div className={'flex-row-center ml-4 h-full'} ref={productRef}>
             <div className={'flex-row-center h-9 border-solid border-r border-gray-light'} />
             <div
               className={'flex-row-center cursor-pointer '}
@@ -113,7 +113,7 @@ export default function Header() {
               }}
             >
               <span className={'flex-row-center font-logo text-[2.3rem] font-semibold ml-4 mt-3'}>
-                {product}
+                {decodeURI(product)}
               </span>
               <PiCaretUpDownLight
                 className={'flex-row-center text-[1.4rem] fill-gray-light ml-2'}
