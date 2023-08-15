@@ -147,7 +147,7 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
       setMasterEmail('');
     } else {
       // 수정일 경우에 기존 post 정보로 값 채워넣기
-      refetch;
+      refetch();
     }
   }, [isOpen, isCreateProduct, productId]);
 
