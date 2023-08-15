@@ -2,24 +2,46 @@ import { useRecoilState } from 'recoil';
 import { eachComment } from '@/recoil/Project/Post.ts';
 import { FaUserCircle } from 'react-icons/fa';
 import { formatCreteaDate } from '@/utils/fotmatCreateDate.ts';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { BsHeart, BsHeartFill } from 'react-icons/bs';
 import useInput from '@/hooks/useInput.ts';
 import PostChildComment from '@/components/Project/Post/PostChildComment.tsx';
+import { useMutation } from 'react-query';
+import { createComment } from '@/api/Project/Post.ts';
+import { CommentBody } from '@/typings/post.ts';
+import { useMessage } from '@/hooks/useMessage.ts';
 
 interface Props {
   postId: number;
 }
 
 export default function PostComment({ postId }: Props) {
+  const { showMessage, contextHolder } = useMessage();
+  // 댓글 value
+  const [commentValue, onChangeCommentValue, setCommentValue] = useInput('');
+  const [check, setCheck] = useState<boolean>(false);
+  //댓글 생성 body data
+  const [createData, setCreateData] = useState<CommentBody>({
+    parentId: null,
+    content: '',
+  });
+
   const [isLikeClick, setIsLikeClick] = useState<{ [key: number]: boolean }>({});
   const [isChildClick, setIsChildClick] = useState<{ [key: number]: boolean }>({});
   const [countChildLike, setCountChildLike] = useState<{ [key: number]: number }>({});
-  const [commentValue, onChangeCommentValue, setCommentValue] = useInput('');
   const [childCommentValue, setChildCommentValue] = useState<{ [key: number]: string }>({});
 
   // TODO : postId 값 넣어서 CommentList api 연결하기
   const [commentList, setCommentList] = useRecoilState(eachComment);
+
+  // 댓글 생성
+  const { mutate: createCommentMutate } = useMutation(() => createComment(postId, createData), {
+    onSuccess: (data) => {
+      if (typeof data !== 'string' && 'id' in data) {
+        showMessage('success', '댓글이 등록되었습니다.');
+      } else showMessage('error', '댓글 등록에 실패했습니다.');
+    },
+  });
 
   // 댓글 좋아요 눌렀을 때
   const onClickLike = useCallback(
@@ -56,8 +78,11 @@ export default function PostComment({ postId }: Props) {
   const activeEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
     // 한글 짤림 방지
     if (e.nativeEvent.isComposing) return;
+
     // Enter 입력 시 댓글 추가
     if (e.key === 'Enter') {
+      setCreateData({ ...createData, content: commentValue });
+      setCheck(true);
       console.log(commentValue);
       setCommentValue('');
 
@@ -65,8 +90,27 @@ export default function PostComment({ postId }: Props) {
     }
   };
 
+  // 댓글 생성요청 + 데이터 초기화
+  useEffect(() => {
+    if (check) {
+      if (createData.content === '') {
+        showMessage('warning', '댓글을 입력해주세요.');
+        return;
+      }
+
+      createCommentMutate();
+
+      setCheck(false);
+      setCreateData({
+        parentId: null,
+        content: '',
+      });
+    }
+  }, [check]);
+
   return (
     <div className={'flex-col-center justify-start w-[60%] h-auto'}>
+      {contextHolder}
       {/*댓글 */}
       {commentList
         .filter((comment) => comment.parentId === null)
@@ -127,11 +171,11 @@ export default function PostComment({ postId }: Props) {
                 </span>
               </div>
               {/*대댓글 */}
-              <PostChildComment
-                commentList={commentList}
-                commentId={comment.id}
-                isChildClick={isChildClick[comment.id]}
-              />
+              {/*<PostChildComment*/}
+              {/*  commentList={commentList}*/}
+              {/*  commentId={comment.id}*/}
+              {/*  isChildClick={isChildClick[comment.id]}*/}
+              {/*/>*/}
             </div>
           );
         })}
