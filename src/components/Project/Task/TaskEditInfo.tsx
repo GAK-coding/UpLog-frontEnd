@@ -39,8 +39,8 @@ export default function TaskEditInfo({ isEdit, taskInfo }: Props) {
 
   const member = useRecoilValue(productMemberList);
   const memberList: SelectMenu[] = member.map((memberItem) => ({
-    value: memberItem.id.toString(),
-    label: `${memberItem.nickName}(${memberItem.name})`,
+    value: memberItem.memberId.toString(),
+    label: `${memberItem.memberNickName}(${memberItem.memberName})`,
   }));
 
   // 시작 날짜 입력 값

@@ -12,18 +12,38 @@ import {
 import { productMemberList } from '@/recoil/Product/atom.ts';
 import { useRecoilState } from 'recoil';
 import { AiFillCaretDown } from 'react-icons/ai';
+type MessageType = 'success' | 'error' | 'warning';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+  onClickChangeRoleLeader: (memberId: number) => void;
+  onClickChangeRoleDefault: (memberId: number) => void;
+  nowSelectedMemberId: number;
+  showMessage: (type: MessageType, content: string) => void;
 }
 
-export default function AuthorityModal({ isOpen, onClose }: Props) {
+export default function AuthorityModal({
+  isOpen,
+  onClose,
+  onClickChangeRoleLeader,
+  onClickChangeRoleDefault,
+  nowSelectedMemberId,
+  showMessage,
+}: Props) {
   const [members, setMembers] = useRecoilState(productMemberList);
-  const [selectedMember, setSelectedMember] = useState('');
-  const onSelectedMember = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+  const [selectedMember, setSelectedMember] = useState('-1');
+  const onSelectedMemberId = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedMember(e.target.value);
   }, []);
+
+  const onChangeDefault = useCallback(() => {
+    onClickChangeRoleDefault(nowSelectedMemberId);
+  }, [nowSelectedMemberId]);
+
+  const onChangeLeader = useCallback(() => {
+    onClickChangeRoleLeader(+selectedMember);
+  }, [selectedMember]);
 
   return (
     <Modal isCentered onClose={onClose} isOpen={isOpen}>
@@ -61,16 +81,17 @@ export default function AuthorityModal({ isOpen, onClose }: Props) {
                   marginTop={'1rem'}
                   border={'1px solid var(--gray-light)'}
                   borderRadius={'0.625rem'}
-                  onChange={onSelectedMember}
+                  onChange={onSelectedMemberId}
                   icon={<AiFillCaretDown fill={'var(--gray-light)'} />}
+                  placeholder={'위임할 멤버를 선택해주세요.'}
                 >
-                  <option selected hidden disabled value="">
-                    위임할 멤버를 선택해주세요.
-                  </option>
-
-                  {members.map((member) => (
-                    <option key={member.email} value={member.name}>
-                      {member.name}
+                  {members?.map((member) => (
+                    <option
+                      hidden={member.powerType !== 'DEFAULT'}
+                      key={member.memberId}
+                      value={member.memberId}
+                    >
+                      {member.memberNickName}({member.memberName})
                     </option>
                   ))}
                 </Select>
@@ -82,7 +103,14 @@ export default function AuthorityModal({ isOpen, onClose }: Props) {
         <ModalFooter>
           <button
             className={'bg-orange rounded font-bold text-sm text-white w-[4.5rem] h-9'}
-            onClick={() => {}}
+            onClick={() => {
+              onChangeDefault();
+              setTimeout(() => {
+                onChangeLeader();
+              }, 500);
+              onClose();
+              showMessage('success', '권한이 변경되었습니다.');
+            }}
           >
             완료
           </button>
