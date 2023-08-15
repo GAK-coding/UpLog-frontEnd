@@ -159,7 +159,7 @@ export default function SignUp() {
   }, [password, isCheckPw]);
 
   useEffect(() => {
-    if (isLogin) navigate('/');
+    if (sessionStorage.getItem('accessToken') && sessionStorage.getItem('userInfo')) navigate('/');
   }, []);
 
   return (

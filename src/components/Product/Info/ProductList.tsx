@@ -13,50 +13,29 @@ import { SaveUserInfo } from '@/typings/member.ts';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { changeProductsSequence, getMyProducts } from '@/api/Product/Product.ts';
 import { GetProductList, ProductInfo } from '@/typings/product.ts';
+import { useGetAllProduct } from '@/components/Product/hooks/useGetAllProduct.ts';
 
 export default function ProductList() {
   const navigate = useNavigate();
   const userInfo: SaveUserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
 
   // 수정할 product id
-  const [productId, setProductId] = useState<number>(0);
+  const [productId, setProductId] = useState(1);
 
   // ProductList 정보
   // const [productList, setProductList] = useRecoilState(productListData);
 
   // 제품 List click
   const [isProductClick, setIsProductClick] = useRecoilState(productOpen);
+  const onCloseProduct = useCallback(() => {
+    setIsProductClick(false);
+  }, []);
 
   // 제품추가&정보수정 모달창
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isCreateProduct, setIsCreateProduct] = useState(true);
 
-  const { data: productList } = useQuery('myProductList', getMyProducts, {
-    select: (data) => {
-      console.log(data);
-
-      if (typeof data !== 'string') {
-        const list: ProductInfo[] = data.map((item: GetProductList) => {
-          return {
-            productId: item.productId,
-            productName: item.productName,
-            powerType: item.powerType,
-            indexNum: item.indexNum,
-            draggableId: item.productId.toString(),
-            // TODO: 이미지 수정 필요
-            image: '/images/test_userprofile.png',
-          };
-        });
-
-        return list;
-      }
-    },
-    // staleTime: 60000, // 1분
-    // cacheTime: 80000, // 1분 20초
-    // refetchOnMount: false, // 마운트(리렌더링)될 때 데이터를 다시 가져오지 않음
-    refetchOnWindowFocus: false, // 브라우저를 포커싱했을때 데이터를 가져오지 않음
-    refetchOnReconnect: false, // 네트워크가 다시 연결되었을때 다시 가져오지 않음
-  });
+  const [productList, refetch] = useGetAllProduct();
 
   const { mutate } = useMutation(changeProductsSequence);
 
@@ -102,7 +81,7 @@ export default function ProductList() {
   return (
     <section
       className={
-        'border-base w-[20rem] min-h-[3.3rem] max-h-[27.3rem] block absolute top-[4.5rem] left-[11rem] shadow-sign-up z-40'
+        'border-base w-[20rem] min-h-[3.3rem] max-h-[27.3rem] block absolute top-[4.5rem] left-[11rem] shadow-sign-up z-50'
       }
       onClick={onChildClick}
     >
@@ -138,40 +117,49 @@ export default function ProductList() {
                           className={`flex-row-center justify-between w-full h-[4.5rem] hover:bg-hover ${
                             snapshot.isDragging ? 'shadow-2xl shadow-gray-400' : ''
                           }`}
-                          onClick={() => {
-                            // TODO: url 인코딩하기
-                            const encodedProductName = encodeURIComponent(product.productName);
-                            navigate(`/workspace/${product.productName}`);
-                          }}
                         >
-                          <RxDragHandleDots2
-                            className={'flex w-[2.6rem] items-center text-4xl ml-4 fill-gray-light'}
-                            onClick={() => setIsProductClick(!isProductClick)}
-                          />
-                          <img
-                            src={product.image}
-                            alt="userprofile"
-                            className={'ml-2 w-[2rem] h-[2rem]'}
-                            onClick={() => setIsProductClick(!isProductClick)}
-                          />
-                          <span
-                            className={'ml-3 text-xl font-bold w-full'}
-                            onClick={() => setIsProductClick(!isProductClick)}
+                          <div
+                            className={'flex-row-center h-full w-[85%]'}
+                            onClick={() => {
+                              // TODO: url 인코딩하기
+                              navigate(`/workspace/${product.productName}`);
+                              sessionStorage.setItem('nowProduct', JSON.stringify(product));
+                              onCloseProduct();
+                            }}
                           >
-                            {product.productName}
-                          </span>
+                            <RxDragHandleDots2
+                              className={
+                                'flex w-[2.6rem] items-center text-4xl ml-4 fill-gray-light'
+                              }
+                              onClick={() => setIsProductClick(!isProductClick)}
+                            />
+                            <img
+                              src={product.image}
+                              alt="userprofile"
+                              className={'ml-2 w-[2rem] h-[2rem]'}
+                              onClick={() => setIsProductClick(!isProductClick)}
+                            />
+                            <span
+                              className={'ml-3 text-xl font-bold w-full'}
+                              onClick={() => setIsProductClick(!isProductClick)}
+                            >
+                              {product.productName}
+                            </span>
+                          </div>
 
                           {(product.powerType === 'MASTER' || product.powerType === 'LEADER') && (
-                            <BiPencil
-                              className={
-                                'flex-row-center w-20 text-xl mr-4 fill-gray-light cursor-pointer z-50'
-                              }
+                            <span
+                              className={'flex-row-center w-[15%] h-full'}
                               onClick={() => {
                                 onOpen();
                                 onChangeIsCreateProduct(false);
                                 setProductId(product.productId);
                               }}
-                            />
+                            >
+                              <BiPencil
+                                className={'text-xl fill-gray-light cursor-pointer z-50 '}
+                              />
+                            </span>
                           )}
                         </div>
                       )}

@@ -197,7 +197,7 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
     setCreateData({
       title: postName,
       menuId: postMenu,
-      postType: postType,
+      postType: postType === 'DEFAULT' ? null : postType,
       content: postContent,
       productId: 1,
       projectId: 10,
@@ -330,7 +330,7 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
                   }
                 >
                   <div className={'flex w-[6rem] items-center justify-end h-auto'}>
-                    <span>메뉴</span>
+                    <span>메뉴 (필수)</span>
                     <div
                       className={'ml-3 h-4 border-solid border-r border-[0.2px] border-gray-border'}
                     />
@@ -378,7 +378,7 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
                   }
                 >
                   <div className={'flex w-[6rem] items-center justify-end h-auto'}>
-                    <span>타입</span>
+                    <span>타입 (선택)</span>
                     <div
                       className={'ml-3 h-4 border-solid border-r border-[0.2px] border-gray-border'}
                     />

@@ -1,5 +1,6 @@
 import { targetMemberInfo } from '@/typings/member.ts';
 
+export type PostType = 'DEFAULT' | 'REQUEST_READ' | 'REQUEST_REQUIREMENT' | null;
 export interface Post {
   id: number;
   title: string;
@@ -8,7 +9,7 @@ export interface Post {
   menuName: string;
   productName: string;
   projectName: string;
-  postType: string | null;
+  postType: PostType;
   content: string;
   createTime: string;
   tagList?: string[];
@@ -34,7 +35,7 @@ export interface FailPost {
 export interface UpdatePostBody {
   updatePostTitle: string | null;
   updatePostContent: string | null;
-  updatePostType: string | null;
+  updatePostType: PostType | null;
   updateMenuId: number | null;
 }
 
