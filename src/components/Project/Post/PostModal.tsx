@@ -258,32 +258,22 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
     if (isEdit) {
       // post 정보 get (1개)
       refetch();
+
+      setCreateData({
+        title: '',
+        menuId: -1,
+        postType: null,
+        content: '',
+        productId: -1,
+        projectId: -1,
+      });
     } else {
       setPostName('');
       setPostType(null);
       setPostMenu(-1);
-      // setPostContent('');
+      setPostContent('');
     }
   }, [isOpen, isEdit]);
-
-  // 모달창이 닫히면 입력했던 내용이 사라짐
-  useEffect(() => {
-    isEdit
-      ? setUpdateData({
-          updatePostTitle: null,
-          updatePostContent: null,
-          updatePostType: null,
-          updateMenuId: null,
-        })
-      : setCreateData({
-          title: '',
-          menuId: -1,
-          postType: null,
-          content: '',
-          productId: -1,
-          projectId: -1,
-        });
-  }, [onClose]);
 
   return (
     <Modal isCentered onClose={onClose} isOpen={isOpen}>
