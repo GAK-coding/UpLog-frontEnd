@@ -63,15 +63,15 @@ export default function PostEach({ post }: Props) {
     >
       {/*작성자 정보 + 작성일자 시간*/}
       <div className={'flex-row-center justify-start w-full h-[5.8rem]'}>
-        {post.authorInfoDTO.image === '' ? (
-          <FaUserCircle className={'flex text-[3rem] fill-gray-dark'} />
-        ) : (
-          <img
-            src={post.authorInfoDTO.image}
-            alt="userprofile"
-            className={'flex w-[3rem] fill-gray-dark'}
-          />
-        )}
+        {/*{post.authorInfoDTO.image === '' ? (*/}
+        {/*  <FaUserCircle className={'flex text-[3rem] fill-gray-dark'} />*/}
+        {/*) : (*/}
+        {/*  <img*/}
+        {/*    src={post.authorInfoDTO.image}*/}
+        {/*    alt="userprofile"*/}
+        {/*    className={'flex w-[3rem] fill-gray-dark'}*/}
+        {/*  />*/}
+        {/*)}*/}
         <div className={'flex-col w-auto h-[3.8rem] ml-4'}>
           <span
             className={'flex h-1/2 font-bold text-[1.2rem] mb-1.5'}
