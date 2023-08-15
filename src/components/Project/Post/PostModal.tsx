@@ -203,6 +203,12 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
       projectId: 10,
     });
 
+    setUpdateData({
+      ...updateData,
+      updatePostContent: postContent,
+    });
+
+    console.log('내용', postContent);
     setCheck(true);
   }, [postName, postMenu]);
 
@@ -239,8 +245,10 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
       }
 
       setCheck(false);
-      setPostContent('');
-      setTimeout(() => onClose(), 2000);
+      setTimeout(() => {
+        onClose();
+        setPostContent('');
+      }, 2000);
     }
   }, [check]);
 
@@ -249,22 +257,21 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
     if (isEdit) {
       // post 정보 get (1개)
       refetch();
+    } else {
+      setPostName('');
+      setPostType(null);
+      setPostMenu(-1);
+      // setPostContent('');
     }
   }, [isOpen, isEdit, post]);
 
   // 모달창이 닫히면 입력했던 내용이 사라짐
   useEffect(() => {
-    setPostName('');
-    setPostType('DEFAULT');
-    setPostMenu(-1);
-    setPostContent('');
-    // setPostTag([]);
-
     // 생성관련
     setCreateData({
       title: '',
       menuId: -1,
-      postType: 'DEFAULT',
+      postType: null,
       content: '',
       productId: -1,
       projectId: -1,
@@ -277,7 +284,7 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
       updatePostType: null,
       updateMenuId: null,
     });
-  }, [onClose, isEdit]);
+  }, [onClose]);
 
   return (
     <Modal isCentered onClose={onClose} isOpen={isOpen}>

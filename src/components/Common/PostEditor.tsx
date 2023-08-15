@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Editor } from '@toast-ui/react-editor';
 import '@toast-ui/editor/dist/toastui-editor.css';
 import colorSyntax from '@toast-ui/editor-plugin-color-syntax';
@@ -33,15 +33,18 @@ export default function PostEditor({ isPost }: Props) {
   const [darkMode, setDarkMode] = useRecoilState(themeState);
 
   const [editPost, setEditPost] = useRecoilState(editorPost);
+  const [editData, setEditData] = useState<string>('');
   const [editChangeLog, setEditChangeLog] = useRecoilState(editorChangeLog);
 
   const onChange = () => {
     const data = editorRef!.current!.getInstance().getHTML();
     const convertedData = data.replace(/"/g, "'");
-    console.log(editPost);
+    // console.log(editPost);
 
-    if (isPost) setEditPost(convertedData);
-    else setEditChangeLog(convertedData);
+    if (isPost) {
+      setEditData(convertedData);
+      setEditPost(editData);
+    } else setEditChangeLog(convertedData);
     // console.log(editorRef!.current!.getRootElement().clientHeight);
   };
 

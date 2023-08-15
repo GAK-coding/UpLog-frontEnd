@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios';
-import { FailPost, PostBody, Post, Posts, UpdatePostBody } from '@/typings/post.ts';
+import { FailPost, PostBody, Post, Posts, UpdatePostBody, NoticeMenu } from '@/typings/post.ts';
 import { instance } from '@/api';
 
 // post 생성
@@ -56,3 +56,19 @@ export const updatePost = async (postId: number, data: UpdatePostBody) => {
     return 'update post fail';
   }
 };
+
+// post 공지 등록
+export const noticePost = async (menuId: number, updateNoticePostId: number) => {
+  try {
+    const res: AxiosResponse<NoticeMenu | FailPost> = await instance.patch(
+      `/menus/${menuId}/notice-post`,
+      { updateNoticePostId: updateNoticePostId }
+    );
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    return 'notice post fail';
+  }
+};
+
+// post 공지 해제

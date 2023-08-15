@@ -10,11 +10,16 @@ import { useCallback, useState } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 import { useDisclosure } from '@chakra-ui/react';
 import { Viewer } from '@toast-ui/react-editor';
+import { useMutation } from 'react-query';
+import { noticePost } from '@/api/Project/Post.ts';
+import { useMessage } from '@/hooks/useMessage.ts';
 
 interface Props {
   post: Post;
+  menuId: number;
 }
-export default function PostEach({ post }: Props) {
+export default function PostEach({ post, menuId }: Props) {
+  const { showMessage, contextHolder } = useMessage();
   const { isOpen: isOpenModal, onOpen: onOpenModal, onClose: onCloseModal } = useDisclosure();
   const { isOpen: isOpenDialog, onOpen: onOpenDialog, onClose: onCloseDialog } = useDisclosure();
 
@@ -22,6 +27,14 @@ export default function PostEach({ post }: Props) {
   const [isScrapClick, setIsScrapClick] = useState<{ [key: number]: boolean }>({});
   const [isClickKebab, setIsClickKebab] = useState<{ [key: number]: boolean }>({});
 
+  const { mutate: noticePostMutate } = useMutation(() => noticePost(menuId, post.id), {
+    onSuccess: (data) => {
+      if (typeof data !== 'string' && 'id' in data) {
+        console.log('.');
+        showMessage('success', '공지글로 등록되었습니다.');
+      } else showMessage('error', '공지글 등록에 실패했습니다.');
+    },
+  });
   // TODO : 좋아요, 스크랩 클릭 초기 값 멤버마다 다르게 설정해서 해야함
   // 좋아요 눌렀을 때
   const onClickLike = useCallback(
@@ -52,8 +65,8 @@ export default function PostEach({ post }: Props) {
 
   // 공지글로 등록
   const onClickNotice = useCallback((postId: number) => {
-    // TODO : 해당 post id값으로 메뉴 공지글로 등록하는 api 요청 보내기
-    console.log(postId);
+    noticePostMutate();
+    console.log(menuId, postId);
   }, []);
 
   return (
@@ -62,6 +75,7 @@ export default function PostEach({ post }: Props) {
         'flex-col-center justify-start w-full h-auto border-base py-[1.8rem] px-[3.3rem] mb-12'
       }
     >
+      {contextHolder}
       {/*작성자 정보 + 작성일자 시간*/}
       <div className={'flex-row-center justify-start w-full h-[5.8rem]'}>
         {/*{post.authorInfoDTO.image === '' ? (*/}
@@ -165,7 +179,7 @@ export default function PostEach({ post }: Props) {
           {isClickKebab[post.id] && (
             <section
               className={
-                'absolute top-[2.2rem] flex-col-center w-[4rem] h-[5.5rem] bottom-5 task-detail-border cursor-pointer text-[0.5rem] text-gray-dark'
+                'absolute top-[2.2rem] flex-col-center w-[5rem] h-[6rem] bottom-5 task-detail-border cursor-pointer text-[0.5rem] text-gray-dark'
               }
             >
               <button
@@ -191,6 +205,7 @@ export default function PostEach({ post }: Props) {
                 isOpen={isOpenDialog}
                 onClose={onCloseDialog}
                 post={post.id}
+                menuId={menuId}
                 isTask={false}
               />
             </section>

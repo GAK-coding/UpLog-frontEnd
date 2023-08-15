@@ -49,3 +49,10 @@ export interface CommentInfo {
   nickname: string;
   image: string;
 }
+
+export interface NoticeMenu {
+  id: number;
+  menuName: string;
+  projectId: number;
+  version: string;
+}

@@ -45,19 +45,19 @@ export default function PostMain() {
           <span className={'ml-4 font-bold text-[1.5rem] text-gray-dark'}>공지</span>
         </div>
       )}
-      {noticePostInfo && <PostEach post={noticePostInfo} />}
+      {noticePostInfo && <PostEach post={noticePostInfo} menuId={menuId!} />}
 
       {/*noticePost id가 맨 첫번째 id와 같다면 보여주지 않음 posts 배열 map*/}
       {noticePostInfo &&
         posts &&
         posts.map((post, index) =>
           index === 0 && post.id === noticePostInfo.id ? null : (
-            <PostEach key={post.id} post={post} />
+            <PostEach key={post.id} post={post} menuId={menuId!} />
           )
         )}
 
       {/*noticePost가 없으면 그냥 posts만 보여줌*/}
-      {posts && posts.map((post) => <PostEach key={post.id} post={post} />)}
+      {posts && posts.map((post) => <PostEach key={post.id} post={post} menuId={menuId!} />)}
     </section>
   );
 }
