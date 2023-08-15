@@ -13,14 +13,16 @@ import useInput from '@/hooks/useInput.ts';
 import { Select } from 'antd';
 import { menuListData } from '@/recoil/Project/Menu.ts';
 import { SelectMenu } from '@/typings/menu.ts';
-import { Post, PostBody } from '@/typings/post.ts';
+import { Post, PostBody, Posts } from '@/typings/post.ts';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import PostEditor from '@/components/Common/PostEditor.tsx';
 import TagInput from '@/components/Project/Post/TagInput.tsx';
 import { editorPost, themeState } from '@/recoil/Common/atom.ts';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { createPost, eachPost } from '@/api/Project/Post.ts';
+import { useParams } from 'react-router-dom';
+import show = Mocha.reporters.Base.cursor.show;
 
 interface Props {
   isOpen: boolean;
@@ -34,6 +36,7 @@ interface PostType {
 }
 
 export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
+  const { product, project, menutitle } = useParams();
   const { showMessage, contextHolder } = useMessage();
 
   // 메뉴 list
@@ -50,6 +53,9 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
   ];
 
   const [darkMode, setDarkMode] = useRecoilState(themeState);
+
+  // menuId 찾기
+  const menuId = menuList.find((menu) => menu.menuName === menutitle)?.id;
 
   // 포스트 제목, 메뉴, 타입, 내용, 태그
   const [postName, onChangePostName, setPostName] = useInput('');
@@ -70,14 +76,36 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
   const [postData, setPostData] = useState<Post>();
   const [check, setCheck] = useState(false);
 
+  const queryClient = useQueryClient();
+
   // post 생성
   const { mutate: createPostMutate } = useMutation((data: PostBody) => createPost(data), {
+    onMutate: async (newData: PostBody) => {
+      await queryClient.cancelQueries(['menuPostData', menuId]);
+
+      const previousData: Posts | undefined = queryClient.getQueryData(['menuPostData', menuId]);
+
+      queryClient.setQueryData(['menuPostData', menuId], newData);
+
+      return () => queryClient.setQueryData(['menuPostData', menuId], previousData);
+    },
     onSuccess: (data) => {
       if (typeof data !== 'string' && 'id' in data) {
         showMessage('success', 'Post 생성에 성공했습니다.');
       } else if (typeof data !== 'string' && 'message' in data) {
         showMessage('warning', data.message);
       } else showMessage('error', 'Post 생성에 실패했습니다.');
+    },
+    onError: (error, newData, rollback) => {
+      if (rollback) {
+        rollback();
+        showMessage('error', 'Post 생성에 실패했습니다.');
+      } else {
+        showMessage('error', 'Post 생성에 실패했습니다.');
+      }
+    },
+    onSettled: () => {
+      return queryClient.invalidateQueries(['menuPostData', menuId]);
     },
   });
 
@@ -96,7 +124,7 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
     enabled: false,
   });
 
-  // post
+  // post 수정
 
   const handleChange = (type: string) => (value: { value: string; label: React.ReactNode }) => {
     if (type === 'menuId') {
@@ -190,7 +218,7 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
       productId: -1,
       projectId: -1,
     });
-  }, [onClose]);
+  }, [onClose, isEdit]);
 
   return (
     <Modal isCentered onClose={onClose} isOpen={isOpen}>
