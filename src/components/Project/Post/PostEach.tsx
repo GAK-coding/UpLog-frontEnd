@@ -11,7 +11,7 @@ import { FaUserCircle } from 'react-icons/fa';
 import { useDisclosure } from '@chakra-ui/react';
 import { Viewer } from '@toast-ui/react-editor';
 import { useMutation, useQueryClient } from 'react-query';
-import { noticePost } from '@/api/Project/Post.ts';
+import { noticePost, postLike } from '@/api/Project/Post.ts';
 import { useMessage } from '@/hooks/useMessage.ts';
 
 interface Props {
@@ -29,6 +29,7 @@ export default function PostEach({ post, menuId }: Props) {
 
   const queryClient = useQueryClient();
 
+  // 공지글 등록
   const { mutate: noticePostMutate } = useMutation(() => noticePost(menuId, post.id), {
     onSuccess: (data) => {
       if (typeof data !== 'string' && 'id' in data) {
@@ -40,6 +41,18 @@ export default function PostEach({ post, menuId }: Props) {
       return queryClient.invalidateQueries(['menuPostData', menuId], { refetchInactive: true });
     },
   });
+
+  // 좋아요 클릭
+  const { mutate: postLikeMutate } = useMutation(() => postLike(post.id), {
+    onSuccess: (data) => {
+      if (typeof data !== 'string' && 'cnt' in data)
+        isLikeClick[post.id] ? showMessage('success', '🥲') : showMessage('success', '😍️');
+    },
+    onSettled: () => {
+      return queryClient.invalidateQueries(['getEachPost', post.id], { refetchInactive: true });
+    },
+  });
+
   // TODO : 좋아요, 스크랩 클릭 초기 값 멤버마다 다르게 설정해서 해야함
   // 좋아요 눌렀을 때
   const onClickLike = useCallback(
@@ -49,6 +62,7 @@ export default function PostEach({ post, menuId }: Props) {
         [postId]: !prevState[postId],
       }));
 
+      postLikeMutate();
       // TODO : 좋아요 취소, 좋아요 눌렀을 때 api 요청 보내기
       // TODO : 좋아요 취소, 좋아요 눌렀을 개수 변경된 값으로 get하기
     },
@@ -147,12 +161,14 @@ export default function PostEach({ post, menuId }: Props) {
         <div className={'flex-row-center justify-start w-1/2 h-full text-gray-dark'}>
           {isLikeClick[post.id] ? (
             <BsHeartFill
-              className={'flex text-[1.5rem] text-[#FF5733] mr-1.5 mt-1 cursor-pointer'}
+              className={'flex text-[1.5rem] text-[#FF5733] mr-1.5 mt-1 cursor-pointer scale-110'}
               onClick={() => onClickLike(post.id)}
             />
           ) : (
             <BsHeart
-              className={'flex text-[1.5rem] text-gray-light mr-1.5 mt-1 cursor-pointer'}
+              className={
+                'flex text-[1.5rem] text-gray-light mr-1.5 mt-1 cursor-pointer hover:scale-110'
+              }
               onClick={() => onClickLike(post.id)}
             />
           )}

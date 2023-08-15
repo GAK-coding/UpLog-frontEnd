@@ -85,7 +85,7 @@ export const noticePost = async (menuId: number, updateNoticePostId: number) => 
 // post 좋아요 & 좋아요 취소
 export const postLike = async (postId: number) => {
   try {
-    const res: AxiosResponse<PostLike | FailPost> = await instance.post(`/posts/${postId}/like`);
+    const res: AxiosResponse<PostLike | FailPost> = await instance.post(`/posts/${postId}/likes`);
     return res.data;
   } catch (error) {
     console.log(error);
@@ -96,7 +96,7 @@ export const postLike = async (postId: number) => {
 // post 좋아요 개수
 export const postLikeCount = async (postId: number) => {
   try {
-    const res: AxiosResponse<number> = await instance.get(`/posts/${postId}/like`);
+    const res: AxiosResponse<number> = await instance.get(`/posts/${postId}/likes`);
     return res.data;
   } catch (error) {
     console.log(error);
