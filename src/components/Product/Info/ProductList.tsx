@@ -13,13 +13,14 @@ import { SaveUserInfo } from '@/typings/member.ts';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { changeProductsSequence, getMyProducts } from '@/api/Product/Product.ts';
 import { GetProductList, ProductInfo } from '@/typings/product.ts';
+import { useGetAllProduct } from '@/components/Product/hooks/useGetAllProduct.ts';
 
 export default function ProductList() {
   const navigate = useNavigate();
   const userInfo: SaveUserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
 
   // 수정할 product id
-  const [productId, setProductId] = useState<number>(0);
+  const [productId, setProductId] = useState(1);
 
   // ProductList 정보
   // const [productList, setProductList] = useRecoilState(productListData);
@@ -31,32 +32,7 @@ export default function ProductList() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isCreateProduct, setIsCreateProduct] = useState(true);
 
-  const { data: productList } = useQuery('myProductList', getMyProducts, {
-    select: (data) => {
-      console.log(data);
-
-      if (typeof data !== 'string') {
-        const list: ProductInfo[] = data.map((item: GetProductList) => {
-          return {
-            productId: item.productId,
-            productName: item.productName,
-            powerType: item.powerType,
-            indexNum: item.indexNum,
-            draggableId: item.productId.toString(),
-            // TODO: 이미지 수정 필요
-            image: '/images/test_userprofile.png',
-          };
-        });
-
-        return list;
-      }
-    },
-    // staleTime: 60000, // 1분
-    // cacheTime: 80000, // 1분 20초
-    // refetchOnMount: false, // 마운트(리렌더링)될 때 데이터를 다시 가져오지 않음
-    refetchOnWindowFocus: false, // 브라우저를 포커싱했을때 데이터를 가져오지 않음
-    refetchOnReconnect: false, // 네트워크가 다시 연결되었을때 다시 가져오지 않음
-  });
+  const [productList, refetch] = useGetAllProduct();
 
   const { mutate } = useMutation(changeProductsSequence);
 
@@ -140,8 +116,8 @@ export default function ProductList() {
                           }`}
                           onClick={() => {
                             // TODO: url 인코딩하기
-                            const encodedProductName = encodeURIComponent(product.productName);
                             navigate(`/workspace/${product.productName}`);
+                            sessionStorage.setItem('nowProduct', JSON.stringify(product));
                           }}
                         >
                           <RxDragHandleDots2

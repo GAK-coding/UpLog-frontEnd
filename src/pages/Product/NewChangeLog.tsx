@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useCallback, useState } from 'react';
 import { IoIosArrowBack } from 'react-icons/io';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Select } from '@chakra-ui/react';
 import { changeType } from '@/typings/product.ts';
 import useInput from '@/hooks/useInput.ts';

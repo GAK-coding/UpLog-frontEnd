@@ -8,7 +8,7 @@ export function useGetEachProduct(
   productId: number,
   showMessage: (type: MessageType, content: string) => void,
   setProductName?: Dispatch<SetStateAction<string>>,
-  isEnabled = false
+  isEnabled = true
 ) {
   const { refetch, data } = useQuery(['getProjectInfo', productId], () => eachProduct(productId), {
     onSuccess: (data) => {
