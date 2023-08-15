@@ -13,16 +13,15 @@ import useInput from '@/hooks/useInput.ts';
 import { Select } from 'antd';
 import { menuListData } from '@/recoil/Project/Menu.ts';
 import { SelectMenu } from '@/typings/menu.ts';
-import { Post, PostBody, Posts } from '@/typings/post.ts';
+import { Post, PostBody, Posts, UpdatePostBody } from '@/typings/post.ts';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import PostEditor from '@/components/Common/PostEditor.tsx';
 import TagInput from '@/components/Project/Post/TagInput.tsx';
 import { editorPost, themeState } from '@/recoil/Common/atom.ts';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { createPost, eachPost } from '@/api/Project/Post.ts';
+import { createPost, eachPost, updatePost } from '@/api/Project/Post.ts';
 import { useParams } from 'react-router-dom';
-import show = Mocha.reporters.Base.cursor.show;
 
 interface Props {
   isOpen: boolean;
@@ -71,6 +70,12 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
     productId: -1,
     projectId: -1,
   });
+  const [updateData, setUpdateData] = useState<UpdatePostBody>({
+    updatePostTitle: null,
+    updatePostContent: null,
+    updatePostType: null,
+    updateMenuId: null,
+  });
 
   // post 수정시 get 해오는 데이터를 저장하는 변수
   const [postData, setPostData] = useState<Post>();
@@ -105,7 +110,7 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
       }
     },
     onSettled: () => {
-      return queryClient.invalidateQueries(['menuPostData', menuId]);
+      return queryClient.invalidateQueries(['menuPostData', menuId], { refetchInactive: true });
     },
   });
 
@@ -125,6 +130,39 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
   });
 
   // post 수정
+  const { mutate: updatePostMutate } = useMutation(
+    (data: UpdatePostBody) => updatePost(post!, data),
+
+    {
+      onMutate: async (newData: UpdatePostBody) => {
+        await queryClient.cancelQueries(['menuPostData', menuId]);
+
+        const previousData: Posts | undefined = queryClient.getQueryData(['menuPostData', menuId]);
+
+        queryClient.setQueryData(['menuPostData', menuId], newData);
+
+        return () => queryClient.setQueryData(['menuPostData', menuId], previousData);
+      },
+      onSuccess: (data) => {
+        if (typeof data !== 'string' && 'id' in data) {
+          showMessage('success', 'Post 수정에 성공했습니다.');
+        } else if (typeof data !== 'string' && 'message' in data) {
+          showMessage('warning', data.message);
+        } else showMessage('error', 'Post 수정에 실패했습니다.');
+      },
+      onError: (error, newData, rollback) => {
+        if (rollback) {
+          rollback();
+          showMessage('error', 'Post 수정에 실패했습니다.');
+        } else {
+          showMessage('error', 'Post 수정에 실패했습니다.');
+        }
+      },
+      onSettled: () => {
+        return queryClient.invalidateQueries(['menuPostData', menuId], { refetchInactive: true });
+      },
+    }
+  );
 
   const handleChange = (type: string) => (value: { value: string; label: React.ReactNode }) => {
     if (type === 'menuId') {
@@ -177,17 +215,22 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
     }
   }, [darkMode]);
 
+  // postName
   useEffect(() => {
-    setCreateData({ ...createData, title: postName });
+    isEdit
+      ? setUpdateData({ ...updateData, updatePostTitle: postName })
+      : setCreateData({ ...createData, title: postName });
   }, [postName]);
 
+  // 생성, 수정 요청보냄
   useEffect(() => {
     if (check) {
       if (isEdit) {
-        // TODO: Post 수정 api 연결
+        updatePostMutate(updateData);
       } else {
         createPostMutate(createData);
       }
+
       setCheck(false);
       setPostContent('');
       setTimeout(() => onClose(), 2000);
@@ -202,14 +245,15 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
     }
   }, [isOpen, isEdit, post]);
 
+  // 모달창이 닫히면 입력했던 내용이 사라짐
   useEffect(() => {
-    // 모달창이 닫히면 입력했던 내용이 사라짐
     setPostName('');
     setPostType({ postType: null });
     setPostMenu(-1);
     setPostContent('');
     // setPostTag([]);
 
+    // 생성관련
     setCreateData({
       title: '',
       menuId: -1,
@@ -217,6 +261,14 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
       content: '',
       productId: -1,
       projectId: -1,
+    });
+
+    // 수정관련
+    setUpdateData({
+      updatePostTitle: null,
+      updatePostContent: null,
+      updatePostType: null,
+      updateMenuId: null,
     });
   }, [onClose, isEdit]);
 
