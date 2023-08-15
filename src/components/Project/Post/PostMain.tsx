@@ -6,16 +6,16 @@ import { menuListData } from '@/recoil/Project/Menu.ts';
 import { useParams } from 'react-router-dom';
 import { menuPostList } from '@/api/Project/Post.ts';
 import { useState } from 'react';
-import { useGetMenuList } from '@/components/Project/hooks/useGetMenuList.ts';
 import { useRecoilValue } from 'recoil';
 
 export default function PostMain() {
   const { product, project, menutitle } = useParams();
-  const proejctId = 10; // TODO : 현재 project id 값으로 바꾸기
+
   //메뉴별로 Post 조회한 데이터
   const [noticePostInfo, setNoticePostInfo] = useState<Post>();
   const [posts, setPosts] = useState<Post[]>();
 
+  // menuId 찾기
   const menuList = useRecoilValue(menuListData);
   const menuId = menuList.find((menu) => menu.menuName === menutitle)?.id;
 
