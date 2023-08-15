@@ -45,7 +45,7 @@ export interface CommentInfo {
   parentId: number | null;
   content: string;
   name: string;
-  nickname: string;
+  nickName: string;
   image?: string;
   createTime: string;
 }

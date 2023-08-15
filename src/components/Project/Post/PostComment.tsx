@@ -8,6 +8,7 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { createComment, postCommentList } from '@/api/Project/Post.ts';
 import { CommentBody, CommentInfo } from '@/typings/post.ts';
 import { useMessage } from '@/hooks/useMessage.ts';
+import { SaveUserInfo } from '@/typings/member.ts';
 
 interface Props {
   postId: number;
@@ -15,6 +16,8 @@ interface Props {
 
 export default function PostComment({ postId }: Props) {
   const { showMessage, contextHolder } = useMessage();
+  const userInfo: SaveUserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
+
   // 댓글 value
   const [commentValue, onChangeCommentValue, setCommentValue] = useInput('');
   const [check, setCheck] = useState<boolean>(false);
@@ -154,25 +157,33 @@ export default function PostComment({ postId }: Props) {
             return (
               <div key={index} className={'flex-col-center justify-start w-full h-auto pt-2 my-2'}>
                 {/*유저 정보 + 댓글 작성시간*/}
-                <div className={'flex-row-center justify-start items-start w-full h-auto mb-2'}>
-                  <FaUserCircle className={'flex text-[2rem] fill-gray-dark'} />
-                  {/*{comment.image === '' ? (*/}
-                  {/*  <FaUserCircle className={'flex text-[2rem] fill-gray-dark'} />*/}
-                  {/*) : (*/}
-                  {/*  <img*/}
-                  {/*    src={comment.image}*/}
-                  {/*    alt="userprofile"*/}
-                  {/*    className={'flex w-[2rem] fill-gray-dark'}*/}
-                  {/*  />*/}
-                  {/*)}*/}
-                  <div className={'flex-col w-auto h-auto ml-3'}>
-                    <span
-                      className={'flex h-1/2 text-[0.93rem]'}
-                    >{`${comment.nickName}(${comment.name})`}</span>
-                    <span className={'flex h-1/2 text-[0.8rem] text-gray-light'}>
-                      {formatCreteaDate(comment.createTime)}
-                    </span>
+                <div className={'flex-row-center justify-between items-start w-full h-auto mb-2'}>
+                  <div className={'flex'}>
+                    <FaUserCircle className={'flex text-[2rem] fill-gray-dark'} />
+                    {/*{comment.image === '' ? (*/}
+                    {/*  <FaUserCircle className={'flex text-[2rem] fill-gray-dark'} />*/}
+                    {/*) : (*/}
+                    {/*  <img*/}
+                    {/*    src={comment.image}*/}
+                    {/*    alt="userprofile"*/}
+                    {/*    className={'flex w-[2rem] fill-gray-dark'}*/}
+                    {/*  />*/}
+                    {/*)}*/}
+                    <div className={'flex-col w-auto h-auto ml-3'}>
+                      <span
+                        className={'flex h-1/2 text-[0.93rem]'}
+                      >{`${comment.nickName}(${comment.name})`}</span>
+                      <span className={'flex h-1/2 text-[0.8rem] text-gray-light'}>
+                        {formatCreteaDate(comment.createTime)}
+                      </span>
+                    </div>
                   </div>
+                  {userInfo.id === comment.memberId && (
+                    <div className={'flex justify-between w-[4rem] text-[0.8rem] text-gray-light'}>
+                      <span className={'cursor-pointer'}>수정</span>
+                      <span className={'cursor-pointer'}>삭제</span>
+                    </div>
+                  )}
                 </div>
                 {/*댓글 내용*/}
                 <span className={'flex w-full ml-[5.5rem] mb-1 text-[1rem] font-bold'}>

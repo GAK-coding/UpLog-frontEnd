@@ -116,7 +116,7 @@ export default function PostEach({ post, menuId, likeList, noticeId }: Props) {
   return (
     <article
       className={
-        'flex-col-center justify-start w-full h-auto border-base py-[1.8rem] px-[3.3rem] mb-12'
+        'flex-col-center justify-start w-full h-auto border border-gray-light py-[1.8rem] px-[3.3rem] mb-12'
       }
     >
       {contextHolder}
