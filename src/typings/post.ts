@@ -56,3 +56,14 @@ export interface NoticeMenu {
   projectId: number;
   version: string;
 }
+
+export interface PostLike {
+  id: number;
+  memberNickname: string;
+  cnt: number;
+}
+
+export interface PostLikeList {
+  id: number;
+  postTitle: string;
+}

@@ -1,5 +1,14 @@
 import { AxiosResponse } from 'axios';
-import { FailPost, PostBody, Post, Posts, UpdatePostBody, NoticeMenu } from '@/typings/post.ts';
+import {
+  FailPost,
+  PostBody,
+  Post,
+  Posts,
+  UpdatePostBody,
+  NoticeMenu,
+  PostLike,
+  PostLikeList,
+} from '@/typings/post.ts';
 import { instance } from '@/api';
 
 // post 생성
@@ -72,3 +81,36 @@ export const noticePost = async (menuId: number, updateNoticePostId: number) => 
 };
 
 // post 공지 해제
+
+// post 좋아요 & 좋아요 취소
+export const postLike = async (postId: number) => {
+  try {
+    const res: AxiosResponse<PostLike | FailPost> = await instance.post(`/posts/${postId}/like`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    return 'post like fail';
+  }
+};
+
+// post 좋아요 개수
+export const postLikeCount = async (postId: number) => {
+  try {
+    const res: AxiosResponse<number> = await instance.get(`/posts/${postId}/like`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    return 'post like count fail';
+  }
+};
+
+// post each member 좋아요 리스트
+export const postLikeList = async () => {
+  try {
+    const res: AxiosResponse<PostLikeList[]> = await instance.get(`/posts/likes`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    return 'post like list fail';
+  }
+};
