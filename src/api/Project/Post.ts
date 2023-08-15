@@ -38,7 +38,7 @@ export const menuPostList = async (menuId: number) => {
 // post 삭제
 export const deletePost = async (postId: number) => {
   try {
-    const res: AxiosResponse<string> = await instance.delete(`/posts/${postId}`);
+    const res: AxiosResponse<string | FailPost> = await instance.delete(`/posts/${postId}`);
     return res.data;
   } catch (error) {
     console.log(error);
