@@ -17,8 +17,8 @@ export default function PostMain() {
 
   // menuId 찾기
   const menuList = useRecoilValue(menuListData);
-  const menuId = menuList.find((menu) => menu.menuName === menutitle)?.id;
-
+  // const menuId = menuList.find((menu) => menu.menuName === menutitle)?.id;
+  const menuId = 55;
   const { data } = useQuery(['menuPostData', menuId], () => menuPostList(menuId!), {
     onSuccess: (data) => {
       if (typeof data !== 'string') {

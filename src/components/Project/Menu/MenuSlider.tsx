@@ -108,7 +108,7 @@ export default function MenuSlider({ product, project, menutitle }: Props) {
       if (editMenuName === '') {
         showMessage('warning', '메뉴 이름을 입력해주세요.');
         // 바뀐 menuName에 맞게 주소값도 다시 설정
-        navigate(`/workspace/${product}/${project}/menu/menu ${menuId}`);
+        navigate(`/workspace/${product}/${project}/menu/menu${menuId}`);
         // menu edit api 요청
         editMenuMutate(`menu ${menuId}`);
         return;
@@ -182,29 +182,29 @@ export default function MenuSlider({ product, project, menutitle }: Props) {
   return (
     <StyledSlider {...settings} className={'w-h-full text-[1.25rem] font-bold text-gray-border'}>
       {/*결과물 menu (defult)*/}
-      {menuList.length !== 0 && (
-        <NavLink
-          to={`/workspace/${product}/${project}/menu/${menuList[0].menuName}`}
-          className={({ isActive }) =>
-            `flex-row-center justify-start  m-auto h-[5rem] w-1/5 border-r border-gray-border ${
-              isActive && 'bg-orange text-black'
-            }`
-          }
-        >
-          <span className={'flex-row-center h-full w-full'}>
-            {menuList[0].menuName}
-            {contextHolder}
-          </span>
-          <DeleteMenuDialog
-            isOpen={isOpen}
-            onClose={onClose}
-            menu={deleteMenuName}
-            menuId={menuId}
-          />
-        </NavLink>
-      )}
+      {/*{menuList.length !== 0 && (*/}
+      {/*  <NavLink*/}
+      {/*    to={`/workspace/${product}/${project}/menu/${menuList[0].menuName}`}*/}
+      {/*    className={({ isActive }) =>*/}
+      {/*      `flex-row-center justify-start  m-auto h-[5rem] w-1/5 border-r border-gray-border ${*/}
+      {/*        isActive && 'bg-orange text-black'*/}
+      {/*      }`*/}
+      {/*    }*/}
+      {/*  >*/}
+      {/*    <span className={'flex-row-center h-full w-full'}>*/}
+      {/*      {menuList[0].menuName}*/}
+      {/*      {contextHolder}*/}
+      {/*    </span>*/}
+      {/*    <DeleteMenuDialog*/}
+      {/*      isOpen={isOpen}*/}
+      {/*      onClose={onClose}*/}
+      {/*      menu={deleteMenuName}*/}
+      {/*      menuId={menuId}*/}
+      {/*    />*/}
+      {/*  </NavLink>*/}
+      {/*)}*/}
       {menuList.length !== 0 &&
-        menuList.slice(1).map((menu) => (
+        menuList.map((menu) => (
           <NavLink
             to={`/workspace/${product}/${project}/menu/${menu.menuName}`}
             className={({ isActive }) =>
@@ -214,7 +214,7 @@ export default function MenuSlider({ product, project, menutitle }: Props) {
             }
             key={menu.id}
           >
-            {menutitle === menu.menuName && (
+            {menutitle === menu.menuName && menu.menuName !== '결과물' && (
               <IoIosClose
                 className={
                   'absolute right-2 top-0.5 text-transparent text-[2rem] hover:text-gray-dark'

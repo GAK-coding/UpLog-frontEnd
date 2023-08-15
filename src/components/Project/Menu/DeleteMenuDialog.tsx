@@ -77,7 +77,7 @@ export default function DeleteMenuDialog({ isOpen, onClose, menu, menuId }: Prop
     setMenuList(updatedMenuList);
 
     deleteMenuMutate();
-    navigate(`/workspace/${product}/${project}/menu/결과물`);
+    navigate(`/workspace/${product}/${project}/menu/${menuList[0].menuName}`);
   }, [menuList, setMenuList, menu]);
 
   return (

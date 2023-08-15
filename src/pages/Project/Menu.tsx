@@ -10,20 +10,23 @@ import PostModal from '@/components/Project/Post/PostModal.tsx';
 import { postMain } from '@/recoil/Project/Post.ts';
 import { useEffect } from 'react';
 import { menuListData } from '@/recoil/Project/Menu.ts';
+import { useGetMenuList } from '@/components/Project/hooks/useGetMenuList.ts';
+import { projectMenuList } from '@/api/Project/Menu.ts';
 
 export default function Menu() {
   const { product, project, menutitle } = useParams();
   const navigate = useNavigate();
-  const menuList = useRecoilValue(menuListData);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const menuList = useRecoilValue(menuListData);
 
   // post, task 구분
   const [isPost, setIsPost] = useRecoilState(postMain);
 
   // 존재하지 않는 메뉴 페이지로 이동하면 결과물 페이지로 이동하게 수정
   useEffect(() => {
-    if (menutitle === undefined || !menuList.some((menu) => menu.menuName === menutitle))
+    if (menutitle === undefined || !menuList.some((menu) => menu.menuName === menutitle)) {
       navigate(`/workspace/${product}/${project}/menu/결과물`);
+    } else navigate(`/workspace/${product}/${project}/menu/${menutitle}`);
   }, [product, project, menutitle]);
 
   return (

@@ -98,6 +98,7 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
         // setPostTag(data.tagList);
       }
     },
+    enabled: false,
   });
   const handleChange = (type: string) => (value: { value: string; label: React.ReactNode }) => {
     if (type === 'menuId') {
