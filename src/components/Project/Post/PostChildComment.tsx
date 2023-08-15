@@ -56,7 +56,7 @@ export default function PostChildComment({ commentList, commentId, isChildClick 
                 <div className={'flex-col w-auto h-auto ml-3'}>
                   <span
                     className={'flex h-1/2 text-[0.93rem]'}
-                  >{`${child.nickname}(${child.name})`}</span>
+                  >{`${child.nickName}(${child.name})`}</span>
                   <span className={'flex h-1/2 text-[0.8rem] text-gray-light'}>
                     {formatCreteaDate(child.createTime)}
                   </span>
