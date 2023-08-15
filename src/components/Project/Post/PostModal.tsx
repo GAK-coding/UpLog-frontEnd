@@ -161,6 +161,7 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
         createPostMutate(createData);
       }
       setCheck(false);
+      setPostContent('');
       setTimeout(() => onClose(), 2000);
     }
   }, [check]);
@@ -170,24 +171,26 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
     if (isEdit) {
       // post 정보 get (1개)
       refetch();
-      return;
-    } else {
-      // 생성할 때 모달창이 열릴 때 마다 값 초기화
-      setPostName('');
-      setPostType({ postType: null });
-      setPostMenu(-1);
-      // setPostContent('');
-      // setPostTag([]);
-      setCreateData({
-        title: '',
-        menuId: -1,
-        postType: '',
-        content: '',
-        productId: -1,
-        projectId: -1,
-      });
     }
   }, [isOpen, isEdit, post]);
+
+  useEffect(() => {
+    // 모달창이 닫히면 입력했던 내용이 사라짐
+    setPostName('');
+    setPostType({ postType: null });
+    setPostMenu(-1);
+    setPostContent('');
+    // setPostTag([]);
+
+    setCreateData({
+      title: '',
+      menuId: -1,
+      postType: '',
+      content: '',
+      productId: -1,
+      projectId: -1,
+    });
+  }, [onClose]);
 
   return (
     <Modal isCentered onClose={onClose} isOpen={isOpen}>
