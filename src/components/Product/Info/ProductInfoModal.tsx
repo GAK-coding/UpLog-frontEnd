@@ -75,7 +75,12 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
 
   // TODO : staleTime 확인 필요
   // 제품 정보 조회
-  const [productGetData, refetch] = useGetEachProduct(productId, showMessage, setProductName, true);
+  const [productGetData, refetch] = useGetEachProduct(
+    productId,
+    showMessage,
+    setProductName,
+    false
+  );
 
   // 제품 정보 수정
   const { mutate: updateProduct } = useMutation(productEdit, {
@@ -140,10 +145,8 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
       setProductName('');
       setClientEmail('');
       setMasterEmail('');
-    }
-
-    // 수정일 경우에 기존 post 정보로 값 채워넣기
-    else {
+    } else {
+      // 수정일 경우에 기존 post 정보로 값 채워넣기
       refetch;
     }
   }, [isOpen, isCreateProduct, productId]);

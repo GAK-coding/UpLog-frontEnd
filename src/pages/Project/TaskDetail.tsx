@@ -41,8 +41,6 @@ export default function TaskDetail() {
       if (typeof data !== 'string' && 'taskName' in data) {
         setTaskInfo(data);
         setTaskName(data.taskName);
-        console.log('가져온 정보', data);
-        console.log(editTaskData, taskName);
       }
     },
     // staleTime: 6000, // 1분
@@ -69,7 +67,6 @@ export default function TaskDetail() {
   // 수정 버튼 클릭 시
   const onChangeEdit = useCallback(() => {
     setIsEdit(true);
-    console.log('여기', editTaskData, taskName);
   }, [isEdit]);
 
   // 수정 완료 버튼 클릭 시

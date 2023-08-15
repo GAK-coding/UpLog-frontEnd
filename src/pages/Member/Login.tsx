@@ -11,6 +11,7 @@ import { useRecoilState } from 'recoil';
 import { loginStatus } from '@/recoil/User/atom.ts';
 import { useCookies } from 'react-cookie';
 import { loginAPI } from '@/api/Members/Login-Signup.ts';
+import { useGetAllProduct } from '@/components/Product/hooks/useGetAllProduct.ts';
 
 export default function Login() {
   const { showMessage, contextHolder } = useMessage();
@@ -20,7 +21,7 @@ export default function Login() {
   const [isLogin, setIsLogin] = useRecoilState(loginStatus);
   const [cookies, setCookie, removeCookie] = useCookies();
 
-  const { mutate } = useMutation(loginAPI, {
+  const { mutate, isSuccess } = useMutation(loginAPI, {
     onSuccess: (data: GetUserInfo | string) => {
       if (typeof data === 'string') {
         showMessage('error', '아이디 또는 비밀번호를 잘못 입력하셨습니다.');
@@ -40,7 +41,10 @@ export default function Login() {
       setCookie('refreshToken', refreshToken, { path: '/' });
       sessionStorage.setItem('userInfo', JSON.stringify(userInfo));
       setIsLogin(true);
-      navigate('/');
+
+      // const productList = useGetAllProduct();
+      // console.log(productList);
+      navigate('/workspace/1', { state: { isLogin: true } });
     },
     onError: () => {
       showMessage('error', '아이디 또는 비밀번호를 잘못 입력하셨습니다.');
@@ -68,8 +72,8 @@ export default function Login() {
   });
 
   useEffect(() => {
-    if (isLogin) navigate('/');
-  }, [isLogin]);
+    if (sessionStorage.getItem('accessToken') && sessionStorage.getItem('userInfo')) navigate('/');
+  }, []);
 
   return (
     <section className={'h-full'}>

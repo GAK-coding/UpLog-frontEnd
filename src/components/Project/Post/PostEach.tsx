@@ -1,4 +1,4 @@
-import { PostData } from '@/typings/postData.ts';
+import { Post } from '@/typings/post.ts';
 import { formatCreteaDate } from '@/utils/fotmatCreateDate.ts';
 import PostModal from '@/components/Project/Post/PostModal.tsx';
 import DeleteDialog from '@/components/Common/DeleteDialog.tsx';
@@ -9,9 +9,10 @@ import { GoKebabHorizontal } from 'react-icons/go';
 import { useCallback, useState } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 import { useDisclosure } from '@chakra-ui/react';
+import { Viewer } from '@toast-ui/react-editor';
 
 interface Props {
-  post: PostData;
+  post: Post;
 }
 export default function PostEach({ post }: Props) {
   const { isOpen: isOpenModal, onOpen: onOpenModal, onClose: onCloseModal } = useDisclosure();
@@ -63,15 +64,15 @@ export default function PostEach({ post }: Props) {
     >
       {/*작성자 정보 + 작성일자 시간*/}
       <div className={'flex-row-center justify-start w-full h-[5.8rem]'}>
-        {post.authorInfoDTO.image === '' ? (
-          <FaUserCircle className={'flex text-[3rem] fill-gray-dark'} />
-        ) : (
-          <img
-            src={post.authorInfoDTO.image}
-            alt="userprofile"
-            className={'flex w-[3rem] fill-gray-dark'}
-          />
-        )}
+        {/*{post.authorInfoDTO.image === '' ? (*/}
+        {/*  <FaUserCircle className={'flex text-[3rem] fill-gray-dark'} />*/}
+        {/*) : (*/}
+        {/*  <img*/}
+        {/*    src={post.authorInfoDTO.image}*/}
+        {/*    alt="userprofile"*/}
+        {/*    className={'flex w-[3rem] fill-gray-dark'}*/}
+        {/*  />*/}
+        {/*)}*/}
         <div className={'flex-col w-auto h-[3.8rem] ml-4'}>
           <span
             className={'flex h-1/2 font-bold text-[1.2rem] mb-1.5'}
@@ -85,8 +86,10 @@ export default function PostEach({ post }: Props) {
         <div className={'flex-row-center justify-start w-full h-1/2 text-[1.1rem] font-bold'}>
           <span className={'text-gray-light'}>Title</span>
           <div className={'mx-3 h-4 border-solid border-r border-[0.5px] border-gray-light'} />
-          {post.postType !== null && (
-            <span className={'text-[1.2rem] text-orange mr-2'}>[{post.postType}]</span>
+          {post.postType !== 'DEFAULT' && (
+            <span className={'text-[1.2rem] text-orange mr-2'}>
+              {post.postType === 'REQUEST_READ' ? '[필독]' : '[요청]'}
+            </span>
           )}
           <span className={'text-[1.2rem]'}>{post.title}</span>
         </div>
@@ -104,7 +107,9 @@ export default function PostEach({ post }: Props) {
       <div
         className={'flex-col-center justify-start w-[75%] min-h-[7rem] h-auto my-6 text-[1.1rem]'}
       >
-        <div className={'w-[85%] h-auto mb-[2rem] font-bold'}>{post.content}</div>
+        <div className={'w-[85%] h-auto mb-[2rem] font-bold'}>
+          <Viewer initialValue={post.content} />
+        </div>
         <div className={'w-[90%] h-auto flex-row-center justify-start'}>
           {post.tagList &&
             post.tagList.map((tag, index) => {
@@ -169,7 +174,6 @@ export default function PostEach({ post }: Props) {
               >
                 수정
               </button>
-              <PostModal isOpen={isOpenModal} onClose={onCloseModal} post={post.id} isEdit={true} />
               <button
                 className={'flex-row-center w-full h-1/3 hover:bg-orange-light-sideBar'}
                 onClick={() => onClickNotice(post.id)}
@@ -182,6 +186,7 @@ export default function PostEach({ post }: Props) {
               >
                 삭제
               </button>
+              <PostModal isOpen={isOpenModal} onClose={onCloseModal} post={post.id} isEdit={true} />
               <DeleteDialog
                 isOpen={isOpenDialog}
                 onClose={onCloseDialog}
@@ -193,7 +198,7 @@ export default function PostEach({ post }: Props) {
         </div>
       </div>
       {/*댓글*/}
-      <PostComment postId={post.id} />
+      {/*<PostComment postId={post.id} />*/}
     </article>
   );
 }

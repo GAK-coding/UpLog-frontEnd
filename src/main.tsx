@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import GlobalStyles from './styles/GlobalStyles';
 import loadable from '@loadable/component';
+import { RecoilRoot } from 'recoil';
 
 const App = loadable(() => import('@/layouts/App.tsx'));
 
@@ -13,8 +14,8 @@ if (localStorage.theme === 'dark') {
 }
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <>
+  <RecoilRoot>
     <GlobalStyles />
     <App />
-  </>
+  </RecoilRoot>
 );

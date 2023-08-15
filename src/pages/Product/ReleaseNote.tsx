@@ -1,9 +1,11 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Release } from '@/typings/product.ts';
 import { Table, TableContainer, Th, Thead, Tr, useDisclosure } from '@chakra-ui/react';
 import { AiOutlinePlus } from 'react-icons/ai';
 import Tables from '@/components/Product/ReleaseNote/Tables.tsx';
 import ProjectModal from '@/components/Product/ReleaseNote/ProjectModal.tsx';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useGetAllProduct } from '@/components/Product/hooks/useGetAllProduct.ts';
 export default function ReleaseNote() {
   // TODO: 리코일에서 받아 올 값
   const dummy: Release[] = [
@@ -72,6 +74,11 @@ export default function ReleaseNote() {
     },
   ];
 
+  const navigate = useNavigate();
+  const { state } = useLocation();
+  const [isLogin, setIsLogin] = useState(state?.isLogin);
+  const [productList, refetch] = useGetAllProduct(false)!;
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   // 모달 프로젝트 추가로 띄울건지, 프로젝트 완료로 띄울건지
   const [isAdd, setIsAdd] = useState(true);
@@ -95,6 +102,17 @@ export default function ReleaseNote() {
     setIsAdd(modalType === 'add');
     onOpen();
   }, []);
+
+  useEffect(() => {
+    if (isLogin && !sessionStorage.getItem('nowProduct')) {
+      refetch();
+      console.log(productList);
+      if (productList?.length > 0) {
+        sessionStorage.setItem('nowProduct', JSON.stringify(productList[0]));
+        navigate(`/workspace/${productList[0].productName}`);
+      }
+    }
+  }, [isLogin, productList]);
 
   return (
     <section className={'w-full min-w-[50em] py-32 px-14 xl:px-56'} onClick={onCloseKebab}>
