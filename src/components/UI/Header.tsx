@@ -11,11 +11,12 @@ import { useOutsideAlerter } from '@/hooks/useOutsideAlerter.ts';
 import ProductList from '@/components/Product/Info/ProductList.tsx';
 import UserProfile from '@/components/Member/Header/UserProfile.tsx';
 import { themeState } from '@/recoil/Common/atom.ts';
+import { ProductInfo } from '@/typings/product.ts';
 
 export default function Header() {
   const navigate = useNavigate();
   const [darkMode, setDarkMode] = useRecoilState(themeState);
-  const nowProduct = JSON.parse(sessionStorage.getItem('nowProduct')!);
+  const nowProduct: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
 
   // TODO: 실제 userprofile 값으로 변경하기
   const userprofile = '';

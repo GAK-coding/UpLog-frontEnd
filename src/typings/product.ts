@@ -1,3 +1,5 @@
+import { numberInputTheme } from '@chakra-ui/theme/dist/components/number-input';
+
 export interface Product {
   id: number;
   name: string;
@@ -44,8 +46,14 @@ export interface ProductEditBody {
   powerType: 'MASTER' | 'LEADER' | 'DEFAULT' | 'CLIENT' | null;
 }
 
+export interface updateResultDTO {
+  duplicatedCnt: number;
+  duplicatedMemberList: string[];
+  failCnt: number;
+  failMemberList: string[];
+}
 export interface ProductEditData {
-  memberPowerListDTO: { poductId: number; productName: 'newProductName1' };
+  updateResultDTO: updateResultDTO | null;
 }
 
 // ReleaseNote.tsx에서 사용
@@ -64,12 +72,13 @@ export interface Release {
 }
 
 export interface ProductMember {
-  position: 'master' | 'leader' | 'member';
-  profile: string | null;
-  nickName: string;
-  name: string;
-  email: string;
-  id: number;
+  powerType: 'MASTER' | 'LEADER' | 'DEFAULT' | 'CLIENT';
+  memberId: number;
+  memberNickName: string;
+  memberName: string;
+  memberEmail: string;
+  // TODO: 이미지 연결 후 수정
+  profile?: string | null;
   // 케밥 버튼을 위한 변수이며 프론트에서 추가해줘야됨
   isOpen: boolean;
 }

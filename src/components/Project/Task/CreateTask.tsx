@@ -69,8 +69,8 @@ export default function CreateTask({ isOpen, onClose, menuId }: Props) {
 
   const member = useRecoilValue(productMemberList);
   const memberList: SelectMenu[] = member.map((memberItem) => ({
-    value: memberItem.id.toString(),
-    label: `${memberItem.nickName}(${memberItem.name})`,
+    value: memberItem.memberId.toString(),
+    label: `${memberItem.memberNickName}(${memberItem.memberName})`,
   }));
 
   const [isCustom, setIsCustom] = useState(true);
