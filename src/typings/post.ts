@@ -1,6 +1,7 @@
 import { targetMemberInfo } from '@/typings/member.ts';
 
-export interface PostData {
+export type PostType = 'DEFAULT' | 'REQUEST_READ' | 'REQUEST_REQUIREMENT' | null;
+export interface Post {
   id: number;
   title: string;
   authorInfoDTO: targetMemberInfo;
@@ -8,7 +9,7 @@ export interface PostData {
   menuName: string;
   productName: string;
   projectName: string;
-  postType: string | null;
+  postType: PostType;
   content: string;
   createTime: string;
   tagList?: string[];
@@ -17,11 +18,11 @@ export interface PostData {
 }
 
 export interface Posts {
-  noticePost: PostData;
-  posts: PostData[];
+  noticePost?: Post;
+  posts: Post[];
 }
 
-export interface PostBody extends Pick<PostData, 'title' | 'content' | 'menuId' | 'postType'> {
+export interface PostBody extends Pick<Post, 'title' | 'content' | 'menuId' | 'postType'> {
   productId: number;
   projectId: number;
 }
@@ -31,7 +32,13 @@ export interface FailPost {
   message: string;
 }
 
-export interface MenuPosts {}
+export interface UpdatePostBody {
+  updatePostTitle: string | null;
+  updatePostContent: string | null;
+  updatePostType: PostType | null;
+  updateMenuId: number | null;
+}
+
 export interface CommentInfo {
   id: number;
   parentId: number | null;

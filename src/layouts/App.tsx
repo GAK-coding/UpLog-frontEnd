@@ -71,7 +71,6 @@ function App() {
                     <Route path={':product/chats'} element={<Chats />} />
                     <Route path={':product/calendar'} element={<Calendar />} />
                     <Route path={':product/newchange'} element={<NewChangeLog />} />
-                    <Route path={':product/:project/menu/결과물'} element={<Menu />} />
                     <Route path={':product/:project/menu/:menutitle'} element={<Menu />} />
                     <Route
                       path={':product/:project/menu/:menutitle/task/:taskid'}

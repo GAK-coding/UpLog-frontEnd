@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useRef } from 'react';
+import React, { useEffect, useLayoutEffect, useRef } from 'react';
 import { Editor } from '@toast-ui/react-editor';
 import '@toast-ui/editor/dist/toastui-editor.css';
 import colorSyntax from '@toast-ui/editor-plugin-color-syntax';
@@ -37,10 +37,11 @@ export default function PostEditor({ isPost }: Props) {
 
   const onChange = () => {
     const data = editorRef!.current!.getInstance().getHTML();
-    console.log(data);
+    const convertedData = data.replace(/"/g, "'");
+    console.log(editPost);
 
-    if (isPost) setEditPost(data);
-    else setEditChangeLog(data);
+    if (isPost) setEditPost(convertedData);
+    else setEditChangeLog(convertedData);
     // console.log(editorRef!.current!.getRootElement().clientHeight);
   };
 
