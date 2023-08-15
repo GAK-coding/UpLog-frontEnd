@@ -1,3 +1,5 @@
+import { changeLog } from '@/typings/product.ts';
+
 export interface SubGroup {
   [key: string]: string[];
 }
@@ -14,4 +16,19 @@ export interface GroupMember {
 export interface GroupInfo {
   id: number;
   name: string;
+}
+
+export interface Products {
+  id: number;
+  version: string;
+  projectStatus: 'PROGRESS_IN' | 'PROGRESS_COMPLETE';
+}
+
+export interface Release extends Products {
+  // TODO: 백엔드에서 날짜 보내주면 받아야됨
+  date?: string;
+  contents?: changeLog[];
+  // id: number;
+  // version: string;
+  // projectStatus: 'PROGRESS_IN' | 'PROGRESS_COMPLETE';
 }
