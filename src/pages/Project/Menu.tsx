@@ -10,8 +10,6 @@ import PostModal from '@/components/Project/Post/PostModal.tsx';
 import { postMain } from '@/recoil/Project/Post.ts';
 import { useEffect } from 'react';
 import { menuListData } from '@/recoil/Project/Menu.ts';
-import { useGetMenuList } from '@/components/Project/hooks/useGetMenuList.ts';
-import { projectMenuList } from '@/api/Project/Menu.ts';
 
 export default function Menu() {
   const { product, project, menutitle } = useParams();
