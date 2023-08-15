@@ -1,3 +1,5 @@
+import { numberInputTheme } from '@chakra-ui/theme/dist/components/number-input';
+
 export interface Product {
   id: number;
   name: string;
@@ -44,8 +46,14 @@ export interface ProductEditBody {
   powerType: 'MASTER' | 'LEADER' | 'DEFAULT' | 'CLIENT' | null;
 }
 
+export interface updateResultDTO {
+  duplicatedCnt: number;
+  duplicatedMemberList: string[];
+  failCnt: number;
+  failMemberList: string[];
+}
 export interface ProductEditData {
-  memberPowerListDTO: { poductId: number; productName: 'newProductName1' };
+  updateResultDTO: updateResultDTO | null;
 }
 
 // ReleaseNote.tsx에서 사용

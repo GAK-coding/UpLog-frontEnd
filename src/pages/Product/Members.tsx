@@ -7,7 +7,7 @@ import { productMemberList } from '@/recoil/Product/atom.ts';
 import { GiLaurelCrown } from 'react-icons/gi';
 import { PiCrownSimpleFill } from 'react-icons/pi';
 import { GoKebabHorizontal } from 'react-icons/go';
-import { ProductMember } from '@/typings/product.ts';
+import { ProductInfo, ProductMember, updateResultDTO } from '@/typings/product.ts';
 import { HiOutlineRefresh } from 'react-icons/hi';
 import { IoMdClose } from 'react-icons/io';
 import { Scrollbars } from 'rc-scrollbars';
@@ -19,6 +19,8 @@ import { useMutation } from 'react-query';
 import { productEdit } from '@/api/Product/Product.ts';
 
 export default function Members() {
+  const { productId, powerType }: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
+
   const [emails, , setEmails] = useInput('');
   // 쉼표 기준으로 자르는 알고리즘
   // console.log(emails.split(',').map((email) => email.trim()));
@@ -32,7 +34,6 @@ export default function Members() {
   // 방출인지 권한 위임인지
   const [isOut, setIsOut] = useState(false);
   const { showMessage, contextHolder } = useMessage();
-  const productId = 8;
 
   // console.log(data);
 
@@ -71,7 +72,34 @@ export default function Members() {
 
   const { mutate } = useMutation(productEdit, {
     onSuccess: (data) => {
-      console.log(data);
+      if (typeof data !== 'string' && data.updateResultDTO) {
+        const { failCnt, failMemberList, duplicatedCnt, duplicatedMemberList } =
+          data.updateResultDTO;
+
+        if (failCnt > 0 && duplicatedCnt > 0) {
+          showMessage(
+            'error',
+            `${failMemberList.join(', ')}님 가입되어 있지 않고, ${duplicatedMemberList.join(
+              ', '
+            )}님은 이미 존재하여 초대에 실패했습니다.`
+          );
+          return;
+        } else if (failCnt > 0) {
+          showMessage(
+            'error',
+            `${failMemberList.join(', ')}님은 가입되어 있지 않아 초대에 실패했습니다.`
+          );
+          return;
+        } else if (duplicatedCnt > 0) {
+          showMessage(
+            'error',
+            `${duplicatedMemberList.join(', ')}님은 이미 존재하여 초대에 실패했습니다.`
+          );
+          return;
+        }
+
+        showMessage('success', '성공적으로 초대되었습니다.');
+      }
     },
   });
 
@@ -157,47 +185,49 @@ export default function Members() {
       onClick={onCloseMemberKebab}
     >
       {contextHolder}
-      <article className={'mb-20'}>
-        <h1 className={'text-3xl font-bold mb-7'}>멤버 추가</h1>
-        <div
-          className={
-            'border-[0.6px] rounded-[0.625rem] shadow-sign-up w-[50rem] h-auto px-9 py-7 bg-border'
-          }
-        >
-          <h2 className={'text-[1.4rem] font-bold mb-7'}>초대하기</h2>
-          <div className={'pl-14'}>
-            <span className={'text-gray-dark font-bold'}>이메일 입력</span>
-            <div className={'flex mt-4'}>
-              <div className={'w-4/5'}>
-                <Textarea
-                  value={emails}
-                  onChange={onChangeEmails}
-                  border={'1px solid var(--border-line)'}
-                  height={'100%'}
-                  maxLength={1000}
-                  focusBorderColor={'none'}
-                  placeholder="이메일은 쉼표(,)로 구분해 주세요."
-                />
-              </div>
-              <div className={'w-1/5 flex-col-center justify-end gap-2.5'}>
-                <button
-                  className={'bg-orange rounded font-bold text-sm text-white w-[4.5rem] h-9'}
-                  onClick={onClickInvite}
-                >
-                  전송
-                </button>
-                <span
-                  className={'flex-col-center gap-1 text-xs text-gray-dark cursor-pointer'}
-                  onClick={onClickIsLeader}
-                >
-                  <BsCheckCircle className={`text-2xl ${isLeader && 'fill-orange'}`} />
-                  리더로 초대하기
-                </span>
+      {(powerType === 'LEADER' || powerType === 'MASTER') && (
+        <article className={'mb-20'}>
+          <h1 className={'text-3xl font-bold mb-7'}>멤버 추가</h1>
+          <div
+            className={
+              'border-[0.6px] rounded-[0.625rem] shadow-sign-up w-[50rem] h-auto px-9 py-7 bg-border'
+            }
+          >
+            <h2 className={'text-[1.4rem] font-bold mb-7'}>초대하기</h2>
+            <div className={'pl-14'}>
+              <span className={'text-gray-dark font-bold'}>이메일 입력</span>
+              <div className={'flex mt-4'}>
+                <div className={'w-4/5'}>
+                  <Textarea
+                    value={emails}
+                    onChange={onChangeEmails}
+                    border={'1px solid var(--border-line)'}
+                    height={'100%'}
+                    maxLength={1000}
+                    focusBorderColor={'none'}
+                    placeholder="이메일은 쉼표(,)로 구분해 주세요."
+                  />
+                </div>
+                <div className={'w-1/5 flex-col-center justify-end gap-2.5'}>
+                  <button
+                    className={'bg-orange rounded font-bold text-sm text-white w-[4.5rem] h-9'}
+                    onClick={onClickInvite}
+                  >
+                    전송
+                  </button>
+                  <span
+                    className={'flex-col-center gap-1 text-xs text-gray-dark cursor-pointer'}
+                    onClick={onClickIsLeader}
+                  >
+                    <BsCheckCircle className={`text-2xl ${isLeader && 'fill-orange'}`} />
+                    리더로 초대하기
+                  </span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </article>
+        </article>
+      )}
 
       <article>
         <h1 className={'text-3xl font-bold mb-7'}>멤버 리스트</h1>
