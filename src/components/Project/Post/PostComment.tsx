@@ -1,44 +1,151 @@
-import { useRecoilState } from 'recoil';
-import { eachComment } from '@/recoil/Project/Post.ts';
 import { FaUserCircle } from 'react-icons/fa';
 import { formatCreteaDate } from '@/utils/fotmatCreateDate.ts';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { BsHeart, BsHeartFill } from 'react-icons/bs';
 import useInput from '@/hooks/useInput.ts';
 import PostChildComment from '@/components/Project/Post/PostChildComment.tsx';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import {
+  commentLike,
+  commentLikeCount,
+  commentLikeList,
+  createComment,
+  deleteComment,
+  postCommentList,
+} from '@/api/Project/Post.ts';
+import { CommentBody, CommentInfo, CommentLikeList } from '@/typings/post.ts';
+import { useMessage } from '@/hooks/useMessage.ts';
+import { SaveUserInfo } from '@/typings/member.ts';
 
 interface Props {
   postId: number;
+  commentLikeData: CommentLikeList[];
 }
 
-export default function PostComment({ postId }: Props) {
+export default function PostComment({ postId, commentLikeData }: Props) {
+  const { showMessage, contextHolder } = useMessage();
+  const userInfo: SaveUserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
+
+  // 댓글 value
+  const [commentValue, onChangeCommentValue, setCommentValue] = useInput('');
+  const [check, setCheck] = useState<boolean>(false);
+  //댓글 생성 body data
+  const [createData, setCreateData] = useState<CommentBody>({
+    parentId: null,
+    content: '',
+  });
+
+  const [commentList, setCommentList] = useState<CommentInfo[]>();
+  const [commentId, setCommentId] = useState<number>(0);
+
   const [isLikeClick, setIsLikeClick] = useState<{ [key: number]: boolean }>({});
   const [isChildClick, setIsChildClick] = useState<{ [key: number]: boolean }>({});
-  const [countChildLike, setCountChildLike] = useState<{ [key: number]: number }>({});
-  const [commentValue, onChangeCommentValue, setCommentValue] = useInput('');
   const [childCommentValue, setChildCommentValue] = useState<{ [key: number]: string }>({});
 
-  // TODO : postId 값 넣어서 CommentList api 연결하기
-  const [commentList, setCommentList] = useRecoilState(eachComment);
+  const queryClient = useQueryClient();
+
+  // 댓글 생성
+  const { mutate: createCommentMutate } = useMutation(() => createComment(postId, createData), {
+    onMutate: async () => {
+      await queryClient.cancelQueries(['commentList', postId]);
+
+      const previousData: CommentInfo | undefined = queryClient.getQueryData([
+        'commentList',
+        postId,
+      ]);
+
+      const newCommentData = {
+        ...previousData,
+        content: createData.content,
+      };
+      queryClient.setQueryData(['commentList', postId], newCommentData);
+
+      return () => queryClient.setQueryData(['commentList', postId], previousData);
+    },
+    onSuccess: (data) => {
+      if (typeof data !== 'string') {
+        showMessage('success', '댓글이 등록되었습니다.');
+      } else showMessage('error', '댓글 등록에 실패했습니다.');
+    },
+    onError: (error, value, rollback) => {
+      if (rollback) {
+        rollback();
+        showMessage('error', '댓글 등록에 실패했습니다.');
+      } else {
+        showMessage('error', '댓글 등록에 실패했습니다.');
+      }
+    },
+    onSettled: () => {
+      return queryClient.invalidateQueries(['commentList', postId]);
+    },
+  });
+
+  // 댓글 조회
+  const { data } = useQuery(['commentList', postId], () => postCommentList(postId), {
+    onSuccess: (data) => {
+      if (typeof data !== 'string') {
+        setCommentList(data);
+      }
+    },
+  });
+
+  // 댓글 삭제
+  const { mutate: deleteCommentMutate } = useMutation(
+    (commentId: number) => deleteComment(commentId),
+    {
+      onMutate: async (commentId) => {
+        await queryClient.cancelQueries(['commentList', postId]);
+
+        const previousData: CommentInfo[] | undefined = queryClient.getQueryData([
+          'commentList',
+          postId,
+        ]);
+
+        const newCommentData = previousData?.filter((comment) => comment.id !== commentId);
+        queryClient.setQueryData(['commentList', postId], newCommentData);
+
+        return () => queryClient.setQueryData(['commentList', postId], previousData);
+      },
+      onSuccess: (data) => {
+        if (typeof data === 'string' && data === 'DELETE OK') {
+          showMessage('success', '댓글이 삭제되었습니다.');
+        }
+      },
+      onError: (error, value, rollback) => {
+        if (rollback) {
+          rollback();
+          showMessage('error', '댓글 삭제에 실패했습니다.');
+        } else {
+          showMessage('error', '댓글 삭제에 실패했습니다.');
+        }
+      },
+      onSettled: () => {
+        return queryClient.invalidateQueries(['commentList', postId]);
+      },
+    }
+  );
+
+  // 댓글 좋아요
+  const { mutate: commentLikeMutate } = useMutation(
+    (commentId: number) => commentLike(commentId),
+    {}
+  );
+
+  // 댓글 좋아요 개수
+  const { data: commentLikeCnt } = useQuery(
+    ['commentLikeCount', commentId],
+    () => commentLikeCount(commentId),
+    {}
+  );
 
   // 댓글 좋아요 눌렀을 때
   const onClickLike = useCallback(
     (commentId: number) => {
-      // TODO : 좋아요 누른건지, 취소한건지 구별어떻게하지
       setIsLikeClick((prevState) => ({
         ...prevState,
         [commentId]: !prevState[commentId],
       }));
 
-      setCountChildLike((prevCountChildLike) => {
-        if (isLikeClick[commentId]) {
-          return {
-            ...prevCountChildLike,
-            [commentId]: (prevCountChildLike[commentId] || 0) + 1,
-          };
-        }
-        return prevCountChildLike; // 값이 true가 아닐 때는 변경하지 않음
-      });
       //TODO : 좋아요 취소, 좋아요 눌렀을 때 api 요청 보내기
     },
     [isLikeClick]
@@ -56,8 +163,11 @@ export default function PostComment({ postId }: Props) {
   const activeEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
     // 한글 짤림 방지
     if (e.nativeEvent.isComposing) return;
+
     // Enter 입력 시 댓글 추가
     if (e.key === 'Enter') {
+      setCreateData({ ...createData, content: commentValue });
+      setCheck(true);
       console.log(commentValue);
       setCommentValue('');
 
@@ -65,76 +175,123 @@ export default function PostComment({ postId }: Props) {
     }
   };
 
+  // 댓글 생성요청 + 데이터 초기화
+  useEffect(() => {
+    if (check) {
+      if (createData.content === '') {
+        showMessage('warning', '댓글을 입력해주세요.');
+        return;
+      }
+
+      createCommentMutate();
+
+      setCheck(false);
+      setCreateData({
+        parentId: null,
+        content: '',
+      });
+    }
+  }, [check]);
+
   return (
     <div className={'flex-col-center justify-start w-[60%] h-auto'}>
+      {contextHolder}
       {/*댓글 */}
-      {commentList
-        .filter((comment) => comment.parentId === null)
-        .map((comment, index) => {
-          return (
-            <div key={index} className={'flex-col-center justify-start w-full h-auto pt-2 my-2'}>
-              {/*유저 정보 + 댓글 작성시간*/}
-              <div className={'flex-row-center justify-start items-start w-full h-auto mb-2'}>
-                {comment.image === '' ? (
-                  <FaUserCircle className={'flex text-[2rem] fill-gray-dark'} />
-                ) : (
-                  <img
-                    src={comment.image}
-                    alt="userprofile"
-                    className={'flex w-[2rem] fill-gray-dark'}
-                  />
-                )}
-                <div className={'flex-col w-auto h-auto ml-3'}>
+      {commentList !== undefined &&
+        Array.from(commentList)
+          .filter((comment) => comment.parentId === null)
+          .map((comment, index) => {
+            return (
+              <div key={index} className={'flex-col-center justify-start w-full h-auto pt-2 my-2'}>
+                {/*유저 정보 + 댓글 작성시간*/}
+                <div className={'flex-row-center justify-between items-start w-full h-auto mb-2'}>
+                  <div className={'flex'}>
+                    <FaUserCircle className={'flex text-[2rem] fill-gray-dark'} />
+                    {/*{comment.image === '' ? (*/}
+                    {/*  <FaUserCircle className={'flex text-[2rem] fill-gray-dark'} />*/}
+                    {/*) : (*/}
+                    {/*  <img*/}
+                    {/*    src={comment.image}*/}
+                    {/*    alt="userprofile"*/}
+                    {/*    className={'flex w-[2rem] fill-gray-dark'}*/}
+                    {/*  />*/}
+                    {/*)}*/}
+                    <div className={'flex-col w-auto h-auto ml-3'}>
+                      <span
+                        className={'flex h-1/2 text-[0.93rem]'}
+                      >{`${comment.nickName}(${comment.name})`}</span>
+                      <span className={'flex h-1/2 text-[0.8rem] text-gray-light'}>
+                        {formatCreteaDate(comment.createTime)}
+                      </span>
+                    </div>
+                  </div>
+                  {userInfo.id === comment.memberId && (
+                    <div className={'flex justify-between w-[4rem] text-[0.8rem] text-gray-light'}>
+                      <span className={'cursor-pointer hover:text-orange'}>수정</span>
+                      <span
+                        className={'cursor-pointer hover:text-orange'}
+                        onClick={() => deleteCommentMutate(comment.id)}
+                      >
+                        삭제
+                      </span>
+                    </div>
+                  )}
+                </div>
+                {/*댓글 내용*/}
+                <span className={'flex w-full ml-[5.5rem] mb-1 text-[1rem] font-bold'}>
+                  {comment.content}
+                </span>
+                {/* 좋아요 + 답글 달기 */}
+                <div className={'flex-row-center justify-start w-full h-auto ml-[5.5rem] mb-3'}>
+                  <div
+                    className={'flex-row-center justify-start cursor-pointer'}
+                    onClick={() => onClickLike(comment.id)}
+                  >
+                    <span className={'flex text-gray-light text-[0.7rem] mr-1'}>좋아요</span>
+                    {/*{isLikeClick[comment.id] ? (*/}
+                    {/*  <BsHeartFill*/}
+                    {/*    className={'flex text-[0.8rem] text-[#FF5733] mr-1.5 mt-1 cursor-pointer'}*/}
+                    {/*  />*/}
+                    {/*) : (*/}
+                    {/*  <BsHeart*/}
+                    {/*    className={'flex text-[0.8rem] text-gray-light mr-1.5 mt-1 cursor-pointer'}*/}
+                    {/*  />*/}
+                    {/*)}*/}
+
+                    {commentLikeData.some((like) => like.id === comment.id) ? (
+                      <BsHeartFill
+                        className={'flex text-[0.8rem] text-[#FF5733] mr-1.5 mt-1 cursor-pointer'}
+                      />
+                    ) : (
+                      <BsHeart
+                        className={'flex text-[0.8rem] text-gray-light mr-1.5 mt-1 cursor-pointer'}
+                      />
+                    )}
+                    <span className={'text-[0.8rem] text-gray-light ml-0.5'}>
+                      {commentLikeCnt === 0 ? '' : commentLikeCnt}
+                    </span>
+                    {/*{countChildLike[comment.id] !== undefined && (*/}
+                    {/*  <span className={'text-[0.8rem] text-gray-light ml-0.5'}>{`${*/}
+                    {/*    countChildLike[comment.id]*/}
+                    {/*  }개`}</span>*/}
+                    {/*)}*/}
+                  </div>
                   <span
-                    className={'flex h-1/2 text-[0.93rem]'}
-                  >{`${comment.nickname}(${comment.name})`}</span>
-                  <span className={'flex h-1/2 text-[0.8rem] text-gray-light'}>
-                    {formatCreteaDate(comment.createTime)}
+                    className={'flex text-gray-light ml-2 text-[0.7rem] cursor-pointer'}
+                    onClick={() => onClickChild(comment.id)}
+                  >
+                    답글 달기
                   </span>
                 </div>
+                {/*대댓글 */}
+                {/*<PostChildComment*/}
+                {/*  commentList={commentList}*/}
+                {/*  commentId={comment.id}*/}
+                {/*  isChildClick={isChildClick[comment.id]}*/}
+                {/*/>*/}
               </div>
-              {/*댓글 내용*/}
-              <span className={'flex w-full ml-[5.5rem] mb-1 text-[1rem] font-bold'}>
-                {comment.content}
-              </span>
-              {/* 좋아요 + 답글 달기 */}
-              <div className={'flex-row-center justify-start w-full h-auto ml-[5.5rem] mb-3'}>
-                <div
-                  className={'flex-row-center justify-start cursor-pointer'}
-                  onClick={() => onClickLike(comment.id)}
-                >
-                  <span className={'flex text-gray-light text-[0.7rem] mr-1'}>좋아요</span>
-                  {isLikeClick[comment.id] ? (
-                    <BsHeartFill
-                      className={'flex text-[0.8rem] text-[#FF5733] mr-1.5 mt-1 cursor-pointer'}
-                    />
-                  ) : (
-                    <BsHeart
-                      className={'flex text-[0.8rem] text-gray-light mr-1.5 mt-1 cursor-pointer'}
-                    />
-                  )}
-                  {countChildLike[comment.id] !== undefined && (
-                    <span className={'text-[0.8rem] text-gray-light ml-0.5'}>{`${
-                      countChildLike[comment.id]
-                    }개`}</span>
-                  )}
-                </div>
-                <span
-                  className={'flex text-gray-light ml-2 text-[0.7rem] cursor-pointer'}
-                  onClick={() => onClickChild(comment.id)}
-                >
-                  답글 달기
-                </span>
-              </div>
-              {/*대댓글 */}
-              <PostChildComment
-                commentList={commentList}
-                commentId={comment.id}
-                isChildClick={isChildClick[comment.id]}
-              />
-            </div>
-          );
-        })}
+            );
+          })}
       {/*댓글 작성 input */}
       <div
         className={

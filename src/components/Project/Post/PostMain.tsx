@@ -1,10 +1,10 @@
 import { BsFillMegaphoneFill } from 'react-icons/bs';
-import { Post, PostLikeList } from '@/typings/post.ts';
+import { CommentLikeList, Post, PostLikeList } from '@/typings/post.ts';
 import PostEach from '@/components/Project/Post/PostEach.tsx';
 import { useQuery } from 'react-query';
 import { menuListData } from '@/recoil/Project/Menu.ts';
 import { useParams } from 'react-router-dom';
-import { menuPostList, postLikeList } from '@/api/Project/Post.ts';
+import { commentLikeList, menuPostList, postLikeList } from '@/api/Project/Post.ts';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 
@@ -15,6 +15,8 @@ export default function PostMain() {
   const [noticePostInfo, setNoticePostInfo] = useState<Post>();
   const [posts, setPosts] = useState<Post[]>();
   const [likeList, setLikeList] = useState<PostLikeList[]>();
+  const [commentLike, setCommentLike] = useState<CommentLikeList[]>();
+
   // menuId 찾기
   const menuList = useRecoilValue(menuListData);
   const menuId = menuList.find((menu) => menu.menuName === menutitle)?.id;
@@ -41,6 +43,15 @@ export default function PostMain() {
     },
   });
 
+  // 멤버 댓글 좋아요 리스트
+  const { data: commentList } = useQuery(['commentLikeList'], () => commentLikeList(), {
+    onSuccess: (data) => {
+      if (typeof data !== 'string') {
+        setCommentLike(data);
+      }
+    },
+  });
+
   useEffect(() => {
     if (menuId !== undefined) refetch();
   }, [menutitle, menuId]);
@@ -59,6 +70,7 @@ export default function PostMain() {
           post={noticePostInfo}
           menuId={menuId!}
           likeList={likeList!}
+          commentLike={commentLike!}
           noticeId={noticePostInfo.id}
         />
       )}
@@ -73,6 +85,7 @@ export default function PostMain() {
               post={post}
               menuId={menuId!}
               likeList={likeList!}
+              commentLike={commentLike!}
               noticeId={noticePostInfo.id}
             />
           )
@@ -81,7 +94,13 @@ export default function PostMain() {
       {/*noticePost가 없으면 그냥 posts만 보여줌*/}
       {posts &&
         posts.map((post) => (
-          <PostEach key={post.id} post={post} menuId={menuId!} likeList={likeList!} />
+          <PostEach
+            key={post.id}
+            post={post}
+            menuId={menuId!}
+            likeList={likeList!}
+            commentLike={commentLike!}
+          />
         ))}
     </section>
   );
