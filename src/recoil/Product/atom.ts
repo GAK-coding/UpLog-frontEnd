@@ -61,55 +61,55 @@ export const productListData = atom<ProductInfo[]>({
 export const productMemberList = atom<ProductMember[]>({
   key: 'productMemberList',
   default: [
-    {
-      position: 'master',
-      profile: null,
-      nickName: 'Crong',
-      name: '권오현',
-      email: 'qhslsl@gmail.com',
-      id: 1,
-      isOpen: false,
-    },
-    {
-      position: 'leader',
-      profile: 'https://tech.cloudmt.co.kr/2023/02/27/juunini-why-argo/images/argo.webp',
-      nickName: 'OCI',
-      name: '오채영',
-      email: '1234@gmail.com',
-      id: 2,
-      isOpen: false,
-    },
-    {
-      position: 'leader',
-      profile: 'https://tech.cloudmt.co.kr/2023/02/27/juunini-why-argo/images/argo.webp',
-      nickName: 'Argo',
-      name: '박은령',
-      email: 'q123124@gmail.com',
-      id: 3,
-
-      isOpen: false,
-    },
-    {
-      position: 'member',
-      profile:
-        'https://w7.pngwing.com/pngs/276/1019/png-transparent-sid-sloth-scrat-ice-age-the-sloth-buckle-free-thumbnail.png',
-      nickName: '젠킨스',
-      name: '장준',
-      email: '123124@gmail.com',
-      id: 4,
-
-      isOpen: false,
-    },
-    {
-      position: 'member',
-      profile:
-        'https://w7.pngwing.com/pngs/276/1019/png-transparent-sid-sloth-scrat-ice-age-the-sloth-buckle-free-thumbnail.png',
-      nickName: '나무늘보',
-      name: '김윤정',
-      email: 'fasfs@gmail.com',
-      id: 5,
-      isOpen: false,
-    },
+    // {
+    //   powerType: 'MASTER',
+    //   profile: null,
+    //   memberNickName: 'Crong',
+    //   memberName: '권오현',
+    //   memberEmail: 'qhslsl@gmail.com',
+    //   memberId: 1,
+    //   isOpen: false,
+    // },
+    // {
+    //   powerType: 'LEADER',
+    //   profile: 'https://tech.cloudmt.co.kr/2023/02/27/juunini-why-argo/images/argo.webp',
+    //   memberNickName: 'OCI',
+    //   memberName: '오채영',
+    //   memberEmail: '1234@gmail.com',
+    //   memberId: 2,
+    //   isOpen: false,
+    // },
+    // {
+    //   powerType: 'LEADER',
+    //   profile: 'https://tech.cloudmt.co.kr/2023/02/27/juunini-why-argo/images/argo.webp',
+    //   memberNickName: 'Argo',
+    //   memberName: '박은령',
+    //   memberEmail: 'q123124@gmail.com',
+    //   memberId: 3,
+    //
+    //   isOpen: false,
+    // },
+    // {
+    //   powerType: 'DEFAULT',
+    //   profile:
+    //     'https://w7.pngwing.com/pngs/276/1019/png-transparent-sid-sloth-scrat-ice-age-the-sloth-buckle-free-thumbnail.png',
+    //   memberNickName: '젠킨스',
+    //   memberName: '장준',
+    //   memberEmail: '123124@gmail.com',
+    //   memberId: 4,
+    //
+    //   isOpen: false,
+    // },
+    // {
+    //   powerType: 'DEFAULT',
+    //   profile:
+    //     'https://w7.pngwing.com/pngs/276/1019/png-transparent-sid-sloth-scrat-ice-age-the-sloth-buckle-free-thumbnail.png',
+    //   memberNickName: '나무늘보',
+    //   memberName: '김윤정',
+    //   memberEmail: 'fasfs@gmail.com',
+    //   memberId: 5,
+    //   isOpen: false,
+    // },
     // {
     //   position: 'member',
     //   profile:

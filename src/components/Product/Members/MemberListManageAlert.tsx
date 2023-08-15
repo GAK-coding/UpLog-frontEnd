@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
 import {
   AlertDialog,
   AlertDialogBody,
@@ -8,15 +8,33 @@ import {
   AlertDialogOverlay,
   Button,
 } from '@chakra-ui/react';
+type MessageType = 'success' | 'error' | 'warning';
 
 interface Props {
   isOut: boolean;
   isOpen: boolean;
   onClose: () => void;
   nickName: string;
+  onClickChangeRoleLeader: (memberId: number) => void;
+  nowSelectedMemberId: number;
+  showMessage: (type: MessageType, content: string) => void;
 }
-export default function MemberListManageAlert({ isOut, isOpen, onClose, nickName }: Props) {
+export default function MemberListManageAlert({
+  isOut,
+  isOpen,
+  onClose,
+  nickName,
+  onClickChangeRoleLeader,
+  nowSelectedMemberId,
+  showMessage,
+}: Props) {
   const cancelRef = useRef<HTMLButtonElement>(null);
+
+  const onClickChange = useCallback(() => {
+    onClickChangeRoleLeader(nowSelectedMemberId);
+    onClose();
+    showMessage('success', '권한이 변경되었습니다.');
+  }, [nowSelectedMemberId]);
 
   return (
     <AlertDialog isCentered isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
@@ -48,7 +66,7 @@ export default function MemberListManageAlert({ isOut, isOpen, onClose, nickName
             <Button ref={cancelRef} onClick={onClose}>
               취소
             </Button>
-            <Button backgroundColor={'var(--orange)'} onClick={onClose} ml={3}>
+            <Button backgroundColor={'var(--orange)'} onClick={onClickChange} ml={3}>
               {isOut ? '방출' : '권한 부여'}
             </Button>
           </AlertDialogFooter>
