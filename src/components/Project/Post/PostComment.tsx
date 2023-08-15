@@ -168,7 +168,7 @@ export default function PostComment({ postId }: Props) {
                   <div className={'flex-col w-auto h-auto ml-3'}>
                     <span
                       className={'flex h-1/2 text-[0.93rem]'}
-                    >{`${comment.nickname}(${comment.name})`}</span>
+                    >{`${comment.nickName}(${comment.name})`}</span>
                     <span className={'flex h-1/2 text-[0.8rem] text-gray-light'}>
                       {formatCreteaDate(comment.createTime)}
                     </span>
