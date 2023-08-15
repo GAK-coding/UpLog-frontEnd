@@ -35,41 +35,6 @@ export default function Members() {
   const [isOut, setIsOut] = useState(false);
   const { showMessage, contextHolder } = useMessage();
 
-  // console.log(data);
-
-  // const { mutate } = useMutation(
-  //   () => {
-  //     let isEmailFormat = true;
-  //     const memberEmailList = emails.split(',').map((email) => {
-  //       const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
-  //       if (!emailRegex.test(email.trim())) {
-  //         isEmailFormat = false;
-  //       }
-  //       return email.trim();
-  //     });
-  //
-  //     if (!isEmailFormat) {
-  //       showMessage('warning', '이메일 형식이 올바르지 않은 메일이 존재합니다.');
-  //       return;
-  //     }
-  //
-  //     return productEdit(
-  //       {
-  //         link: 'string',
-  //         newName: null,
-  //         memberEmailList: memberEmailList,
-  //         powerType: isLeader ? 'LEADER' : 'LEADER',
-  //       },
-  //       productId
-  //     );
-  //   },
-  //   {
-  //     onSuccess: (data) => {
-  //       console.log(data);
-  //     },
-  //   }
-  // );
-
   const { mutate } = useMutation(productEdit, {
     onSuccess: (data) => {
       if (typeof data !== 'string' && data.updateResultDTO) {
@@ -99,6 +64,7 @@ export default function Members() {
         }
 
         showMessage('success', '성공적으로 초대되었습니다.');
+        setEmails('');
       }
     },
   });
