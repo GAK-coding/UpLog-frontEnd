@@ -96,17 +96,17 @@ export default function PostEach({ post, menuId, likeList, noticeId }: Props) {
   );
 
   // 스크랩 눌렀을 때
-  const onClickScrap = useCallback(
-    (postId: number) => {
-      setIsScrapClick((prevState) => ({
-        ...prevState,
-        [postId]: !prevState[postId],
-      }));
-
-      // TODO : 스크랩 취소, 좋아요 눌렀을 때 api 요청 보내기
-    },
-    [isScrapClick]
-  );
+  // const onClickScrap = useCallback(
+  //   (postId: number) => {
+  //     setIsScrapClick((prevState) => ({
+  //       ...prevState,
+  //       [postId]: !prevState[postId],
+  //     }));
+  //
+  //     // TODO : 스크랩 취소, 좋아요 눌렀을 때 api 요청 보내기
+  //   },
+  //   [isScrapClick]
+  // );
 
   // 공지글로 등록
   const onClickNotice = useCallback((postId: number) => {
@@ -203,17 +203,17 @@ export default function PostEach({ post, menuId, likeList, noticeId }: Props) {
           <span className={'flex mr-3'}>{post.commentCount}</span>
         </div>
         <div className={'relative flex-row-center w-1/2 h-full justify-end cursor-pointer'}>
-          {isScrapClick[post.id] ? (
-            <AiFillStar
-              className={'flex text-[1.5rem] text-[#FFA41B] ml-1.5'}
-              onClick={() => onClickScrap(post.id)}
-            />
-          ) : (
-            <AiOutlineStar
-              className={'flex text-[1.5rem] text-gray-light ml-1.5'}
-              onClick={() => onClickScrap(post.id)}
-            />
-          )}
+          {/*{isScrapClick[post.id] ? (*/}
+          {/*  <AiFillStar*/}
+          {/*    className={'flex text-[1.5rem] text-[#FFA41B] ml-1.5'}*/}
+          {/*    onClick={() => onClickScrap(post.id)}*/}
+          {/*  />*/}
+          {/*) : (*/}
+          {/*  <AiOutlineStar*/}
+          {/*    className={'flex text-[1.5rem] text-gray-light ml-1.5'}*/}
+          {/*    onClick={() => onClickScrap(post.id)}*/}
+          {/*  />*/}
+          {/*)}*/}
           <GoKebabHorizontal
             className={'flex text-[1.3rem] text-gray-light ml-1.5'}
             onClick={() =>
@@ -260,7 +260,7 @@ export default function PostEach({ post, menuId, likeList, noticeId }: Props) {
         </div>
       </div>
       {/*댓글*/}
-      {/*<PostComment postId={post.id} />*/}
+      <PostComment postId={post.id} />
     </article>
   );
 }
