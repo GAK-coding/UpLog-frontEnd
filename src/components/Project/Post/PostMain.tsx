@@ -5,7 +5,7 @@ import { useQuery } from 'react-query';
 import { menuListData } from '@/recoil/Project/Menu.ts';
 import { useParams } from 'react-router-dom';
 import { menuPostList } from '@/api/Project/Post.ts';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 
 export default function PostMain() {
@@ -17,9 +17,10 @@ export default function PostMain() {
 
   // menuId 찾기
   const menuList = useRecoilValue(menuListData);
-  // const menuId = menuList.find((menu) => menu.menuName === menutitle)?.id;
-  const menuId = 55;
-  const { data } = useQuery(['menuPostData', menuId], () => menuPostList(menuId!), {
+  const menuId = menuList.find((menu) => menu.menuName === menutitle)?.id;
+
+  // menu별로 post 조회
+  const { refetch } = useQuery(['menuPostData', menuId], () => menuPostList(menuId!), {
     onSuccess: (data) => {
       if (typeof data !== 'string') {
         setPosts(data['posts']);
@@ -28,7 +29,12 @@ export default function PostMain() {
         }
       }
     },
+    enabled: false,
   });
+
+  useEffect(() => {
+    if (menuId !== undefined) refetch();
+  }, [menutitle, menuId]);
 
   return (
     <section className={'flex-col-center justify-start w-[75%] h-auto mb-12 '}>

@@ -13,13 +13,12 @@ import useInput from '@/hooks/useInput.ts';
 import { Select } from 'antd';
 import { menuListData } from '@/recoil/Project/Menu.ts';
 import { SelectMenu } from '@/typings/menu.ts';
-import { PostBody, Post } from '@/typings/post.ts';
+import { Post, PostBody } from '@/typings/post.ts';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import PostEditor from '@/components/Common/PostEditor.tsx';
 import TagInput from '@/components/Project/Post/TagInput.tsx';
 import { editorPost, themeState } from '@/recoil/Common/atom.ts';
-import { eachMenuPost, postTagList } from '@/recoil/Project/Post.ts';
 import { useMutation, useQuery } from 'react-query';
 import { createPost, eachPost } from '@/api/Project/Post.ts';
 
@@ -164,11 +163,6 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
   useEffect(() => {
     if (isEdit) {
       refetch;
-      // setPostName(filteredPost!.title);
-      // setPostType({ postType: filteredPost!.postType });
-      // setPostMenu(filteredPost!.menuId);
-      // setPostContent(filteredPost!.content);
-      // setPostTag(filteredPost.tagList);
       return;
     }
 
@@ -177,7 +171,7 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
     setPostMenu(-1);
     // setPostContent('');
     // setPostTag([]);
-  }, [isOpen]);
+  }, [isOpen, isEdit, post]);
 
   return (
     <Modal isCentered onClose={onClose} isOpen={isOpen}>

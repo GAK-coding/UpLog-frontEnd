@@ -163,13 +163,9 @@ export default function PostEach({ post }: Props) {
                 'absolute top-[2.2rem] flex-col-center w-[4rem] h-[5.5rem] bottom-5 task-detail-border cursor-pointer text-[0.5rem] text-gray-dark'
               }
             >
-              <button
-                className={'flex-row-center w-full h-1/3 hover:bg-orange-light-sideBar'}
-                onClick={() => onOpenModal()}
-              >
-                수정
+              <button className={'flex-row-center w-full h-1/3 hover:bg-orange-light-sideBar'}>
+                <span onClick={() => onOpenModal()}>수정</span>
               </button>
-              <PostModal isOpen={isOpenModal} onClose={onCloseModal} post={post.id} isEdit={true} />
               <button
                 className={'flex-row-center w-full h-1/3 hover:bg-orange-light-sideBar'}
                 onClick={() => onClickNotice(post.id)}
@@ -182,6 +178,7 @@ export default function PostEach({ post }: Props) {
               >
                 삭제
               </button>
+              <PostModal isOpen={isOpenModal} onClose={onCloseModal} post={post.id} isEdit={true} />
               <DeleteDialog
                 isOpen={isOpenDialog}
                 onClose={onCloseDialog}
