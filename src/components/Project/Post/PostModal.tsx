@@ -62,7 +62,7 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
   const [postName, onChangePostName, setPostName] = useInput('');
   const [postMenu, setPostMenu] = useState(-1);
   const [postType, setPostType] = useState<PostType>({ postType: null });
-  const [postContent, setPostContent] = useState<string>(recoilPostcontent);
+  const [postContent, setPostContent] = useState<string>();
   // const [postTag, setPostTag] = useRecoilState(postTagList);
   const [createData, setCreateData] = useState<PostBody>({
     title: '',
@@ -99,6 +99,7 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
     },
     enabled: false,
   });
+
   const handleChange = (type: string) => (value: { value: string; label: React.ReactNode }) => {
     if (type === 'menuId') {
       setPostMenu(+value.value);
@@ -162,7 +163,7 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
   // 모달창이 새로 열릴 때 마다 값 초기화
   useEffect(() => {
     if (isEdit) {
-      refetch;
+      refetch();
       return;
     }
 
@@ -191,7 +192,7 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
           bg={'var(--white)'}
           color={'var(--black)'}
         >
-          Post 생성
+          {isEdit ? 'Post 수정' : 'Post 생성'}
         </ModalHeader>
         <ModalCloseButton
           fontSize={'1rem'}
@@ -229,26 +230,28 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
                       className={'ml-3 h-4 border-solid border-r border-[0.2px] border-gray-border'}
                     />
                   </div>
-                  <Select
-                    labelInValue
-                    defaultValue={
-                      isEdit
-                        ? {
-                            value: `${postData!.menuId}`,
-                            label: `${postData!.menuName}`,
-                          }
-                        : { value: '-1', label: '메뉴 선택' }
-                    }
-                    onChange={handleChange('menuId')}
-                    style={{ width: 100 }}
-                    bordered={false}
-                    options={menuNameList}
-                    dropdownStyle={{
-                      backgroundColor: 'var(--gray-sideBar)',
-                      color: 'var(--black)',
-                      borderColor: 'var(--border-line)',
-                    }}
-                  />
+                  {postData && (
+                    <Select
+                      labelInValue
+                      defaultValue={
+                        isEdit
+                          ? {
+                              value: `${postData!.menuId}`,
+                              label: `${postData!.menuName}`,
+                            }
+                          : { value: '-1', label: '메뉴 선택' }
+                      }
+                      onChange={handleChange('menuId')}
+                      style={{ width: 100 }}
+                      bordered={false}
+                      options={menuNameList}
+                      dropdownStyle={{
+                        backgroundColor: 'var(--gray-sideBar)',
+                        color: 'var(--black)',
+                        borderColor: 'var(--border-line)',
+                      }}
+                    />
+                  )}
                 </div>
 
                 {/* 타입 | select */}
@@ -263,26 +266,28 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
                       className={'ml-3 h-4 border-solid border-r border-[0.2px] border-gray-border'}
                     />
                   </div>
-                  <Select
-                    labelInValue
-                    defaultValue={
-                      isEdit
-                        ? {
-                            value: `${postData!.postType}`,
-                            label: `${postData!.postType ?? '타입 선택'}`,
-                          }
-                        : { value: '', label: '타입 선택' }
-                    }
-                    onChange={handleChange('type')}
-                    style={{ width: 100 }}
-                    bordered={false}
-                    options={typeList}
-                    dropdownStyle={{
-                      backgroundColor: 'var(--gray-sideBar)',
-                      color: 'var(--black)',
-                      borderColor: 'var(--border-line)',
-                    }}
-                  />
+                  {postData && (
+                    <Select
+                      labelInValue
+                      defaultValue={
+                        isEdit
+                          ? {
+                              value: `${postData!.postType}`,
+                              label: `${postData!.postType ?? '타입 선택'}`,
+                            }
+                          : { value: '', label: '타입 선택' }
+                      }
+                      onChange={handleChange('type')}
+                      style={{ width: 100 }}
+                      bordered={false}
+                      options={typeList}
+                      dropdownStyle={{
+                        backgroundColor: 'var(--gray-sideBar)',
+                        color: 'var(--black)',
+                        borderColor: 'var(--border-line)',
+                      }}
+                    />
+                  )}
                 </div>
               </section>
               <div className={'w-full border-b border-gray-spring'} />
