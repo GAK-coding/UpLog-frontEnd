@@ -29,7 +29,6 @@ export default function PostEach({ post, menuId, likeList, noticeId }: Props) {
   const [isScrapClick, setIsScrapClick] = useState<{ [key: number]: boolean }>({});
   const [isClickKebab, setIsClickKebab] = useState<{ [key: number]: boolean }>({});
 
-  const [isInList, setIsInList] = useState<{ [key: number]: boolean }>({});
   const queryClient = useQueryClient();
 
   // 공지글 등록
@@ -48,7 +47,7 @@ export default function PostEach({ post, menuId, likeList, noticeId }: Props) {
   const { mutate: unNoticePostMutate } = useMutation(() => unNoticePost(menuId), {
     onSuccess: (data) => {
       if (typeof data !== 'string' && 'id' in data) {
-        showMessage('success', '공지글이 해제 되었습니다..');
+        showMessage('success', '공지글이 해제 되었습니다.');
       } else showMessage('error', '공지글 해제에 실패했습니다.');
     },
     onSettled: () => {
@@ -56,36 +55,33 @@ export default function PostEach({ post, menuId, likeList, noticeId }: Props) {
     },
   });
 
+  // 좋아요 개수 get
+  const { data: likeData, refetch } = useQuery(
+    ['postLike', post.id],
+    () => postLikeCount(post.id),
+    {
+      enabled: false,
+    }
+  );
+
   // 좋아요 클릭
   const { mutate: postLikeMutate } = useMutation(() => postLike(post.id), {
-    onMutate: async () => {
-      await queryClient.cancelQueries(['postLike', post.id]);
-
-      const previousData = queryClient.getQueryData(['postLike', post.id]);
-
-      const newPostData = {
-        cnt: isLikeClick[post.id] ? post.likeCount - 1 : post.likeCount + 1,
-      };
-
-      queryClient.setQueryData(['postLike', post.id], newPostData);
-
-      return () => queryClient.setQueryData(['postLike', post.id], previousData);
-    },
     onSuccess: (data) => {
-      if (typeof data !== 'string' && 'cnt' in data)
-        isLikeClick[post.id] ? showMessage('success', '🥲🥲') : showMessage('success', '😍️😍');
+      if (typeof data !== 'string' && 'cnt' in data) {
+        if (likeList.some((likePost) => likePost.id === post.id)) {
+          showMessage('success', '🥲🥲');
+        } else {
+          showMessage('success', '😍️😍');
+        }
+      }
     },
     onSettled: () => {
-      return queryClient.invalidateQueries(['postLike', post.id], { refetchInactive: true });
+      // 멤버가 누른 좋아요 리스트 다시 조회
+      refetch();
+      return queryClient.invalidateQueries(['postLikeList']);
     },
   });
 
-  // 좋아요 개수 get
-  const { data, refetch } = useQuery(['postLike', post.id], () => postLikeCount(post.id), {
-    enabled: false,
-  });
-
-  // TODO : 좋아요, 스크랩 클릭 초기 값 멤버마다 다르게 설정해서 해야함
   // 좋아요 눌렀을 때
   const onClickLike = useCallback(
     (postId: number) => {
@@ -95,7 +91,6 @@ export default function PostEach({ post, menuId, likeList, noticeId }: Props) {
       }));
 
       postLikeMutate();
-      refetch;
     },
     [isLikeClick]
   );
@@ -189,7 +184,7 @@ export default function PostEach({ post, menuId, likeList, noticeId }: Props) {
       {/*좋아요, 댓글, 스크랩, 케밥 버튼*/}
       <div className={'flex-row-center justify-between w-[75%] h-[2.5rem] px-2'}>
         <div className={'flex-row-center justify-start w-1/2 h-full text-gray-dark'}>
-          {likeList.some((likePost) => likePost.id === post.id) || isLikeClick[post.id] ? (
+          {likeList.some((likePost) => likePost.id === post.id) ? (
             <BsHeartFill
               className={'flex text-[1.5rem] text-[#FF5733] mr-1.5 mt-1 cursor-pointer scale-110'}
               onClick={() => onClickLike(post.id)}
@@ -202,9 +197,8 @@ export default function PostEach({ post, menuId, likeList, noticeId }: Props) {
               onClick={() => onClickLike(post.id)}
             />
           )}
-          <span className={'flex mr-4'}>
-            {isLikeClick[post.id] ? post.likeCount + 1 : post.likeCount}
-          </span>
+
+          <span className={'flex mr-4'}>{likeData ?? post.likeCount}</span>
           <BsChat className={'flex text-[1.5rem] text-gray-light mr-1.5'} />
           <span className={'flex mr-3'}>{post.commentCount}</span>
         </div>
