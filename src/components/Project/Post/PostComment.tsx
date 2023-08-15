@@ -5,7 +5,7 @@ import { BsHeart, BsHeartFill } from 'react-icons/bs';
 import useInput from '@/hooks/useInput.ts';
 import PostChildComment from '@/components/Project/Post/PostChildComment.tsx';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { createComment, postCommentList } from '@/api/Project/Post.ts';
+import { createComment, deleteComment, postCommentList } from '@/api/Project/Post.ts';
 import { CommentBody, CommentInfo } from '@/typings/post.ts';
 import { useMessage } from '@/hooks/useMessage.ts';
 import { SaveUserInfo } from '@/typings/member.ts';
@@ -80,6 +80,42 @@ export default function PostComment({ postId }: Props) {
       }
     },
   });
+
+  // 댓글 삭제
+  const { mutate: deleteCommentMutate } = useMutation(
+    (commentId: number) => deleteComment(commentId),
+    {
+      onMutate: async (commentId) => {
+        await queryClient.cancelQueries(['commentList', postId]);
+
+        const previousData: CommentInfo[] | undefined = queryClient.getQueryData([
+          'commentList',
+          postId,
+        ]);
+
+        const newCommentData = previousData?.filter((comment) => comment.id !== commentId);
+        queryClient.setQueryData(['commentList', postId], newCommentData);
+
+        return () => queryClient.setQueryData(['commentList', postId], previousData);
+      },
+      onSuccess: (data) => {
+        if (typeof data === 'string' && data === 'DELETE OK') {
+          showMessage('success', '댓글이 삭제되었습니다.');
+        }
+      },
+      onError: (error, value, rollback) => {
+        if (rollback) {
+          rollback();
+          showMessage('error', '댓글 삭제에 실패했습니다.');
+        } else {
+          showMessage('error', '댓글 삭제에 실패했습니다.');
+        }
+      },
+      onSettled: () => {
+        return queryClient.invalidateQueries(['commentList', postId]);
+      },
+    }
+  );
 
   // 댓글 좋아요 눌렀을 때
   const onClickLike = useCallback(
@@ -180,8 +216,13 @@ export default function PostComment({ postId }: Props) {
                   </div>
                   {userInfo.id === comment.memberId && (
                     <div className={'flex justify-between w-[4rem] text-[0.8rem] text-gray-light'}>
-                      <span className={'cursor-pointer'}>수정</span>
-                      <span className={'cursor-pointer'}>삭제</span>
+                      <span className={'cursor-pointer hover:text-orange'}>수정</span>
+                      <span
+                        className={'cursor-pointer hover:text-orange'}
+                        onClick={() => deleteCommentMutate(comment.id)}
+                      >
+                        삭제
+                      </span>
                     </div>
                   )}
                 </div>
