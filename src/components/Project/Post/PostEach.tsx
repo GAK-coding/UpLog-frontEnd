@@ -1,4 +1,4 @@
-import { PostData } from '@/typings/postData.ts';
+import { Post } from '@/typings/post.ts';
 import { formatCreteaDate } from '@/utils/fotmatCreateDate.ts';
 import PostModal from '@/components/Project/Post/PostModal.tsx';
 import DeleteDialog from '@/components/Common/DeleteDialog.tsx';
@@ -11,7 +11,7 @@ import { FaUserCircle } from 'react-icons/fa';
 import { useDisclosure } from '@chakra-ui/react';
 
 interface Props {
-  post: PostData;
+  post: Post;
 }
 export default function PostEach({ post }: Props) {
   const { isOpen: isOpenModal, onOpen: onOpenModal, onClose: onCloseModal } = useDisclosure();
@@ -193,7 +193,7 @@ export default function PostEach({ post }: Props) {
         </div>
       </div>
       {/*댓글*/}
-      <PostComment postId={post.id} />
+      {/*<PostComment postId={post.id} />*/}
     </article>
   );
 }

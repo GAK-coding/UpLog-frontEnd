@@ -1,11 +1,11 @@
 import { AxiosResponse } from 'axios';
-import { FailPost, PostBody, PostData, Posts } from '@/typings/postData.ts';
+import { FailPost, PostBody, Post, Posts } from '@/typings/post.ts';
 import { instance } from '@/api';
 
 // post 생성
 export const createPost = async (data: PostBody) => {
   try {
-    const res: AxiosResponse<PostData | FailPost> = await instance.post('/posts', data);
+    const res: AxiosResponse<Post | FailPost> = await instance.post('/posts', data);
     return res.data;
   } catch (error) {
     console.log(error);
@@ -16,7 +16,7 @@ export const createPost = async (data: PostBody) => {
 // post 단일조회
 export const eachPost = async (postId: number) => {
   try {
-    const res: AxiosResponse<PostData> = await instance.get(`/posts/${postId}`);
+    const res: AxiosResponse<Post> = await instance.get(`/posts/${postId}`);
     return res.data;
   } catch (error) {
     console.log(error);
@@ -27,7 +27,7 @@ export const eachPost = async (postId: number) => {
 // post menu별 조회
 export const menuPostList = async (menuId: number) => {
   try {
-    const res: AxiosResponse<Posts> = await instance.get(`/posts/menus/${menuId}`);
+    const res: AxiosResponse<Posts> = await instance.get(`/menus/${menuId}/posts`);
     return res.data;
   } catch (error) {
     console.log(error);

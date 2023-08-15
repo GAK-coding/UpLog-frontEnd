@@ -13,15 +13,15 @@ import useInput from '@/hooks/useInput.ts';
 import { Select } from 'antd';
 import { menuListData } from '@/recoil/Project/Menu.ts';
 import { SelectMenu } from '@/typings/menu.ts';
-import { PostBody, PostData } from '@/typings/postData.ts';
+import { PostBody, Post } from '@/typings/post.ts';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import PostEditor from '@/components/Common/PostEditor.tsx';
 import TagInput from '@/components/Project/Post/TagInput.tsx';
 import { editorPost, themeState } from '@/recoil/Common/atom.ts';
 import { eachMenuPost, postTagList } from '@/recoil/Project/Post.ts';
-import { useMutation } from 'react-query';
-import { createPost } from '@/api/Project/Post.ts';
+import { useMutation, useQuery } from 'react-query';
+import { createPost, eachPost } from '@/api/Project/Post.ts';
 
 interface Props {
   isOpen: boolean;
@@ -38,9 +38,10 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
   const { showMessage, contextHolder } = useMessage();
 
   // TODO : post id로 post data 가져오는 api 연결해서 값 설정하는걸로 바꿀거임
-  const postData = useRecoilValue(eachMenuPost);
-  const posts = postData.posts as PostData[];
-  const filteredPost = posts.filter((item) => item.id === post)[0];
+  const [postData, setPostData] = useState<Post>();
+  // const posts = postData.posts as Post[];
+  // const filteredPost = posts.filter((item) => item.id === post)[0];
+  // const filteredPost: Post | undefined = postData['posts'].find((item) => item.id === post);
 
   // 메뉴 list
   const menuList = useRecoilValue(menuListData);
@@ -82,6 +83,20 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
       } else if (typeof data !== 'string' && 'message' in data) {
         showMessage('warning', data.message);
       } else showMessage('error', 'Post 생성에 실패했습니다.');
+    },
+  });
+
+  // post 단일 조회
+  const { refetch } = useQuery(['getEachPost', post], () => eachPost(post!), {
+    onSuccess: (data) => {
+      if (typeof data === 'object' && 'id' in data) {
+        setPostData(data);
+        setPostName(data.title);
+        setPostMenu(data.menuId);
+        setPostType({ postType: data.postType });
+        setPostContent(data.content);
+        // setPostTag(data.tagList);
+      }
     },
   });
   const handleChange = (type: string) => (value: { value: string; label: React.ReactNode }) => {
@@ -147,14 +162,15 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
   // 모달창이 새로 열릴 때 마다 값 초기화
   useEffect(() => {
     if (isEdit) {
-      setPostName(filteredPost.title);
-      setPostType({ postType: filteredPost.postType });
-      setPostMenu(filteredPost.menuId);
-      setPostContent(filteredPost.content);
+      refetch;
+      // setPostName(filteredPost!.title);
+      // setPostType({ postType: filteredPost!.postType });
+      // setPostMenu(filteredPost!.menuId);
+      // setPostContent(filteredPost!.content);
       // setPostTag(filteredPost.tagList);
-
       return;
     }
+
     setPostName('');
     setPostType({ postType: null });
     setPostMenu(-1);
@@ -223,8 +239,8 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
                     defaultValue={
                       isEdit
                         ? {
-                            value: `${filteredPost.menuId}`,
-                            label: `${filteredPost.menuName}`,
+                            value: `${postData!.menuId}`,
+                            label: `${postData!.menuName}`,
                           }
                         : { value: '-1', label: '메뉴 선택' }
                     }
@@ -257,8 +273,8 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
                     defaultValue={
                       isEdit
                         ? {
-                            value: `${filteredPost.postType}`,
-                            label: `${filteredPost.postType ?? '타입 선택'}`,
+                            value: `${postData!.postType}`,
+                            label: `${postData!.postType ?? '타입 선택'}`,
                           }
                         : { value: '', label: '타입 선택' }
                     }
