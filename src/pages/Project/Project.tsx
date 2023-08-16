@@ -327,7 +327,7 @@ export default function Project() {
       </div>
 
       {/*보드*/}
-      <div className={'w-noneSideBar h-board flex-col'}>
+      <div className={'w-noneSideBar h-board flex-col pt-4'}>
         <section className={'flex-col-center w-noneSideBar h-[90%]'}>
           {/*dnd*/}
           <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
