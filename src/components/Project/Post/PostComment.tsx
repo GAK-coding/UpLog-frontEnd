@@ -35,10 +35,10 @@ export default function PostComment({ postId, menuId }: Props) {
   const [commentList, setCommentList] = useState<CommentInfo[]>();
   const [commentId, setCommentId] = useState<number>(0);
   // const [likeCnt, setLikeCnt] = useState<{ [key: number]: number }>({});
-  //
-  const [isEditComment, setIsEditComment] = useState<{ [key: number]: boolean }>({});
-  const [editCommentValue, setEditCommentValue] = useState<string>('');
-  const [editContent, onChangeEditContent, setEditContent] = useInput('');
+
+  // const [isEditComment, setIsEditComment] = useState<{ [key: number]: boolean }>({});
+  // const [editCommentValue, setEditCommentValue] = useState<string>('');
+  // const [editContent, onChangeEditContent, setEditContent] = useInput('');
 
   // const [isLikeClick, setIsLikeClick] = useState<{ [key: number]: boolean }>({});
   // const [isChildClick, setIsChildClick] = useState<{ [key: number]: boolean }>({});
@@ -144,51 +144,6 @@ export default function PostComment({ postId, menuId }: Props) {
     },
   });
 
-  // 댓글 수정
-  const { mutate: editCommentMutate } = useMutation(
-    (commentId: number) => updateComment(commentId, editCommentValue[commentId]),
-    {
-      onMutate: async (commentId: number) => {
-        await queryClient.cancelQueries(['commentList', postId]);
-
-        const previousData: CommentInfo[] | undefined = queryClient.getQueryData([
-          'commentList',
-          postId,
-        ]);
-
-        const newCommentData = previousData?.map((comment) => {
-          if (comment.id === commentId) {
-            return {
-              ...comment,
-              content: editCommentValue[commentId],
-            };
-          }
-          return comment;
-        });
-
-        queryClient.setQueryData(['commentList', postId], newCommentData);
-
-        return () => queryClient.setQueryData(['commentList', postId], previousData);
-      },
-      onSuccess: (data) => {
-        if (typeof data !== 'string') {
-          showMessage('success', '댓글이 수정되었습니다.');
-        } else showMessage('error', '댓글 수정에 실패했습니다.');
-      },
-      onError: (error, value, rollback) => {
-        if (rollback) {
-          rollback();
-          showMessage('error', '댓글 수정에 실패했습니다.');
-        } else {
-          showMessage('error', '댓글 수정에 실패했습니다.');
-        }
-      },
-      onSettled: () => {
-        return queryClient.invalidateQueries(['commentList', postId]);
-      },
-    }
-  );
-
   // console.log('여기', data);
   // // 댓글 좋아요 개수
   // const commentLikeCnt = useQueries(
@@ -264,39 +219,6 @@ export default function PostComment({ postId, menuId }: Props) {
     }
   };
 
-  // 댓글 수정 요청
-  const activeEditComment = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    // 한글 짤림 방지
-    if (e.nativeEvent.isComposing) return;
-
-    // Enter 입력 시 댓글 추가
-    if (e.key === 'Enter') {
-      setEditCommentValue(editContent);
-      setEditCheck(true);
-      console.log(editContent);
-      setEditContent('');
-    }
-
-    setCommentId(commentId);
-    setIsEditComment((prevState) => ({
-      ...prevState,
-      [commentId]: !prevState[commentId],
-    }));
-  };
-
-  useEffect(() => {
-    if (editCheck) {
-      if (editCommentValue === '') {
-        showMessage('warning', '댓글을 입력해주세요.');
-        return;
-      }
-
-      editCommentMutate(commentId);
-      setEditCheck(false);
-      setEditCommentValue('');
-    }
-  }, [editCheck]);
-
   // 댓글 생성요청 + 데이터 초기화
   useEffect(() => {
     if (check) {
@@ -351,18 +273,6 @@ export default function PostComment({ postId, menuId }: Props) {
                     <div className={'flex justify-between w-[4rem] text-[0.8rem] text-gray-light'}>
                       <span
                         className={'cursor-pointer hover:text-orange'}
-                        onClick={() => {
-                          setIsEditComment((prevState) => ({
-                            ...prevState,
-                            [comment.id]: !prevState[comment.id],
-                          }));
-                          setEditContent(comment.content);
-                        }}
-                      >
-                        수정
-                      </span>
-                      <span
-                        className={'cursor-pointer hover:text-orange'}
                         onClick={() => deleteCommentMutate(comment.id)}
                       >
                         삭제
@@ -371,26 +281,9 @@ export default function PostComment({ postId, menuId }: Props) {
                   )}
                 </div>
                 {/*댓글 내용*/}
-                {isEditComment[comment.id] ? (
-                  <div className={'flex w-full ml-[5.5rem] mb-1 text-[1rem]'}>
-                    <input
-                      type="text"
-                      value={editContent}
-                      onChange={onChangeEditContent}
-                      placeholder={'댓글을 입력해주세요.'}
-                      maxLength={30}
-                      className={'flex w-full h-full outline-none rounded-2xl bg-amber-400'}
-                      onKeyDown={(e) => {
-                        activeEditComment(e);
-                        setCommentId(comment.id);
-                      }}
-                    />
-                  </div>
-                ) : (
-                  <span className={'flex w-full ml-[5.5rem] mb-1 text-[1rem] font-bold'}>
-                    {comment.content}
-                  </span>
-                )}
+                <span className={'flex w-full ml-[5.5rem] mb-1 text-[1rem] font-bold'}>
+                  {comment.content}
+                </span>
                 {/*<span className={'flex w-full ml-[5.5rem] mb-1 text-[1rem] font-bold'}>*/}
                 {/*  {comment.content}*/}
                 {/*</span>*/}
