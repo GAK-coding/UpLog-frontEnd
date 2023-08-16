@@ -347,10 +347,7 @@ export default function Members() {
                           {member.powerType === 'LEADER' && (
                             <PiCrownSimpleFill className={'fill-orange'} />
                           )}
-                          {member.powerType === 'CLIENT' && userInfo.position === 'COMPANY' && (
-                            <HiOutlineBuildingOffice className={'fill-gray-light'} />
-                          )}
-                          {member.powerType === 'CLIENT' && userInfo.position !== 'COMPANY' && (
+                          {member.powerType === 'CLIENT' && (
                             <BsPeopleFill className={'fill-gray-light'} />
                           )}
                         </span>
