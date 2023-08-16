@@ -23,6 +23,7 @@ export interface Posts {
 }
 
 export interface PostBody extends Pick<Post, 'title' | 'content' | 'menuId' | 'postType'> {
+  tagContents: string[];
   productId: number;
   projectId: number;
 }
