@@ -6,8 +6,8 @@ import Tables from '@/components/Product/ReleaseNote/Tables.tsx';
 import ProjectModal from '@/components/Product/ReleaseNote/ProjectModal.tsx';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useGetAllProduct } from '@/components/Product/hooks/useGetAllProduct.ts';
-import { useMutation, useQueries } from 'react-query';
-import { createProject, getAllProductProjects } from '@/api/Project/Version.ts';
+import { useQueries } from 'react-query';
+import { getAllProductProjects } from '@/api/Project/Version.ts';
 import { useRecoilState } from 'recoil';
 import { eachProductProjects } from '@/recoil/Project/atom.ts';
 import { useMessage } from '@/hooks/useMessage.ts';
@@ -79,12 +79,12 @@ export default function ReleaseNote() {
   // ];
 
   const [projects, setProjects] = useRecoilState(eachProductProjects);
-  const { productId, productName }: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
+  const nowProduct: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
 
   const queryResults = useQueries([
     {
-      queryKey: ['getAllProductProjects', productId],
-      queryFn: () => getAllProductProjects(productId),
+      queryKey: ['getAllProductProjects', nowProduct?.productId],
+      queryFn: () => getAllProductProjects(nowProduct?.productId),
       staleTime: 300000, // 5분
       cacheTime: 600000, // 10분
       refetchOnMount: false, // 마운트(리렌더링)될 때 데이터를 다시 가져오지 않음
@@ -148,7 +148,7 @@ export default function ReleaseNote() {
       <div className={'min-w-[30em] flex justify-between mb-4'}>
         <span className={'flex items-center'}>
           <img src="/images/test.jpeg" alt={'제품 사진'} className={'w-12 h-12 mr-4'} />
-          <span className={'text-[2.4rem] font-bold'}>{productName}</span>
+          <span className={'text-[2.4rem] font-bold'}>{nowProduct?.productName}</span>
         </span>
         <button
           className={'mr-2 text-gray-dark font-bold underline self-end'}

@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useRef } from 'react';
-import { useMessage } from '@/hooks/useMessage.ts';
 import {
   Modal,
   ModalBody,
@@ -37,7 +36,7 @@ export default function ProjectModal({
   showMessage,
   nowProjectId,
 }: Props) {
-  const { productId }: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
+  const nowProduct: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
   const queryClient = useQueryClient();
 
   // 프로젝트 추가에서는 프로젝트 이름, 완료에서는 최종 버전
@@ -52,11 +51,11 @@ export default function ProjectModal({
       }
     },
     onMutate: async ({ version }) => {
-      await queryClient.cancelQueries(['getAllProductProjects', productId]);
+      await queryClient.cancelQueries(['getAllProductProjects', nowProduct?.productId]);
 
-      const snapshot = queryClient.getQueryData(['getAllProductProjects', productId]);
+      const snapshot = queryClient.getQueryData(['getAllProductProjects', nowProduct?.productId]);
 
-      queryClient.setQueriesData(['getAllProductProjects', productId], () => {
+      queryClient.setQueriesData(['getAllProductProjects', nowProduct?.productId], () => {
         const temp: Release[] = [...projects, { version, projectStatus: 'PROGRESS_IN', id: -1 }];
 
         return temp;
@@ -65,20 +64,23 @@ export default function ProjectModal({
       return { snapshot };
     },
     onError: (error, newTodo, context) => {
-      queryClient.setQueriesData(['getAllProductProjects', productId], context?.snapshot);
+      queryClient.setQueriesData(
+        ['getAllProductProjects', nowProduct?.productId],
+        context?.snapshot
+      );
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['getAllProductProjects', productId] });
+      queryClient.invalidateQueries({ queryKey: ['getAllProductProjects', nowProduct?.productId] });
     },
   });
 
   const { mutate: completeProjectMutate } = useMutation(completeProject, {
     onMutate: async ({ version, projectId }) => {
-      await queryClient.cancelQueries(['getAllProductProjects', productId]);
+      await queryClient.cancelQueries(['getAllProductProjects', nowProduct?.productId]);
 
-      const snapshot = queryClient.getQueryData(['getAllProductProjects', productId]);
+      const snapshot = queryClient.getQueryData(['getAllProductProjects', nowProduct?.productId]);
 
-      queryClient.setQueriesData(['getAllProductProjects', productId], () => {
+      queryClient.setQueriesData(['getAllProductProjects', nowProduct?.productId], () => {
         const temp: Release[] = projects.map((project) => {
           if (project.id === projectId) {
             return { ...project, version, projectStatus: 'PROGRESS_COMPLETE' };
@@ -92,10 +94,13 @@ export default function ProjectModal({
       return { snapshot };
     },
     onError: (error, newTodo, context) => {
-      queryClient.setQueriesData(['getAllProductProjects', productId], context?.snapshot);
+      queryClient.setQueriesData(
+        ['getAllProductProjects', nowProduct?.productId],
+        context?.snapshot
+      );
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['getAllProductProjects', productId] });
+      queryClient.invalidateQueries({ queryKey: ['getAllProductProjects', nowProduct?.productId] });
     },
   });
 
@@ -106,7 +111,7 @@ export default function ProjectModal({
     }
 
     //TODO: url 수정 필요
-    createProjectMutate({ productId, version: `${text}(임시)`, link: '/' });
+    createProjectMutate({ productId: nowProduct?.productId, version: `${text}(임시)`, link: '/' });
     showMessage('success', '프로젝트가 생성되었습니다!');
     onClose();
     setText('');

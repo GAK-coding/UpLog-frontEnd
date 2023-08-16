@@ -1,10 +1,10 @@
 import { instance } from '@/api';
 import { AxiosResponse } from 'axios';
-import { Products } from '@/typings/project.ts';
+import { Project, ProjectGroup } from '@/typings/project.ts';
 
 export const getAllProductProjects = async (productId: number) => {
   try {
-    const res: AxiosResponse<Products> = await instance.get(`/products/${productId}/projects`);
+    const res: AxiosResponse<Project> = await instance.get(`/products/${productId}/projects`);
     return res.data;
   } catch (err) {
     return 'fail get all product projects';
@@ -14,7 +14,7 @@ export const getAllProductProjects = async (productId: number) => {
 export const createProject = async (data: { productId: number; version: string; link: string }) => {
   try {
     const { productId, version, link } = data;
-    const res: AxiosResponse<Products> = await instance.post(`/products/${productId}/projects`, {
+    const res: AxiosResponse<Project> = await instance.post(`/products/${productId}/projects`, {
       version,
       link,
     });
@@ -36,5 +36,15 @@ export const completeProject = async (data: { projectId: number; version: string
     return res.data;
   } catch (err) {
     return 'fail complete project';
+  }
+};
+
+export const getProjectGroups = async (projectId: number) => {
+  try {
+    const res: AxiosResponse<ProjectGroup[]> = await instance.get(`/projects/${projectId}/teams`);
+
+    return res.data;
+  } catch (err) {
+    return 'fail getProjectGroups';
   }
 };

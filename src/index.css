@@ -40,6 +40,10 @@
   .task-status-ring {
     @apply w-[2.3rem] h-[2.3rem] rounded-full border-[3px]
   }
+
+  .ellipsis{
+    @apply overflow-hidden whitespace-nowrap overflow-ellipsis break-all
+  }
 }
 
 

@@ -34,6 +34,7 @@ export default function UserProfile() {
     sessionStorage.removeItem('userInfo');
     sessionStorage.removeItem('accessToken');
     sessionStorage.removeItem('nowProduct');
+    sessionStorage.removeItem('nowProject');
     removeCookie('refreshToken', { path: '/' });
     setIsLogin(false);
     setIsProfileClick(false);

@@ -64,7 +64,7 @@ export default function Tables({
               cursor={'pointer'}
               onClick={() => {
                 const url = encodeURI(`/workspace/${product}/${version.version}`);
-                console.log(url);
+                sessionStorage.setItem('nowProject', JSON.stringify(version));
 
                 navigate(url);
               }}
@@ -76,7 +76,7 @@ export default function Tables({
               borderBottom={'1px solid var(--gray-table)'}
               textAlign={'center'}
             >
-              {version.date}
+              {version.projectStatus === 'PROGRESS_IN' ? '진행 중' : version.date}
             </Td>
             <Td
               borderTop={'1px solid var(--gray-table)'}
