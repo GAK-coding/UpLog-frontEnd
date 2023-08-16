@@ -13,6 +13,7 @@ import UserProfile from '@/components/Member/Header/UserProfile.tsx';
 import { themeState } from '@/recoil/Common/atom.ts';
 import { ProductInfo } from '@/typings/product.ts';
 import { BiChevronDown } from 'react-icons/bi';
+import * as path from 'path';
 
 export default function Header() {
   const navigate = useNavigate();
@@ -37,7 +38,6 @@ export default function Header() {
   const product = parts[2];
 
   // 로그인 여부
-  //TODO : 섹션 storage 값으로 변경하기
   const [isLogin, setIsLogin] = useRecoilState(loginStatus);
 
   // userProfile click
@@ -98,7 +98,11 @@ export default function Header() {
   return (
     <header
       className={`fixed top-0 flex-row-center justify-between pt-[0.5rem] w-full h-[5.7rem] z-50
-      ${isNoneHeader ? 'bg-none-header' : 'border-solid border-b border-header-gray'}`}
+      ${
+        isNoneHeader || pathname === '/'
+          ? 'bg-none-header'
+          : 'border-solid border-b border-header-gray'
+      }`}
     >
       {/*로고 + 글자 (메인페이지로 이동)*/}
       <div

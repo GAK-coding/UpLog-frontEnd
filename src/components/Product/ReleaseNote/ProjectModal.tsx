@@ -16,8 +16,9 @@ import { completeProject, createProject } from '@/api/Project/Version.ts';
 import { useMutation, useQueryClient } from 'react-query';
 import { ProductInfo } from '@/typings/product.ts';
 import { eachProductProjects } from '@/recoil/Project/atom.ts';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { Release } from '@/typings/project.ts';
+import { frontEndUrl } from '@/recoil/Common/atom.ts';
 type MessageType = 'success' | 'error' | 'warning';
 
 interface Props {
@@ -38,6 +39,7 @@ export default function ProjectModal({
 }: Props) {
   const nowProduct: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
   const queryClient = useQueryClient();
+  const baseUrl = useRecoilValue(frontEndUrl);
 
   // 프로젝트 추가에서는 프로젝트 이름, 완료에서는 최종 버전
   const [text, onChangeText, setText] = useInput('');
@@ -110,8 +112,11 @@ export default function ProjectModal({
       return;
     }
 
-    //TODO: url 수정 필요
-    createProjectMutate({ productId: nowProduct?.productId, version: `${text}(임시)`, link: '/' });
+    createProjectMutate({
+      productId: nowProduct?.productId,
+      version: `${text}(임시)`,
+      link: baseUrl,
+    });
     showMessage('success', '프로젝트가 생성되었습니다!');
     onClose();
     setText('');

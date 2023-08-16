@@ -31,6 +31,7 @@ export default {
           border: 'var(--border-gray)',
           sideBar: 'var(--sideBar-gray)',
           table: 'var(--table-gray)',
+          main: 'var(--main-gray)',
         },
         hover: 'var(--hover)',
         'menu-arrow': 'var(--menu-arrow)',

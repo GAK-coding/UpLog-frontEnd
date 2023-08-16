@@ -19,9 +19,10 @@ import {
   productEdit,
 } from '@/api/Product/Product.ts';
 import { SaveUserInfo } from '@/typings/member.ts';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { productMemberList } from '@/recoil/Product/atom.ts';
 import { HiOutlineBuildingOffice } from 'react-icons/hi2';
+import { frontEndUrl } from '@/recoil/Common/atom.ts';
 
 export default function Members() {
   const queryClient = useQueryClient();
@@ -37,6 +38,7 @@ export default function Members() {
   const { isOpen: isAlertOpen, onOpen: onAlertOpen, onClose: onAlertClose } = useDisclosure();
   const [nowSelectedMember, setNowSelectedMember] = useState('');
   const [nowSelectedMemberId, setNowSelectedMemberId] = useState(-1);
+  const baseUrl = useRecoilValue(frontEndUrl);
   // 방출인지 권한 위임인지
   const [isOut, setIsOut] = useState(false);
   const { showMessage, contextHolder } = useMessage();
@@ -198,8 +200,7 @@ export default function Members() {
 
     mutate({
       data: {
-        // TODO: 링크 적어야됨
-        link: 'string',
+        link: baseUrl,
         newName: null,
         memberEmailList: memberEmailList,
         powerType: isLeader ? 'LEADER' : 'DEFAULT',
