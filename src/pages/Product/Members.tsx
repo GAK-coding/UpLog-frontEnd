@@ -21,6 +21,7 @@ import {
 import { SaveUserInfo } from '@/typings/member.ts';
 import { useRecoilState } from 'recoil';
 import { productMemberList } from '@/recoil/Product/atom.ts';
+import { HiOutlineBuildingOffice } from 'react-icons/hi2';
 
 export default function Members() {
   const queryClient = useQueryClient();
@@ -346,7 +347,10 @@ export default function Members() {
                           {member.powerType === 'LEADER' && (
                             <PiCrownSimpleFill className={'fill-orange'} />
                           )}
-                          {member.powerType === 'CLIENT' && (
+                          {member.powerType === 'CLIENT' && userInfo.position === 'COMPANY' && (
+                            <HiOutlineBuildingOffice className={'fill-gray-light'} />
+                          )}
+                          {member.powerType === 'CLIENT' && userInfo.position !== 'COMPANY' && (
                             <BsPeopleFill className={'fill-gray-light'} />
                           )}
                         </span>
