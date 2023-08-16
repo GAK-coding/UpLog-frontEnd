@@ -18,10 +18,9 @@ interface Props {
   post: Post;
   menuId: number;
   likeList: PostLikeList[];
-  commentLike: CommentLikeList[];
   noticeId?: number;
 }
-export default function PostEach({ post, menuId, likeList, commentLike, noticeId }: Props) {
+export default function PostEach({ post, menuId, likeList, noticeId }: Props) {
   const { showMessage, contextHolder } = useMessage();
   const { isOpen: isOpenModal, onOpen: onOpenModal, onClose: onCloseModal } = useDisclosure();
   const { isOpen: isOpenDialog, onOpen: onOpenDialog, onClose: onCloseDialog } = useDisclosure();
@@ -74,6 +73,10 @@ export default function PostEach({ post, menuId, likeList, commentLike, noticeId
         } else {
           showMessage('success', '😍️😍');
         }
+      } else if (typeof data !== 'string' && 'message' in data) {
+        showMessage('warning', data.message);
+      } else {
+        showMessage('error', '좋아요 실패');
       }
     },
     onSettled: () => {
@@ -117,7 +120,7 @@ export default function PostEach({ post, menuId, likeList, commentLike, noticeId
   return (
     <article
       className={
-        'flex-col-center justify-start w-full h-auto border border-gray-light py-[1.8rem] px-[3.3rem] mb-12'
+        'flex-col-center justify-start w-full h-auto border border-line bg-post-bg py-[1.8rem] px-[3.3rem] mb-12'
       }
     >
       {contextHolder}
@@ -262,7 +265,7 @@ export default function PostEach({ post, menuId, likeList, commentLike, noticeId
         </div>
       </div>
       {/*댓글*/}
-      <PostComment postId={post.id} commentLikeData={commentLike} />
+      <PostComment postId={post.id} menuId={menuId} />
     </article>
   );
 }

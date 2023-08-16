@@ -238,8 +238,12 @@ export default function Project() {
   }, [filterGroup, childGroup]);
 
   return (
-    <section className={'flex-col justify-start w-noneSideBar h-full relative overflow-x-hidden'}>
-      <div className={'w-noneSideBar h-[13.8rem] flex-col'}>
+    <section
+      className={
+        'flex-col justify-start w-noneSideBar h-full relative overflow-x-hidden overflow-hidden'
+      }
+    >
+      <div className={'w-noneSideBar h-[10.8rem] flex-col overflow-y-hidden'}>
         <section className={'flex-row-center justify-start w-full h-[3.5rem] px-12 pt-4'}>
           {/*그룹 필터링*/}
           <div className={'flex-row-center w-[25rem] justify-between'}>
@@ -271,34 +275,34 @@ export default function Project() {
           </div>
         </section>
         {/*칸반, 스크럼 선택*/}
-        <section className={'w-full h-[6rem]'}>
-          <div className={'flex-row-center justify-center w-full h-full px-2 '}>
+        <section className={'w-full h-[4rem]'}>
+          <div className={'flex-row-center justify-center w-full h-full px-2'}>
             <button type={'button'} onClick={() => onClickKanban(true)}>
               <span
                 className={`text-3xl  ${
                   isKanban ? 'text-black font-bold' : 'text-gray-border font-semibold'
                 } transition ease-in-out duration-300 hover:scale-110 hover:-translate-y-1`}
               >
-                칸반
+                칸반 보드
               </span>
             </button>
 
-            <div className={'mx-4 h-8 border-solid border-r border-[1px] border-gray-border'} />
+            {/*<div className={'mx-4 h-8 border-solid border-r border-[1px] border-gray-border'} />*/}
 
-            <button type={'button'} onClick={() => onClickKanban(false)}>
-              <span
-                className={`text-3xl transition ease-in-out duration-300 hover:scale-110  ${
-                  !isKanban ? 'text-black font-bold' : 'text-gray-border font-semibold'
-                }`}
-              >
-                스크럼
-              </span>
-            </button>
+            {/*<button type={'button'} onClick={() => onClickKanban(false)}>*/}
+            {/*  <span*/}
+            {/*    className={`text-3xl transition ease-in-out duration-300 hover:scale-110  ${*/}
+            {/*      !isKanban ? 'text-black font-bold' : 'text-gray-border font-semibold'*/}
+            {/*    }`}*/}
+            {/*  >*/}
+            {/*    스크럼*/}
+            {/*  </span>*/}
+            {/*</button>*/}
           </div>
         </section>
         {/*진행률*/}
 
-        <section className={'flex-row-center justify-between w-noneSideBar h-[4.3rem]'}>
+        <section className={'flex-row-center justify-between w-noneSideBar h-[3.3rem]'}>
           {/*TODO : 스크럼 주차 정보 데이터로 처리 + 화살표 기능 추가*/}
           <div className={'flex w-1/3 h-full'} />
           <div className={'flex-row-center w-1/3 h-full'}>
@@ -323,7 +327,7 @@ export default function Project() {
       </div>
 
       {/*보드*/}
-      <div className={'w-noneSideBar h-board flex-col'}>
+      <div className={'w-noneSideBar h-board flex-col pt-4'}>
         <section className={'flex-col-center w-noneSideBar h-[90%]'}>
           {/*dnd*/}
           <DragDropContext onDragEnd={(result) => onDragEnd(result)}>

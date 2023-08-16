@@ -21,6 +21,7 @@ import {
 import { SaveUserInfo } from '@/typings/member.ts';
 import { useRecoilState } from 'recoil';
 import { productMemberList } from '@/recoil/Product/atom.ts';
+import { HiOutlineBuildingOffice } from 'react-icons/hi2';
 
 export default function Members() {
   const queryClient = useQueryClient();
@@ -120,7 +121,7 @@ export default function Members() {
     onMutate: async ({ newPowerType, memberId }) => {
       await queryClient.cancelQueries(['getProductMemberList', productId]);
 
-      const sanpshot = queryClient.getQueryData(['getProductMemberList', productId]);
+      const snapshot = queryClient.getQueryData(['getProductMemberList', productId]);
 
       queryClient.setQueryData(['getProductMemberList', productId], () => {
         const temp: ProductMember[] = members.map((member) => {
@@ -148,10 +149,10 @@ export default function Members() {
         return temp;
       });
 
-      return { sanpshot };
+      return { snapshot };
     },
     onError: (error, newTodo, context) => {
-      queryClient.setQueriesData(['getProductMemberList', productId], context?.sanpshot);
+      queryClient.setQueriesData(['getProductMemberList', productId], context?.snapshot);
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['getProductMemberList', productId] });

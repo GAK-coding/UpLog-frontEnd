@@ -1,34 +1,31 @@
 import { FaUserCircle } from 'react-icons/fa';
 import { formatCreteaDate } from '@/utils/fotmatCreateDate.ts';
 import { useCallback, useEffect, useState } from 'react';
-import { BsHeart, BsHeartFill } from 'react-icons/bs';
 import useInput from '@/hooks/useInput.ts';
-import PostChildComment from '@/components/Project/Post/PostChildComment.tsx';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import {
-  commentLike,
-  commentLikeCount,
-  commentLikeList,
   createComment,
   deleteComment,
   postCommentList,
+  updateComment,
 } from '@/api/Project/Post.ts';
-import { CommentBody, CommentInfo, CommentLikeList } from '@/typings/post.ts';
+import { CommentBody, CommentInfo } from '@/typings/post.ts';
 import { useMessage } from '@/hooks/useMessage.ts';
 import { SaveUserInfo } from '@/typings/member.ts';
 
 interface Props {
   postId: number;
-  commentLikeData: CommentLikeList[];
+  menuId: number;
 }
 
-export default function PostComment({ postId, commentLikeData }: Props) {
+export default function PostComment({ postId, menuId }: Props) {
   const { showMessage, contextHolder } = useMessage();
   const userInfo: SaveUserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
 
   // 댓글 value
   const [commentValue, onChangeCommentValue, setCommentValue] = useInput('');
   const [check, setCheck] = useState<boolean>(false);
+  const [editCheck, setEditCheck] = useState<boolean>(false);
   //댓글 생성 body data
   const [createData, setCreateData] = useState<CommentBody>({
     parentId: null,
@@ -37,10 +34,15 @@ export default function PostComment({ postId, commentLikeData }: Props) {
 
   const [commentList, setCommentList] = useState<CommentInfo[]>();
   const [commentId, setCommentId] = useState<number>(0);
+  // const [likeCnt, setLikeCnt] = useState<{ [key: number]: number }>({});
 
-  const [isLikeClick, setIsLikeClick] = useState<{ [key: number]: boolean }>({});
-  const [isChildClick, setIsChildClick] = useState<{ [key: number]: boolean }>({});
-  const [childCommentValue, setChildCommentValue] = useState<{ [key: number]: string }>({});
+  // const [isEditComment, setIsEditComment] = useState<{ [key: number]: boolean }>({});
+  // const [editCommentValue, setEditCommentValue] = useState<string>('');
+  // const [editContent, onChangeEditContent, setEditContent] = useInput('');
+
+  // const [isLikeClick, setIsLikeClick] = useState<{ [key: number]: boolean }>({});
+  // const [isChildClick, setIsChildClick] = useState<{ [key: number]: boolean }>({});
+  // const [childCommentValue, setChildCommentValue] = useState<{ [key: number]: string }>({});
 
   const queryClient = useQueryClient();
 
@@ -63,7 +65,9 @@ export default function PostComment({ postId, commentLikeData }: Props) {
       return () => queryClient.setQueryData(['commentList', postId], previousData);
     },
     onSuccess: (data) => {
-      if (typeof data !== 'string') {
+      if (typeof data !== 'string' && 'message' in data) {
+        showMessage('warning', data.message);
+      } else if (typeof data !== 'string') {
         showMessage('success', '댓글이 등록되었습니다.');
       } else showMessage('error', '댓글 등록에 실패했습니다.');
     },
@@ -76,16 +80,8 @@ export default function PostComment({ postId, commentLikeData }: Props) {
       }
     },
     onSettled: () => {
-      return queryClient.invalidateQueries(['commentList', postId]);
-    },
-  });
-
-  // 댓글 조회
-  const { data } = useQuery(['commentList', postId], () => postCommentList(postId), {
-    onSuccess: (data) => {
-      if (typeof data !== 'string') {
-        setCommentList(data);
-      }
+      queryClient.invalidateQueries(['commentList', postId]);
+      queryClient.invalidateQueries(['menuPostData', menuId], { refetchInactive: true });
     },
   });
 
@@ -120,44 +116,96 @@ export default function PostComment({ postId, commentLikeData }: Props) {
         }
       },
       onSettled: () => {
-        return queryClient.invalidateQueries(['commentList', postId]);
+        queryClient.invalidateQueries(['commentList', postId]);
       },
     }
   );
 
   // 댓글 좋아요
-  const { mutate: commentLikeMutate } = useMutation(
-    (commentId: number) => commentLike(commentId),
-    {}
-  );
+  // const { mutate: commentLikeMutate } = useMutation((commentId: number) => commentLike(commentId), {
+  //   onSuccess: (data) => {
+  //     if (typeof data !== 'string' && 'cnt' in data) {
+  //       if (commentLikeData.some((like) => like.id === commentId)) {
+  //         showMessage('success', '🥲🥲');
+  //       } else {
+  //         showMessage('success', '😍️😍');
+  //       }
+  //     }
+  //   },
+  //   onSettled: () => {
+  //     queryClient.invalidateQueries(['commentLikeList']);
+  //   },
+  // });
+
+  // 댓글 조회
+  const { data } = useQuery(['commentList', postId], () => postCommentList(postId), {
+    onSuccess: (data) => {
+      if (data && typeof data !== 'string') {
+        setCommentList(data);
+      }
+    },
+  });
+
+  // console.log('여기', data);
+  // // 댓글 좋아요 개수
+  // const commentLikeCnt = useQueries(
+  //   commentList
+  //     ? Array.from(commentList).map((comment) => ({
+  //         queryKey: ['commentLikeCount', comment.id],
+  //         queryFn: () => commentLikeCount(comment.id),
+  //         onSuccess: (data: number | string) => {
+  //           if (typeof data !== 'string') {
+  //             setLikeCnt((prevState) => ({
+  //               ...prevState,
+  //               [comment.id]: data,
+  //             }));
+  //           }
+  //         },
+  //         // enabled: !!commentList,
+  //       }))
+  //     : []
+  // );
+
+  // console.log(commentLikeCnt);
 
   // 댓글 좋아요 개수
-  const { data: commentLikeCnt } = useQuery(
-    ['commentLikeCount', commentId],
-    () => commentLikeCount(commentId),
-    {}
-  );
+  // const { data: commentLikeCnt } = useQuery(
+  //   ['commentLikeCount', commentId],
+  //   () => commentLikeCount(commentId),
+  //   {
+  //     onSuccess: (data: number | string) => {
+  //       if (typeof data !== 'string') {
+  //         setLikeCnt((prevState) => ({
+  //           ...prevState,
+  //           [commentId]: data,
+  //         }));
+  //         console.log(commentId, data);
+  //       }
+  //     },
+  //     // enabled: !!commentList,
+  //   }
+  // );
 
   // 댓글 좋아요 눌렀을 때
-  const onClickLike = useCallback(
-    (commentId: number) => {
-      setIsLikeClick((prevState) => ({
-        ...prevState,
-        [commentId]: !prevState[commentId],
-      }));
-
-      //TODO : 좋아요 취소, 좋아요 눌렀을 때 api 요청 보내기
-    },
-    [isLikeClick]
-  );
+  // const onClickLike = useCallback(
+  //   (commentId: number) => {
+  //     setIsLikeClick((prevState) => ({
+  //       ...prevState,
+  //       [commentId]: !prevState[commentId],
+  //     }));
+  //     setCommentId(commentId);
+  //     commentLikeMutate(commentId);
+  //   },
+  //   [isLikeClick]
+  // );
 
   // 답글달기 눌렀을 때
-  const onClickChild = useCallback((commentId: number) => {
-    setIsChildClick((prevState) => ({
-      ...prevState,
-      [commentId]: !prevState[commentId],
-    }));
-  }, []);
+  // const onClickChild = useCallback((commentId: number) => {
+  //   setIsChildClick((prevState) => ({
+  //     ...prevState,
+  //     [commentId]: !prevState[commentId],
+  //   }));
+  // }, []);
 
   // Enter 입력 시 댓글 추가
   const activeEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -170,8 +218,6 @@ export default function PostComment({ postId, commentLikeData }: Props) {
       setCheck(true);
       console.log(commentValue);
       setCommentValue('');
-
-      // TODO : 댓글 추가 api 요청 보내기
     }
   };
 
@@ -227,7 +273,6 @@ export default function PostComment({ postId, commentLikeData }: Props) {
                   </div>
                   {userInfo.id === comment.memberId && (
                     <div className={'flex justify-between w-[4rem] text-[0.8rem] text-gray-light'}>
-                      <span className={'cursor-pointer hover:text-orange'}>수정</span>
                       <span
                         className={'cursor-pointer hover:text-orange'}
                         onClick={() => deleteCommentMutate(comment.id)}
@@ -241,13 +286,16 @@ export default function PostComment({ postId, commentLikeData }: Props) {
                 <span className={'flex w-full ml-[5.5rem] mb-1 text-[1rem] font-bold'}>
                   {comment.content}
                 </span>
+                {/*<span className={'flex w-full ml-[5.5rem] mb-1 text-[1rem] font-bold'}>*/}
+                {/*  {comment.content}*/}
+                {/*</span>*/}
                 {/* 좋아요 + 답글 달기 */}
                 <div className={'flex-row-center justify-start w-full h-auto ml-[5.5rem] mb-3'}>
                   <div
                     className={'flex-row-center justify-start cursor-pointer'}
-                    onClick={() => onClickLike(comment.id)}
+                    // onClick={() => onClickLike(comment.id)}
                   >
-                    <span className={'flex text-gray-light text-[0.7rem] mr-1'}>좋아요</span>
+                    {/*<span className={'flex text-gray-light text-[0.7rem] mr-1'}>좋아요</span>*/}
                     {/*{isLikeClick[comment.id] ? (*/}
                     {/*  <BsHeartFill*/}
                     {/*    className={'flex text-[0.8rem] text-[#FF5733] mr-1.5 mt-1 cursor-pointer'}*/}
@@ -258,30 +306,30 @@ export default function PostComment({ postId, commentLikeData }: Props) {
                     {/*  />*/}
                     {/*)}*/}
 
-                    {commentLikeData.some((like) => like.id === comment.id) ? (
-                      <BsHeartFill
-                        className={'flex text-[0.8rem] text-[#FF5733] mr-1.5 mt-1 cursor-pointer'}
-                      />
-                    ) : (
-                      <BsHeart
-                        className={'flex text-[0.8rem] text-gray-light mr-1.5 mt-1 cursor-pointer'}
-                      />
-                    )}
-                    <span className={'text-[0.8rem] text-gray-light ml-0.5'}>
-                      {commentLikeCnt === 0 ? '' : commentLikeCnt}
-                    </span>
+                    {/*{commentLikeData.some((like) => like.id === comment.id) ? (*/}
+                    {/*  <BsHeartFill*/}
+                    {/*    className={'flex text-[0.8rem] text-[#FF5733] mr-1.5 mt-1 cursor-pointer'}*/}
+                    {/*  />*/}
+                    {/*) : (*/}
+                    {/*  <BsHeart*/}
+                    {/*    className={'flex text-[0.8rem] text-gray-light mr-1.5 mt-1 cursor-pointer'}*/}
+                    {/*  />*/}
+                    {/*)}*/}
+                    {/*<span className={'text-[0.8rem] text-gray-light ml-0.5'}>*/}
+                    {/*{likeCnt[comment.id] !== undefined ? `${likeCnt[comment.id]}개` : ''}*/}
+                    {/*</span>*/}
                     {/*{countChildLike[comment.id] !== undefined && (*/}
                     {/*  <span className={'text-[0.8rem] text-gray-light ml-0.5'}>{`${*/}
                     {/*    countChildLike[comment.id]*/}
                     {/*  }개`}</span>*/}
                     {/*)}*/}
                   </div>
-                  <span
-                    className={'flex text-gray-light ml-2 text-[0.7rem] cursor-pointer'}
-                    onClick={() => onClickChild(comment.id)}
-                  >
-                    답글 달기
-                  </span>
+                  {/*<span*/}
+                  {/*  className={'flex text-gray-light ml-2 text-[0.7rem] cursor-pointer'}*/}
+                  {/*  onClick={() => onClickChild(comment.id)}*/}
+                  {/*>*/}
+                  {/*  답글 달기*/}
+                  {/*</span>*/}
                 </div>
                 {/*대댓글 */}
                 {/*<PostChildComment*/}
@@ -295,7 +343,7 @@ export default function PostComment({ postId, commentLikeData }: Props) {
       {/*댓글 작성 input */}
       <div
         className={
-          'flex-row-center justify-between w-full h-[3rem] mt-4  border border-line rounded-2xl px-5'
+          'flex-row-center justify-between w-full h-[3rem] mt-4 border border-gray-light rounded-2xl px-5'
         }
       >
         <input
@@ -304,7 +352,7 @@ export default function PostComment({ postId, commentLikeData }: Props) {
           onChange={onChangeCommentValue}
           placeholder={'댓글을 입력해주세요.'}
           maxLength={30}
-          className={'flex w-full h-full outline-none rounded-2xl'}
+          className={'flex w-full h-full outline-none bg-transparent rounded-2xl'}
           onKeyDown={(e) => activeEnter(e)}
         />
       </div>

@@ -17,12 +17,12 @@ export default function Workspace() {
 
   return (
     <section className={'w-h-full flex'}>
-      <nav className={'w-[18.6rem] h-full border-r py-4'}>
-        <div className={`h-[40%] ${product && project && 'border-b'}`}>
-          <div className={'h-[35%] flex-col-center items-start px-10'}>
+      <nav className={'w-[18.6rem] h-full border-r border-gray-spring py-4'}>
+        <div className={`h-[40%] ${product && project && 'border-b border-gray-spring'}`}>
+          <div className={'h-[35%] flex-col-center items-start px-12'}>
             <Link
               to={`/workspace/${nowProduct?.productName}`}
-              className={'text-3xl font-bold ellipsis'}
+              className={'text-[1.7rem] font-bold ellipsis'}
             >
               {nowProduct?.productName}
             </Link>

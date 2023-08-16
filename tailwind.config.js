@@ -21,6 +21,9 @@ export default {
           line: 'var(--task-line)',
           'detail-line': 'var(--task-detail-line)',
         },
+        post: {
+          bg: 'var(--post-board)',
+        },
         gray: {
           light: 'var(--gray-light)',
           dark: 'var(--gray-dark)',
@@ -52,7 +55,7 @@ export default {
       },
       height: {
         noneHeader: 'calc(100vh - 5.7rem)',
-        board: 'calc(100vh - 19.5rem)',
+        board: 'calc(100vh - 16.5rem)',
         menu: 'calc(100vh - 10.7rem)',
         content: 'calc(100vh - 15.7rem)',
       },
