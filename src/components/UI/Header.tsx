@@ -37,7 +37,6 @@ export default function Header() {
   const product = parts[2];
 
   // 로그인 여부
-  //TODO : 섹션 storage 값으로 변경하기
   const [isLogin, setIsLogin] = useRecoilState(loginStatus);
 
   // userProfile click

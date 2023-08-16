@@ -53,7 +53,6 @@ export default function TaskMain() {
 
   // 날짜, 상태 데이터 필터링 값
   const handleChange = (type: string) => (value: { value: string; label: React.ReactNode }) => {
-    // TODO : Task 상태, 날짜별로 필터링해서 보여주기
     // task 상태
     if (type === 'status') {
       switch (value.value) {

@@ -30,7 +30,6 @@ interface Props {
 }
 
 export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, productId }: Props) {
-  // const { product, project };
   const [productName, onChangeProductName, setProductName] = useInput('');
   const [masterEmail, onChangeMasterEmail, setMasterEmail] = useInput('');
   const [clientEmail, onChangeClientEmail, setClientEmail] = useInput<string>('');
@@ -42,7 +41,7 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
     name: '',
     masterEmail: '',
     clientEmail: null,
-    link: '',
+    link: `${baseUrl}`,
   });
 
   const [updateProductInfo, setUpdateProductInfo] = useState<ProductEditBody>({
@@ -205,7 +204,7 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
         setUpdateProductInfo({
           ...updateProductInfo,
           memberEmailList: clientEmailList,
-          link: `${baseUrl}/workspace/${productId}`,
+          link: `${baseUrl}`,
           powerType: 'CLIENT',
         });
       }
@@ -230,7 +229,7 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
       name: productName,
       masterEmail: masterEmail,
       clientEmail: clientEmail,
-      link: `${baseUrl}/workspace/${productId}`,
+      link: `${baseUrl}`,
     });
     setCheck(true);
   }, [productName, masterEmail, clientEmail, updateProductInfo, productGetData]);

@@ -17,9 +17,6 @@ export interface GetProductList {
 export interface ProductInfo extends Omit<GetProductList, 'memberName'> {
   draggableId: string;
   image?: string;
-  // TODO : master, client type user info로 변경하기
-  // masterEmail: string;
-  // client: string;
 }
 
 export interface ProductBody {
