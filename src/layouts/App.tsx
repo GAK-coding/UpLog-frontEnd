@@ -1,5 +1,5 @@
 import './../App.css';
-import { RecoilRoot, useRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
@@ -27,6 +27,7 @@ const Members = loadable(() => import('@/pages/Product/Members.tsx'));
 const NewChangeLog = loadable(() => import('@/pages/Product/NewChangeLog.tsx'));
 const Menu = loadable(() => import('@/pages/Project/Menu.tsx'));
 const TaskDetail = loadable(() => import('@/pages/Project/TaskDetail.tsx'));
+const ManageGroup = loadable(() => import('@/pages/Project/ManageGroup.tsx'));
 
 // jest에서 .env 이용하려고 넣은 코드
 const { MODE: ENVIRONMENT } = import.meta.env;
@@ -83,6 +84,10 @@ function App() {
                     <Route
                       path={':product/:project/group/:parentgroup/:childgroup'}
                       element={<Project />}
+                    />
+                    <Route
+                      path={':product/:project/group/:parentgroup/setting'}
+                      element={<ManageGroup />}
                     />
                   </Route>
                 </Routes>

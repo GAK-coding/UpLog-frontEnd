@@ -6,22 +6,33 @@ import { SlCalender } from 'react-icons/sl';
 import Chats from '@/components/Product/SideBar/Chats.tsx';
 import Groups from '@/components/Product/SideBar/Groups.tsx';
 import { Scrollbars } from 'rc-scrollbars';
+import { ProductInfo } from '@/typings/product.ts';
+import { Project } from '@/typings/project.ts';
 
 export default function Workspace() {
   const { product, project, parentgroup, childgroup } = useParams();
   const { pathname } = useLocation();
+  const nowProduct: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
+  const nowProject: Project = JSON.parse(sessionStorage.getItem('nowProject')!);
 
   return (
     <section className={'w-h-full flex'}>
       <nav className={'w-[18.6rem] h-full border-r py-4'}>
-        <div className={`h-[30%] ${product && project && 'border-b'}`}>
-          <div className={'h-1/5 flex-row-center px-10'}>
-            <Link to={`/workspace/${product}`} className={'text-3xl font-bold'}>
-              AllFromU
+        <div className={`h-[40%] ${product && project && 'border-b'}`}>
+          <div className={'h-[35%] flex-col-center items-start px-10'}>
+            <Link
+              to={`/workspace/${nowProduct?.productName}`}
+              className={'text-3xl font-bold ellipsis'}
+            >
+              {nowProduct?.productName}
             </Link>
-            {project && <span className={'text-gray-dark text-xl font-bold ml-4'}>v.1.0.0</span>}
+            {project && (
+              <span className={'self-start text-gray-dark text-xl font-bold mt-2 ellipsis'}>
+                {project}
+              </span>
+            )}
           </div>
-          <div className={'h-4/5 flex flex-col justify-evenly'}>
+          <div className={'h-[60%] flex flex-col justify-evenly'}>
             <NavLink
               to={
                 parentgroup
@@ -47,7 +58,7 @@ export default function Workspace() {
           </div>
         </div>
         {product && project && (
-          <div className={'overflow-y-auto h-[70%]'}>
+          <div className={'overflow-y-auto h-[65%]'}>
             <Scrollbars
               style={{ height: '100%' }}
               autoHide

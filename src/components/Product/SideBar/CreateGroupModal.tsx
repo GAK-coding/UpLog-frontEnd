@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ChangeEvent, useCallback } from 'react';
 import {
   Modal,
   ModalBody,
@@ -7,6 +7,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Textarea,
 } from '@chakra-ui/react';
 import useInput from '@/hooks/useInput.ts';
 
@@ -19,13 +20,18 @@ export default function CreateGroupModal({ isOpen, onClose }: Props) {
   // TODO: 그룹 이름 중복 안되게 해야됨
   const [groupName, onChangeGroupName, setGroupName] = useInput('');
 
+  const [emails, , setEmails] = useInput('');
+  const onChangeEmails = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {
+    setEmails(e.target.value);
+  }, []);
+
   return (
     <Modal isCentered onClose={onClose} isOpen={isOpen}>
       <ModalOverlay />
 
       <ModalContent
         maxW={'41rem'}
-        h={'22rem'}
+        h={'40rem'}
         shadow={'boxShadow-sign-up'}
         rounded={'none'}
         p={'1.2rem'}
@@ -46,7 +52,7 @@ export default function CreateGroupModal({ isOpen, onClose }: Props) {
           mr={'0.8rem'}
         />
         <ModalBody>
-          <section className={'flex flex-col justify-center items-start w-h-full'}>
+          <section className={'flex flex-col justify-evenly items-start w-h-full'}>
             <div className={'mx-auto'}>
               <span className={'text-gray-dark font-bold text-[1.2rem]'}>그룹 이름</span>
               <div className={'flex items-center'}>
@@ -57,6 +63,23 @@ export default function CreateGroupModal({ isOpen, onClose }: Props) {
                   onChange={onChangeGroupName}
                   placeholder={'그룹 이름을 작성해주세요.'}
                   maxLength={10}
+                />
+              </div>
+            </div>
+
+            <div className={'mx-auto'}>
+              <span className={'text-gray-dark font-bold text-[1.2rem]'}>초대 멤버</span>
+
+              <div className={'flex items-center w-[29rem] h-[14rem] mt-4'}>
+                <Textarea
+                  value={emails}
+                  onChange={onChangeEmails}
+                  border={'1px solid var(--border-line)'}
+                  height={'100%'}
+                  maxLength={1000}
+                  focusBorderColor={'none'}
+                  placeholder="이메일은 쉼표(,)로 구분해 주세요."
+                  resize={'none'}
                 />
               </div>
             </div>

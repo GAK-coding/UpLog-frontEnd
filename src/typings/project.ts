@@ -18,17 +18,23 @@ export interface GroupInfo {
   name: string;
 }
 
-export interface Products {
+export interface Project {
   id: number;
   version: string;
   projectStatus: 'PROGRESS_IN' | 'PROGRESS_COMPLETE';
 }
 
-export interface Release extends Products {
+export interface Release extends Project {
   // TODO: 백엔드에서 날짜 보내주면 받아야됨
   date?: string;
   contents?: changeLog[];
   // id: number;
   // version: string;
   // projectStatus: 'PROGRESS_IN' | 'PROGRESS_COMPLETE';
+}
+
+export interface ProjectGroup {
+  id: number;
+  teamName: string;
+  depth: number;
 }

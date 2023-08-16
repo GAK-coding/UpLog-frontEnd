@@ -5,34 +5,41 @@ import { BsDot } from 'react-icons/bs';
 import { NavLink, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { IoIosArrowDown, IoMdSettings } from 'react-icons/io';
 import CreateGroupModal from '@/components/Product/SideBar/CreateGroupModal.tsx';
+import { useGetProjectGroups } from '@/components/Project/hooks/useGetProjectGroups.ts';
+import { Project } from '@/typings/project.ts';
 
 export default function Groups() {
   const { product, project, parentgroup, childgroup } = useParams();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const nowProject: Project = JSON.parse(sessionStorage.getItem('nowProject')!);
 
   const [parentGroups, setParentGroups] = useState<
     Array<{ name: string; isOpen: boolean; isHover: boolean }>
   >([
-    { name: '개발팀', isOpen: false, isHover: false },
-    { name: '마케팅팀', isOpen: false, isHover: false },
-    { name: '홍보팀', isOpen: false, isHover: false },
-    { name: '바보팀', isOpen: false, isHover: false },
-    { name: '멍청이팀', isOpen: false, isHover: false },
-    { name: '똥개팀', isOpen: false, isHover: false },
-    { name: '젠킨스팀', isOpen: false, isHover: false },
+    // { name: '개발팀', isOpen: false, isHover: false },
+    // { name: '마케팅팀', isOpen: false, isHover: false },
+    // { name: '홍보팀', isOpen: false, isHover: false },
+    // { name: '바보팀', isOpen: false, isHover: false },
+    // { name: '멍청이팀', isOpen: false, isHover: false },
+    // { name: '똥개팀', isOpen: false, isHover: false },
+    // { name: '젠킨스팀', isOpen: false, isHover: false },
   ]);
 
   const childGroups: string[][] = [
-    ['프론트엔드', '백엔드', '풀스택'],
-    ['콘텐츠', '디자인'],
-    ['SNS', '기사'],
-    ['김윤정'],
-    ['박은령'],
-    ['오채영'],
-    ['장준'],
+    // ['프론트엔드', '백엔드', '풀스택'],
+    // ['콘텐츠', '디자인'],
+    // ['SNS', '기사'],
+    // ['김윤정'],
+    // ['박은령'],
+    // ['오채영'],
+    // ['장준'],
   ];
+
+  const groups = useGetProjectGroups(nowProject?.id);
+
+  console.log(groups);
 
   /** 부모 집합 펼치는 함수 */
   const onToggle = useCallback(
