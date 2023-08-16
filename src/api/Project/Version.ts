@@ -60,3 +60,25 @@ export const getProjectTeams = async (teamId: number) => {
     return 'fail getProjectTeams';
   }
 };
+
+export const createProjectTeam = async (data: {
+  projectId: number;
+  memberIdList: string[];
+  name: string;
+  parentTeamId: number | null;
+  link: string;
+}) => {
+  try {
+    const { projectId, memberIdList, name, parentTeamId, link } = data;
+
+    const res: AxiosResponse<{ id: number }> = await instance.post(`/projects/${projectId}/teams`, {
+      memberIdList,
+      name,
+      parentTeamId,
+      link,
+    });
+    return res.data;
+  } catch (err) {
+    return 'fail createProjectTeam';
+  }
+};
