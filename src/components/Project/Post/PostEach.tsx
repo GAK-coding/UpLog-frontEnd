@@ -13,6 +13,7 @@ import { Viewer } from '@toast-ui/react-editor';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { noticePost, postLike, postLikeCount, unNoticePost } from '@/api/Project/Post.ts';
 import { useMessage } from '@/hooks/useMessage.ts';
+import { SaveUserInfo } from '@/typings/member.ts';
 
 interface Props {
   post: Post;
@@ -28,6 +29,8 @@ export default function PostEach({ post, menuId, likeList, noticeId }: Props) {
   const [isLikeClick, setIsLikeClick] = useState<{ [key: number]: boolean }>({});
   const [isScrapClick, setIsScrapClick] = useState<{ [key: number]: boolean }>({});
   const [isClickKebab, setIsClickKebab] = useState<{ [key: number]: boolean }>({});
+
+  const userInfo: SaveUserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
 
   const queryClient = useQueryClient();
 
@@ -230,28 +233,32 @@ export default function PostEach({ post, menuId, likeList, noticeId }: Props) {
           />
           {isClickKebab[post.id] && (
             <section
-              className={
-                'absolute top-[2.2rem] flex-col-center w-[5rem] h-[6rem] bottom-5 task-detail-border cursor-pointer text-[0.5rem] text-gray-dark'
-              }
+              className={`absolute top-[2.2rem] flex-col-center w-[5rem] ${
+                userInfo.id === post.authorInfoDTO.id ? 'h-[6rem]' : 'h-[2rem]'
+              } bottom-5 task-detail-border cursor-pointer text-[0.5rem] text-gray-dark`}
             >
+              {userInfo.id === post.authorInfoDTO.id && (
+                <button
+                  className={'flex-row-center w-full h-[2rem] hover:bg-orange-light-sideBar'}
+                  onClick={() => onOpenModal()}
+                >
+                  수정
+                </button>
+              )}
               <button
-                className={'flex-row-center w-full h-1/3 hover:bg-orange-light-sideBar'}
-                onClick={() => onOpenModal()}
-              >
-                수정
-              </button>
-              <button
-                className={'flex-row-center w-full h-1/3 hover:bg-orange-light-sideBar'}
+                className={'flex-row-center w-full h-[2rem] hover:bg-orange-light-sideBar'}
                 onClick={() => onClickNotice(post.id)}
               >
                 {noticeId === post.id ? '공지 해제' : '공지'}
               </button>
-              <button
-                className={'flex-row-center w-full h-1/3 hover:bg-orange-light-sideBar'}
-                onClick={() => onOpenDialog()}
-              >
-                삭제
-              </button>
+              {userInfo.id === post.authorInfoDTO.id && (
+                <button
+                  className={'flex-row-center w-full h-[2rem] hover:bg-orange-light-sideBar'}
+                  onClick={() => onOpenDialog()}
+                >
+                  삭제
+                </button>
+              )}
               <PostModal isOpen={isOpenModal} onClose={onCloseModal} post={post.id} isEdit={true} />
               <DeleteDialog
                 isOpen={isOpenDialog}

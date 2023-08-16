@@ -63,7 +63,7 @@ export default function Tables({
               textAlign={'center'}
               cursor={'pointer'}
               onClick={() => {
-                const url = encodeURI(`/workspace/${product}/${version.version}`);
+                const url = encodeURI(`/workspace/${product}/${version.id}`);
                 sessionStorage.setItem('nowProject', JSON.stringify(version));
 
                 navigate(url);

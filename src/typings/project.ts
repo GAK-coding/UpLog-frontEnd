@@ -56,3 +56,4 @@ export interface ScreenProjectTeams extends ProjectTeams {
   isHover: boolean;
   isOpen: boolean;
 }
+export interface SaveProjectInfo extends Project {}

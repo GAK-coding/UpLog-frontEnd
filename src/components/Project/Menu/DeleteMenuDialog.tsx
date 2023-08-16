@@ -14,6 +14,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { deleteMenu } from '@/api/Project/Menu.ts';
 import { useMutation, useQueryClient } from 'react-query';
 import { useMessage } from '@/hooks/useMessage.ts';
+import { SaveUserInfo } from '@/typings/member.ts';
+import { SaveProjectInfo } from '@/typings/project.ts';
 
 interface Props {
   isOpen: boolean;
@@ -28,7 +30,10 @@ export default function DeleteMenuDialog({ isOpen, onClose, menu, menuId }: Prop
   const cancelRef = useRef<HTMLButtonElement>(null);
   const [menuList, setMenuList] = useRecoilState(menuListData);
   const queryClient = useQueryClient();
-  const projectId = 10;
+
+  const nowProject: SaveProjectInfo = JSON.parse(sessionStorage.getItem('nowProject')!);
+
+  const projectId = nowProject.id;
 
   // menu delete
   const { mutate: deleteMenuMutate } = useMutation(() => deleteMenu(menuId), {

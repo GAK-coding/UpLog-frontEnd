@@ -23,6 +23,7 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { createPost, eachPost, updatePost } from '@/api/Project/Post.ts';
 import { useParams } from 'react-router-dom';
 import { ProductInfo } from '@/typings/product.ts';
+import { SaveProjectInfo } from '@/typings/project.ts';
 
 interface Props {
   isOpen: boolean;
@@ -35,6 +36,9 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
   const { product, project, menutitle } = useParams();
   const { showMessage, contextHolder } = useMessage();
   const productInfo: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
+  const nowProject: SaveProjectInfo = JSON.parse(sessionStorage.getItem('nowProject')!);
+  const projectId = nowProject.id;
+
   // 메뉴 list
   const menuList = useRecoilValue(menuListData);
   const menuNameList: SelectMenu[] = menuList.map((menuItem) => ({
@@ -201,7 +205,7 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
       postType: postType === 'DEFAULT' ? null : postType,
       content: postContent,
       productId: productInfo.productId,
-      projectId: 10,
+      projectId: projectId,
     });
 
     setUpdateData({
