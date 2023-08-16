@@ -3,7 +3,12 @@ import { formatCreteaDate } from '@/utils/fotmatCreateDate.ts';
 import { useCallback, useEffect, useState } from 'react';
 import useInput from '@/hooks/useInput.ts';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { createComment, deleteComment, postCommentList } from '@/api/Project/Post.ts';
+import {
+  createComment,
+  deleteComment,
+  postCommentList,
+  updateComment,
+} from '@/api/Project/Post.ts';
 import { CommentBody, CommentInfo } from '@/typings/post.ts';
 import { useMessage } from '@/hooks/useMessage.ts';
 import { SaveUserInfo } from '@/typings/member.ts';
@@ -31,6 +36,7 @@ export default function PostComment({ postId, menuId }: Props) {
   // const [likeCnt, setLikeCnt] = useState<{ [key: number]: number }>({});
   //
   const [isEditComment, setIsEditComment] = useState<{ [key: number]: boolean }>({});
+  const [editCommentValue, setEditCommentValue] = useState<{ [key: number]: string }>({});
   // const [isLikeClick, setIsLikeClick] = useState<{ [key: number]: boolean }>({});
   // const [isChildClick, setIsChildClick] = useState<{ [key: number]: boolean }>({});
   // const [childCommentValue, setChildCommentValue] = useState<{ [key: number]: string }>({});
@@ -135,6 +141,51 @@ export default function PostComment({ postId, menuId }: Props) {
     },
   });
 
+  // 댓글 수정
+  const { mutate: editCommentMutate } = useMutation(
+    (commentId: number) => updateComment(commentId, editCommentValue[commentId]),
+    {
+      onMutate: async (commentId: number) => {
+        await queryClient.cancelQueries(['commentList', postId]);
+
+        const previousData: CommentInfo[] | undefined = queryClient.getQueryData([
+          'commentList',
+          postId,
+        ]);
+
+        const newCommentData = previousData?.map((comment) => {
+          if (comment.id === commentId) {
+            return {
+              ...comment,
+              content: editCommentValue[commentId],
+            };
+          }
+          return comment;
+        });
+
+        queryClient.setQueryData(['commentList', postId], newCommentData);
+
+        return () => queryClient.setQueryData(['commentList', postId], previousData);
+      },
+      onSuccess: (data) => {
+        if (typeof data !== 'string') {
+          showMessage('success', '댓글이 수정되었습니다.');
+        } else showMessage('error', '댓글 수정에 실패했습니다.');
+      },
+      onError: (error, value, rollback) => {
+        if (rollback) {
+          rollback();
+          showMessage('error', '댓글 수정에 실패했습니다.');
+        } else {
+          showMessage('error', '댓글 수정에 실패했습니다.');
+        }
+      },
+      onSettled: () => {
+        return queryClient.invalidateQueries(['commentList', postId]);
+      },
+    }
+  );
+
   // console.log('여기', data);
   // // 댓글 좋아요 개수
   // const commentLikeCnt = useQueries(
@@ -215,6 +266,8 @@ export default function PostComment({ postId, menuId }: Props) {
       ...prevState,
       [commentId]: !prevState[commentId],
     }));
+
+    editCommentMutate(commentId);
   }, []);
 
   // 댓글 생성요청 + 데이터 초기화
