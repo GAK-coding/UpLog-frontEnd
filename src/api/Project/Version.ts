@@ -1,6 +1,8 @@
 import { instance } from '@/api';
 import { AxiosResponse } from 'axios';
-import { Project, ProjectGroup } from '@/typings/project.ts';
+import { Project, ProjectGroup, ProjectTeams } from '@/typings/project.ts';
+import { data } from 'autoprefixer';
+import { ChangeLog } from '@/typings/product.ts';
 
 export const getAllProductProjects = async (productId: number) => {
   try {
@@ -46,5 +48,56 @@ export const getProjectGroups = async (projectId: number) => {
     return res.data;
   } catch (err) {
     return 'fail getProjectGroups';
+  }
+};
+
+export const getProjectTeams = async (teamId: number) => {
+  try {
+    const res: AxiosResponse<{ childTeamInfoDTOList: ProjectTeams[] }> = await instance.get(
+      `/teams/${teamId}/child-team`
+    );
+
+    return res.data;
+  } catch (err) {
+    return 'fail getProjectTeams';
+  }
+};
+
+export const createProjectTeam = async (data: {
+  projectId: number;
+  memberIdList: string[];
+  name: string;
+  parentTeamId: number | null;
+  link: string;
+}) => {
+  try {
+    const { projectId, memberIdList, name, parentTeamId, link } = data;
+
+    const res: AxiosResponse<{ id: number }> = await instance.post(`/projects/${projectId}/teams`, {
+      memberIdList,
+      name,
+      parentTeamId,
+      link,
+    });
+    return res.data;
+  } catch (err) {
+    return 'fail createProjectTeam';
+  }
+};
+
+export const createNewChangeLog = async (data: ChangeLog) => {
+  try {
+    const { productId, title, content, issueStatus, createdTime, modifiedTime } = data;
+    const res: AxiosResponse<ChangeLog> = await instance.post(`/changedIssues/${productId}`, {
+      title,
+      content,
+      issueStatus,
+      createdTime,
+      modifiedTime,
+    });
+
+    return res.data;
+  } catch (err) {
+    return 'fail createNewChangeLog';
   }
 };

@@ -37,12 +37,13 @@ export default function PostEditor({ isPost }: Props) {
   const onChange = () => {
     const data = editorRef!.current!.getInstance().getHTML();
     const convertedData = data.replace(/"/g, "'");
-    // console.log(editPost);
 
+    setEditData(convertedData);
     if (isPost) {
-      setEditData(convertedData);
       setEditPost(editData);
-    } else setEditChangeLog(convertedData);
+    } else {
+      setEditChangeLog(editData);
+    }
     // console.log(editorRef!.current!.getRootElement().clientHeight);
   };
 

@@ -1,4 +1,4 @@
-import { changeLog } from '@/typings/product.ts';
+import { ChangeLog } from '@/typings/product.ts';
 
 export interface SubGroup {
   [key: string]: string[];
@@ -27,7 +27,7 @@ export interface Project {
 export interface Release extends Project {
   // TODO: 백엔드에서 날짜 보내주면 받아야됨
   date?: string;
-  contents?: changeLog[];
+  contents?: ChangeLog[];
   // id: number;
   // version: string;
   // projectStatus: 'PROGRESS_IN' | 'PROGRESS_COMPLETE';
@@ -39,4 +39,21 @@ export interface ProjectGroup {
   depth: number;
 }
 
+export interface childTeamInfoDTO {
+  teamId: number;
+  teamName: string;
+  depth: number;
+}
+
+export interface ProjectTeams {
+  teamId: number;
+  teamName: string;
+  depth: number;
+  childTeamInfoDTOList: childTeamInfoDTO[];
+}
+
+export interface ScreenProjectTeams extends ProjectTeams {
+  isHover: boolean;
+  isOpen: boolean;
+}
 export interface SaveProjectInfo extends Project {}
