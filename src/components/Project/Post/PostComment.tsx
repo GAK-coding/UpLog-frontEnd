@@ -25,6 +25,7 @@ export default function PostComment({ postId, menuId }: Props) {
   // 댓글 value
   const [commentValue, onChangeCommentValue, setCommentValue] = useInput('');
   const [check, setCheck] = useState<boolean>(false);
+  const [editCheck, setEditCheck] = useState<boolean>(false);
   //댓글 생성 body data
   const [createData, setCreateData] = useState<CommentBody>({
     parentId: null,
@@ -32,11 +33,13 @@ export default function PostComment({ postId, menuId }: Props) {
   });
 
   const [commentList, setCommentList] = useState<CommentInfo[]>();
-  // const [commentId, setCommentId] = useState<number>(0);
+  const [commentId, setCommentId] = useState<number>(0);
   // const [likeCnt, setLikeCnt] = useState<{ [key: number]: number }>({});
   //
   const [isEditComment, setIsEditComment] = useState<{ [key: number]: boolean }>({});
-  const [editCommentValue, setEditCommentValue] = useState<{ [key: number]: string }>({});
+  const [editCommentValue, setEditCommentValue] = useState<string>('');
+  const [editContent, onChangeEditContent, setEditContent] = useInput('');
+
   // const [isLikeClick, setIsLikeClick] = useState<{ [key: number]: boolean }>({});
   // const [isChildClick, setIsChildClick] = useState<{ [key: number]: boolean }>({});
   // const [childCommentValue, setChildCommentValue] = useState<{ [key: number]: string }>({});
@@ -261,14 +264,38 @@ export default function PostComment({ postId, menuId }: Props) {
     }
   };
 
-  const onClickEditComment = useCallback((commentId: number) => {
+  // 댓글 수정 요청
+  const activeEditComment = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    // 한글 짤림 방지
+    if (e.nativeEvent.isComposing) return;
+
+    // Enter 입력 시 댓글 추가
+    if (e.key === 'Enter') {
+      setEditCommentValue(editContent);
+      setEditCheck(true);
+      console.log(editContent);
+      setEditContent('');
+    }
+
+    setCommentId(commentId);
     setIsEditComment((prevState) => ({
       ...prevState,
       [commentId]: !prevState[commentId],
     }));
+  };
 
-    editCommentMutate(commentId);
-  }, []);
+  useEffect(() => {
+    if (editCheck) {
+      if (editCommentValue === '') {
+        showMessage('warning', '댓글을 입력해주세요.');
+        return;
+      }
+
+      editCommentMutate(commentId);
+      setEditCheck(false);
+      setEditCommentValue('');
+    }
+  }, [editCheck]);
 
   // 댓글 생성요청 + 데이터 초기화
   useEffect(() => {
@@ -324,7 +351,13 @@ export default function PostComment({ postId, menuId }: Props) {
                     <div className={'flex justify-between w-[4rem] text-[0.8rem] text-gray-light'}>
                       <span
                         className={'cursor-pointer hover:text-orange'}
-                        onClick={() => onClickEditComment(comment.id)}
+                        onClick={() => {
+                          setIsEditComment((prevState) => ({
+                            ...prevState,
+                            [comment.id]: !prevState[comment.id],
+                          }));
+                          setEditContent(comment.content);
+                        }}
                       >
                         수정
                       </span>
@@ -338,9 +371,29 @@ export default function PostComment({ postId, menuId }: Props) {
                   )}
                 </div>
                 {/*댓글 내용*/}
-                <span className={'flex w-full ml-[5.5rem] mb-1 text-[1rem] font-bold'}>
-                  {comment.content}
-                </span>
+                {isEditComment[comment.id] ? (
+                  <div className={'flex w-full ml-[5.5rem] mb-1 text-[1rem]'}>
+                    <input
+                      type="text"
+                      value={editContent}
+                      onChange={onChangeEditContent}
+                      placeholder={'댓글을 입력해주세요.'}
+                      maxLength={30}
+                      className={'flex w-full h-full outline-none rounded-2xl bg-amber-400'}
+                      onKeyDown={(e) => {
+                        activeEditComment(e);
+                        setCommentId(comment.id);
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <span className={'flex w-full ml-[5.5rem] mb-1 text-[1rem] font-bold'}>
+                    {comment.content}
+                  </span>
+                )}
+                {/*<span className={'flex w-full ml-[5.5rem] mb-1 text-[1rem] font-bold'}>*/}
+                {/*  {comment.content}*/}
+                {/*</span>*/}
                 {/* 좋아요 + 답글 달기 */}
                 <div className={'flex-row-center justify-start w-full h-auto ml-[5.5rem] mb-3'}>
                   <div
