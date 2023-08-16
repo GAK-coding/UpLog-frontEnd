@@ -84,13 +84,13 @@ export default function Tables({
               marginY={'auto'}
               fontSize={'1.1rem'}
             >
-              {version?.contents?.length > 0 ? (
+              {version.contents && version?.contents?.length > 0 ? (
                 version?.contents?.map((content, idx) => {
                   return (
                     <div
                       key={idx}
                       className={`${
-                        version.contents.length - 1 !== idx && 'mb-5'
+                        version.contents && version.contents.length - 1 !== idx && 'mb-5'
                       } flex items-center`}
                     >
                       <span

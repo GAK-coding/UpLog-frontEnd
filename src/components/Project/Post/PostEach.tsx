@@ -73,6 +73,10 @@ export default function PostEach({ post, menuId, likeList, noticeId }: Props) {
         } else {
           showMessage('success', '😍️😍');
         }
+      } else if (typeof data !== 'string' && 'message' in data) {
+        showMessage('warning', data.message);
+      } else {
+        showMessage('error', '좋아요 실패');
       }
     },
     onSettled: () => {
@@ -116,7 +120,7 @@ export default function PostEach({ post, menuId, likeList, noticeId }: Props) {
   return (
     <article
       className={
-        'flex-col-center justify-start w-full h-auto border border-gray-light py-[1.8rem] px-[3.3rem] mb-12'
+        'flex-col-center justify-start w-full h-auto border border-line bg-post-bg py-[1.8rem] px-[3.3rem] mb-12'
       }
     >
       {contextHolder}

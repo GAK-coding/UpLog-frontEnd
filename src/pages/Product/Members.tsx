@@ -21,6 +21,7 @@ import {
 import { SaveUserInfo } from '@/typings/member.ts';
 import { useRecoilState } from 'recoil';
 import { productMemberList } from '@/recoil/Product/atom.ts';
+import { HiOutlineBuildingOffice } from 'react-icons/hi2';
 
 export default function Members() {
   const queryClient = useQueryClient();

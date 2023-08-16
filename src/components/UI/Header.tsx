@@ -12,6 +12,7 @@ import ProductList from '@/components/Product/Info/ProductList.tsx';
 import UserProfile from '@/components/Member/Header/UserProfile.tsx';
 import { themeState } from '@/recoil/Common/atom.ts';
 import { ProductInfo } from '@/typings/product.ts';
+import { BiChevronDown } from 'react-icons/bi';
 
 export default function Header() {
   const navigate = useNavigate();
@@ -101,11 +102,11 @@ export default function Header() {
     >
       {/*로고 + 글자 (메인페이지로 이동)*/}
       <div
-        className={'relative flex-row-center justify-start w-[60%] h-full md:w-auto ml-8 md:ml-32'}
+        className={'relative flex-row-center justify-start w-[60%] h-full md:w-auto ml-12 md:ml-12'}
       >
         <nav className={'flex-row-center cursor-pointer'} onClick={() => navigate('/')}>
-          <img className={'flex mr-4 h-10'} src={'/images/mainLogo.png'} alt={'main-logo'} />
-          <span className={'flex font-logo text-[2.3rem] font-semibold text-gray-dark mt-2'}>
+          <img className={'flex mr-4 h-12'} src={'/images/mainLogo.png'} alt={'main-logo'} />
+          <span className={'flex font-logo text-[2.4rem] font-semibold text-gray-dark mt-2'}>
             upLog
           </span>
         </nav>
@@ -120,13 +121,11 @@ export default function Header() {
               }}
             >
               {pathname !== '/' && (
-                <span className={'flex-row-center font-logo text-[2.3rem] font-semibold ml-4 mt-3'}>
+                <span className={'flex-row-center -mt-2 ml-4 text-[2rem] font-bold text-gray-dark'}>
                   {decodeURI(nowProduct?.productName)}
                 </span>
               )}
-              <PiCaretUpDownLight
-                className={'flex-row-center text-[1.4rem] fill-gray-light ml-2'}
-              />
+              <BiChevronDown className={'flex-row-center text-[2rem] fill-gray-light ml-2'} />
               {isProductClick && <ProductList />}
             </div>
           </div>
