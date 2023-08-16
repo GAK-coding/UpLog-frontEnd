@@ -1,5 +1,5 @@
 import { DatePicker, DatePickerProps, Select } from 'antd';
-import { SubGroup } from '@/typings/project.ts';
+import { SaveProjectInfo, SubGroup } from '@/typings/project.ts';
 import { SelectMenu } from '@/typings/menu.ts';
 import { TaskData } from '@/typings/task.ts';
 import { useState } from 'react';
@@ -16,7 +16,8 @@ interface Props {
   taskInfo: TaskData;
 }
 export default function TaskEditInfo({ isEdit, taskInfo }: Props) {
-  const projectId = 10;
+  const nowProject: SaveProjectInfo = JSON.parse(sessionStorage.getItem('nowProject')!);
+  const projectId = nowProject.id;
   const [editTaskData, setEditTask] = useRecoilState(editTaskInfo);
   const pGroup: string[] = ['그룹', '개발팀', '마케팅팀', '홍보팀'];
   const cGroup: SubGroup = {

@@ -11,6 +11,7 @@ import { getAllProductProjects } from '@/api/Project/Version.ts';
 import { useRecoilState } from 'recoil';
 import { eachProductProjects } from '@/recoil/Project/atom.ts';
 import { useMessage } from '@/hooks/useMessage.ts';
+import { editorChangeLog } from '@/recoil/Common/atom.ts';
 export default function ReleaseNote() {
   // const dummy: Release[] = [
   //   {
@@ -90,6 +91,7 @@ export default function ReleaseNote() {
       refetchOnMount: false, // 마운트(리렌더링)될 때 데이터를 다시 가져오지 않음
       refetchOnWindowFocus: false, // 브라우저를 포커싱했을때 데이터를 가져오지 않음
       refetchOnReconnect: false, // 네트워크가 다시 연결되었을때 다시 가져오지 않음
+      enabled: !!nowProduct?.productId,
     },
   ]);
 
@@ -137,7 +139,7 @@ export default function ReleaseNote() {
       refetch();
       if (productList?.length > 0) {
         sessionStorage.setItem('nowProduct', JSON.stringify(productList[0]));
-        navigate(`/workspace/${productList[0].productName}`);
+        navigate(`/workspace/${productList[0].productId}`);
       }
     }
   }, [isLogin, productList]);

@@ -148,7 +148,8 @@ export default function Login() {
 
         <article className={'w-[37rem] flex-col-center text-lg font-bold'}>
           <nav
-            className={'flex-row-center w-full border-solid border-b border-gray-spring pb-7 mb-5'}
+            // className={'flex-row-center w-full border-solid border-b border-gray-spring pb-7 mb-5'}
+            className={'flex-row-center w-full pb-7 mb-5'}
           >
             <Link to={'/pwinquiry'} className={'w-[46%] text-right'}>
               <button>비밀번호 찾기</button>
@@ -160,17 +161,17 @@ export default function Login() {
               <button>회원가입</button>
             </Link>
           </nav>
-          <div className={'flex-col-center w-full'}>
-            <span className={'mb-7 text-lg font-bold'}>간편 로그인</span>
-            <div className={'w-3/5 flex-row-center justify-evenly'}>
-              <button onClick={() => login()}>
-                <img className={'w-12'} src={'google.svg'} alt={'google'} />
-              </button>
-              <button>
-                <img className={'w-12'} src={'kakao.svg'} alt={'kakao'} />
-              </button>
-            </div>
-          </div>
+          {/*<div className={'flex-col-center w-full'}>*/}
+          {/*  <span className={'mb-7 text-lg font-bold'}>간편 로그인</span>*/}
+          {/*  <div className={'w-3/5 flex-row-center justify-evenly'}>*/}
+          {/*    <button onClick={() => login()}>*/}
+          {/*      <img className={'w-12'} src={'google.svg'} alt={'google'} />*/}
+          {/*    </button>*/}
+          {/*    <button>*/}
+          {/*      <img className={'w-12'} src={'kakao.svg'} alt={'kakao'} />*/}
+          {/*    </button>*/}
+          {/*  </div>*/}
+          {/*</div>*/}
         </article>
       </div>
     </section>

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { BsChevronCompactDown } from 'react-icons/bs';
-import { SubGroup } from '@/typings/project.ts';
+import { SaveProjectInfo, SubGroup } from '@/typings/project.ts';
 import { Progress, Select, Space } from 'antd';
 import StatusBoard from '@/components/Project/Board/StatusBoard.tsx';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
@@ -18,7 +18,8 @@ interface IndexID {
 }
 export default function Project() {
   const { product, project } = useParams();
-  const projectId = 10;
+  const nowProject: SaveProjectInfo = JSON.parse(sessionStorage.getItem('nowProject')!);
+  const projectId = nowProject.id;
   const navigate = useNavigate();
   const [taskStatus, setTaskStatus] = useState<TaskStatus>('PROGRESS_BEFORE');
   const [dragUpdateData, setDragUpdateData] = useState<DragTaskIndexBody>({

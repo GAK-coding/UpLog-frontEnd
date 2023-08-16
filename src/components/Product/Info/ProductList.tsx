@@ -121,8 +121,7 @@ export default function ProductList() {
                           <div
                             className={'flex-row-center h-full w-[85%]'}
                             onClick={() => {
-                              // TODO: url 인코딩하기
-                              navigate(`/workspace/${product.productName}`);
+                              navigate(`/workspace/${product.productId}`);
                               sessionStorage.setItem('nowProduct', JSON.stringify(product));
                               onCloseProduct();
                             }}

@@ -8,6 +8,7 @@ import CreateGroupModal from '@/components/Product/SideBar/CreateGroupModal.tsx'
 import { Project, ScreenProjectTeams } from '@/typings/project.ts';
 import { useQuery } from 'react-query';
 import { getProjectTeams } from '@/api/Project/Version.ts';
+import { useMessage } from '@/hooks/useMessage.ts';
 
 export default function Groups() {
   const { product, project, parentgroup, childgroup } = useParams();
@@ -15,16 +16,9 @@ export default function Groups() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const nowProject: Project = JSON.parse(sessionStorage.getItem('nowProject')!);
+  const { showMessage, contextHolder } = useMessage();
 
-  const [parentGroups, setParentGroups] = useState<ScreenProjectTeams[]>([
-    // { name: '개발팀', isOpen: false, isHover: false },
-    // { name: '마케팅팀', isOpen: false, isHover: false },
-    // { name: '홍보팀', isOpen: false, isHover: false },
-    // { name: '바보팀', isOpen: false, isHover: false },
-    // { name: '멍청이팀', isOpen: false, isHover: false },
-    // { name: '똥개팀', isOpen: false, isHover: false },
-    // { name: '젠킨스팀', isOpen: false, isHover: false },
-  ]);
+  const [parentGroups, setParentGroups] = useState<ScreenProjectTeams[]>([]);
 
   const childGroups: string[][] = [
     // ['프론트엔드', '백엔드', '풀스택'],
@@ -90,6 +84,7 @@ export default function Groups() {
 
   return (
     <section className={'px-10'}>
+      {contextHolder}
       <div className={'h-20 flex-row-center justify-between'}>
         <header className={'text-[1.4rem] font-bold'}>Group</header>
         <span className={'cursor-pointer'} onClick={onOpen}>
@@ -166,7 +161,13 @@ export default function Groups() {
           </div>
         ))}
       </div>
-      <CreateGroupModal isOpen={isOpen} onClose={onClose} />
+      <CreateGroupModal
+        isOpen={isOpen}
+        onClose={onClose}
+        showMessage={showMessage}
+        parentGroups={parentGroups}
+        setParentGroups={setParentGroups}
+      />
     </section>
   );
 }

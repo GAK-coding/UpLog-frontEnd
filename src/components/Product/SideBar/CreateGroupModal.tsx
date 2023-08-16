@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useCallback } from 'react';
+import React, { ChangeEvent, Dispatch, SetStateAction, useCallback } from 'react';
 import {
   Modal,
   ModalBody,
@@ -10,20 +10,80 @@ import {
   Textarea,
 } from '@chakra-ui/react';
 import useInput from '@/hooks/useInput.ts';
+import { createProjectTeam } from '@/api/Project/Version.ts';
+import { useMutation, useQueryClient } from 'react-query';
+import { Project, ScreenProjectTeams } from '@/typings/project.ts';
+import { numberInputTheme } from '@chakra-ui/theme/dist/components/number-input';
+type MessageType = 'success' | 'error' | 'warning';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+  showMessage: (type: MessageType, content: string) => void;
+  parentGroups: ScreenProjectTeams[];
+  setParentGroups: Dispatch<SetStateAction<ScreenProjectTeams[]>>;
 }
 
-export default function CreateGroupModal({ isOpen, onClose }: Props) {
+export default function CreateGroupModal({
+  isOpen,
+  onClose,
+  showMessage,
+  parentGroups,
+  setParentGroups,
+}: Props) {
   // TODO: 그룹 이름 중복 안되게 해야됨
   const [groupName, onChangeGroupName, setGroupName] = useInput('');
+  const nowProject: Project = JSON.parse(sessionStorage.getItem('nowProject')!);
+  const queryClient = useQueryClient();
 
   const [emails, , setEmails] = useInput('');
   const onChangeEmails = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {
     setEmails(e.target.value);
   }, []);
+
+  const { mutate } = useMutation(createProjectTeam, {
+    onMutate: async () => {
+      await queryClient.cancelQueries(['getProjectTeams', nowProject?.id]);
+
+      const snapshot = queryClient.getQueryData(['getProjectTeams', nowProject?.id]);
+
+      queryClient.setQueriesData(['getProjectTeams', nowProject?.id], () => {
+        const temp: ScreenProjectTeams[] = [
+          ...parentGroups,
+          {
+            teamName: groupName,
+            teamId: -1,
+            depth: 1,
+            childTeamInfoDTOList: [],
+            isOpen: false,
+            isHover: false,
+          },
+        ];
+        return temp;
+      });
+
+      return { snapshot };
+    },
+    onError: (error, newTodo, context) => {
+      queryClient.setQueriesData(['getProjectTeams', nowProject?.id], context?.snapshot);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['getProjectTeams', nowProject?.id] });
+    },
+  });
+
+  const onClickCreate = useCallback(() => {
+    // TODO: link 처리 필요
+    mutate({
+      name: groupName,
+      parentTeamId: null,
+      memberIdList: [],
+      link: '/',
+      projectId: nowProject?.id,
+    });
+    onClose();
+    showMessage('success', '그룹이 생성되었습니다.');
+  }, [groupName, nowProject]);
 
   return (
     <Modal isCentered onClose={onClose} isOpen={isOpen}>
@@ -89,7 +149,7 @@ export default function CreateGroupModal({ isOpen, onClose }: Props) {
         <ModalFooter>
           <button
             className={'bg-orange rounded font-bold text-sm text-white w-[4.5rem] h-9'}
-            onClick={() => {}}
+            onClick={onClickCreate}
           >
             완료
           </button>

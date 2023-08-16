@@ -6,6 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { typeBgColors } from '@/recoil/Product/ReleaseNote.ts';
 import { eachProductProjects } from '@/recoil/Project/atom.ts';
+import { editorChangeLog } from '@/recoil/Common/atom.ts';
 
 interface Props {
   isClickKebab: boolean;
@@ -25,6 +26,7 @@ export default function Tables({
   setNowProjectId,
 }: Props) {
   const bgColor = useRecoilValue(typeBgColors);
+  const [editChangeLog, setEditChangeLog] = useRecoilState(editorChangeLog);
 
   const [projects, setProjects] = useRecoilState(eachProductProjects);
 
@@ -63,7 +65,7 @@ export default function Tables({
               textAlign={'center'}
               cursor={'pointer'}
               onClick={() => {
-                const url = encodeURI(`/workspace/${product}/${version.version}`);
+                const url = encodeURI(`/workspace/${product}/${version.id}`);
                 sessionStorage.setItem('nowProject', JSON.stringify(version));
 
                 navigate(url);
@@ -112,7 +114,11 @@ export default function Tables({
                   className={
                     'flex items-center text-[1.2rem] text-gray-light font-bold cursor-pointer'
                   }
-                  onClick={() => navigate(`/workspace/${product}/newchange`)}
+                  onClick={() => {
+                    navigate(`/workspace/${product}/newchange`);
+                    sessionStorage.setItem('nowProject', JSON.stringify(version));
+                    setEditChangeLog('');
+                  }}
                 >
                   <AiOutlinePlus className={'text-[1.6rem] mr-3'} /> 변경이력 추가
                 </button>
@@ -140,7 +146,11 @@ export default function Tables({
                   >
                     <button
                       className={'h-1/2 hover:bg-orange-light-sideBar'}
-                      onClick={() => navigate(`/workspace/${product}/newchange`)}
+                      onClick={() => {
+                        navigate(`/workspace/${product}/newchange`);
+                        sessionStorage.setItem('nowProject', JSON.stringify(version));
+                        setEditChangeLog('');
+                      }}
                     >
                       변경이력 추가
                     </button>

@@ -76,3 +76,15 @@ export interface ProductMember {
   // 케밥 버튼을 위한 변수이며 프론트에서 추가해줘야됨
   isOpen: boolean;
 }
+
+export type issueStatus = 'NEW' | 'FEATURE' | 'CHANGED' | 'FIXED' | 'DEPRECATED';
+
+export interface ChangeLog {
+  // productId: number;
+  title: string;
+  content: string;
+  issueStatus: issueStatus;
+  createdTime: string;
+  modifiedTime: string;
+  productId?: number;
+}

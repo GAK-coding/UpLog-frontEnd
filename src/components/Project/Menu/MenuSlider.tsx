@@ -15,6 +15,7 @@ import { useMutation, useQueryClient } from 'react-query';
 import { createMenu, editMenu } from '@/api/Project/Menu.ts';
 import { FailMenu, MenuInfo } from '@/typings/menu.ts';
 import { useGetMenuList } from '@/components/Project/hooks/useGetMenuList.ts';
+import { SaveProjectInfo } from '@/typings/project.ts';
 
 interface Props {
   product: string;
@@ -52,8 +53,8 @@ export default function MenuSlider({ product, project, menutitle }: Props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const regex = /^[a-zA-Z가-힣\s]*$/;
 
-  // TODO : 현재 project id 값으로 바꾸기
-  const projectId = 10;
+  const nowProject: SaveProjectInfo = JSON.parse(sessionStorage.getItem('nowProject')!);
+  const projectId = nowProject.id;
   const queryClient = useQueryClient();
 
   // menuList get
@@ -256,6 +257,12 @@ export default function MenuSlider({ product, project, menutitle }: Props) {
               }}
             />
           )}
+          <DeleteMenuDialog
+            isOpen={isOpen}
+            onClose={onClose}
+            menu={deleteMenuName}
+            menuId={menuId}
+          />
         </div>
       )}
     </StyledSlider>

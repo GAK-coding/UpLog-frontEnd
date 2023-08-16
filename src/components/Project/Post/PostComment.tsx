@@ -117,6 +117,7 @@ export default function PostComment({ postId, menuId }: Props) {
       },
       onSettled: () => {
         queryClient.invalidateQueries(['commentList', postId]);
+        queryClient.invalidateQueries(['menuPostData', menuId], { refetchInactive: true });
       },
     }
   );
