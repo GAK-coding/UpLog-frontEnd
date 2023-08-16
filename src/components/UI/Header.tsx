@@ -212,19 +212,23 @@ export default function Header() {
             )}
           </div>
 
-          <span
-            className={'flex self-end text-gray-dark text-xl cursor-pointer'}
-            onClick={() => navigate('/login')}
-          >
-            로그인
-          </span>
-          <span className={'flex self-end text-gray-dark text-xl'}>&nbsp;•</span>
-          <span
-            className={'flex self-end text-gray-dark text-xl cursor-pointer'}
-            onClick={() => navigate('/signup')}
-          >
-            &nbsp;회원가입
-          </span>
+          {pathname !== '/' && (
+            <div className={'flex'}>
+              <span
+                className={'flex self-end text-gray-dark text-xl cursor-pointer'}
+                onClick={() => navigate('/login')}
+              >
+                로그인
+              </span>
+              <span className={'flex self-end text-gray-dark text-xl'}>&nbsp;•</span>
+              <span
+                className={'flex self-end text-gray-dark text-xl cursor-pointer'}
+                onClick={() => navigate('/signup')}
+              >
+                &nbsp;회원가입
+              </span>
+            </div>
+          )}
         </div>
       )}
     </header>
