@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { ChangeLogBody, ChangeLogData, ProductInfo } from '@/typings/product.ts';
+import { ChangeLogBody, ChangeLogData, issueStatus, ProductInfo } from '@/typings/product.ts';
 import { Table, TableContainer, Th, Thead, Tr, useDisclosure } from '@chakra-ui/react';
 import { AiOutlinePlus } from 'react-icons/ai';
 import Tables from '@/components/Product/ReleaseNote/Tables.tsx';
@@ -104,6 +104,8 @@ export default function ReleaseNote() {
       enabled: !!projects,
     }))
   );
+
+  console.log(eachProjectQueryResults);
 
   const navigate = useNavigate();
   const { state } = useLocation();
@@ -244,6 +246,7 @@ export default function ReleaseNote() {
                 onClickComplete={onClickProjectModal}
                 setTempVersion={setTempVersion}
                 setNowProjectId={setNowProjectId}
+                eachProjectQueryResults={eachProjectQueryResults}
               />
             )}
           </Table>

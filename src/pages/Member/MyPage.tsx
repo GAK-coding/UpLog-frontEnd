@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ImageCrop from '@/components/Member/MyPage/ImageCrop.tsx';
 import { UploadFile, UploadProps } from 'antd/lib';
 import { useDisclosure } from '@chakra-ui/react';
@@ -48,10 +48,15 @@ export default function MyPage() {
     if (newFileList.length > 0) await encodeFileToBase64(newFileList[0]!.originFileObj!);
   };
 
-  const { mutate } = useMutation(updateMyInfo);
+  const nowImage = useRef<string>();
+  const { mutate } = useMutation(updateMyInfo, {
+    onSuccess: (data) => {
+      if (data) nowImage.current = data;
+    },
+  });
 
   const onChangeProfile = useCallback(async () => {
-    if (!newName && !newNickname && !fileList[0]) {
+    if (!newName && !newNickname) {
       showMessage('warning', '프로필 변경을 해주세요.');
       return;
     }
@@ -61,43 +66,33 @@ export default function MyPage() {
     //
     // console.log(fileList[0].originFileObj!);
 
-    mutate({ newName, newNickname, file: fileList[0]!.originFileObj! ?? '' });
+    console.log(nowImage.current);
 
+    mutate({
+      newNickname: !newNickname ? null : newNickname,
+      newName: !newName ? null : newName,
+      file: null,
+      // file: fileList[0]!.originFileObj?.uid === '-1' ? null : fileList[0]!.originFileObj!,
+    });
+
+    setUserInfo({
+      ...userInfo,
+      nickname: !newNickname ? userInfo.nickname : newNickname,
+      name: !newName ? userInfo.name : newName,
+    });
+    sessionStorage.setItem(
+      'userInfo',
+      JSON.stringify({
+        ...userInfo,
+        newNickname: !newNickname ? null : newNickname,
+        newName: !newName ? null : newName,
+      })
+    );
+
+    setNewNickname('');
+    setNewName('');
     showMessage('success', '프로필 변경 완료!');
-    //
-    // if (newName && newNickname) {
-    //   await nameChangeMutate({ id: userInfo.id, newName });
-    //   setTimeout(() => {
-    //     nicknameChangeMutate({ id: userInfo.id, newNickname });
-    //   }, 1000);
-    //
-    //   setUserInfo({ ...userInfo, nickname: newNickname, name: newName });
-    //   sessionStorage.setItem(
-    //     'userInfo',
-    //     JSON.stringify({ ...userInfo, nickname: newNickname, name: newName })
-    //   );
-    //   setNewNickname('');
-    //   setNewName('');
-    //
-    //   showMessage('success', '이름, 닉네임 변경 완료!');
-    // } else if (newName) {
-    //   nameChangeMutate({ id: userInfo.id, newName });
-    //
-    //   setUserInfo({ ...userInfo, name: newName });
-    //   sessionStorage.setItem('userInfo', JSON.stringify({ ...userInfo, name: newName }));
-    //   setNewName('');
-    //
-    //   showMessage('success', '이름 변경 완료!');
-    // } else {
-    //   nicknameChangeMutate({ id: userInfo.id, newNickname });
-    //
-    //   setUserInfo({ ...userInfo, nickname: newNickname });
-    //   sessionStorage.setItem('userInfo', JSON.stringify({ ...userInfo, nickname: newNickname }));
-    //   setNewNickname('');
-    //
-    //   showMessage('success', '닉네임 변경 완료!');
-    // }
-  }, [newName, newNickname, fileList]);
+  }, [newName, newNickname, fileList, userInfo]);
 
   // 비밀번호 변경 모달
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -106,6 +101,18 @@ export default function MyPage() {
   const onChangeIsClickPw = useCallback((chk: boolean) => {
     setIsClickPwChange(chk);
   }, []);
+
+  // useEffect(() => {
+  //   if (userInfo.image) {
+  //     const imageFile: UploadFile = {
+  //       uid: '-1',
+  //       name: 'image.png', // You can set a desired name here
+  //       status: 'done',
+  //       url: userInfo.image, // Set the URL of the image
+  //     };
+  //     setFileList([imageFile]);
+  //   }
+  // }, [userInfo.image]);
 
   return (
     <section className={'mypage flex flex-col items-center w-full h-[68rem]'}>

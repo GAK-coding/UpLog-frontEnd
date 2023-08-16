@@ -65,8 +65,6 @@ export const deleteAccount = async (data: {
 
 export const imageUpload = async (data: File) => {
   try {
-    console.log('여기', data);
-
     const formData = new FormData();
     await formData.append('file', data);
 
@@ -76,7 +74,7 @@ export const imageUpload = async (data: File) => {
 
     return res.data.url;
   } catch (err) {
-    return 'fail imageUpload';
+    return null;
   }
 };
 
@@ -95,6 +93,8 @@ export const updateMyInfo = async (data: {
       newNickname,
       image,
     });
+
+    if (file) return image;
   } catch (err) {
     return 'fail updateMyInfo';
   }
