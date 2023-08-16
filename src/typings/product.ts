@@ -76,12 +76,17 @@ export interface ProductMember {
 
 export type issueStatus = 'NEW' | 'FEATURE' | 'CHANGED' | 'FIXED' | 'DEPRECATED';
 
-export interface ChangeLog {
-  // productId: number;
+export interface ChangeLogBody {
   title: string;
   content: string;
   issueStatus: issueStatus;
-  createdTime: string;
-  modifiedTime: string;
-  productId?: number;
+}
+
+export interface SaveProductInfo {
+  draggableId: string;
+  image: string;
+  indexNum: number;
+  powerType: string;
+  productId: number;
+  productName: string;
 }
