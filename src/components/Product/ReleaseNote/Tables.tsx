@@ -7,6 +7,9 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { typeBgColors } from '@/recoil/Product/ReleaseNote.ts';
 import { eachProductProjects } from '@/recoil/Project/atom.ts';
 import { editorChangeLog } from '@/recoil/Common/atom.ts';
+import { UseQueryResult } from 'react-query';
+import { ChangeLogData } from '@/typings/product.ts';
+import { data } from 'autoprefixer';
 
 interface Props {
   isClickKebab: boolean;
@@ -15,6 +18,10 @@ interface Props {
   onClickComplete: (modalType: 'add' | 'complete') => void;
   setTempVersion: React.Dispatch<React.SetStateAction<string>>;
   setNowProjectId: React.Dispatch<React.SetStateAction<number>>;
+  eachProjectQueryResults: UseQueryResult<
+    ChangeLogData[] | 'fail getChangeLogEachProject',
+    unknown
+  >[];
 }
 
 export default function Tables({
@@ -24,6 +31,7 @@ export default function Tables({
   onClickComplete,
   setTempVersion,
   setNowProjectId,
+  eachProjectQueryResults,
 }: Props) {
   const bgColor = useRecoilValue(typeBgColors);
   const [editChangeLog, setEditChangeLog] = useRecoilState(editorChangeLog);
@@ -46,6 +54,10 @@ export default function Tables({
       setIsClickKebab(false);
     }
   }, []);
+
+  function capitalizeFirstLetter(str: string) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
 
   return (
     <Tbody>
@@ -86,8 +98,13 @@ export default function Tables({
               marginY={'auto'}
               fontSize={'1.1rem'}
             >
-              {version.contents && version?.contents?.length > 0 ? (
-                version?.contents?.map((content, idx) => {
+              {eachProjectQueryResults[index]['data'] !== 'fail getChangeLogEachProject' &&
+              Array.isArray(eachProjectQueryResults[index]['data']) ? (
+                (
+                  [
+                    ...JSON.parse(JSON.stringify(eachProjectQueryResults?.[index]?.['data'])),
+                  ] as ChangeLogData[]
+                )?.map((content, idx) => {
                   return (
                     <div
                       key={idx}
@@ -97,10 +114,10 @@ export default function Tables({
                     >
                       <span
                         className={`${
-                          bgColor[content.type]
+                          bgColor[capitalizeFirstLetter(content.issueStatus.toLowerCase())]
                         } text-[#292723] mr-4 p-2 rounded-[0.31rem]`}
                       >
-                        {content.type}
+                        {content.issueStatus}
                       </span>
                       {content.content}
                     </div>

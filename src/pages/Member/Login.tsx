@@ -28,14 +28,17 @@ export default function Login() {
         return;
       }
 
-      const { id, email, nickname, name, position, accessToken, refreshToken } = data;
+      const { id, email, nickname, name, position, accessToken, refreshToken, image } = data;
       const userInfo: SaveUserInfo = {
         id,
         nickname,
         name,
         position,
         email,
+        image,
       };
+
+      console.log(image);
 
       sessionStorage.setItem('accessToken', accessToken);
       setCookie('refreshToken', refreshToken, { path: '/' });
