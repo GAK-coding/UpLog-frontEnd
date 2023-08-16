@@ -140,7 +140,7 @@ export default function ReleaseNote() {
     const projectList = queryResults[0].data;
     console.log(projectList);
     if (projectList && typeof projectList !== 'string') {
-      const temp = JSON.parse(JSON.stringify(projectList)).reverse();
+      const temp = JSON.parse(JSON.stringify(projectList));
       setProjects([...temp]);
     }
   }, [queryResults[0].data]);
