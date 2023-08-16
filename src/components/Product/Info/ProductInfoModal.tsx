@@ -22,7 +22,6 @@ import { useGetEachProduct } from '@/components/Product/hooks/useGetEachProduct.
 import { useRecoilValue } from 'recoil';
 import { frontEndUrl } from '@/recoil/Common/atom.ts';
 import { util } from 'prismjs';
-import encode = util.encode;
 
 interface Props {
   isOpen: boolean;
@@ -46,7 +45,6 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
     clientEmail: null,
     link: '',
   });
-  // TODO : 링크 임베딩 된 링크로 다시 보내기
 
   const updateProductInfo: ProductEditBody = {
     link: null,
@@ -154,6 +152,28 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
         }
       }
 
+      // let isEmailFormat = true;
+      // const clientEmailList = clientEmail
+      //   .split(',')
+      //   .map((email) => {
+      //     const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+      //     if (!emailRegex.test(email.trim()) && email.trim() !== '') {
+      //       isEmailFormat = false;
+      //     }
+      //
+      //     if (email.trim() !== '') {
+      //       return email.trim();
+      //     } else {
+      //       return null; // 빈 문자열이 아닌 경우에는 null을 반환하도록 수정
+      //     }
+      //   })
+      //   .filter((email) => email !== null) as string[];
+      //
+      // if (!isEmailFormat) {
+      //   showMessage('warning', '이메일 형식이 올바르지 않은 메일이 존재합니다.');
+      //   return;
+      // }
+
       // 수정 요청 보냄
       return;
     }
@@ -174,7 +194,7 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
     setProductInfo({
       name: productName,
       masterEmail: masterEmail,
-      clientEmail: null,
+      clientEmail: clientEmail,
       link: `${baseUrl}/workspace/${encodeURI(productName)}`,
     });
   }, [productName, masterEmail, updateProductInfo]);
