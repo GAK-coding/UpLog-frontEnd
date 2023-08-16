@@ -2,7 +2,7 @@ import { instance } from '@/api';
 import { AxiosResponse } from 'axios';
 import { FailProject, Project, ProjectGroup, ProjectTeams } from '@/typings/project.ts';
 import { data } from 'autoprefixer';
-import { ChangeLogBody, FailProduct } from '@/typings/product.ts';
+import { ChangeLogBody, ChangeLogData, FailProduct } from '@/typings/product.ts';
 
 export const getAllProductProjects = async (productId: number) => {
   try {
@@ -106,7 +106,7 @@ export const createNewChangeLog = async (data: ChangeLogBody, projectId: number)
 // 변경이력 조회
 export const getChangeLogEachProject = async (projectId: number) => {
   try {
-    const res: AxiosResponse<ChangeLogBody[] | FailProject> = await instance.get(
+    const res: AxiosResponse<ChangeLogData[]> = await instance.get(
       `/changedIssues/${projectId}/issue`
     );
 

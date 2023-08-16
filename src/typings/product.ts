@@ -57,11 +57,6 @@ export interface ProductEditData {
 // ReleaseNote.tsx에서 사용
 export type changeType = 'Feature' | 'Changed' | 'Deprecated' | 'New' | 'Fixed';
 
-export interface changeLog {
-  type: changeType;
-  content: string;
-}
-
 export interface ProductMember {
   powerType: 'MASTER' | 'LEADER' | 'DEFAULT' | 'CLIENT';
   memberId: number;
@@ -80,6 +75,14 @@ export interface ChangeLogBody {
   title: string;
   content: string;
   issueStatus: issueStatus;
+}
+
+export interface ChangeLogData {
+  id: number;
+  content: string;
+  issueStatus: issueStatus;
+  createdTime: string;
+  modifiedTime: string;
 }
 
 export interface SaveProductInfo {
