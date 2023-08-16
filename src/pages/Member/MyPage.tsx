@@ -11,7 +11,6 @@ import useInput from '@/hooks/useInput.ts';
 import { useMutation } from 'react-query';
 import { changeName, changeNickname, updateMyInfo } from '@/api/Members/mypage.ts';
 import { useMessage } from '@/hooks/useMessage.ts';
-import { useImgUpload } from '@/hooks/useImgUpload.ts';
 
 export default function MyPage() {
   // const userInfo: SaveUserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
@@ -52,10 +51,19 @@ export default function MyPage() {
   const { mutate } = useMutation(updateMyInfo);
 
   const onChangeProfile = useCallback(async () => {
-    // if (!newName && !newNickname) {
-    //   showMessage('warning', '이름과 닉네임을 입력해주세요.');
-    //   return;
-    // }
+    if (!newName && !newNickname && !fileList[0]) {
+      showMessage('warning', '프로필 변경을 해주세요.');
+      return;
+    }
+
+    // const formData = new FormData();
+    // await formData.append('file', fileList[0]!.originFileObj!);
+    //
+    // console.log(fileList[0].originFileObj!);
+
+    mutate({ newName, newNickname, file: fileList[0]!.originFileObj! ?? '' });
+
+    showMessage('success', '프로필 변경 완료!');
     //
     // if (newName && newNickname) {
     //   await nameChangeMutate({ id: userInfo.id, newName });
@@ -89,7 +97,7 @@ export default function MyPage() {
     //
     //   showMessage('success', '닉네임 변경 완료!');
     // }
-  }, []);
+  }, [newName, newNickname, fileList]);
 
   // 비밀번호 변경 모달
   const { isOpen, onOpen, onClose } = useDisclosure();
