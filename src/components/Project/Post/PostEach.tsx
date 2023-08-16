@@ -177,11 +177,11 @@ export default function PostEach({ post, menuId, likeList, noticeId }: Props) {
           <Viewer initialValue={post.content} />
         </div>
         <div className={'w-[90%] h-auto flex-row-center justify-start'}>
-          {post.tagList &&
-            post.tagList.map((tag, index) => {
+          {post.postTags &&
+            post.postTags.map((tag, index) => {
               return (
                 <div key={index} className={'w-auto h-auto text-gray-dark mx-3'}>
-                  #{tag}
+                  #{tag.contents}
                 </div>
               );
             })}
