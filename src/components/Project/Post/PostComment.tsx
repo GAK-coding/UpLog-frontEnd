@@ -19,10 +19,11 @@ import { SaveUserInfo } from '@/typings/member.ts';
 
 interface Props {
   postId: number;
+  menuId: number;
   commentLikeData: CommentLikeList[];
 }
 
-export default function PostComment({ postId, commentLikeData }: Props) {
+export default function PostComment({ postId, menuId, commentLikeData }: Props) {
   const { showMessage, contextHolder } = useMessage();
   const userInfo: SaveUserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
 
@@ -38,9 +39,10 @@ export default function PostComment({ postId, commentLikeData }: Props) {
   const [commentList, setCommentList] = useState<CommentInfo[]>();
   const [commentId, setCommentId] = useState<number>(0);
 
+  const [isEditComment, setIsEditComment] = useState<{ [key: number]: boolean }>({});
   const [isLikeClick, setIsLikeClick] = useState<{ [key: number]: boolean }>({});
-  const [isChildClick, setIsChildClick] = useState<{ [key: number]: boolean }>({});
-  const [childCommentValue, setChildCommentValue] = useState<{ [key: number]: string }>({});
+  // const [isChildClick, setIsChildClick] = useState<{ [key: number]: boolean }>({});
+  // const [childCommentValue, setChildCommentValue] = useState<{ [key: number]: string }>({});
 
   const queryClient = useQueryClient();
 
@@ -76,7 +78,8 @@ export default function PostComment({ postId, commentLikeData }: Props) {
       }
     },
     onSettled: () => {
-      return queryClient.invalidateQueries(['commentList', postId]);
+      queryClient.invalidateQueries(['commentList', postId]);
+      queryClient.invalidateQueries(['menuPostData', menuId], { refetchInactive: true });
     },
   });
 
@@ -120,7 +123,7 @@ export default function PostComment({ postId, commentLikeData }: Props) {
         }
       },
       onSettled: () => {
-        return queryClient.invalidateQueries(['commentList', postId]);
+        queryClient.invalidateQueries(['commentList', postId]);
       },
     }
   );
@@ -152,12 +155,12 @@ export default function PostComment({ postId, commentLikeData }: Props) {
   );
 
   // 답글달기 눌렀을 때
-  const onClickChild = useCallback((commentId: number) => {
-    setIsChildClick((prevState) => ({
-      ...prevState,
-      [commentId]: !prevState[commentId],
-    }));
-  }, []);
+  // const onClickChild = useCallback((commentId: number) => {
+  //   setIsChildClick((prevState) => ({
+  //     ...prevState,
+  //     [commentId]: !prevState[commentId],
+  //   }));
+  // }, []);
 
   // Enter 입력 시 댓글 추가
   const activeEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -174,6 +177,8 @@ export default function PostComment({ postId, commentLikeData }: Props) {
       // TODO : 댓글 추가 api 요청 보내기
     }
   };
+
+  const onClickEditComment = useCallback((commentId) => {}, []);
 
   // 댓글 생성요청 + 데이터 초기화
   useEffect(() => {
@@ -227,7 +232,12 @@ export default function PostComment({ postId, commentLikeData }: Props) {
                   </div>
                   {userInfo.id === comment.memberId && (
                     <div className={'flex justify-between w-[4rem] text-[0.8rem] text-gray-light'}>
-                      <span className={'cursor-pointer hover:text-orange'}>수정</span>
+                      <span
+                        className={'cursor-pointer hover:text-orange'}
+                        onClick={() => onClickEditComment(comment.id)}
+                      >
+                        수정
+                      </span>
                       <span
                         className={'cursor-pointer hover:text-orange'}
                         onClick={() => deleteCommentMutate(comment.id)}
@@ -276,12 +286,12 @@ export default function PostComment({ postId, commentLikeData }: Props) {
                     {/*  }개`}</span>*/}
                     {/*)}*/}
                   </div>
-                  <span
-                    className={'flex text-gray-light ml-2 text-[0.7rem] cursor-pointer'}
-                    onClick={() => onClickChild(comment.id)}
-                  >
-                    답글 달기
-                  </span>
+                  {/*<span*/}
+                  {/*  className={'flex text-gray-light ml-2 text-[0.7rem] cursor-pointer'}*/}
+                  {/*  onClick={() => onClickChild(comment.id)}*/}
+                  {/*>*/}
+                  {/*  답글 달기*/}
+                  {/*</span>*/}
                 </div>
                 {/*대댓글 */}
                 {/*<PostChildComment*/}

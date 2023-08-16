@@ -262,7 +262,7 @@ export default function PostEach({ post, menuId, likeList, commentLike, noticeId
         </div>
       </div>
       {/*댓글*/}
-      <PostComment postId={post.id} commentLikeData={commentLike} />
+      <PostComment postId={post.id} menuId={menuId} commentLikeData={commentLike} />
     </article>
   );
 }
