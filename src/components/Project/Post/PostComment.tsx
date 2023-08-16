@@ -65,7 +65,9 @@ export default function PostComment({ postId, menuId }: Props) {
       return () => queryClient.setQueryData(['commentList', postId], previousData);
     },
     onSuccess: (data) => {
-      if (typeof data !== 'string') {
+      if (typeof data !== 'string' && 'message' in data) {
+        showMessage('warning', data.message);
+      } else if (typeof data !== 'string') {
         showMessage('success', '댓글이 등록되었습니다.');
       } else showMessage('error', '댓글 등록에 실패했습니다.');
     },
@@ -341,7 +343,7 @@ export default function PostComment({ postId, menuId }: Props) {
       {/*댓글 작성 input */}
       <div
         className={
-          'flex-row-center justify-between w-full h-[3rem] mt-4  border border-line rounded-2xl px-5'
+          'flex-row-center justify-between w-full h-[3rem] mt-4 border border-gray-light rounded-2xl px-5'
         }
       >
         <input
@@ -350,7 +352,7 @@ export default function PostComment({ postId, menuId }: Props) {
           onChange={onChangeCommentValue}
           placeholder={'댓글을 입력해주세요.'}
           maxLength={30}
-          className={'flex w-full h-full outline-none rounded-2xl'}
+          className={'flex w-full h-full outline-none bg-transparent rounded-2xl'}
           onKeyDown={(e) => activeEnter(e)}
         />
       </div>

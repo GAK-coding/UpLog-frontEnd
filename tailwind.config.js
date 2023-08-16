@@ -21,6 +21,9 @@ export default {
           line: 'var(--task-line)',
           'detail-line': 'var(--task-detail-line)',
         },
+        post: {
+          bg: 'var(--post-board)',
+        },
         gray: {
           light: 'var(--gray-light)',
           dark: 'var(--gray-dark)',
