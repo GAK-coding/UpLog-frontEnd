@@ -34,7 +34,7 @@ export default function Home() {
       <div className={'flex-row-center w-full h-[45%]'}>
         <button
           className={
-            'flex-row-center justify-between w-[30rem] h-[6.5rem] pl-28 pr-8 cursor-pointer rounded-xl bg-orange font-logo font-bold shadow-[0_4px_9px_-4px_#e4a11b] transition duration-150 ease-in-out hover:shadow-[0_8px_9px_-4px_rgba(228,161,27,0.3),0_4px_18px_0_rgba(228,161,27,0.2)] hover:scale-110 hover:bg-[#F86F03] focus:shadow-[0_8px_9px_-4px_rgba(228,161,27,0.3),0_4px_18px_0_rgba(228,161,27,0.2)] focus:outline-none focus:ring-0 active:bg-warning-700 active:shadow-[0_8px_9px_-4px_rgba(228,161,27,0.3),0_4px_18px_0_rgba(228,161,27,0.2)] hover:text-[#f5f5f5]'
+            'flex-row-center justify-between w-[30rem] h-[6.5rem] pl-28 pr-8 cursor-pointer rounded-xl bg-orange font-logo font-bold shadow-[0_4px_9px_-4px_#e4a11b] transition duration-150 ease-in-out hover:shadow-[0_8px_9px_-4px_rgba(228,161,27,0.3),0_4px_18px_0_rgba(228,161,27,0.2)] hover:scale-110 hover:bg-[#F86F03] focus:shadow-[0_8px_9px_-4px_rgba(228,161,27,0.3),0_4px_18px_0_rgba(228,161,27,0.2)] focus:outline-none focus:ring-0 active:bg-warning-700 active:shadow-[0_8px_9px_-4px_rgba(228,161,27,0.3),0_4px_18px_0_rgba(228,161,27,0.2)] hover:text-white'
           }
           onClick={() => navigate('/login')}
         >
