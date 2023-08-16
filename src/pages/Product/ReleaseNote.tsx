@@ -129,7 +129,7 @@ export default function ReleaseNote() {
   useEffect(() => {
     const projectList = queryResults[0].data;
     if (projectList && typeof projectList !== 'string') {
-      const temp = JSON.parse(JSON.stringify(projectList)).reverse();
+      const temp = JSON.parse(JSON.stringify(projectList));
       setProjects([...temp]);
     }
   }, [queryResults[0].data]);
