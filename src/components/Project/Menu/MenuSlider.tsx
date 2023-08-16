@@ -256,6 +256,12 @@ export default function MenuSlider({ product, project, menutitle }: Props) {
               }}
             />
           )}
+          <DeleteMenuDialog
+            isOpen={isOpen}
+            onClose={onClose}
+            menu={deleteMenuName}
+            menuId={menuId}
+          />
         </div>
       )}
     </StyledSlider>
