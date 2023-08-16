@@ -27,6 +27,6 @@ export function useGetEachProduct(
     refetchOnReconnect: false, // 네트워크가 다시 연결되었을때 다시 가져오지 않음
   });
 
-  if (data && typeof data !== 'string' && 'teamId' in data) return [data, refetch];
+  if (data && typeof data !== 'string' && 'id' in data) return [data, refetch];
   else return [[], refetch];
 }

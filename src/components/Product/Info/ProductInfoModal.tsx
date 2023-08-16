@@ -21,7 +21,6 @@ import { ProductBody, ProductEditBody } from '@/typings/product.ts';
 import { useGetEachProduct } from '@/components/Product/hooks/useGetEachProduct.ts';
 import { useRecoilValue } from 'recoil';
 import { frontEndUrl } from '@/recoil/Common/atom.ts';
-import { util } from 'prismjs';
 
 interface Props {
   isOpen: boolean;
@@ -46,12 +45,12 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
     link: '',
   });
 
-  const updateProductInfo: ProductEditBody = {
+  const [updateProductInfo, setUpdateProductInfo] = useState<ProductEditBody>({
     link: null,
     newName: productName,
     memberEmailList: [],
     powerType: null,
-  };
+  });
 
   // 제품 이미지 업로드
   const [fileList, setFileList] = useState<UploadFile[]>([]);
@@ -99,8 +98,33 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
       return () => queryClient.setQueryData('myProductList', previousProductList);
     },
     onSuccess: (data) => {
-      if (typeof data === 'object') {
-        showMessage('success', '제품 정보가 변경되었습니다.');
+      if (typeof data !== 'string' && data.updateResultDTO) {
+        const { failCnt, failMemberList, duplicatedCnt, duplicatedMemberList } =
+          data.updateResultDTO;
+
+        if (failCnt > 0 && duplicatedCnt > 0) {
+          showMessage(
+            'error',
+            `${failMemberList.join(', ')}님 가입되어 있지 않고, ${duplicatedMemberList.join(
+              ', '
+            )}님은 이미 존재하여 초대에 실패했습니다.`
+          );
+          return;
+        } else if (failCnt > 0) {
+          showMessage(
+            'error',
+            `${failMemberList.join(', ')}님은 가입되어 있지 않아 초대에 실패했습니다.`
+          );
+          return;
+        } else if (duplicatedCnt > 0) {
+          showMessage(
+            'error',
+            `${duplicatedMemberList.join(', ')}님은 이미 존재하여 초대에 실패했습니다.`
+          );
+          return;
+        }
+
+        showMessage('success', '제품 수정이 완료되었습니다.');
         setTimeout(() => onClose(), 2000);
       }
     },
@@ -136,45 +160,56 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
 
   // 제품 추가 완료 버튼
   const onClickMakeProduct = useCallback(() => {
-    setCheck(true);
-
     if (!isCreateProduct) {
       if (!productName) {
+        console.log(clientEmail);
         showMessage('warning', '제품 이름을 입력해주세요.');
         return;
       }
 
       // 변경된 사항이 없으면 수정 요청 보내지 않음
-      if (typeof productGetData === 'object' && productGetData !== null) {
-        if ('name' in productGetData && productName === productGetData.name) {
-          showMessage('warning', '변경된 정보가 없습니다.');
-          return;
-        }
+      console.log(productName, productGetData, clientEmail);
+      if ('name' in productGetData && productName === productGetData.name && clientEmail === '') {
+        showMessage('warning', '변경된 정보가 없습니다.');
+        return;
       }
 
-      // let isEmailFormat = true;
-      // const clientEmailList = clientEmail
-      //   .split(',')
-      //   .map((email) => {
-      //     const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
-      //     if (!emailRegex.test(email.trim()) && email.trim() !== '') {
-      //       isEmailFormat = false;
-      //     }
-      //
-      //     if (email.trim() !== '') {
-      //       return email.trim();
-      //     } else {
-      //       return null; // 빈 문자열이 아닌 경우에는 null을 반환하도록 수정
-      //     }
-      //   })
-      //   .filter((email) => email !== null) as string[];
-      //
-      // if (!isEmailFormat) {
-      //   showMessage('warning', '이메일 형식이 올바르지 않은 메일이 존재합니다.');
-      //   return;
-      // }
+      if (clientEmail === '') {
+        setUpdateProductInfo({
+          ...updateProductInfo,
+          newName: productName,
+        });
+      } else {
+        let isEmailFormat = true;
+        const clientEmailList = clientEmail
+          .split(',')
+          .map((email) => {
+            const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+            if (!emailRegex.test(email.trim()) && email.trim() !== '') {
+              isEmailFormat = false;
+            }
 
-      // 수정 요청 보냄
+            if (email.trim() !== '') {
+              return email.trim();
+            } else {
+              return null; // 빈 문자열이 아닌 경우에는 null을 반환하도록 수정
+            }
+          })
+          .filter((email) => email !== null) as string[];
+
+        if (!isEmailFormat) {
+          showMessage('warning', '이메일 형식이 올바르지 않은 메일이 존재합니다.');
+          return;
+        }
+
+        setUpdateProductInfo({
+          ...updateProductInfo,
+          memberEmailList: clientEmailList,
+          link: `${baseUrl}/workspace/${encodeURI(productName)}`,
+          powerType: 'CLIENT',
+        });
+      }
+      setCheck(true);
       return;
     }
 
@@ -197,26 +232,46 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
       clientEmail: clientEmail,
       link: `${baseUrl}/workspace/${encodeURI(productName)}`,
     });
-  }, [productName, masterEmail, updateProductInfo]);
+    setCheck(true);
+  }, [productName, masterEmail, clientEmail, updateProductInfo, productGetData]);
 
   useEffect(() => {
     // 모달창 껏다가 키면 정보 초기화
     if (isCreateProduct) {
+      setProductInfo({
+        name: '',
+        masterEmail: '',
+        clientEmail: null,
+        link: '',
+      });
       setProductName('');
       setClientEmail('');
       setMasterEmail('');
     } else {
       // 수정일 경우에 기존 post 정보로 값 채워넣기
       refetch();
+      setProductName('');
+      setClientEmail('');
+      setMasterEmail('');
     }
   }, [isOpen, isCreateProduct, productId]);
 
+  useEffect(() => {
+    console.log('바뀜', clientEmail);
+  }, [clientEmail]);
   useEffect(() => {
     if (check) {
       isCreateProduct
         ? createProductMutate()
         : updateProduct({ data: updateProductInfo, productId });
     }
+
+    setUpdateProductInfo({
+      link: null,
+      newName: productName,
+      memberEmailList: [],
+      powerType: null,
+    });
     setCheck(false);
   }, [check, isCreateProduct]);
 
