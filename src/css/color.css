@@ -30,7 +30,7 @@
   --input-bg: #ffffff;
   --hover: #e9ecef;
   --shadow: rgba(0, 0, 0, 0.1);
-
+  --main-gray : #64635e;
   --Feature: #deecdc;
   --Changed: #faedcc;
   --Deprecated: #f7e1dc;
@@ -61,6 +61,7 @@ html.dark {
   --task-line: #424242;
   --task-detail-line: #424242;
   --menu-arrow : rgba(100, 99 ,94, 0.2);
+  --main-gray: #c4c4c4;
   /*
    border-bg : border 배경 색깔
    border-gray : input, button 창 border 색깔
