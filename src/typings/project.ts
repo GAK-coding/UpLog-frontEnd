@@ -38,3 +38,5 @@ export interface ProjectGroup {
   teamName: string;
   depth: number;
 }
+
+export interface SaveProjectInfo extends Project {}

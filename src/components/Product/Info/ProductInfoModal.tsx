@@ -205,7 +205,7 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
         setUpdateProductInfo({
           ...updateProductInfo,
           memberEmailList: clientEmailList,
-          link: `${baseUrl}/workspace/${encodeURI(productName)}`,
+          link: `${baseUrl}/workspace/${productId}`,
           powerType: 'CLIENT',
         });
       }
@@ -230,7 +230,7 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
       name: productName,
       masterEmail: masterEmail,
       clientEmail: clientEmail,
-      link: `${baseUrl}/workspace/${encodeURI(productName)}`,
+      link: `${baseUrl}/workspace/${productId}`,
     });
     setCheck(true);
   }, [productName, masterEmail, clientEmail, updateProductInfo, productGetData]);
