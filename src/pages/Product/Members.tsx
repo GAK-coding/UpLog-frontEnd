@@ -120,7 +120,7 @@ export default function Members() {
     onMutate: async ({ newPowerType, memberId }) => {
       await queryClient.cancelQueries(['getProductMemberList', productId]);
 
-      const sanpshot = queryClient.getQueryData(['getProductMemberList', productId]);
+      const snapshot = queryClient.getQueryData(['getProductMemberList', productId]);
 
       queryClient.setQueryData(['getProductMemberList', productId], () => {
         const temp: ProductMember[] = members.map((member) => {
@@ -148,10 +148,10 @@ export default function Members() {
         return temp;
       });
 
-      return { sanpshot };
+      return { snapshot };
     },
     onError: (error, newTodo, context) => {
-      queryClient.setQueriesData(['getProductMemberList', productId], context?.sanpshot);
+      queryClient.setQueriesData(['getProductMemberList', productId], context?.snapshot);
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['getProductMemberList', productId] });

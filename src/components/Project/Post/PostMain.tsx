@@ -1,5 +1,5 @@
 import { BsFillMegaphoneFill } from 'react-icons/bs';
-import { CommentLikeList, Post, PostLikeList } from '@/typings/post.ts';
+import { CommentLikeList, Post, PostLikeList, Posts } from '@/typings/post.ts';
 import PostEach from '@/components/Project/Post/PostEach.tsx';
 import { useQuery } from 'react-query';
 import { menuListData } from '@/recoil/Project/Menu.ts';
@@ -44,13 +44,13 @@ export default function PostMain() {
   });
 
   // 멤버 댓글 좋아요 리스트
-  const { data: commentList } = useQuery(['commentLikeList'], () => commentLikeList(), {
-    onSuccess: (data) => {
-      if (typeof data !== 'string') {
-        setCommentLike(data);
-      }
-    },
-  });
+  // const { data: commentList } = useQuery(['commentLikeList'], () => commentLikeList(), {
+  //   onSuccess: (data) => {
+  //     if (typeof data !== 'string') {
+  //       setCommentLike(data);
+  //     }
+  //   },
+  // });
 
   useEffect(() => {
     if (menuId !== undefined) refetch();
@@ -70,7 +70,6 @@ export default function PostMain() {
           post={noticePostInfo}
           menuId={menuId!}
           likeList={likeList!}
-          commentLike={commentLike!}
           noticeId={noticePostInfo.id}
         />
       )}
@@ -85,7 +84,6 @@ export default function PostMain() {
               post={post}
               menuId={menuId!}
               likeList={likeList!}
-              commentLike={commentLike!}
               noticeId={noticePostInfo.id}
             />
           )
@@ -94,13 +92,7 @@ export default function PostMain() {
       {/*noticePost가 없으면 그냥 posts만 보여줌*/}
       {posts &&
         posts.map((post) => (
-          <PostEach
-            key={post.id}
-            post={post}
-            menuId={menuId!}
-            likeList={likeList!}
-            commentLike={commentLike!}
-          />
+          <PostEach key={post.id} post={post} menuId={menuId!} likeList={likeList!} />
         ))}
     </section>
   );

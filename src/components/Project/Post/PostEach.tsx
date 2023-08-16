@@ -18,10 +18,9 @@ interface Props {
   post: Post;
   menuId: number;
   likeList: PostLikeList[];
-  commentLike: CommentLikeList[];
   noticeId?: number;
 }
-export default function PostEach({ post, menuId, likeList, commentLike, noticeId }: Props) {
+export default function PostEach({ post, menuId, likeList, noticeId }: Props) {
   const { showMessage, contextHolder } = useMessage();
   const { isOpen: isOpenModal, onOpen: onOpenModal, onClose: onCloseModal } = useDisclosure();
   const { isOpen: isOpenDialog, onOpen: onOpenDialog, onClose: onCloseDialog } = useDisclosure();
@@ -262,7 +261,7 @@ export default function PostEach({ post, menuId, likeList, commentLike, noticeId
         </div>
       </div>
       {/*댓글*/}
-      <PostComment postId={post.id} commentLikeData={commentLike} />
+      <PostComment postId={post.id} menuId={menuId} />
     </article>
   );
 }
