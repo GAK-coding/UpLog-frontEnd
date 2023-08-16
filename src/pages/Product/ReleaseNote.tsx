@@ -1,17 +1,18 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { ProductInfo } from '@/typings/product.ts';
+import { ChangeLogBody, ChangeLogData, ProductInfo } from '@/typings/product.ts';
 import { Table, TableContainer, Th, Thead, Tr, useDisclosure } from '@chakra-ui/react';
 import { AiOutlinePlus } from 'react-icons/ai';
 import Tables from '@/components/Product/ReleaseNote/Tables.tsx';
 import ProjectModal from '@/components/Product/ReleaseNote/ProjectModal.tsx';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useGetAllProduct } from '@/components/Product/hooks/useGetAllProduct.ts';
-import { useQueries } from 'react-query';
-import { getAllProductProjects } from '@/api/Project/Version.ts';
+import { useQueries, useQuery } from 'react-query';
+import { getAllProductProjects, getChangeLogEachProject } from '@/api/Project/Version.ts';
 import { useRecoilState } from 'recoil';
 import { eachProductProjects } from '@/recoil/Project/atom.ts';
 import { useMessage } from '@/hooks/useMessage.ts';
 import { editorChangeLog } from '@/recoil/Common/atom.ts';
+import { FailProject } from '@/typings/project.ts';
 export default function ReleaseNote() {
   // const dummy: Release[] = [
   //   {
@@ -81,6 +82,7 @@ export default function ReleaseNote() {
 
   const [projects, setProjects] = useRecoilState(eachProductProjects);
   const nowProduct: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
+  const [eachProejctChangeLog, setEachProjectChangeLog] = useState<ChangeLogData[]>();
 
   const queryResults = useQueries([
     {
@@ -94,6 +96,14 @@ export default function ReleaseNote() {
       enabled: !!nowProduct?.productId,
     },
   ]);
+
+  const eachProjectQueryResults = useQueries(
+    projects.map((project) => ({
+      queryKey: ['getChangeLog', project.id],
+      queryFn: () => getChangeLogEachProject(project.id),
+      enabled: !!projects,
+    }))
+  );
 
   const navigate = useNavigate();
   const { state } = useLocation();
@@ -128,11 +138,29 @@ export default function ReleaseNote() {
 
   useEffect(() => {
     const projectList = queryResults[0].data;
+    console.log(projectList);
     if (projectList && typeof projectList !== 'string') {
       const temp = JSON.parse(JSON.stringify(projectList));
       setProjects([...temp]);
     }
   }, [queryResults[0].data]);
+
+  useEffect(() => {
+    const changeLogListData = eachProjectQueryResults.map((queryResult) => queryResult.data);
+    console.log(changeLogListData[0]);
+    console.log(changeLogListData.length);
+    // if (changeLogListData && changeLogListData.length > 0) {
+    //   if (
+    //     typeof changeLogListData.id === 'number' &&
+    //     typeof changeLogListData.content === 'string' &&
+    //     typeof changeLogListData.issueStatus === 'string' &&
+    //     typeof changeLogListData.createdTime === 'string' &&
+    //     (typeof changeLogListData.modifiedTime === 'string' ||
+    //       changeLogListData.modifiedTime === null)
+    //   )
+    //     setEachProjectChangeLog(Array.from(changeLogListData));
+    // }
+  }, [eachProjectQueryResults]);
 
   useEffect(() => {
     if (isLogin && !sessionStorage.getItem('nowProduct')) {

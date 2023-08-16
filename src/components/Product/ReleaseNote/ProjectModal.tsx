@@ -48,8 +48,13 @@ export default function ProjectModal({
 
   const { mutate: createProjectMutate } = useMutation(createProject, {
     onSuccess: (data) => {
-      if (typeof data !== 'string') {
+      if (typeof data !== 'string' && 'id' in data) {
         newProjectId.current = data.id;
+        showMessage('success', '프로젝트가 생성되었습니다!');
+      } else if (typeof data !== 'string' && 'message' in data) {
+        showMessage('warning', data.message);
+      } else {
+        showMessage('error', '프로젝트 생성에 실패하였습니다.');
       }
     },
     onMutate: async ({ version }) => {
@@ -117,7 +122,6 @@ export default function ProjectModal({
       version: `${text}(임시)`,
       link: baseUrl,
     });
-    showMessage('success', '프로젝트가 생성되었습니다!');
     onClose();
     setText('');
   }, [text]);

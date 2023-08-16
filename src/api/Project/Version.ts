@@ -1,8 +1,8 @@
 import { instance } from '@/api';
 import { AxiosResponse } from 'axios';
-import { Project, ProjectGroup, ProjectTeams } from '@/typings/project.ts';
+import { FailProject, Project, ProjectGroup, ProjectTeams } from '@/typings/project.ts';
 import { data } from 'autoprefixer';
-import { ChangeLog } from '@/typings/product.ts';
+import { ChangeLogBody, ChangeLogData, FailProduct } from '@/typings/product.ts';
 
 export const getAllProductProjects = async (productId: number) => {
   try {
@@ -16,10 +16,13 @@ export const getAllProductProjects = async (productId: number) => {
 export const createProject = async (data: { productId: number; version: string; link: string }) => {
   try {
     const { productId, version, link } = data;
-    const res: AxiosResponse<Project> = await instance.post(`/products/${productId}/projects`, {
-      version,
-      link,
-    });
+    const res: AxiosResponse<Project | FailProject> = await instance.post(
+      `/products/${productId}/projects`,
+      {
+        version,
+        link,
+      }
+    );
 
     return res.data;
   } catch (err) {
@@ -85,19 +88,31 @@ export const createProjectTeam = async (data: {
   }
 };
 
-export const createNewChangeLog = async (data: ChangeLog) => {
+// 변경이력 생성
+export const createNewChangeLog = async (data: ChangeLogBody, projectId: number) => {
   try {
-    const { productId, title, content, issueStatus, createdTime, modifiedTime } = data;
-    const res: AxiosResponse<ChangeLog> = await instance.post(`/changedIssues/${productId}`, {
-      title,
-      content,
-      issueStatus,
-      createdTime,
-      modifiedTime,
-    });
+    const res: AxiosResponse<ChangeLogBody | FailProduct> = await instance.post(
+      `/changedIssues/${projectId}`,
+      data
+    );
 
     return res.data;
   } catch (err) {
+    console.log(err);
     return 'fail createNewChangeLog';
+  }
+};
+
+// 변경이력 조회
+export const getChangeLogEachProject = async (projectId: number) => {
+  try {
+    const res: AxiosResponse<ChangeLogData[]> = await instance.get(
+      `/changedIssues/${projectId}/issue`
+    );
+
+    return res.data;
+  } catch (err) {
+    console.log(err);
+    return 'fail getChangeLogEachProject';
   }
 };
