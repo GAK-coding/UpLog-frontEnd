@@ -157,7 +157,7 @@ export default function TaskMain() {
         {/*task list border*/}
         <div
           className={
-            'flex-col-center justify-start items-start w-full border-base rounded-[5px] mt-6'
+            'flex-col-center justify-start items-start w-full border-base border-gray-border bg-post-bg rounded-[5px] mt-6'
           }
         >
           {/*task 정보*/}
@@ -165,7 +165,7 @@ export default function TaskMain() {
             <section
               key={task.id}
               className={
-                'flex-row-center justify-start w-full min-h-[3.5rem] px-4 border-b border-line cursor-pointer'
+                'flex-row-center justify-start w-full min-h-[3.5rem] px-4 border-b border-gray-border cursor-pointer'
               }
               onClick={() =>
                 navigate(`/workspace/${product}/${project}/menu/${menutitle}/task/${task.id}`)
@@ -219,7 +219,7 @@ export default function TaskMain() {
           ))}
           <section
             className={
-              'flex-row-center justify-start w-full min-h-[3.5rem] px-4 text-gray-dark cursor-pointer'
+              'flex-row-center justify-start w-full min-h-[3.5rem] px-4 bg-post-bg text-gray-dark cursor-pointer'
             }
             onClick={() => onOpen()}
           >
