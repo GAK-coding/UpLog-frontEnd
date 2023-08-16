@@ -38,3 +38,21 @@ export interface ProjectGroup {
   teamName: string;
   depth: number;
 }
+
+export interface childTeamInfoDTO {
+  teamId: number;
+  teamName: string;
+  depth: number;
+}
+
+export interface ProjectTeams {
+  teamId: number;
+  teamName: string;
+  depth: number;
+  childTeamInfoDTOList: childTeamInfoDTO[];
+}
+
+export interface ScreenProjectTeams extends ProjectTeams {
+  isHover: boolean;
+  isOpen: boolean;
+}
