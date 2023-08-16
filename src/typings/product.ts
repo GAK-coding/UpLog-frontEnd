@@ -25,6 +25,7 @@ export interface ProductInfo extends Omit<GetProductList, 'memberName'> {
 export interface ProductBody {
   name: string;
   masterEmail: string;
+  clientEmail: string | null;
   link: string;
 }
 export interface FailProduct {

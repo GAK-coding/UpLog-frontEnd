@@ -1,11 +1,11 @@
 import {
   FailProduct,
+  GetProductList,
   ProductBody,
   ProductEditBody,
   ProductEditData,
-  ProductsData,
-  GetProductList,
   ProductMember,
+  ProductsData,
 } from '@/typings/product.ts';
 import { AxiosResponse } from 'axios';
 import { instance } from '@/api';

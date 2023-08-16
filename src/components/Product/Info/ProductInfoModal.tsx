@@ -15,11 +15,12 @@ import ImageCrop from '@/components/Member/MyPage/ImageCrop.tsx';
 import { UploadFile, UploadProps } from 'antd/lib';
 import { RcFile } from 'antd/es/upload';
 import { FiUpload } from 'react-icons/fi';
-import { useMutation, useQuery } from 'react-query';
-import { createProduct, eachProduct, productEdit } from '@/api/Product/Product.ts';
+import { useMutation } from 'react-query';
+import { createProduct, productEdit } from '@/api/Product/Product.ts';
 import { ProductBody, ProductEditBody } from '@/typings/product.ts';
-import { SaveUserInfo } from '@/typings/member.ts';
 import { useGetEachProduct } from '@/components/Product/hooks/useGetEachProduct.ts';
+import { useRecoilValue } from 'recoil';
+import { frontEndUrl } from '@/recoil/Common/atom.ts';
 
 interface Props {
   isOpen: boolean;
@@ -29,18 +30,19 @@ interface Props {
 }
 
 export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, productId }: Props) {
+  // const { product, project };
   const [productName, onChangeProductName, setProductName] = useInput('');
   const [masterEmail, onChangeMasterEmail, setMasterEmail] = useInput('');
-  const [clientEmail, onChangeClientEmail, setClientEmail] = useInput('');
+  const [clientEmail, onChangeClientEmail, setClientEmail] = useInput<string | null>(null);
   const { showMessage, contextHolder } = useMessage();
-
-  const userInfo: SaveUserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
+  const baseUrl = useRecoilValue(frontEndUrl);
 
   // TODO : 링크 임베딩 된 링크로 다시 보내기
   const productInfo: ProductBody = {
     name: productName,
     masterEmail: masterEmail,
-    link: 'www.naver.com',
+    clientEmail: clientEmail,
+    link: `${baseUrl}/workspace/${productName}`,
   };
 
   const updateProductInfo: ProductEditBody = {
