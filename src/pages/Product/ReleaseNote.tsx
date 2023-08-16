@@ -11,6 +11,7 @@ import { getAllProductProjects } from '@/api/Project/Version.ts';
 import { useRecoilState } from 'recoil';
 import { eachProductProjects } from '@/recoil/Project/atom.ts';
 import { useMessage } from '@/hooks/useMessage.ts';
+import { editorChangeLog } from '@/recoil/Common/atom.ts';
 export default function ReleaseNote() {
   // const dummy: Release[] = [
   //   {

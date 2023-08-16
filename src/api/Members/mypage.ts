@@ -62,3 +62,38 @@ export const deleteAccount = async (data: {
     return 'delete account fail';
   }
 };
+
+export const imageUpload = async (data: FormData) => {
+  try {
+    const res: AxiosResponse<{ url: string }> = await instance.post(
+      '//storages/upload',
+      {
+        data,
+      },
+      {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      }
+    );
+
+    return res.data.url;
+  } catch (err) {
+    return 'fail imageUpload';
+  }
+};
+
+export const updateMyInfo = async (data: {
+  newName: string | null;
+  newNickname: string | null;
+  image: string | null;
+}) => {
+  try {
+    const { newName, newNickname, image } = data;
+    await instance.patch('/members/information', {
+      newName,
+      newNickname,
+      image,
+    });
+  } catch (err) {
+    return 'fail updateMyInfo';
+  }
+};

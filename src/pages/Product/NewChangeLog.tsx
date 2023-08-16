@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useCallback, useState } from 'react';
+import React, { ChangeEvent, useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import { IoIosArrowBack } from 'react-icons/io';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Select } from '@chakra-ui/react';
@@ -7,11 +7,18 @@ import useInput from '@/hooks/useInput.ts';
 import { AiFillCaretDown } from 'react-icons/ai';
 import { formatDate } from '@/utils/formatDate.ts';
 import PostEditor from '@/components/Common/PostEditor.tsx';
+import { SaveUserInfo } from '@/typings/member.ts';
+import { Project } from '@/typings/project.ts';
+import { editorChangeLog } from '@/recoil/Common/atom.ts';
+import { useRecoilState } from 'recoil';
 
 const typeList: changeType[] = ['New', 'Feature', 'Changed', 'Fixed', 'Deprecated'];
 
 export default function NewChangeLog() {
   const { product } = useParams();
+  const userInfo: SaveUserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
+  const nowProject: Project = JSON.parse(sessionStorage.getItem('nowProject')!);
+  const [editChangeLog, setEditChangeLog] = useRecoilState(editorChangeLog);
 
   const [selectedType, setSelectedType] = useState(typeList[0]);
   const onChangeSelectedType = useCallback((e: ChangeEvent<HTMLSelectElement>) => {
@@ -82,7 +89,7 @@ export default function NewChangeLog() {
             <div className={'my-4 mx-10'}>
               <div className={'flex items-center text-gray-dark w-full mb-4'}>
                 <span className={'w-[11%] font-bold'}>버전</span>
-                <span>v.1.1.2</span>
+                <span>{nowProject?.version}</span>
               </div>
               <div className={'flex items-center text-gray-dark w-full mb-4'}>
                 <span className={'w-[11%] font-bold'}>날짜</span>
@@ -96,7 +103,7 @@ export default function NewChangeLog() {
                     alt="프로필 사진"
                     className={'w-10 h-10 rounded-[50%] mr-3'}
                   />
-                  Crong(권오현)
+                  {userInfo?.nickname}({userInfo?.name}){' '}
                 </span>
               </div>
             </div>

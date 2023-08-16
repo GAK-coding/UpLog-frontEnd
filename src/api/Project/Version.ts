@@ -1,6 +1,8 @@
 import { instance } from '@/api';
 import { AxiosResponse } from 'axios';
 import { Project, ProjectGroup, ProjectTeams } from '@/typings/project.ts';
+import { data } from 'autoprefixer';
+import { ChangeLog } from '@/typings/product.ts';
 
 export const getAllProductProjects = async (productId: number) => {
   try {
@@ -80,5 +82,22 @@ export const createProjectTeam = async (data: {
     return res.data;
   } catch (err) {
     return 'fail createProjectTeam';
+  }
+};
+
+export const createNewChangeLog = async (data: ChangeLog) => {
+  try {
+    const { productId, title, content, issueStatus, createdTime, modifiedTime } = data;
+    const res: AxiosResponse<ChangeLog> = await instance.post(`/changedIssues/${productId}`, {
+      title,
+      content,
+      issueStatus,
+      createdTime,
+      modifiedTime,
+    });
+
+    return res.data;
+  } catch (err) {
+    return 'fail createNewChangeLog';
   }
 };
