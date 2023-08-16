@@ -63,17 +63,16 @@ export const deleteAccount = async (data: {
   }
 };
 
-export const imageUpload = async (data: FormData) => {
+export const imageUpload = async (data: File) => {
   try {
-    const res: AxiosResponse<{ url: string }> = await instance.post(
-      '//storages/upload',
-      {
-        data,
-      },
-      {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      }
-    );
+    console.log('여기', data);
+
+    const formData = new FormData();
+    await formData.append('file', data);
+
+    const res: AxiosResponse<{ url: string }> = await instance.post('/storages/upload', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
 
     return res.data.url;
   } catch (err) {
@@ -84,10 +83,13 @@ export const imageUpload = async (data: FormData) => {
 export const updateMyInfo = async (data: {
   newName: string | null;
   newNickname: string | null;
-  image: string | null;
+  file: File | null;
 }) => {
   try {
-    const { newName, newNickname, image } = data;
+    const { newName, newNickname, file } = data;
+    let image;
+    if (file) image = await imageUpload(file);
+
     await instance.patch('/members/information', {
       newName,
       newNickname,

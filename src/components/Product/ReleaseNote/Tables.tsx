@@ -49,7 +49,7 @@ export default function Tables({
 
   return (
     <Tbody>
-      {projects?.map((version, index) => {
+      {[...projects].reverse()?.map((version, index) => {
         return (
           <Tr
             key={index}
