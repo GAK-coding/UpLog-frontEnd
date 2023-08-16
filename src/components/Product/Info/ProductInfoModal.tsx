@@ -15,12 +15,14 @@ import ImageCrop from '@/components/Member/MyPage/ImageCrop.tsx';
 import { UploadFile, UploadProps } from 'antd/lib';
 import { RcFile } from 'antd/es/upload';
 import { FiUpload } from 'react-icons/fi';
-import { useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import { createProduct, productEdit } from '@/api/Product/Product.ts';
 import { ProductBody, ProductEditBody } from '@/typings/product.ts';
 import { useGetEachProduct } from '@/components/Product/hooks/useGetEachProduct.ts';
 import { useRecoilValue } from 'recoil';
 import { frontEndUrl } from '@/recoil/Common/atom.ts';
+import { util } from 'prismjs';
+import encode = util.encode;
 
 interface Props {
   isOpen: boolean;
@@ -33,17 +35,18 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
   // const { product, project };
   const [productName, onChangeProductName, setProductName] = useInput('');
   const [masterEmail, onChangeMasterEmail, setMasterEmail] = useInput('');
-  const [clientEmail, onChangeClientEmail, setClientEmail] = useInput<string | null>(null);
+  const [clientEmail, onChangeClientEmail, setClientEmail] = useInput<string>('');
   const { showMessage, contextHolder } = useMessage();
   const baseUrl = useRecoilValue(frontEndUrl);
+  const [check, setCheck] = useState(false);
 
+  const [productInfo, setProductInfo] = useState<ProductBody>({
+    name: '',
+    masterEmail: '',
+    clientEmail: null,
+    link: '',
+  });
   // TODO : 링크 임베딩 된 링크로 다시 보내기
-  const productInfo: ProductBody = {
-    name: productName,
-    masterEmail: masterEmail,
-    clientEmail: clientEmail,
-    link: `${baseUrl}/workspace/${productName}`,
-  };
 
   const updateProductInfo: ProductEditBody = {
     link: null,
@@ -55,6 +58,8 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
   // 제품 이미지 업로드
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [imageSrc, setImageSrc] = useState('');
+
+  const queryClient = useQueryClient();
 
   // 제품 생성
   const { mutate: createProductMutate } = useMutation(() => createProduct(productInfo), {
@@ -86,11 +91,31 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
 
   // 제품 정보 수정
   const { mutate: updateProduct } = useMutation(productEdit, {
+    onMutate: async (updateData) => {
+      await queryClient.cancelQueries('myProductList');
+
+      const previousProductList = queryClient.getQueryData('myProductList');
+
+      queryClient.setQueryData('myProductList', updateData);
+
+      return () => queryClient.setQueryData('myProductList', previousProductList);
+    },
     onSuccess: (data) => {
       if (typeof data === 'object') {
         showMessage('success', '제품 정보가 변경되었습니다.');
         setTimeout(() => onClose(), 2000);
       }
+    },
+    onError: (error, value, rollback) => {
+      if (rollback) {
+        rollback();
+        showMessage('error', '제품 정보 변경에 실패했습니다.');
+      } else {
+        showMessage('error', '제품 정보 변경에 실패했습니다.');
+      }
+    },
+    onSettled: () => {
+      return queryClient.invalidateQueries('myProductList');
     },
   });
 
@@ -113,6 +138,8 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
 
   // 제품 추가 완료 버튼
   const onClickMakeProduct = useCallback(() => {
+    setCheck(true);
+
     if (!isCreateProduct) {
       if (!productName) {
         showMessage('warning', '제품 이름을 입력해주세요.');
@@ -128,17 +155,28 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
       }
 
       // 수정 요청 보냄
-      updateProduct({ data: updateProductInfo, productId });
       return;
     }
+
     // 필수 정보를 입력하지 않았을 때
     if (!productName || !masterEmail) {
       showMessage('warning', '필수 정보를 입력해주세요.');
       return;
     }
 
-    // 제품 생성
-    createProductMutate();
+    if (productInfo.clientEmail === '') {
+      setProductInfo({
+        ...productInfo,
+        clientEmail: null,
+      });
+    }
+
+    setProductInfo({
+      name: productName,
+      masterEmail: masterEmail,
+      clientEmail: null,
+      link: `${baseUrl}/workspace/${encodeURI(productName)}`,
+    });
   }, [productName, masterEmail, updateProductInfo]);
 
   useEffect(() => {
@@ -152,6 +190,15 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
       refetch();
     }
   }, [isOpen, isCreateProduct, productId]);
+
+  useEffect(() => {
+    if (check) {
+      isCreateProduct
+        ? createProductMutate()
+        : updateProduct({ data: updateProductInfo, productId });
+    }
+    setCheck(false);
+  }, [check, isCreateProduct]);
 
   return (
     <Modal isCentered onClose={onClose} isOpen={isOpen}>
