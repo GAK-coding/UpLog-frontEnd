@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { ChangeLogBody, ChangeLogData, ProductInfo } from '@/typings/product.ts';
+import { ChangeLogBody, ChangeLogData, issueStatus, ProductInfo } from '@/typings/product.ts';
 import { Table, TableContainer, Th, Thead, Tr, useDisclosure } from '@chakra-ui/react';
 import { AiOutlinePlus } from 'react-icons/ai';
 import Tables from '@/components/Product/ReleaseNote/Tables.tsx';
@@ -105,6 +105,8 @@ export default function ReleaseNote() {
     }))
   );
 
+  // console.log(eachProjectQueryResults);
+
   const navigate = useNavigate();
   const { state } = useLocation();
   const [isLogin, setIsLogin] = useState(state?.isLogin);
@@ -138,7 +140,7 @@ export default function ReleaseNote() {
 
   useEffect(() => {
     const projectList = queryResults[0].data;
-    console.log(projectList);
+    // console.log(projectList);
     if (projectList && typeof projectList !== 'string') {
       const temp = JSON.parse(JSON.stringify(projectList));
       setProjects([...temp]);
@@ -147,8 +149,8 @@ export default function ReleaseNote() {
 
   useEffect(() => {
     const changeLogListData = eachProjectQueryResults.map((queryResult) => queryResult.data);
-    console.log(changeLogListData[0]);
-    console.log(changeLogListData.length);
+    // console.log(changeLogListData[0]);
+    // console.log(changeLogListData.length);
     // if (changeLogListData && changeLogListData.length > 0) {
     //   if (
     //     typeof changeLogListData.id === 'number' &&
@@ -168,6 +170,8 @@ export default function ReleaseNote() {
       if (productList?.length > 0) {
         sessionStorage.setItem('nowProduct', JSON.stringify(productList[0]));
         navigate(`/workspace/${productList[0].productId}`);
+      } else {
+        navigate('/');
       }
     }
   }, [isLogin, productList]);
@@ -244,6 +248,7 @@ export default function ReleaseNote() {
                 onClickComplete={onClickProjectModal}
                 setTempVersion={setTempVersion}
                 setNowProjectId={setNowProjectId}
+                eachProjectQueryResults={eachProjectQueryResults}
               />
             )}
           </Table>
