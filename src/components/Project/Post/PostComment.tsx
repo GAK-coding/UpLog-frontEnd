@@ -255,16 +255,15 @@ export default function PostComment({ postId, menuId }: Props) {
                 {/*유저 정보 + 댓글 작성시간*/}
                 <div className={'flex-row-center justify-between items-start w-full h-auto mb-2'}>
                   <div className={'flex'}>
-                    <FaUserCircle className={'flex text-[2rem] fill-gray-dark'} />
-                    {/*{comment.image === '' ? (*/}
-                    {/*  <FaUserCircle className={'flex text-[2rem] fill-gray-dark'} />*/}
-                    {/*) : (*/}
-                    {/*  <img*/}
-                    {/*    src={comment.image}*/}
-                    {/*    alt="userprofile"*/}
-                    {/*    className={'flex w-[2rem] fill-gray-dark'}*/}
-                    {/*  />*/}
-                    {/*)}*/}
+                    {comment.image ? (
+                      <img
+                        src={comment.image}
+                        alt="userprofile"
+                        className={'flex w-[2rem] h-[2rem] fill-gray-dark'}
+                      />
+                    ) : (
+                      <FaUserCircle className={'flex text-[2rem] fill-gray-dark'} />
+                    )}
                     <div className={'flex-col w-auto h-auto ml-3'}>
                       <span
                         className={'flex h-1/2 text-[0.93rem]'}

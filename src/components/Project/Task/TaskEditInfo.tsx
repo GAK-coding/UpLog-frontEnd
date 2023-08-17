@@ -21,6 +21,7 @@ interface Props {
 export default function TaskEditInfo({ isEdit, taskInfo }: Props) {
   const nowProduct: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
   const nowProject: SaveProjectInfo = JSON.parse(sessionStorage.getItem('nowProject')!);
+
   const projectId = nowProject.id;
   const [editTaskData, setEditTask] = useRecoilState(editTaskInfo);
   const pGroup: string[] = ['그룹', '개발팀', '마케팅팀', '홍보팀'];
