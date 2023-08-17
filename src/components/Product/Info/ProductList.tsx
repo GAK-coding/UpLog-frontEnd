@@ -69,6 +69,7 @@ export default function ProductList() {
 
         const updateIndexList: number[] = updatedProduct.map((item) => item.productId);
         mutate(updateIndexList);
+        console.log(updateIndexList);
 
         // 바로 쿼리에 업데이트
         queryClient.setQueriesData('myProductList', updatedProduct);
