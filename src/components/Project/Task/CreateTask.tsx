@@ -64,10 +64,12 @@ export default function CreateTask({ isOpen, onClose, menuId }: Props) {
 
   const menuList = useRecoilValue(menuListData);
   // const menuId = 56
-  const menuNameList: SelectMenu[] = menuList.map((menuItem) => ({
-    value: menuItem.id.toString(),
-    label: menuItem.menuName,
-  }));
+  const menuNameList: SelectMenu[] = menuList
+    .filter((menu) => menu.menuName !== '결과물')
+    .map((menuItem) => ({
+      value: menuItem.id.toString(),
+      label: menuItem.menuName,
+    }));
 
   const member = useRecoilValue(allMemberList);
 
