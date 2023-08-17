@@ -12,6 +12,7 @@ import {
 import { CommentBody, CommentInfo } from '@/typings/post.ts';
 import { useMessage } from '@/hooks/useMessage.ts';
 import { SaveUserInfo } from '@/typings/member.ts';
+import { SaveProjectInfo } from '@/typings/project.ts';
 
 interface Props {
   postId: number;
@@ -21,6 +22,7 @@ interface Props {
 export default function PostComment({ postId, menuId }: Props) {
   const { showMessage, contextHolder } = useMessage();
   const userInfo: SaveUserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
+  const nowProject: SaveProjectInfo = JSON.parse(sessionStorage.getItem('nowProject')!);
 
   // 댓글 value
   const [commentValue, onChangeCommentValue, setCommentValue] = useInput('');
@@ -272,16 +274,19 @@ export default function PostComment({ postId, menuId }: Props) {
                       </span>
                     </div>
                   </div>
-                  {userInfo.id === comment.memberId && (
-                    <div className={'flex justify-between w-[4rem] text-[0.8rem] text-gray-light'}>
-                      <span
-                        className={'cursor-pointer hover:text-orange'}
-                        onClick={() => deleteCommentMutate(comment.id)}
+                  {userInfo.id === comment.memberId ||
+                    (nowProject.projectStatus !== 'PROGRESS_COMPLETE' && (
+                      <div
+                        className={'flex justify-between w-[4rem] text-[0.8rem] text-gray-light'}
                       >
-                        삭제
-                      </span>
-                    </div>
-                  )}
+                        <span
+                          className={'cursor-pointer hover:text-orange'}
+                          onClick={() => deleteCommentMutate(comment.id)}
+                        >
+                          삭제
+                        </span>
+                      </div>
+                    ))}
                 </div>
                 {/*댓글 내용*/}
                 <span className={'flex w-full ml-[5.5rem] mb-1 text-[1rem] font-bold'}>
@@ -342,21 +347,23 @@ export default function PostComment({ postId, menuId }: Props) {
             );
           })}
       {/*댓글 작성 input */}
-      <div
-        className={
-          'flex-row-center justify-between w-full h-[3rem] mt-4 border border-gray-light rounded-2xl px-5'
-        }
-      >
-        <input
-          type="text"
-          value={commentValue}
-          onChange={onChangeCommentValue}
-          placeholder={'댓글을 입력해주세요.'}
-          maxLength={30}
-          className={'flex w-full h-full outline-none bg-transparent rounded-2xl'}
-          onKeyDown={(e) => activeEnter(e)}
-        />
-      </div>
+      {nowProject.projectStatus !== 'PROGRESS_COMPLETE' && (
+        <div
+          className={
+            'flex-row-center justify-between w-full h-[3rem] mt-4 border border-gray-light rounded-2xl px-5'
+          }
+        >
+          <input
+            type="text"
+            value={commentValue}
+            onChange={onChangeCommentValue}
+            placeholder={'댓글을 입력해주세요.'}
+            maxLength={100}
+            className={'flex w-full h-full outline-none bg-transparent rounded-2xl'}
+            onKeyDown={(e) => activeEnter(e)}
+          />
+        </div>
+      )}
     </div>
   );
 }

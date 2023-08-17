@@ -15,6 +15,7 @@ import { noticePost, postLike, postLikeCount, unNoticePost } from '@/api/Project
 import { useMessage } from '@/hooks/useMessage.ts';
 import { SaveUserInfo } from '@/typings/member.ts';
 import { ProductInfo } from '@/typings/product.ts';
+import { SaveProjectInfo } from '@/typings/project.ts';
 
 interface Props {
   post: Post;
@@ -25,6 +26,7 @@ interface Props {
 export default function PostEach({ post, menuId, likeList, noticeId }: Props) {
   const { showMessage, contextHolder } = useMessage();
   const productInfo: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
+  const nowProject: SaveProjectInfo = JSON.parse(sessionStorage.getItem('nowProject')!);
 
   const { isOpen: isOpenModal, onOpen: onOpenModal, onClose: onCloseModal } = useDisclosure();
   const { isOpen: isOpenDialog, onOpen: onOpenDialog, onClose: onCloseDialog } = useDisclosure();
@@ -95,6 +97,7 @@ export default function PostEach({ post, menuId, likeList, noticeId }: Props) {
   // 좋아요 눌렀을 때
   const onClickLike = useCallback(
     (postId: number) => {
+      if (nowProject.projectStatus === 'PROGRESS_COMPLETE') return;
       setIsLikeClick((prevState) => ({
         ...prevState,
         [postId]: !prevState[postId],
@@ -183,7 +186,7 @@ export default function PostEach({ post, menuId, likeList, noticeId }: Props) {
           {post.postTags &&
             post.postTags.map((tag, index) => {
               return (
-                <div key={index} className={'w-auto h-auto text-gray-dark mx-3'}>
+                <div key={index} className={'w-auto h-auto text-cyan-700 mx-3'}>
                   #{tag.content}
                 </div>
               );
@@ -225,17 +228,18 @@ export default function PostEach({ post, menuId, likeList, noticeId }: Props) {
           {/*    onClick={() => onClickScrap(post.id)}*/}
           {/*  />*/}
           {/*)}*/}
-          {productInfo.powerType !== 'CLIENT' && (
-            <GoKebabHorizontal
-              className={'flex text-[1.3rem] text-gray-light ml-1.5'}
-              onClick={() =>
-                setIsClickKebab((prevState) => ({
-                  ...prevState,
-                  [post.id]: !prevState[post.id],
-                }))
-              }
-            />
-          )}
+          {productInfo.powerType !== 'CLIENT' ||
+            (nowProject.projectStatus !== 'PROGRESS_COMPLETE' && (
+              <GoKebabHorizontal
+                className={'flex text-[1.3rem] text-gray-light ml-1.5'}
+                onClick={() =>
+                  setIsClickKebab((prevState) => ({
+                    ...prevState,
+                    [post.id]: !prevState[post.id],
+                  }))
+                }
+              />
+            ))}
           {isClickKebab[post.id] && (
             <section
               className={`absolute top-[2.2rem] flex-col-center w-[5rem] ${

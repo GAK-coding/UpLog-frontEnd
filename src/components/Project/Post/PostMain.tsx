@@ -7,6 +7,7 @@ import { useParams } from 'react-router-dom';
 import { commentLikeList, menuPostList, postLikeList } from '@/api/Project/Post.ts';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
+import { SaveProjectInfo } from '@/typings/project.ts';
 
 export default function PostMain() {
   const { product, project, menutitle } = useParams();

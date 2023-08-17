@@ -28,7 +28,7 @@ export default function Workspace() {
             </Link>
             {project && (
               <span className={'self-start text-gray-dark text-xl font-bold mt-2 ellipsis'}>
-                {project}
+                {nowProject.version}
               </span>
             )}
           </div>
