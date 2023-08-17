@@ -7,7 +7,7 @@ export default function Error() {
       <div className={'flex-row-center w-full'}>
         <img src={'/images/error.png'} alt="error" className={'w-[10rem]'} />
         <div className={'flex-col-center items-start ml-20'}>
-          <span className={'mt-8 font-logo text-[6rem]'}>Error!</span>
+          <span className={'mt-8 font-logo text-[6rem]'}>Error&nbsp;!</span>
           <span className={'-mt-8 ml-2 flex text-[1.5rem]'}>
             해당 페이지는 존재하지 않는 페이지입니다.
           </span>

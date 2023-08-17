@@ -12,7 +12,7 @@ export interface Post {
   postType: PostType;
   content: string;
   createTime: string;
-  postTags: { id: number; contents: string }[];
+  postTags: { id: number; content: string }[];
   likeCount: number;
   commentCount: number;
 }

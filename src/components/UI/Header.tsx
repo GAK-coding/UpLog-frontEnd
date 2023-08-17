@@ -175,11 +175,11 @@ export default function Header() {
           </div>
           <BsBellFill
             className={'text-[2rem] fill-gray-dark cursor-pointer'}
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/alarm')}
           />
           <BsQuestionCircle
             className={'text-[2rem] fill-gray-dark cursor-pointer'}
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/description')}
           />
 
           <div className={'relative'} ref={profileRef}>

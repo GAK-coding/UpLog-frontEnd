@@ -181,7 +181,7 @@ export default function PostEach({ post, menuId, likeList, noticeId }: Props) {
             post.postTags.map((tag, index) => {
               return (
                 <div key={index} className={'w-auto h-auto text-gray-dark mx-3'}>
-                  #{tag.contents}
+                  #{tag.content}
                 </div>
               );
             })}

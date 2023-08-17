@@ -316,7 +316,10 @@ export default function Project() {
             )}
           </div>
 
-          <div className={'flex-row-center justify-end w-1/3 h-full pr-12'}>
+          <div
+            className={'flex-row-center justify-end w-1/3 h-full pr-12 cursor-pointer'}
+            onClick={() => navigate(`/workspace/${product}/${project}/scrumring`)}
+          >
             <span className={'flex-row-center text-[0.93rem] font-bold mr-4 text-gray-dark'}>
               진행률
             </span>
