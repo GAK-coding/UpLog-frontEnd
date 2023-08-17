@@ -77,7 +77,7 @@ export default function Tables({
                 const url = encodeURI(`/workspace/${product}/${version.id}`);
                 sessionStorage.setItem('nowProject', JSON.stringify(version));
                 {
-                  nowProduct.powerType === 'CLIENT'
+                  nowProduct.powerType === 'CLIENT' || version.projectStatus === 'PROGRESS_COMPLETE'
                     ? navigate(`${url}/menu/결과물`)
                     : navigate(url);
                 }

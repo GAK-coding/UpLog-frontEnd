@@ -12,6 +12,7 @@ import { taskState } from '@/recoil/Project/Task.ts';
 import { DragTaskIndexBody, TaskStatus } from '@/typings/task.ts';
 import { allStatusTaskList, updateTaskIndex } from '@/api/Project/Task.ts';
 import { useMutation, useQuery } from 'react-query';
+import { ProductInfo } from '@/typings/product.ts';
 
 interface IndexID {
   [key: number]: number;
@@ -19,6 +20,8 @@ interface IndexID {
 export default function Project() {
   const { product, project } = useParams();
   const nowProject: SaveProjectInfo = JSON.parse(sessionStorage.getItem('nowProject')!);
+  const nowProduct: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
+
   const projectId = nowProject.id;
   const navigate = useNavigate();
   const [taskStatus, setTaskStatus] = useState<TaskStatus>('PROGRESS_BEFORE');
