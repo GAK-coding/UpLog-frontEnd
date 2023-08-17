@@ -358,7 +358,7 @@ export default function PostComment({ postId, menuId }: Props) {
             value={commentValue}
             onChange={onChangeCommentValue}
             placeholder={'댓글을 입력해주세요.'}
-            maxLength={30}
+            maxLength={100}
             className={'flex w-full h-full outline-none bg-transparent rounded-2xl'}
             onKeyDown={(e) => activeEnter(e)}
           />
