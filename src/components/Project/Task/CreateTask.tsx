@@ -416,37 +416,37 @@ export default function CreateTask({ isOpen, onClose, menuId }: Props) {
               </div>
 
               {/*그룹*/}
-              <div className={'w-full mb-5 text-[1rem]'}>
-                <div className={'flex'}>
-                  <span className={'flex mb-[0.5rem] text-gray-dark font-bold'}>그룹</span>
-                  <span className={'text-[#E06469]'}>&nbsp;*</span>
-                </div>
-                <div className={'flex justify-between pr-7'}>
-                  <Select
-                    defaultValue={pGroup[0]}
-                    style={{ width: 120 }}
-                    onChange={handleParentGroupChange}
-                    options={pGroup.map((group) => ({ label: group, value: group }))}
-                    dropdownStyle={{
-                      backgroundColor: 'var(--gray-sideBar)',
-                      color: 'var(--black)',
-                      borderColor: 'var(--border-line)',
-                    }}
-                  />
+              {/*<div className={'w-full mb-5 text-[1rem]'}>*/}
+              {/*  <div className={'flex'}>*/}
+              {/*    <span className={'flex mb-[0.5rem] text-gray-dark font-bold'}>그룹</span>*/}
+              {/*    <span className={'text-[#E06469]'}>&nbsp;*</span>*/}
+              {/*  </div>*/}
+              {/*  <div className={'flex justify-between pr-7'}>*/}
+              {/*    <Select*/}
+              {/*      defaultValue={pGroup[0]}*/}
+              {/*      style={{ width: 120 }}*/}
+              {/*      onChange={handleParentGroupChange}*/}
+              {/*      options={pGroup.map((group) => ({ label: group, value: group }))}*/}
+              {/*      dropdownStyle={{*/}
+              {/*        backgroundColor: 'var(--gray-sideBar)',*/}
+              {/*        color: 'var(--black)',*/}
+              {/*        borderColor: 'var(--border-line)',*/}
+              {/*      }}*/}
+              {/*    />*/}
 
-                  <Select
-                    style={{ width: 120 }}
-                    value={childGroup}
-                    onChange={onChildGroupChange}
-                    options={parentGroup.map((group) => ({ label: group, value: group }))}
-                    dropdownStyle={{
-                      backgroundColor: 'var(--gray-sideBar)',
-                      color: 'var(--black)',
-                      borderColor: 'var(--border-line)',
-                    }}
-                  />
-                </div>
-              </div>
+              {/*    <Select*/}
+              {/*      style={{ width: 120 }}*/}
+              {/*      value={childGroup}*/}
+              {/*      onChange={onChildGroupChange}*/}
+              {/*      options={parentGroup.map((group) => ({ label: group, value: group }))}*/}
+              {/*      dropdownStyle={{*/}
+              {/*        backgroundColor: 'var(--gray-sideBar)',*/}
+              {/*        color: 'var(--black)',*/}
+              {/*        borderColor: 'var(--border-line)',*/}
+              {/*      }}*/}
+              {/*    />*/}
+              {/*  </div>*/}
+              {/*</div>*/}
 
               {/*메뉴 + 할당자*/}
               <div className={'flex-row-center w-full mb-5 text-[1rem]'}>
@@ -484,7 +484,7 @@ export default function CreateTask({ isOpen, onClose, menuId }: Props) {
                       color: 'var(--black)',
                       borderColor: 'var(--border-line)',
                     }}
-                    disabled={!isGroup}
+                    // disabled={!isGroup}
                   />
                 </div>
               </div>

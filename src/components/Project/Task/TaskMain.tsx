@@ -183,7 +183,7 @@ export default function TaskMain() {
 
               {/*task 메뉴, 상태, 할당자*/}
               <div className={'flex-row-center w-h-full justify-end text-gray-dark text-[0.93rem]'}>
-                <span className={'mr-3'}>{task.teamName}</span>
+                {/*<span className={'mr-3'}>{task.teamName}</span>*/}
                 <span
                   className={
                     'flex items-center px-2 h-[1.5rem] rounded-[0.31rem] bg-orange-light-sideBar'

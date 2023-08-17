@@ -123,10 +123,12 @@ export default function TaskEditInfo({ isEdit, taskInfo }: Props) {
   };
 
   return (
-    <section className={'flex-col justify-start items-start w-[80%] h-[15rem] pl-[3rem]'}>
+    // 그룹 설정하면 이걸로 바꾸기 -> 그리고 다 h-1/5로 바꾸기
+    // <section className={'flex-col justify-start items-start w-[80%] h-[15rem] pl-[3rem]'}>
+    <section className={'flex-col justify-start items-start w-[80%] h-[12rem] pl-[3rem]'}>
       {/*시작날짜*/}
       <div
-        className={'flex items-center justify-start w-[17rem] h-1/5 text-gray-light text-[1rem]'}
+        className={'flex items-center justify-start w-[17rem] h-1/4 text-gray-light text-[1rem]'}
       >
         {/*제목 | */}
         <div className={'flex w-[6rem] items-center justify-end h-auto'}>
@@ -149,7 +151,7 @@ export default function TaskEditInfo({ isEdit, taskInfo }: Props) {
 
       {/*종료날짜*/}
       <div
-        className={'flex items-center justify-start w-[17rem] h-1/5 text-gray-light text-[1rem]'}
+        className={'flex items-center justify-start w-[17rem] h-1/4 text-gray-light text-[1rem]'}
       >
         <div className={'flex w-[6rem] items-center justify-end h-auto'}>
           <span>종료날짜</span>
@@ -169,7 +171,7 @@ export default function TaskEditInfo({ isEdit, taskInfo }: Props) {
       </div>
       {/*메뉴*/}
       <div
-        className={'flex items-center justify-start w-[17rem] h-1/5 text-gray-light text-[1rem]'}
+        className={'flex items-center justify-start w-[17rem] h-1/4 text-gray-light text-[1rem]'}
       >
         <div className={'flex w-[6rem] items-center justify-end h-auto'}>
           <span>메뉴</span>
@@ -195,50 +197,50 @@ export default function TaskEditInfo({ isEdit, taskInfo }: Props) {
       </div>
 
       {/*그룹*/}
-      <div
-        className={'flex items-center justify-start w-[25rem] h-1/5 text-gray-light text-[1rem]'}
-      >
-        <div className={'flex w-[6rem] items-center justify-end h-auto'}>
-          <span>그룹</span>
-          <div className={'ml-3 h-4 border-solid border-r border-[0.2px] border-gray-border'} />
-        </div>
-        {isEdit ? (
-          <div className={'flex justify-between pr-7'}>
-            {/*TODO : projectTeamParentId 값 존재에 따라 defaultValue 값 변경하기*/}
-            <Select
-              defaultValue={pGroup[0]}
-              style={{ width: 100 }}
-              onChange={handleParentGroupChange}
-              bordered={false}
-              options={pGroup.map((group) => ({ label: group, value: group }))}
-              dropdownStyle={{
-                backgroundColor: 'var(--gray-sideBar)',
-                color: 'var(--black)',
-                borderColor: 'var(--border-line)',
-              }}
-            />
+      {/*<div*/}
+      {/*  className={'flex items-center justify-start w-[25rem] h-1/5 text-gray-light text-[1rem]'}*/}
+      {/*>*/}
+      {/*  <div className={'flex w-[6rem] items-center justify-end h-auto'}>*/}
+      {/*    <span>그룹</span>*/}
+      {/*    <div className={'ml-3 h-4 border-solid border-r border-[0.2px] border-gray-border'} />*/}
+      {/*  </div>*/}
+      {/*  {isEdit ? (*/}
+      {/*    <div className={'flex justify-between pr-7'}>*/}
+      {/*      /!*TODO : projectTeamParentId 값 존재에 따라 defaultValue 값 변경하기*!/*/}
+      {/*      <Select*/}
+      {/*        defaultValue={pGroup[0]}*/}
+      {/*        style={{ width: 100 }}*/}
+      {/*        onChange={handleParentGroupChange}*/}
+      {/*        bordered={false}*/}
+      {/*        options={pGroup.map((group) => ({ label: group, value: group }))}*/}
+      {/*        dropdownStyle={{*/}
+      {/*          backgroundColor: 'var(--gray-sideBar)',*/}
+      {/*          color: 'var(--black)',*/}
+      {/*          borderColor: 'var(--border-line)',*/}
+      {/*        }}*/}
+      {/*      />*/}
 
-            <Select
-              style={{ width: 100 }}
-              value={childGroup}
-              onChange={onChildGroupChange}
-              options={parentGroup.map((group) => ({ label: group, value: group }))}
-              bordered={false}
-              dropdownStyle={{
-                backgroundColor: 'var(--gray-sideBar)',
-                color: 'var(--black)',
-                borderColor: 'var(--border-line)',
-              }}
-            />
-          </div>
-        ) : (
-          <span className={'ml-3 text-gray-dark'}>{taskInfo.teamName}</span>
-        )}
-      </div>
+      {/*      <Select*/}
+      {/*        style={{ width: 100 }}*/}
+      {/*        value={childGroup}*/}
+      {/*        onChange={onChildGroupChange}*/}
+      {/*        options={parentGroup.map((group) => ({ label: group, value: group }))}*/}
+      {/*        bordered={false}*/}
+      {/*        dropdownStyle={{*/}
+      {/*          backgroundColor: 'var(--gray-sideBar)',*/}
+      {/*          color: 'var(--black)',*/}
+      {/*          borderColor: 'var(--border-line)',*/}
+      {/*        }}*/}
+      {/*      />*/}
+      {/*    </div>*/}
+      {/*  ) : (*/}
+      {/*    <span className={'ml-3 text-gray-dark'}>{taskInfo.teamName}</span>*/}
+      {/*  )}*/}
+      {/*</div>*/}
 
       {/*할당자*/}
       <div
-        className={'flex items-center justify-start w-[20rem] h-1/5 text-gray-light text-[1rem]'}
+        className={'flex items-center justify-start w-[20rem] h-1/4 text-gray-light text-[1rem]'}
       >
         <div className={'flex w-[6rem] items-center justify-end h-auto'}>
           <span>할당자</span>
