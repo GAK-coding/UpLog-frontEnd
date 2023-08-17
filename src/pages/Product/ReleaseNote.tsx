@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import { ChangeLogBody, ChangeLogData, issueStatus, ProductInfo } from '@/typings/product.ts';
 import { Table, TableContainer, Th, Thead, Tr, useDisclosure } from '@chakra-ui/react';
 import { AiOutlinePlus } from 'react-icons/ai';
@@ -11,7 +11,6 @@ import { getAllProductProjects, getChangeLogEachProject } from '@/api/Project/Ve
 import { useRecoilState } from 'recoil';
 import { eachProductProjects } from '@/recoil/Project/atom.ts';
 import { useMessage } from '@/hooks/useMessage.ts';
-import { useDeprecatedInvertedScale } from 'framer-motion';
 export default function ReleaseNote() {
   // const dummy: Release[] = [
   //   {
@@ -111,6 +110,7 @@ export default function ReleaseNote() {
   const [isLogin, setIsLogin] = useState(state?.isLogin);
   const [productList, refetch] = useGetAllProduct(false)!;
   const { showMessage, contextHolder } = useMessage();
+  const { pathname } = useLocation();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   // 모달 프로젝트 추가로 띄울건지, 프로젝트 완료로 띄울건지
@@ -163,9 +163,21 @@ export default function ReleaseNote() {
     // }
   }, [eachProjectQueryResults]);
 
+  const [chk, setChk] = useState(false);
+
+  const get = async () => {
+    await refetch();
+    setChk(true);
+  };
+
   useEffect(() => {
-    if (isLogin && !sessionStorage.getItem('nowProduct')) {
-      refetch();
+    if (state?.isLogin) {
+      get();
+    }
+  }, [state]);
+
+  useEffect(() => {
+    if (chk) {
       if (productList?.length > 0) {
         sessionStorage.setItem('nowProduct', JSON.stringify(productList[0]));
         navigate(`/workspace/${productList[0].productId}`);
@@ -173,7 +185,13 @@ export default function ReleaseNote() {
         navigate('/');
       }
     }
-  }, [isLogin, productList]);
+  }, [isLogin, productList, chk]);
+
+  useLayoutEffect(() => {
+    if (pathname === '/workspace/undefined') {
+      navigate('/');
+    }
+  }, []);
 
   return (
     <section className={'w-full min-w-[50em] py-32 px-14 xl:px-56'} onClick={onCloseKebab}>
