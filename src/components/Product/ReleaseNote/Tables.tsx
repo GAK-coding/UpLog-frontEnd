@@ -9,7 +9,6 @@ import { eachProductProjects } from '@/recoil/Project/atom.ts';
 import { editorChangeLog } from '@/recoil/Common/atom.ts';
 import { UseQueryResult } from 'react-query';
 import { ChangeLogData } from '@/typings/product.ts';
-import { data } from 'autoprefixer';
 
 interface Props {
   isClickKebab: boolean;
@@ -58,6 +57,8 @@ export default function Tables({
   function capitalizeFirstLetter(str: string) {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
+
+  console.log(eachProjectQueryResults);
 
   return (
     <Tbody>
@@ -109,7 +110,7 @@ export default function Tables({
                     <div
                       key={idx}
                       className={`${
-                        version.contents && version.contents.length - 1 !== idx && 'mb-5'
+                        eachProjectQueryResults[index]['data'].length - 1 !== idx && 'mb-5'
                       } flex items-center`}
                     >
                       <span
@@ -119,7 +120,7 @@ export default function Tables({
                       >
                         {content.issueStatus}
                       </span>
-                      {content.content}
+                      {content.title}
                     </div>
                   );
                 })

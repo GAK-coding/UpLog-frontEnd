@@ -105,7 +105,7 @@ export default function ReleaseNote() {
     }))
   );
 
-  console.log(eachProjectQueryResults);
+  // console.log(eachProjectQueryResults);
 
   const navigate = useNavigate();
   const { state } = useLocation();
@@ -140,7 +140,7 @@ export default function ReleaseNote() {
 
   useEffect(() => {
     const projectList = queryResults[0].data;
-    console.log(projectList);
+    // console.log(projectList);
     if (projectList && typeof projectList !== 'string') {
       const temp = JSON.parse(JSON.stringify(projectList));
       setProjects([...temp]);
@@ -149,8 +149,8 @@ export default function ReleaseNote() {
 
   useEffect(() => {
     const changeLogListData = eachProjectQueryResults.map((queryResult) => queryResult.data);
-    console.log(changeLogListData[0]);
-    console.log(changeLogListData.length);
+    // console.log(changeLogListData[0]);
+    // console.log(changeLogListData.length);
     // if (changeLogListData && changeLogListData.length > 0) {
     //   if (
     //     typeof changeLogListData.id === 'number' &&
@@ -170,6 +170,8 @@ export default function ReleaseNote() {
       if (productList?.length > 0) {
         sessionStorage.setItem('nowProduct', JSON.stringify(productList[0]));
         navigate(`/workspace/${productList[0].productId}`);
+      } else {
+        navigate('/');
       }
     }
   }, [isLogin, productList]);
