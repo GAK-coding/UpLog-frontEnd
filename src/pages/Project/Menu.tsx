@@ -108,18 +108,30 @@ export default function Menu() {
               <PostMain />
             </div>
           )}
-          {(isPost && productInfo.powerType !== 'CLIENT') ||
-            (nowProject.projectStatus !== 'PROGRESS_COMPLETE' && (
-              <button
-                className={
-                  'absolute flex justify-between items-center px-2.5 w-[5.5rem] h-[2rem] top-[6.5rem] right-10 text-[0.93rem] border border-line rounded'
-                }
-                onClick={() => onOpen()}
-              >
-                <BiPencil className={'flex text-gray-dark text-[1.2rem]'} />
-                <span className={'flex text-gray-dark'}>글쓰기</span>
-              </button>
-            ))}
+          {/*{(isPost && productInfo.powerType !== 'CLIENT') ||*/}
+          {/*  (nowProject.projectStatus !== 'PROGRESS_COMPLETE' && (*/}
+          {/*    <button*/}
+          {/*      className={*/}
+          {/*        'absolute flex justify-between items-center px-2.5 w-[5.5rem] h-[2rem] top-[6.5rem] right-10 text-[0.93rem] border border-line rounded'*/}
+          {/*      }*/}
+          {/*      onClick={() => onOpen()}*/}
+          {/*    >*/}
+          {/*      <BiPencil className={'flex text-gray-dark text-[1.2rem]'} />*/}
+          {/*      <span className={'flex text-gray-dark'}>글쓰기</span>*/}
+          {/*    </button>*/}
+          {/*  ))}*/}
+
+          {(isPost && productInfo.powerType !== 'CLIENT') || (
+            <button
+              className={
+                'absolute flex justify-between items-center px-2.5 w-[5.5rem] h-[2rem] top-[6.5rem] right-10 text-[0.93rem] border border-line rounded'
+              }
+              onClick={() => onOpen()}
+            >
+              <BiPencil className={'flex text-gray-dark text-[1.2rem]'} />
+              <span className={'flex text-gray-dark'}>글쓰기</span>
+            </button>
+          )}
 
           <PostModal isOpen={isOpen} onClose={onClose} isEdit={false} />
         </section>
