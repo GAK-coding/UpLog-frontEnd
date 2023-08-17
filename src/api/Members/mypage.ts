@@ -63,12 +63,9 @@ export const deleteAccount = async (data: {
   }
 };
 
-export const imageUpload = async (data: File) => {
+export const imageUpload = async (data: FormData) => {
   try {
-    const formData = new FormData();
-    await formData.append('file', data);
-
-    const res: AxiosResponse<{ url: string }> = await instance.post('/storages/upload', formData, {
+    const res: AxiosResponse<{ url: string }> = await instance.post('/storages/upload', data, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
 
@@ -81,20 +78,16 @@ export const imageUpload = async (data: File) => {
 export const updateMyInfo = async (data: {
   newName: string | null;
   newNickname: string | null;
-  file: File | null;
+  image: string | null;
 }) => {
   try {
-    const { newName, newNickname, file } = data;
-    let image;
-    if (file) image = await imageUpload(file);
+    const { newName, newNickname, image } = data;
 
     await instance.patch('/members/information', {
       newName,
       newNickname,
       image,
     });
-
-    if (file) return image;
   } catch (err) {
     return 'fail updateMyInfo';
   }

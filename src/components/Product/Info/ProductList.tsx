@@ -36,8 +36,6 @@ export default function ProductList() {
 
   const [productList, refetch] = useGetAllProduct();
 
-  console.log(productList);
-
   const { mutate } = useMutation(changeProductsSequence);
 
   // 제품 list 클릭해도 꺼지지않게함

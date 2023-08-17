@@ -11,6 +11,7 @@ import { getAllProductProjects, getChangeLogEachProject } from '@/api/Project/Ve
 import { useRecoilState } from 'recoil';
 import { eachProductProjects } from '@/recoil/Project/atom.ts';
 import { useMessage } from '@/hooks/useMessage.ts';
+import { useDeprecatedInvertedScale } from 'framer-motion';
 export default function ReleaseNote() {
   // const dummy: Release[] = [
   //   {
@@ -95,8 +96,6 @@ export default function ReleaseNote() {
     },
   ]);
 
-  console.log(queryResults[0].data);
-
   const eachProjectQueryResults = useQueries(
     projects.map((project) => ({
       queryKey: ['getChangeLog', project.id],
@@ -175,13 +174,6 @@ export default function ReleaseNote() {
       }
     }
   }, [isLogin, productList]);
-
-  // useEffect(() => {
-  //   if (productList?.length > 0) {
-  //     sessionStorage.setItem('nowProduct', JSON.stringify(productList[0]));
-  //     navigate(`/workspace/${productList[0].productId}`);
-  //   }
-  // }, [productList]);
 
   return (
     <section className={'w-full min-w-[50em] py-32 px-14 xl:px-56'} onClick={onCloseKebab}>
