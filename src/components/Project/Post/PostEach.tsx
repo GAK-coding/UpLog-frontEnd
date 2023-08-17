@@ -228,18 +228,17 @@ export default function PostEach({ post, menuId, likeList, noticeId }: Props) {
           {/*    onClick={() => onClickScrap(post.id)}*/}
           {/*  />*/}
           {/*)}*/}
-          {productInfo.powerType !== 'CLIENT' ||
-            (nowProject.projectStatus !== 'PROGRESS_COMPLETE' && (
-              <GoKebabHorizontal
-                className={'flex text-[1.3rem] text-gray-light ml-1.5'}
-                onClick={() =>
-                  setIsClickKebab((prevState) => ({
-                    ...prevState,
-                    [post.id]: !prevState[post.id],
-                  }))
-                }
-              />
-            ))}
+          {productInfo.powerType !== 'CLIENT' && (
+            <GoKebabHorizontal
+              className={'flex text-[1.3rem] text-gray-light ml-1.5'}
+              onClick={() =>
+                setIsClickKebab((prevState) => ({
+                  ...prevState,
+                  [post.id]: !prevState[post.id],
+                }))
+              }
+            />
+          )}
           {isClickKebab[post.id] && (
             <section
               className={`absolute top-[2.2rem] flex-col-center w-[5rem] ${
