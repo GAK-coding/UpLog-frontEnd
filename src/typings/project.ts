@@ -22,6 +22,7 @@ export interface Project {
   id: number;
   version: string;
   projectStatus: 'PROGRESS_IN' | 'PROGRESS_COMPLETE';
+  endDate: string;
 }
 
 export interface FailProject {
