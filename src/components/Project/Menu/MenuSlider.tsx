@@ -146,11 +146,11 @@ export default function MenuSlider({ product, project, menutitle }: Props) {
       }
 
       // 특수문자는 불가
-      if (!regex.test(nextValue)) {
-        showMessage('warning', '메뉴 이름은 한글, 영문만 가능합니다.');
-        setPlusMenu(false);
-        return;
-      }
+      // if (!regex.test(nextValue)) {
+      //   showMessage('warning', '메뉴 이름은 한글, 영문만 가능합니다.');
+      //   setPlusMenu(false);
+      //   return;
+      // }
 
       if (editMenuName !== '') {
         // 값을 입력했으면 새로운 값으로 메뉴 list에 추가

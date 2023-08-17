@@ -25,8 +25,9 @@ export default function PostMain() {
   const { refetch } = useQuery(['menuPostData', menuId], () => menuPostList(menuId!), {
     onSuccess: (data) => {
       if (typeof data !== 'string') {
-        const reversePosts = [...data['posts']].reverse();
-        setPosts(reversePosts);
+        // const reversePosts = [...data['posts']].reverse();
+        // setPosts(reversePosts);
+        setPosts(data['posts']);
         if (data.noticePost !== undefined) {
           setNoticePostInfo(data.noticePost);
         }
