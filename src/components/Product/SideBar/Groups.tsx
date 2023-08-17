@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { Collapse, useDisclosure } from '@chakra-ui/react';
 import { BsDot } from 'react-icons/bs';
@@ -9,6 +9,7 @@ import { Project, ScreenProjectTeams } from '@/typings/project.ts';
 import { useQuery } from 'react-query';
 import { getProjectTeams } from '@/api/Project/Version.ts';
 import { useMessage } from '@/hooks/useMessage.ts';
+import { useGetProjectGroups } from '@/components/Project/hooks/useGetProjectGroups.ts';
 
 export default function Groups() {
   const { product, project, parentgroup, childgroup } = useParams();
@@ -19,6 +20,8 @@ export default function Groups() {
   const { showMessage, contextHolder } = useMessage();
 
   const [parentGroups, setParentGroups] = useState<ScreenProjectTeams[]>([]);
+
+  const getGroups = useGetProjectGroups(nowProject.id);
 
   const childGroups: string[][] = [
     // ['프론트엔드', '백엔드', '풀스택'],
@@ -81,6 +84,12 @@ export default function Groups() {
     e.preventDefault();
     navigate(`/workspace/${product}/${project}/group/${group}/setting`);
   }, []);
+
+  useEffect(() => {
+    if (getGroups) {
+      sessionStorage.setItem('nowTeamId', getGroups[0]?.id.toString());
+    }
+  }, [getGroups]);
 
   return (
     <section className={'px-10'}>
