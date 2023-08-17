@@ -76,8 +76,10 @@ export default function MyPage() {
       image: imageUrl,
     });
 
+    const temp = JSON.parse(JSON.stringify(userInfo));
+
     setUserInfo({
-      ...userInfo,
+      ...temp,
       nickname: !newNickname ? userInfo.nickname : newNickname,
       name: !newName ? userInfo.name : newName,
       image: imageUrl ? imageUrl : userInfo.image,
@@ -85,9 +87,9 @@ export default function MyPage() {
     sessionStorage.setItem(
       'userInfo',
       JSON.stringify({
-        ...userInfo,
-        newNickname: !newNickname ? null : newNickname,
-        newName: !newName ? null : newName,
+        ...temp,
+        nickname: !newNickname ? userInfo.nickname : newNickname,
+        name: !newName ? userInfo.name : newName,
         image: imageUrl ? imageUrl : userInfo.image,
       })
     );
