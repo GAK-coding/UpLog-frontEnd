@@ -33,6 +33,7 @@ interface Props {
 }
 export default function CreateTask({ isOpen, onClose, menuId }: Props) {
   const { showMessage, contextHolder } = useMessage();
+  const nowTeamId: number = JSON.parse(sessionStorage.getItem('nowTeamId')!);
 
   const [taskName, onChangeTaskName, setTaskName] = useInput('');
   const [newTask, setNewTask] = useState<TaskBody>({
@@ -40,7 +41,7 @@ export default function CreateTask({ isOpen, onClose, menuId }: Props) {
     startTime: '',
     endTime: '',
     menuId: 0,
-    teamId: 13,
+    teamId: nowTeamId,
     targetMemberId: 2,
     taskDetail: '',
   });
@@ -312,7 +313,7 @@ export default function CreateTask({ isOpen, onClose, menuId }: Props) {
       startTime: '',
       endTime: '',
       menuId: 0,
-      teamId: 13,
+      teamId: nowTeamId,
       targetMemberId: 2,
       taskDetail: '',
     });
