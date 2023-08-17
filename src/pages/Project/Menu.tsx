@@ -40,17 +40,17 @@ export default function Menu() {
       <section className={'flex-row-center h-[5rem] w-full'}>
         {/*프로젝트 페이지로 이동하는 버튼*/}
 
-        {/*{nowProject.projectStatus === 'PROGRESS_COMPLETE' ||*/}
-        {/*nowProduct.powerType === 'CLIENT' ? null : (*/}
-        {/*  <BsChevronCompactUp*/}
-        {/*    className={'text-[4rem] text-gray-light cursor-pointer'}*/}
-        {/*    onClick={() => navigate(`/workspace/${product}/${project}`)}*/}
-        {/*  />*/}
-        {/*)}*/}
-        <BsChevronCompactUp
-          className={'text-[4rem] text-gray-light cursor-pointer'}
-          onClick={() => navigate(`/workspace/${product}/${project}`)}
-        />
+        {nowProject.projectStatus === 'PROGRESS_COMPLETE' ||
+        nowProduct.powerType === 'CLIENT' ? null : (
+          <BsChevronCompactUp
+            className={'text-[4rem] text-gray-light cursor-pointer'}
+            onClick={() => navigate(`/workspace/${product}/${project}`)}
+          />
+        )}
+        {/*<BsChevronCompactUp*/}
+        {/*  className={'text-[4rem] text-gray-light cursor-pointer'}*/}
+        {/*  onClick={() => navigate(`/workspace/${product}/${project}`)}*/}
+        {/*/>*/}
       </section>
       {/*메뉴 보드 Wrapper*/}
       <section className={'flex-col justify-start w-[80%] min-w-[80rem] h-menu pt-6'}>
@@ -112,30 +112,19 @@ export default function Menu() {
               <PostMain />
             </div>
           )}
-          {/*{(isPost && productInfo.powerType !== 'CLIENT') ||*/}
-          {/*  (nowProject.projectStatus !== 'PROGRESS_COMPLETE' && (*/}
-          {/*    <button*/}
-          {/*      className={*/}
-          {/*        'absolute flex justify-between items-center px-2.5 w-[5.5rem] h-[2rem] top-[6.5rem] right-10 text-[0.93rem] border border-line rounded'*/}
-          {/*      }*/}
-          {/*      onClick={() => onOpen()}*/}
-          {/*    >*/}
-          {/*      <BiPencil className={'flex text-gray-dark text-[1.2rem]'} />*/}
-          {/*      <span className={'flex text-gray-dark'}>글쓰기</span>*/}
-          {/*    </button>*/}
-          {/*  ))}*/}
 
-          {/*{(isPost && productInfo.powerType !== 'CLIENT') || (*/}
-          <button
-            className={
-              'absolute flex justify-between items-center px-2.5 w-[5.5rem] h-[2rem] top-[6.5rem] right-10 text-[0.93rem] border border-line rounded'
-            }
-            onClick={() => onOpen()}
-          >
-            <BiPencil className={'flex text-gray-dark text-[1.2rem]'} />
-            <span className={'flex text-gray-dark'}>글쓰기</span>
-          </button>
-          {/*)}*/}
+          {productInfo.powerType === 'CLIENT' ||
+          nowProject.projectStatus === 'PROGRESS_COMPLETE' ? null : (
+            <button
+              className={
+                'absolute flex justify-between items-center px-2.5 w-[5.5rem] h-[2rem] top-[6.5rem] right-10 text-[0.93rem] border border-line rounded'
+              }
+              onClick={() => onOpen()}
+            >
+              <BiPencil className={'flex text-gray-dark text-[1.2rem]'} />
+              <span className={'flex text-gray-dark'}>글쓰기</span>
+            </button>
+          )}
 
           <PostModal isOpen={isOpen} onClose={onClose} isEdit={false} />
         </section>
