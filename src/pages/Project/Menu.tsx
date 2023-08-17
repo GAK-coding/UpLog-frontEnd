@@ -10,9 +10,11 @@ import PostModal from '@/components/Project/Post/PostModal.tsx';
 import { postMain } from '@/recoil/Project/Post.ts';
 import { useEffect } from 'react';
 import { menuListData } from '@/recoil/Project/Menu.ts';
+import { ProductInfo } from '@/typings/product.ts';
 
 export default function Menu() {
   const { product, project, menutitle } = useParams();
+  const productInfo: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const menuList = useRecoilValue(menuListData);
@@ -81,7 +83,7 @@ export default function Menu() {
               <PostMain />
             </div>
           )}
-          {isPost && (
+          {isPost && productInfo.powerType !== 'CLIENT' && (
             <button
               className={
                 'absolute flex justify-between items-center px-2.5 w-[5.5rem] h-[2rem] top-[6.5rem] right-10 text-[0.93rem] border border-line rounded'

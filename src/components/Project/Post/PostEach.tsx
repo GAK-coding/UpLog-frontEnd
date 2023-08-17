@@ -1,10 +1,10 @@
-import { CommentLikeList, Post, PostLikeList } from '@/typings/post.ts';
+import { Post, PostLikeList } from '@/typings/post.ts';
 import { formatCreteaDate } from '@/utils/fotmatCreateDate.ts';
 import PostModal from '@/components/Project/Post/PostModal.tsx';
 import DeleteDialog from '@/components/Common/DeleteDialog.tsx';
 import PostComment from '@/components/Project/Post/PostComment.tsx';
 import { BsChat, BsHeart, BsHeartFill } from 'react-icons/bs';
-import { AiFillStar, AiOutlineStar } from 'react-icons/ai';
+// import { AiFillStar, AiOutlineStar } from 'react-icons/ai';
 import { GoKebabHorizontal } from 'react-icons/go';
 import { useCallback, useState } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
@@ -14,6 +14,7 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { noticePost, postLike, postLikeCount, unNoticePost } from '@/api/Project/Post.ts';
 import { useMessage } from '@/hooks/useMessage.ts';
 import { SaveUserInfo } from '@/typings/member.ts';
+import { ProductInfo } from '@/typings/product.ts';
 
 interface Props {
   post: Post;
@@ -23,11 +24,13 @@ interface Props {
 }
 export default function PostEach({ post, menuId, likeList, noticeId }: Props) {
   const { showMessage, contextHolder } = useMessage();
+  const productInfo: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
+
   const { isOpen: isOpenModal, onOpen: onOpenModal, onClose: onCloseModal } = useDisclosure();
   const { isOpen: isOpenDialog, onOpen: onOpenDialog, onClose: onCloseDialog } = useDisclosure();
 
   const [isLikeClick, setIsLikeClick] = useState<{ [key: number]: boolean }>({});
-  const [isScrapClick, setIsScrapClick] = useState<{ [key: number]: boolean }>({});
+  // const [isScrapClick, setIsScrapClick] = useState<{ [key: number]: boolean }>({});
   const [isClickKebab, setIsClickKebab] = useState<{ [key: number]: boolean }>({});
 
   const userInfo: SaveUserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
@@ -222,15 +225,17 @@ export default function PostEach({ post, menuId, likeList, noticeId }: Props) {
           {/*    onClick={() => onClickScrap(post.id)}*/}
           {/*  />*/}
           {/*)}*/}
-          <GoKebabHorizontal
-            className={'flex text-[1.3rem] text-gray-light ml-1.5'}
-            onClick={() =>
-              setIsClickKebab((prevState) => ({
-                ...prevState,
-                [post.id]: !prevState[post.id],
-              }))
-            }
-          />
+          {productInfo.powerType !== 'CLIENT' && (
+            <GoKebabHorizontal
+              className={'flex text-[1.3rem] text-gray-light ml-1.5'}
+              onClick={() =>
+                setIsClickKebab((prevState) => ({
+                  ...prevState,
+                  [post.id]: !prevState[post.id],
+                }))
+              }
+            />
+          )}
           {isClickKebab[post.id] && (
             <section
               className={`absolute top-[2.2rem] flex-col-center w-[5rem] ${
