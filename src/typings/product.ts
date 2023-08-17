@@ -68,9 +68,8 @@ export interface ProductMember {
   // TODO: 이미지 연결 후 수정
   profile?: string | null;
   // 케밥 버튼을 위한 변수이며 프론트에서 추가해줘야됨
-  isOpen: boolean;
+  isOpen?: boolean;
 }
-
 export type issueStatus = 'NEW' | 'FEATURE' | 'CHANGED' | 'FIXED' | 'DEPRECATED';
 
 export interface ChangeLogBody {

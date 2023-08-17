@@ -1,5 +1,6 @@
 import { atom } from 'recoil';
 import { ProductInfo, ProductMember } from '@/typings/product.ts';
+import { SelectMenu } from '@/typings/menu.ts';
 
 export const productOpen = atom({ key: 'productOpen', default: false });
 
@@ -56,6 +57,11 @@ export const productListData = atom<ProductInfo[]>({
   //     // client: 'client',
   //   },
   // ],
+});
+
+export const allMemberList = atom<SelectMenu[]>({
+  key: 'memberList',
+  default: [],
 });
 
 export const productMemberList = atom<ProductMember[]>({

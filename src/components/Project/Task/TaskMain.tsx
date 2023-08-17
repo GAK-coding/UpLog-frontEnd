@@ -9,12 +9,16 @@ import { useDisclosure } from '@chakra-ui/react';
 import CreateTask from '@/components/Project/Task/CreateTask.tsx';
 import { useQuery } from 'react-query';
 import { menuTaskList } from '@/api/Project/Task.ts';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { menuListData } from '@/recoil/Project/Menu.ts';
 import { TaskData } from '@/typings/task.ts';
+import { getProductMemberList } from '@/api/Product/Product.ts';
+import { ProductInfo } from '@/typings/product.ts';
+import { allMemberList, productMemberList } from '@/recoil/Product/atom.ts';
 
 export default function TaskMain() {
   const { product, project, menutitle } = useParams();
+  const nowProduct: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
   const navigate = useNavigate();
   // task 추가 모달창
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -22,6 +26,8 @@ export default function TaskMain() {
   const menuId = menuList.find((menu) => menu.menuName === menutitle)?.id;
   const [taskList, setTaskList] = useRecoilState(taskAll);
   const [firstTaskList, setFirstTaskList] = useState<TaskData[]>([]);
+  const [memberList, setMemberList] = useRecoilState(productMemberList);
+  const [memberListData, setMemberListData] = useRecoilState(allMemberList);
 
   // 날짜, 상태 필터링 데이터
   const dateData: SelectMenu[] = [
@@ -31,6 +37,7 @@ export default function TaskMain() {
       label: '마감날짜',
     },
   ];
+
   const statusData: SelectMenu[] = [
     { value: 'done', label: '완료' },
     { value: 'before', label: '완료 전' },
@@ -50,6 +57,19 @@ export default function TaskMain() {
     cacheTime: 80000, // 12분
     refetchOnWindowFocus: false, // 브라우저를 포커싱했을때 데이터를 가져오지 않음
   });
+
+  // 멤버 리스트 조회
+  const { data } = useQuery(
+    ['getMemberList', nowProduct.productId],
+    () => getProductMemberList(nowProduct.productId),
+    {
+      onSuccess: (data) => {
+        if (typeof data !== 'string') {
+          setMemberList(data);
+        }
+      },
+    }
+  );
 
   // 날짜, 상태 데이터 필터링 값
   const handleChange = (type: string) => (value: { value: string; label: React.ReactNode }) => {
@@ -94,6 +114,17 @@ export default function TaskMain() {
       }
     }
   };
+
+  useEffect(() => {
+    if (memberList !== undefined) {
+      const updateList: SelectMenu[] = memberList.map((memberItem) => ({
+        value: memberItem.memberId.toString(),
+        label: `${memberItem.memberNickName}(${memberItem.memberName})`,
+      }));
+
+      setMemberListData(updateList);
+    }
+  }, [data]);
 
   return (
     <div className={'flex-col-center justify-start w-full h-auto mb-8'}>

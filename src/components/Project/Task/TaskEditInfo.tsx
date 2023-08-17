@@ -2,20 +2,24 @@ import { DatePicker, DatePickerProps, Select } from 'antd';
 import { SaveProjectInfo, SubGroup } from '@/typings/project.ts';
 import { SelectMenu } from '@/typings/menu.ts';
 import { TaskData } from '@/typings/task.ts';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 import * as dayjs from 'dayjs';
-import { productMemberList } from '@/recoil/Product/atom.ts';
+import { allMemberList, productMemberList } from '@/recoil/Product/atom.ts';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useGetMenuList } from '@/components/Project/hooks/useGetMenuList.ts';
 import { editTaskInfo } from '@/recoil/Project/Task.ts';
 import { RangePickerProps } from 'antd/es/date-picker';
+import { getProductMemberList } from '@/api/Product/Product.ts';
+import { useQuery } from 'react-query';
+import { ProductInfo } from '@/typings/product.ts';
 
 interface Props {
   isEdit: boolean;
   taskInfo: TaskData;
 }
 export default function TaskEditInfo({ isEdit, taskInfo }: Props) {
+  const nowProduct: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
   const nowProject: SaveProjectInfo = JSON.parse(sessionStorage.getItem('nowProject')!);
   const projectId = nowProject.id;
   const [editTaskData, setEditTask] = useRecoilState(editTaskInfo);
@@ -38,11 +42,22 @@ export default function TaskEditInfo({ isEdit, taskInfo }: Props) {
     label: menuItem.menuName,
   }));
 
-  const member = useRecoilValue(productMemberList);
-  const memberList: SelectMenu[] = member.map((memberItem) => ({
-    value: memberItem.memberId.toString(),
-    label: `${memberItem.memberNickName}(${memberItem.memberName})`,
-  }));
+  const [memberList, setMemberList] = useRecoilState(productMemberList);
+  const [memberListData, setMemberListData] = useRecoilState(allMemberList);
+  const member = useRecoilValue(allMemberList);
+
+  // 멤버 리스트 조회
+  const { data } = useQuery(
+    ['getMemberList', nowProduct.productId],
+    () => getProductMemberList(nowProduct.productId),
+    {
+      onSuccess: (data) => {
+        if (typeof data !== 'string') {
+          setMemberList(data);
+        }
+      },
+    }
+  );
 
   // 시작 날짜 입력 값
   const onChangeStartTime: DatePickerProps['onChange'] = (date, dateString) => {
@@ -82,6 +97,7 @@ export default function TaskEditInfo({ isEdit, taskInfo }: Props) {
         updateTargetMemberId: +value.value,
       };
 
+      console.log(value.value);
       setEditTask(updatedTask);
     }
   };
@@ -121,6 +137,17 @@ export default function TaskEditInfo({ isEdit, taskInfo }: Props) {
 
     setEditTask(updatedTask);
   };
+
+  useEffect(() => {
+    if (memberList !== undefined) {
+      const updateList: SelectMenu[] = memberList.map((memberItem) => ({
+        value: memberItem.memberId.toString(),
+        label: `${memberItem.memberNickName}(${memberItem.memberName})`,
+      }));
+
+      setMemberListData(updateList);
+    }
+  }, [data]);
 
   return (
     // 그룹 설정하면 이걸로 바꾸기 -> 그리고 다 h-1/5로 바꾸기
@@ -265,7 +292,7 @@ export default function TaskEditInfo({ isEdit, taskInfo }: Props) {
             onChange={handleChange('targetMember')}
             style={{ width: 120 }}
             bordered={false}
-            options={memberList}
+            options={member}
             dropdownStyle={{
               backgroundColor: 'var(--gray-sideBar)',
               color: 'var(--black)',
