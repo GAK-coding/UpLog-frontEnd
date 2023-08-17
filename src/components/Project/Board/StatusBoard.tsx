@@ -112,7 +112,7 @@ export default function StatusBoard({ status, tasks }: Props) {
                                   );
                                 }}
                               >
-                                이동
+                                상세정보
                               </div>
                             </section>
                           )

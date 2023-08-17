@@ -247,33 +247,33 @@ export default function Project() {
       <div className={'w-noneSideBar h-[10.8rem] flex-col overflow-y-hidden'}>
         <section className={'flex-row-center justify-start w-full h-[3.5rem] px-12 pt-4'}>
           {/*그룹 필터링*/}
-          <div className={'flex-row-center w-[25rem] justify-between'}>
-            {/*그룹 -> 하위로 바꾸기*/}
-            <Space wrap>
-              <Select
-                defaultValue={pGroup[0]}
-                style={{ width: 110 }}
-                onChange={handleParentGroupChange}
-                options={pGroup.map((group) => ({ label: group, value: group }))}
-                dropdownStyle={{
-                  backgroundColor: 'var(--gray-sideBar)',
-                  color: 'var(--black)',
-                  borderColor: 'var(--border-line)',
-                }}
-              />
-              <Select
-                style={{ width: 110 }}
-                value={childGroup}
-                onChange={onChildGroupChange}
-                options={parentGroup.map((group) => ({ label: group, value: group }))}
-                dropdownStyle={{
-                  backgroundColor: 'var(--gray-sideBar)',
-                  color: 'var(--black)',
-                  borderColor: 'var(--border-line)',
-                }}
-              />
-            </Space>
-          </div>
+          {/*<div className={'flex-row-center w-[25rem] justify-between'}>*/}
+          {/*  /!*그룹 -> 하위로 바꾸기*!/*/}
+          {/*  <Space wrap>*/}
+          {/*    <Select*/}
+          {/*      defaultValue={pGroup[0]}*/}
+          {/*      style={{ width: 110 }}*/}
+          {/*      onChange={handleParentGroupChange}*/}
+          {/*      options={pGroup.map((group) => ({ label: group, value: group }))}*/}
+          {/*      dropdownStyle={{*/}
+          {/*        backgroundColor: 'var(--gray-sideBar)',*/}
+          {/*        color: 'var(--black)',*/}
+          {/*        borderColor: 'var(--border-line)',*/}
+          {/*      }}*/}
+          {/*    />*/}
+          {/*    <Select*/}
+          {/*      style={{ width: 110 }}*/}
+          {/*      value={childGroup}*/}
+          {/*      onChange={onChildGroupChange}*/}
+          {/*      options={parentGroup.map((group) => ({ label: group, value: group }))}*/}
+          {/*      dropdownStyle={{*/}
+          {/*        backgroundColor: 'var(--gray-sideBar)',*/}
+          {/*        color: 'var(--black)',*/}
+          {/*        borderColor: 'var(--border-line)',*/}
+          {/*      }}*/}
+          {/*    />*/}
+          {/*  </Space>*/}
+          {/*</div>*/}
         </section>
         {/*칸반, 스크럼 선택*/}
         <section className={'w-full h-[4rem]'}>
