@@ -50,7 +50,15 @@ export default function UserProfile() {
         {/*유저 정보*/}
         <div className={'flex-row-center w-[4rem] h-full'}>
           {/*TODO: 백엔드에서 로그인 정보 프로필 사진 추가해주면 됨*/}
-          {<FaUserCircle className={'text-[2.8rem] fill-gray-dark'} />}
+          {!userInfo?.image ? (
+            <FaUserCircle className={'text-[2.6rem] fill-gray-dark cursor-pointer'} />
+          ) : (
+            <img
+              src={userInfo?.image}
+              alt="userprofile"
+              className={'w-[2.6rem] h-[2.6rem] cursor-pointer ml-3 rounded-[50%]'}
+            />
+          )}
         </div>
         <div className={'flex-col-center w-[13rem] h-full pl-2'}>
           <span

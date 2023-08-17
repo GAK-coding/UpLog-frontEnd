@@ -14,13 +14,14 @@ import { useRecoilState } from 'recoil';
 import { useMutation } from 'react-query';
 import { createNewChangeLog } from '@/api/Project/Version.ts';
 import { useMessage } from '@/hooks/useMessage.ts';
+import { user } from '@/recoil/User/atom.ts';
 
 const typeList: changeType[] = ['NEW', 'FEATURE', 'CHANGED', 'FIXED', 'DEPRECATED'];
 
 export default function NewChangeLog() {
   const { product } = useParams();
   const { showMessage, contextHolder } = useMessage();
-  const userInfo: SaveUserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
+  const [userInfo, setUserInfo] = useRecoilState(user);
   const nowProject: Project = JSON.parse(sessionStorage.getItem('nowProject')!);
   const [editChangeLog, setEditChangeLog] = useRecoilState(editorChangeLog);
 
@@ -167,7 +168,7 @@ export default function NewChangeLog() {
                 <span className={'w-[11%] font-bold'}>작성자</span>
                 <span className={'flex items-center'}>
                   <img
-                    src="/images/test.jpeg"
+                    src={userInfo?.image ? userInfo?.image : '/images/test_userprofile.png'}
                     alt="프로필 사진"
                     className={'w-10 h-10 rounded-[50%] mr-3'}
                   />
