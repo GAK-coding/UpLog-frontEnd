@@ -1,28 +1,104 @@
-import React, { ChangeEvent, useCallback, useState } from 'react';
+import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { IoIosArrowBack } from 'react-icons/io';
 import { Link, useParams } from 'react-router-dom';
 import { Select } from '@chakra-ui/react';
-import { changeType } from '@/typings/product.ts';
+import { ChangeLogBody, changeType } from '@/typings/product.ts';
 import useInput from '@/hooks/useInput.ts';
 import { AiFillCaretDown } from 'react-icons/ai';
 import { formatDate } from '@/utils/formatDate.ts';
 import PostEditor from '@/components/Common/PostEditor.tsx';
+import { SaveUserInfo } from '@/typings/member.ts';
+import { Project } from '@/typings/project.ts';
+import { editorChangeLog } from '@/recoil/Common/atom.ts';
+import { useRecoilState } from 'recoil';
+import { useMutation } from 'react-query';
+import { createNewChangeLog } from '@/api/Project/Version.ts';
+import { useMessage } from '@/hooks/useMessage.ts';
+import { user } from '@/recoil/User/atom.ts';
 
-const typeList: changeType[] = ['New', 'Feature', 'Changed', 'Fixed', 'Deprecated'];
+const typeList: changeType[] = ['NEW', 'FEATURE', 'CHANGED', 'FIXED', 'DEPRECATED'];
 
 export default function NewChangeLog() {
   const { product } = useParams();
+  const { showMessage, contextHolder } = useMessage();
+  const [userInfo, setUserInfo] = useRecoilState(user);
+  const nowProject: Project = JSON.parse(sessionStorage.getItem('nowProject')!);
+  const [editChangeLog, setEditChangeLog] = useRecoilState(editorChangeLog);
 
   const [selectedType, setSelectedType] = useState(typeList[0]);
-  const onChangeSelectedType = useCallback((e: ChangeEvent<HTMLSelectElement>) => {
+  const onChangeSelectedType = (e: ChangeEvent<HTMLSelectElement>) => {
     setSelectedType(e.target.value as changeType);
-  }, []);
+    console.log(e.target.value);
+  };
 
   const [title, onChangeTitle, setTitle] = useInput('');
   const today: Date = new Date();
 
+  const [newChangeLog, setNewChangeLog] = useState<ChangeLogBody>({
+    title: '',
+    content: '',
+    issueStatus: 'NEW',
+  });
+
+  const [check, setCheck] = useState(false);
+
+  const { mutate: createChangeLogMutate } = useMutation(
+    (newChangeLog: ChangeLogBody) => createNewChangeLog(newChangeLog, nowProject.id),
+    {
+      onSuccess: (data) => {
+        if (typeof data !== 'string' && 'projectId' in data) {
+          showMessage('success', '변경사항이 성공적으로 등록되었습니다.');
+          setTimeout(() => {
+            history.back();
+          }, 2000);
+        } else if (typeof data !== 'string' && 'message' in data) {
+          showMessage('warning', data.message);
+        } else {
+          showMessage('error', '변경사항 등록에 실패하였습니다.');
+        }
+      },
+    }
+  );
+
+  const onClickCreate = useCallback(() => {
+    if (title === '') {
+      showMessage('warning', '변경사항 제목을 입력해주세요.');
+      return;
+    }
+    if (editChangeLog === '') {
+      showMessage('warning', '변경사항 내용을 입력해주세요.');
+      return;
+    }
+    setNewChangeLog({
+      ...newChangeLog,
+      title: title,
+      content: editChangeLog,
+      issueStatus: selectedType,
+    });
+
+    setCheck(true);
+  }, [title, editChangeLog]);
+
+  useEffect(() => {
+    if (check) {
+      createChangeLogMutate(newChangeLog);
+
+      setTimeout(() => {
+        setNewChangeLog({
+          title: '',
+          content: '',
+          issueStatus: 'NEW',
+        });
+        setTitle('');
+        setEditChangeLog('');
+      }, 3000);
+      setCheck(false);
+    }
+  }, [check]);
+
   return (
     <section className={'w-full h-auto flex py-20'}>
+      {contextHolder}
       <article className={'pt-4 flex justify-center w-[10%] min-w-[6rem] lg:w-[16%]'}>
         <Link
           to={`/workspace/${product}`}
@@ -40,7 +116,7 @@ export default function NewChangeLog() {
         <nav className={'px-6 pt-6 mb-4 text-right'}>
           <button
             className={'bg-orange rounded font-bold text-white w-[5rem] h-9'}
-            onClick={() => {}}
+            onClick={onClickCreate}
           >
             완료
           </button>
@@ -82,7 +158,7 @@ export default function NewChangeLog() {
             <div className={'my-4 mx-10'}>
               <div className={'flex items-center text-gray-dark w-full mb-4'}>
                 <span className={'w-[11%] font-bold'}>버전</span>
-                <span>v.1.1.2</span>
+                <span>{nowProject?.version}</span>
               </div>
               <div className={'flex items-center text-gray-dark w-full mb-4'}>
                 <span className={'w-[11%] font-bold'}>날짜</span>
@@ -92,11 +168,11 @@ export default function NewChangeLog() {
                 <span className={'w-[11%] font-bold'}>작성자</span>
                 <span className={'flex items-center'}>
                   <img
-                    src="/images/test.jpeg"
+                    src={userInfo?.image ? userInfo?.image : '/images/test_userprofile.png'}
                     alt="프로필 사진"
                     className={'w-10 h-10 rounded-[50%] mr-3'}
                   />
-                  Crong(권오현)
+                  {userInfo?.nickname}({userInfo?.name})
                 </span>
               </div>
             </div>

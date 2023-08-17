@@ -9,12 +9,20 @@ import { useDisclosure } from '@chakra-ui/react';
 import CreateTask from '@/components/Project/Task/CreateTask.tsx';
 import { useQuery } from 'react-query';
 import { menuTaskList } from '@/api/Project/Task.ts';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { menuListData } from '@/recoil/Project/Menu.ts';
 import { TaskData } from '@/typings/task.ts';
+import { getProductMemberList } from '@/api/Product/Product.ts';
+import { ProductInfo } from '@/typings/product.ts';
+import { allMemberList, productMemberList } from '@/recoil/Product/atom.ts';
+import { SaveProjectInfo } from '@/typings/project.ts';
+import { FaUserCircle } from 'react-icons/fa';
 
 export default function TaskMain() {
   const { product, project, menutitle } = useParams();
+  const nowProduct: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
+  const nowProject: SaveProjectInfo = JSON.parse(sessionStorage.getItem('nowProject')!);
+
   const navigate = useNavigate();
   // task 추가 모달창
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -22,6 +30,8 @@ export default function TaskMain() {
   const menuId = menuList.find((menu) => menu.menuName === menutitle)?.id;
   const [taskList, setTaskList] = useRecoilState(taskAll);
   const [firstTaskList, setFirstTaskList] = useState<TaskData[]>([]);
+  const [memberList, setMemberList] = useRecoilState(productMemberList);
+  const [memberListData, setMemberListData] = useRecoilState(allMemberList);
 
   // 날짜, 상태 필터링 데이터
   const dateData: SelectMenu[] = [
@@ -31,6 +41,7 @@ export default function TaskMain() {
       label: '마감날짜',
     },
   ];
+
   const statusData: SelectMenu[] = [
     { value: 'done', label: '완료' },
     { value: 'before', label: '완료 전' },
@@ -51,9 +62,21 @@ export default function TaskMain() {
     refetchOnWindowFocus: false, // 브라우저를 포커싱했을때 데이터를 가져오지 않음
   });
 
+  // 멤버 리스트 조회
+  const { data } = useQuery(
+    ['getMemberList', nowProduct.productId],
+    () => getProductMemberList(nowProduct.productId),
+    {
+      onSuccess: (data) => {
+        if (typeof data !== 'string') {
+          setMemberList(data);
+        }
+      },
+    }
+  );
+
   // 날짜, 상태 데이터 필터링 값
   const handleChange = (type: string) => (value: { value: string; label: React.ReactNode }) => {
-    // TODO : Task 상태, 날짜별로 필터링해서 보여주기
     // task 상태
     if (type === 'status') {
       switch (value.value) {
@@ -62,7 +85,11 @@ export default function TaskMain() {
           break;
         }
         case 'before': {
-          setTaskList(firstTaskList.filter((task) => task.taskStatus === 'PROGRESS_BEFORE'));
+          setTaskList(
+            firstTaskList.filter(
+              (task) => task.taskStatus === 'PROGRESS_BEFORE' || task.taskStatus === 'PROGRESS_IN'
+            )
+          );
           break;
         }
         default: {
@@ -91,6 +118,19 @@ export default function TaskMain() {
       }
     }
   };
+
+  useEffect(() => {
+    if (memberList !== undefined) {
+      const updateList: SelectMenu[] = memberList
+        .filter((member) => member.powerType !== 'CLIENT')
+        .map((memberItem) => ({
+          value: memberItem.memberId.toString(),
+          label: `${memberItem.memberNickName}(${memberItem.memberName})`,
+        }));
+
+      setMemberListData(updateList);
+    }
+  }, [data]);
 
   return (
     <div className={'flex-col-center justify-start w-full h-auto mb-8'}>
@@ -153,15 +193,15 @@ export default function TaskMain() {
         {/*task list border*/}
         <div
           className={
-            'flex-col-center justify-start items-start w-full border-base rounded-[5px] mt-6'
+            'flex-col-center justify-start items-start w-full border-base border-gray-border bg-post-bg rounded-[5px] mt-6'
           }
         >
           {/*task 정보*/}
-          {taskList.map((task) => (
+          {taskList.map((task, index) => (
             <section
               key={task.id}
               className={
-                'flex-row-center justify-start w-full min-h-[3.5rem] px-4 border-b border-line cursor-pointer'
+                'flex-row-center justify-start w-full min-h-[3.5rem] border-b px-4 border-gray-border cursor-pointer'
               }
               onClick={() =>
                 navigate(`/workspace/${product}/${project}/menu/${menutitle}/task/${task.id}`)
@@ -180,7 +220,7 @@ export default function TaskMain() {
 
               {/*task 메뉴, 상태, 할당자*/}
               <div className={'flex-row-center w-h-full justify-end text-gray-dark text-[0.93rem]'}>
-                <span className={'mr-3'}>{task.teamName}</span>
+                {/*<span className={'mr-3'}>{task.teamName}</span>*/}
                 <span
                   className={
                     'flex items-center px-2 h-[1.5rem] rounded-[0.31rem] bg-orange-light-sideBar'
@@ -192,7 +232,7 @@ export default function TaskMain() {
                   className={'mx-3 h-5 border-solid border-r border-[0.5px] border-gray-light'}
                 />
                 <span
-                  className={`flex items-center px-2 mr-3 h-[1.5rem] rounded-[0.31rem] text-[#292723] 
+                  className={`flex items-center px-2 mr-5 h-[1.5rem] rounded-[0.31rem] text-[#292723] 
                     ${task.taskStatus === 'PROGRESS_BEFORE' && 'bg-status-before'}
                   ${task.taskStatus === 'PROGRESS_IN' && 'bg-status-going'}
                   ${task.taskStatus === 'PROGRESS_COMPLETE' && 'bg-status-done'}`}
@@ -201,27 +241,29 @@ export default function TaskMain() {
                   {task.taskStatus === 'PROGRESS_IN' && '진행 중'}
                   {task.taskStatus === 'PROGRESS_COMPLETE' && '진행 후'}
                 </span>
-                {/*{!task.targetMember.image ? (*/}
-                {/*  <FaUserCircle className={'flex text-[2.2rem] fill-gray-dark'} />*/}
-                {/*) : (*/}
-                {/*  <img*/}
-                {/*    src={task.targetMember.image}*/}
-                {/*    alt="userprofile"*/}
-                {/*    className={'flex w-[2.2rem] h-[2.2rem]'}*/}
-                {/*  />*/}
-                {/*)}*/}
+                {!task.targetMemberInfoDTO.image ? (
+                  <FaUserCircle className={'flex text-[2.2rem] fill-gray-dark'} />
+                ) : (
+                  <img
+                    src={task.targetMemberInfoDTO.image}
+                    alt="userprofile"
+                    className={'flex w-[2.2rem] h-[2.2rem]'}
+                  />
+                )}
               </div>
             </section>
           ))}
-          <section
-            className={
-              'flex-row-center justify-start w-full min-h-[3.5rem] px-4 text-gray-dark cursor-pointer'
-            }
-            onClick={() => onOpen()}
-          >
-            <AiOutlinePlus className={'text-[1.7rem]'} />
-            <span className={'ml-2 text-[1.1rem]'}>Task 생성하기</span>
-          </section>
+          {nowProject.projectStatus !== 'PROGRESS_COMPLETE' && (
+            <section
+              className={
+                'flex-row-center justify-start w-full min-h-[3.5rem] px-4 bg-post-bg text-gray-dark cursor-pointer'
+              }
+              onClick={() => onOpen()}
+            >
+              <AiOutlinePlus className={'text-[1.7rem]'} />
+              <span className={'ml-2 text-[1.1rem]'}>Task 생성하기</span>
+            </section>
+          )}
         </div>
       </section>
       <CreateTask isOpen={isOpen} onClose={onClose} menuId={menuId!} />

@@ -1,3 +1,5 @@
+import { numberInputTheme } from '@chakra-ui/theme/dist/components/number-input';
+
 export interface Product {
   id: number;
   name: string;
@@ -10,20 +12,20 @@ export interface GetProductList {
   memberName: string;
   powerType: 'MASTER' | 'LEADER' | 'DEFAULT' | 'CLIENT';
   indexNum: number;
+  productImage: null | string;
 }
 
 export interface ProductInfo extends Omit<GetProductList, 'memberName'> {
   draggableId: string;
   image?: string;
-  // TODO : master, client type user info로 변경하기
-  // masterEmail: string;
-  // client: string;
 }
 
 export interface ProductBody {
   name: string;
   masterEmail: string;
+  clientEmail: string | null;
   link: string;
+  image: null | string;
 }
 export interface FailProduct {
   httpStatus: 'NOT_FOUND' | 'FORBIDDEN';
@@ -39,37 +41,59 @@ export interface ProductsData extends Product {
 
 export interface ProductEditBody {
   link: string | null;
+  image: null | string;
   newName: string | null;
   memberEmailList: string[] | null;
   powerType: 'MASTER' | 'LEADER' | 'DEFAULT' | 'CLIENT' | null;
 }
 
+export interface updateResultDTO {
+  duplicatedCnt: number;
+  duplicatedMemberList: string[];
+  failCnt: number;
+  failMemberList: string[];
+}
 export interface ProductEditData {
-  memberPowerListDTO: { poductId: number; productName: 'newProductName1' };
+  updateResultDTO: updateResultDTO | null;
 }
 
 // ReleaseNote.tsx에서 사용
-export type changeType = 'Feature' | 'Changed' | 'Deprecated' | 'New' | 'Fixed';
-
-export interface changeLog {
-  type: changeType;
-  content: string;
-}
-
-export interface Release {
-  status: string;
-  version: string;
-  date: string;
-  contents: changeLog[];
-}
+export type changeType = 'NEW' | 'FEATURE' | 'CHANGED' | 'FIXED' | 'DEPRECATED';
 
 export interface ProductMember {
-  position: 'master' | 'leader' | 'member';
-  profile: string | null;
-  nickName: string;
-  name: string;
-  email: string;
-  id: number;
+  powerType: 'MASTER' | 'LEADER' | 'DEFAULT' | 'CLIENT';
+  memberId: number;
+  memberNickName: string;
+  memberName: string;
+  memberEmail: string;
+  image?: string;
+  // TODO: 이미지 연결 후 수정
+  profile?: string | null;
   // 케밥 버튼을 위한 변수이며 프론트에서 추가해줘야됨
-  isOpen: boolean;
+  isOpen?: boolean;
+}
+export type issueStatus = 'NEW' | 'FEATURE' | 'CHANGED' | 'FIXED' | 'DEPRECATED';
+
+export interface ChangeLogBody {
+  title: string;
+  content: string;
+  issueStatus: issueStatus;
+}
+
+export interface ChangeLogData {
+  id: number;
+  content: string;
+  issueStatus: issueStatus;
+  createdTime: string;
+  modifiedTime: string;
+  title: string;
+}
+
+export interface SaveProductInfo {
+  draggableId: string;
+  image: string;
+  indexNum: number;
+  powerType: string;
+  productId: number;
+  productName: string;
 }

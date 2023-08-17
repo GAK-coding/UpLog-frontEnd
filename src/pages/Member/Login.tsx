@@ -8,7 +8,7 @@ import { useMessage } from '@/hooks/useMessage.ts';
 import { GetUserInfo, LoginInfo, SaveUserInfo } from '@/typings/member.ts';
 import { useMutation } from 'react-query';
 import { useRecoilState } from 'recoil';
-import { loginStatus } from '@/recoil/User/atom.ts';
+import { loginStatus, user } from '@/recoil/User/atom.ts';
 import { useCookies } from 'react-cookie';
 import { loginAPI } from '@/api/Members/Login-Signup.ts';
 
@@ -19,28 +19,34 @@ export default function Login() {
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useRecoilState(loginStatus);
   const [cookies, setCookie, removeCookie] = useCookies();
+  const [userInfo, setUserInfo] = useRecoilState(user);
 
-  const { mutate } = useMutation(loginAPI, {
+  const { mutate, isSuccess } = useMutation(loginAPI, {
     onSuccess: (data: GetUserInfo | string) => {
       if (typeof data === 'string') {
         showMessage('error', '아이디 또는 비밀번호를 잘못 입력하셨습니다.');
         return;
       }
 
-      const { id, email, nickname, name, position, accessToken, refreshToken } = data;
+      const { id, email, nickname, name, position, accessToken, refreshToken, image } = data;
       const userInfo: SaveUserInfo = {
         id,
         nickname,
         name,
         position,
         email,
+        image,
       };
 
       sessionStorage.setItem('accessToken', accessToken);
       setCookie('refreshToken', refreshToken, { path: '/' });
       sessionStorage.setItem('userInfo', JSON.stringify(userInfo));
       setIsLogin(true);
-      navigate('/');
+      setUserInfo(userInfo);
+
+      // const productList = useGetAllProduct();
+      // console.log(productList);
+      navigate('/workspace/1', { state: { isLogin: true } });
     },
     onError: () => {
       showMessage('error', '아이디 또는 비밀번호를 잘못 입력하셨습니다.');
@@ -68,8 +74,8 @@ export default function Login() {
   });
 
   useEffect(() => {
-    if (isLogin) navigate('/');
-  }, [isLogin]);
+    if (sessionStorage.getItem('accessToken') && sessionStorage.getItem('userInfo')) navigate('/');
+  }, []);
 
   return (
     <section className={'h-full'}>
@@ -144,7 +150,8 @@ export default function Login() {
 
         <article className={'w-[37rem] flex-col-center text-lg font-bold'}>
           <nav
-            className={'flex-row-center w-full border-solid border-b border-gray-spring pb-7 mb-5'}
+            // className={'flex-row-center w-full border-solid border-b border-gray-spring pb-7 mb-5'}
+            className={'flex-row-center w-full pb-7 mb-5'}
           >
             <Link to={'/pwinquiry'} className={'w-[46%] text-right'}>
               <button>비밀번호 찾기</button>
@@ -156,17 +163,17 @@ export default function Login() {
               <button>회원가입</button>
             </Link>
           </nav>
-          <div className={'flex-col-center w-full'}>
-            <span className={'mb-7 text-lg font-bold'}>간편 로그인</span>
-            <div className={'w-3/5 flex-row-center justify-evenly'}>
-              <button onClick={() => login()}>
-                <img className={'w-12'} src={'google.svg'} alt={'google'} />
-              </button>
-              <button>
-                <img className={'w-12'} src={'kakao.svg'} alt={'kakao'} />
-              </button>
-            </div>
-          </div>
+          {/*<div className={'flex-col-center w-full'}>*/}
+          {/*  <span className={'mb-7 text-lg font-bold'}>간편 로그인</span>*/}
+          {/*  <div className={'w-3/5 flex-row-center justify-evenly'}>*/}
+          {/*    <button onClick={() => login()}>*/}
+          {/*      <img className={'w-12'} src={'google.svg'} alt={'google'} />*/}
+          {/*    </button>*/}
+          {/*    <button>*/}
+          {/*      <img className={'w-12'} src={'kakao.svg'} alt={'kakao'} />*/}
+          {/*    </button>*/}
+          {/*  </div>*/}
+          {/*</div>*/}
         </article>
       </div>
     </section>

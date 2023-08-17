@@ -2,7 +2,7 @@ import { formatCreteaDate } from '@/utils/fotmatCreateDate.ts';
 import { FaUserCircle } from 'react-icons/fa';
 import { BsHeart, BsHeartFill } from 'react-icons/bs';
 import { useCallback, useState } from 'react';
-import { CommentInfo } from '@/typings/postData.ts';
+import { CommentInfo } from '@/typings/post.ts';
 
 interface Props {
   commentList: CommentInfo[];
@@ -56,7 +56,7 @@ export default function PostChildComment({ commentList, commentId, isChildClick 
                 <div className={'flex-col w-auto h-auto ml-3'}>
                   <span
                     className={'flex h-1/2 text-[0.93rem]'}
-                  >{`${child.nickname}(${child.name})`}</span>
+                  >{`${child.nickName}(${child.name})`}</span>
                   <span className={'flex h-1/2 text-[0.8rem] text-gray-light'}>
                     {formatCreteaDate(child.createTime)}
                   </span>

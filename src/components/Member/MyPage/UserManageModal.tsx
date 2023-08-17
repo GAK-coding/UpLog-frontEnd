@@ -66,6 +66,8 @@ export default function UserManageModal({ isOpen, onClose, isClickPwChange, show
 
       sessionStorage.removeItem('userInfo');
       sessionStorage.removeItem('accessToken');
+      sessionStorage.removeItem('nowProduct');
+      sessionStorage.removeItem('nowProject');
       removeCookie('refreshToken', { path: '/' });
       setIsLogin(false);
       navigator('/');

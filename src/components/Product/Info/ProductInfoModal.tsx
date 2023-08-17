@@ -15,11 +15,14 @@ import ImageCrop from '@/components/Member/MyPage/ImageCrop.tsx';
 import { UploadFile, UploadProps } from 'antd/lib';
 import { RcFile } from 'antd/es/upload';
 import { FiUpload } from 'react-icons/fi';
-import { useMutation, useQuery } from 'react-query';
-import { createProduct, eachProduct, productEdit } from '@/api/Product/Product.ts';
-import { ProductBody, ProductEditBody } from '@/typings/product.ts';
-import { SaveUserInfo } from '@/typings/member.ts';
+import { useMutation, useQueryClient } from 'react-query';
+import { createProduct, productEdit } from '@/api/Product/Product.ts';
+import { ProductBody, ProductEditBody, SaveProductInfo } from '@/typings/product.ts';
 import { useGetEachProduct } from '@/components/Product/hooks/useGetEachProduct.ts';
+import { useRecoilValue } from 'recoil';
+import { frontEndUrl } from '@/recoil/Common/atom.ts';
+import { imageUpload } from '@/api/Members/mypage.ts';
+import { useGetAllProduct } from '@/components/Product/hooks/useGetAllProduct.ts';
 
 interface Props {
   isOpen: boolean;
@@ -31,59 +34,130 @@ interface Props {
 export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, productId }: Props) {
   const [productName, onChangeProductName, setProductName] = useInput('');
   const [masterEmail, onChangeMasterEmail, setMasterEmail] = useInput('');
-  const [clientEmail, onChangeClientEmail, setClientEmail] = useInput('');
+  const [clientEmail, onChangeClientEmail, setClientEmail] = useInput<string>('');
   const { showMessage, contextHolder } = useMessage();
+  const baseUrl = useRecoilValue(frontEndUrl);
+  const [check, setCheck] = useState(false);
+  const [productList, allProductListRefetch] = useGetAllProduct(false);
+  const nowProduct: SaveProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
 
-  const userInfo: SaveUserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
+  const [productInfo, setProductInfo] = useState<ProductBody>({
+    name: '',
+    image: null,
+    masterEmail: '',
+    clientEmail: null,
+    link: `${baseUrl}`,
+  });
 
-  // TODO : 링크 임베딩 된 링크로 다시 보내기
-  const productInfo: ProductBody = {
-    name: productName,
-    masterEmail: masterEmail,
-    link: 'www.naver.com',
-  };
-
-  const updateProductInfo: ProductEditBody = {
+  const [updateProductInfo, setUpdateProductInfo] = useState<ProductEditBody>({
     link: null,
     newName: productName,
     memberEmailList: [],
     powerType: null,
-  };
+    image: null,
+  });
 
   // 제품 이미지 업로드
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [imageSrc, setImageSrc] = useState('');
+  const [imgUrl, setImgUrl] = useState<undefined | string>(undefined);
+
+  const queryClient = useQueryClient();
 
   // 제품 생성
-  const { mutate: createProductMutate } = useMutation(() => createProduct(productInfo), {
-    onSuccess: (data) => {
-      if (data === 'create product fail') {
-        showMessage('error', '중복된 제품 이름입니다.');
-        return;
-      } else {
-        if (typeof data === 'object' && 'message' in data) {
-          if (data.httpStatus === 'NOT_FOUND')
-            showMessage('warning', '마스터 정보가 올바르지 않습니다.');
-          else showMessage('error', '제품 생성 권한이 없습니다.');
+  const { mutate: createProductMutate } = useMutation(
+    () =>
+      createProduct({
+        ...productInfo,
+        clientEmail: !clientEmail ? null : clientEmail,
+        image: !imgUrl ? null : imgUrl,
+      }),
+    {
+      onSuccess: (data) => {
+        if (data === 'create product fail') {
+          showMessage('error', '중복된 제품 이름입니다.');
+          return;
         } else {
-          showMessage('success', '제품이 생성되었습니다.');
-          setTimeout(() => onClose(), 2000);
+          if (typeof data === 'object' && 'message' in data) {
+            if (data.httpStatus === 'NOT_FOUND')
+              showMessage('warning', '마스터 정보가 올바르지 않습니다.');
+            else showMessage('error', '제품 생성 권한이 없습니다.');
+          } else {
+            showMessage('success', '제품이 생성되었습니다.');
+            allProductListRefetch();
+            setTimeout(() => onClose(), 2000);
+          }
         }
-      }
-    },
-  });
+      },
+    }
+  );
 
   // TODO : staleTime 확인 필요
   // 제품 정보 조회
-  const [productGetData, refetch] = useGetEachProduct(productId, showMessage, setProductName, true);
+  const [productGetData, refetch] = useGetEachProduct(
+    productId,
+    showMessage,
+    setProductName,
+    false
+  );
 
   // 제품 정보 수정
   const { mutate: updateProduct } = useMutation(productEdit, {
+    onMutate: async (updateData) => {
+      await queryClient.cancelQueries('myProductList');
+
+      const previousProductList = queryClient.getQueryData('myProductList');
+
+      queryClient.setQueryData('myProductList', updateData);
+
+      sessionStorage.setItem(
+        'nowProduct',
+        JSON.stringify({ ...nowProduct, productName: updateProductInfo.newName })
+      );
+
+      return () => queryClient.setQueryData('myProductList', previousProductList);
+    },
     onSuccess: (data) => {
-      if (typeof data === 'object') {
-        showMessage('success', '제품 정보가 변경되었습니다.');
+      if (typeof data !== 'string' && data.updateResultDTO) {
+        const { failCnt, failMemberList, duplicatedCnt, duplicatedMemberList } =
+          data.updateResultDTO;
+
+        if (failCnt > 0 && duplicatedCnt > 0) {
+          showMessage(
+            'error',
+            `${failMemberList.join(', ')}님 가입되어 있지 않고, ${duplicatedMemberList.join(
+              ', '
+            )}님은 이미 존재하여 초대에 실패했습니다.`
+          );
+          return;
+        } else if (failCnt > 0) {
+          showMessage(
+            'error',
+            `${failMemberList.join(', ')}님은 가입되어 있지 않아 초대에 실패했습니다.`
+          );
+          return;
+        } else if (duplicatedCnt > 0) {
+          showMessage(
+            'error',
+            `${duplicatedMemberList.join(', ')}님은 이미 존재하여 초대에 실패했습니다.`
+          );
+          return;
+        }
+
+        showMessage('success', '제품 수정이 완료되었습니다.');
         setTimeout(() => onClose(), 2000);
       }
+    },
+    onError: (error, value, rollback) => {
+      if (rollback) {
+        rollback();
+        showMessage('error', '제품 정보 변경에 실패했습니다.');
+      } else {
+        showMessage('error', '제품 정보 변경에 실패했습니다.');
+      }
+    },
+    onSettled: () => {
+      return queryClient.invalidateQueries('myProductList');
     },
   });
 
@@ -108,45 +182,140 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
   const onClickMakeProduct = useCallback(() => {
     if (!isCreateProduct) {
       if (!productName) {
+        console.log(clientEmail);
         showMessage('warning', '제품 이름을 입력해주세요.');
         return;
       }
 
       // 변경된 사항이 없으면 수정 요청 보내지 않음
-      if (typeof productGetData === 'object' && productGetData !== null) {
-        if ('name' in productGetData && productName === productGetData.name) {
-          showMessage('warning', '변경된 정보가 없습니다.');
-          return;
-        }
+      console.log(productName, productGetData, clientEmail);
+      if ('name' in productGetData && productName === productGetData.name && clientEmail === '') {
+        showMessage('warning', '변경된 정보가 없습니다.');
+        return;
       }
 
-      // 수정 요청 보냄
-      updateProduct({ data: updateProductInfo, productId });
+      if (clientEmail === '') {
+        setUpdateProductInfo({
+          ...updateProductInfo,
+          newName: productName,
+        });
+      } else {
+        let isEmailFormat = true;
+        const clientEmailList = clientEmail
+          .split(',')
+          .map((email) => {
+            const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+            if (!emailRegex.test(email.trim()) && email.trim() !== '') {
+              isEmailFormat = false;
+            }
+
+            if (email.trim() !== '') {
+              return email.trim();
+            } else {
+              return null; // 빈 문자열이 아닌 경우에는 null을 반환하도록 수정
+            }
+          })
+          .filter((email) => email !== null) as string[];
+
+        if (!isEmailFormat) {
+          showMessage('warning', '이메일 형식이 올바르지 않은 메일이 존재합니다.');
+          return;
+        }
+
+        setUpdateProductInfo({
+          ...updateProductInfo,
+          memberEmailList: clientEmailList,
+          link: `${baseUrl}`,
+          powerType: 'CLIENT',
+        });
+      }
+      setCheck(true);
       return;
     }
+
     // 필수 정보를 입력하지 않았을 때
     if (!productName || !masterEmail) {
       showMessage('warning', '필수 정보를 입력해주세요.');
       return;
     }
 
-    // 제품 생성
-    createProductMutate();
-  }, [productName, masterEmail, updateProductInfo]);
+    if (productInfo.clientEmail === '') {
+      setProductInfo({
+        ...productInfo,
+        clientEmail: null,
+      });
+    }
+
+    setProductInfo({
+      name: productName,
+      masterEmail: masterEmail,
+      clientEmail: clientEmail,
+      link: `${baseUrl}`,
+      image: null,
+    });
+    setCheck(true);
+  }, [productName, masterEmail, clientEmail, updateProductInfo, productGetData]);
 
   useEffect(() => {
     // 모달창 껏다가 키면 정보 초기화
     if (isCreateProduct) {
+      setProductInfo({
+        name: '',
+        masterEmail: '',
+        clientEmail: null,
+        link: '',
+        image: null,
+      });
+      setProductName('');
+      setClientEmail('');
+      setMasterEmail('');
+    } else {
+      // 수정일 경우에 기존 post 정보로 값 채워넣기
+      refetch();
       setProductName('');
       setClientEmail('');
       setMasterEmail('');
     }
-
-    // 수정일 경우에 기존 post 정보로 값 채워넣기
-    else {
-      refetch;
-    }
   }, [isOpen, isCreateProduct, productId]);
+
+  useEffect(() => {
+    console.log('바뀜', clientEmail);
+  }, [clientEmail]);
+  useEffect(() => {
+    if (check) {
+      isCreateProduct
+        ? createProductMutate()
+        : updateProduct({ data: updateProductInfo, productId });
+    }
+
+    setUpdateProductInfo({
+      link: null,
+      newName: productName,
+      memberEmailList: [],
+      powerType: null,
+      image: null,
+    });
+    setCheck(false);
+  }, [check, isCreateProduct]);
+
+  const getUrl = async (file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const url = await imageUpload(formData);
+
+    url && setImgUrl(url);
+    url && setUpdateProductInfo({ ...updateProductInfo, image: url });
+    return url;
+  };
+
+  useEffect(() => {
+    if (fileList[0]) {
+      getUrl(fileList[0].originFileObj!);
+    }
+  }, [fileList]);
+
+  console.log('으악으악새', updateProductInfo);
 
   return (
     <Modal isCentered onClose={onClose} isOpen={isOpen}>

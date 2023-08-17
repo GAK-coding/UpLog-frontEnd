@@ -31,7 +31,7 @@ export const changePassword = async (data: {
   try {
     const { password, newPassword, id } = data;
 
-    const res = await instance.patch(`/members/${id}/password`, { password, newPassword });
+    const res = await instance.patch(`/members/password`, { password, newPassword });
 
     if ('message' in res.data) {
       return res.data;
@@ -60,5 +60,35 @@ export const deleteAccount = async (data: {
     return res.data;
   } catch (err) {
     return 'delete account fail';
+  }
+};
+
+export const imageUpload = async (data: FormData) => {
+  try {
+    const res: AxiosResponse<{ url: string }> = await instance.post('/storages/upload', data, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+
+    return res.data.url;
+  } catch (err) {
+    return null;
+  }
+};
+
+export const updateMyInfo = async (data: {
+  newName: string | null;
+  newNickname: string | null;
+  image: string | null;
+}) => {
+  try {
+    const { newName, newNickname, image } = data;
+
+    await instance.patch('/members/information', {
+      newName,
+      newNickname,
+      image,
+    });
+  } catch (err) {
+    return 'fail updateMyInfo';
   }
 };

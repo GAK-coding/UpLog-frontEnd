@@ -14,8 +14,11 @@ import { useMessage } from '@/hooks/useMessage.ts';
 import { checkTaskEditValue } from '@/utils/checkTaskEditValue.ts';
 import { useRecoilState } from 'recoil';
 import { eachTaskInfo, editTaskInfo } from '@/recoil/Project/Task.ts';
+import { SaveProjectInfo } from '@/typings/project.ts';
 
 export default function TaskDetail() {
+  const nowProject: SaveProjectInfo = JSON.parse(sessionStorage.getItem('nowProject')!);
+
   const { product, project, menutitle, taskid } = useParams();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { showMessage, contextHolder } = useMessage();
@@ -41,8 +44,6 @@ export default function TaskDetail() {
       if (typeof data !== 'string' && 'taskName' in data) {
         setTaskInfo(data);
         setTaskName(data.taskName);
-        console.log('가져온 정보', data);
-        console.log(editTaskData, taskName);
       }
     },
     // staleTime: 6000, // 1분
@@ -56,8 +57,10 @@ export default function TaskDetail() {
     (editTaskData: UpdateTaskBody) => editTask(editTaskData, +taskid!),
     {
       onSuccess: (data) => {
-        if (typeof data === 'string') {
-          setEditSuccess(false);
+        if (typeof data === 'object' && 'message' in data) {
+          showMessage('warning', data.message);
+        } else if (typeof data === 'object' && 'id' in data) {
+          showMessage('success', 'Task 수정에 성공했습니다.');
         }
       },
       onSettled: () => {
@@ -69,7 +72,6 @@ export default function TaskDetail() {
   // 수정 버튼 클릭 시
   const onChangeEdit = useCallback(() => {
     setIsEdit(true);
-    console.log('여기', editTaskData, taskName);
   }, [isEdit]);
 
   // 수정 완료 버튼 클릭 시
@@ -81,14 +83,15 @@ export default function TaskDetail() {
       showMessage('warning', 'Task의 정보를 모두 작성해주세요');
       return;
     }
+
     editTaskMutate(editTaskData);
 
-    if (!editSuccess) {
-      showMessage('error', 'Task 수정에 실패했습니다.');
-      return;
-    }
-
-    showMessage('success', 'Task 수정에 성공했습니다.');
+    // if (!editSuccess) {
+    //   showMessage('error', 'Task 수정에 실패했습니다.');
+    //   return;
+    // }
+    //
+    // showMessage('success', 'Task 수정에 성공했습니다.');
     setTimeout(() => onClose(), 2000);
     setIsEdit(false);
   }, [isEdit, editTaskData, editSuccess]);
@@ -220,37 +223,39 @@ export default function TaskDetail() {
         </section>
 
         {/*수정 삭제 버튼*/}
-        <section className={'flex-row-center justify-end w-full h-[4.5rem] mb-4'}>
-          <nav
-            className={
-              'flex-row-center justify-between w-[13rem] h-auto py-4 px-4 mr-6 font-bold text-white'
-            }
-          >
-            <button
-              className={'w-[5rem] rounded h-9 bg-orange'}
-              onClick={() => {
-                if (!isEdit) onChangeEdit();
-                else setIsEdit(false);
-              }}
+        {nowProject.projectStatus !== 'PROGRESS_COMPLETE' && (
+          <section className={'flex-row-center justify-end w-full h-[4.5rem] mb-4'}>
+            <nav
+              className={
+                'flex-row-center justify-between w-[13rem] h-auto py-4 px-4 mr-6 font-bold text-white'
+              }
             >
-              {isEdit ? '취소' : '수정'}
-            </button>
+              <button
+                className={'w-[5rem] rounded h-9 bg-orange'}
+                onClick={() => {
+                  if (!isEdit) onChangeEdit();
+                  else setIsEdit(false);
+                }}
+              >
+                {isEdit ? '취소' : '수정'}
+              </button>
 
-            <button
-              className={'w-[5rem] rounded h-9 bg-orange'}
-              onClick={() => {
-                if (!isEdit) {
-                  onOpen();
-                  return;
-                }
-                onSubmitEdit();
-              }}
-            >
-              {isEdit ? '완료' : '삭제'}
-            </button>
-            <DeleteDialog isOpen={isOpen} onClose={onClose} isTask={true} task={+taskid!} />
-          </nav>
-        </section>
+              <button
+                className={'w-[5rem] rounded h-9 bg-orange'}
+                onClick={() => {
+                  if (!isEdit) {
+                    onOpen();
+                    return;
+                  }
+                  onSubmitEdit();
+                }}
+              >
+                {isEdit ? '완료' : '삭제'}
+              </button>
+              <DeleteDialog isOpen={isOpen} onClose={onClose} isTask={true} task={+taskid!} />
+            </nav>
+          </section>
+        )}
       </article>
     </section>
   );

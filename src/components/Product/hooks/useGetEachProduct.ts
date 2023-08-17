@@ -1,6 +1,7 @@
 import { eachProduct } from '@/api/Product/Product.ts';
 import { useQuery } from 'react-query';
 import { Dispatch, SetStateAction } from 'react';
+import { ProductsData } from '@/typings/product.ts';
 
 type MessageType = 'success' | 'error' | 'warning';
 
@@ -8,8 +9,8 @@ export function useGetEachProduct(
   productId: number,
   showMessage: (type: MessageType, content: string) => void,
   setProductName?: Dispatch<SetStateAction<string>>,
-  isEnabled = false
-) {
+  isEnabled = true
+): [ProductsData | [], () => void] {
   const { refetch, data } = useQuery(['getProjectInfo', productId], () => eachProduct(productId), {
     onSuccess: (data) => {
       if (typeof data === 'object' && 'message' in data) {
@@ -26,5 +27,6 @@ export function useGetEachProduct(
     refetchOnReconnect: false, // 네트워크가 다시 연결되었을때 다시 가져오지 않음
   });
 
-  return [data, refetch];
+  if (data && typeof data !== 'string' && 'id' in data) return [data, refetch];
+  else return [[], refetch];
 }

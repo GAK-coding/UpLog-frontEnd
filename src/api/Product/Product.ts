@@ -1,10 +1,11 @@
 import {
   FailProduct,
+  GetProductList,
   ProductBody,
   ProductEditBody,
   ProductEditData,
+  ProductMember,
   ProductsData,
-  GetProductList,
 } from '@/typings/product.ts';
 import { AxiosResponse } from 'axios';
 import { instance } from '@/api';
@@ -74,5 +75,29 @@ export const changeProductsSequence = async (updateIndexList: number[]) => {
     await instance.patch('/products', { updateIndexList });
   } catch (err) {
     return 'fail change Products sequence';
+  }
+};
+
+export const getProductMemberList = async (productId: number) => {
+  try {
+    const res: AxiosResponse<ProductMember[]> = await instance.get(
+      `/products/${productId}/members`
+    );
+    return res.data;
+  } catch (err) {
+    return 'fail product member list';
+  }
+};
+
+export const changeProductMemberRole = async (data: {
+  newPowerType: 'LEADER' | 'DEFAULT';
+  memberId: number;
+  productId: number;
+}) => {
+  try {
+    const { newPowerType, memberId, productId } = data;
+    await instance.patch(`/products/${productId}/power-type`, { newPowerType, memberId });
+  } catch (err) {
+    return 'fail change role';
   }
 };

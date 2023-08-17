@@ -14,6 +14,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { deleteMenu } from '@/api/Project/Menu.ts';
 import { useMutation, useQueryClient } from 'react-query';
 import { useMessage } from '@/hooks/useMessage.ts';
+import { SaveUserInfo } from '@/typings/member.ts';
+import { SaveProjectInfo } from '@/typings/project.ts';
 
 interface Props {
   isOpen: boolean;
@@ -28,7 +30,10 @@ export default function DeleteMenuDialog({ isOpen, onClose, menu, menuId }: Prop
   const cancelRef = useRef<HTMLButtonElement>(null);
   const [menuList, setMenuList] = useRecoilState(menuListData);
   const queryClient = useQueryClient();
-  const projectId = 10;
+
+  const nowProject: SaveProjectInfo = JSON.parse(sessionStorage.getItem('nowProject')!);
+
+  const projectId = nowProject.id;
 
   // menu delete
   const { mutate: deleteMenuMutate } = useMutation(() => deleteMenu(menuId), {
@@ -51,10 +56,10 @@ export default function DeleteMenuDialog({ isOpen, onClose, menu, menuId }: Prop
     onSuccess: (data) => {
       if (data === 'delete menu fail') {
         showMessage('error', '메뉴 삭제에 실패했습니다.');
-        setTimeout(() => onClose(), 1000);
+        setTimeout(() => onClose(), 2000);
       } else if (data === 'delete') {
         showMessage('success', '해당 메뉴가 삭제되었습니다.');
-        setTimeout(() => onClose(), 1000);
+        setTimeout(() => onClose(), 2000);
       }
     },
     onError: (error, value, rollback) => {
@@ -73,11 +78,11 @@ export default function DeleteMenuDialog({ isOpen, onClose, menu, menuId }: Prop
   });
 
   const onClickDelete = useCallback(() => {
-    const updatedMenuList = menuList.filter((eachMenu) => eachMenu.menuName !== menu);
-    setMenuList(updatedMenuList);
+    // const updatedMenuList = menuList.filter((eachMenu) => eachMenu.menuName !== menu);
+    // setMenuList(updatedMenuList);
 
     deleteMenuMutate();
-    navigate(`/workspace/${product}/${project}/menu/결과물`);
+    navigate(`/workspace/${product}/${project}/menu/${menuList[0].menuName}`);
   }, [menuList, setMenuList, menu]);
 
   return (

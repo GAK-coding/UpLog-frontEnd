@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ImageCrop from '@/components/Member/MyPage/ImageCrop.tsx';
 import { UploadFile, UploadProps } from 'antd/lib';
 import { useDisclosure } from '@chakra-ui/react';
@@ -9,72 +9,24 @@ import UserManageModal from '@/components/Member/MyPage/UserManageModal.tsx';
 import { SaveUserInfo } from '@/typings/member.ts';
 import useInput from '@/hooks/useInput.ts';
 import { useMutation } from 'react-query';
-import { changeName, changeNickname } from '@/api/Members/mypage.ts';
+import { changeName, changeNickname, imageUpload, updateMyInfo } from '@/api/Members/mypage.ts';
 import { useMessage } from '@/hooks/useMessage.ts';
+import { useRecoilState } from 'recoil';
+import { user } from '@/recoil/User/atom.ts';
 
 export default function MyPage() {
   // const userInfo: SaveUserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
-  const [userInfo, setUserInfo] = useState<SaveUserInfo>(
-    JSON.parse(sessionStorage.getItem('userInfo')!)
-  );
+  const [userInfo, setUserInfo] = useRecoilState(user);
   const [newName, onChangeNewName, setNewName] = useInput('');
   const [newNickname, onChangeNewNickname, setNewNickname] = useInput('');
   const { showMessage, contextHolder } = useMessage();
 
-  const { mutate: nameChangeMutate } = useMutation(changeName, {
-    onError: () => {
-      showMessage('error', '이름 변경 실패!');
-    },
-  });
-  const { mutate: nicknameChangeMutate } = useMutation(changeNickname);
-
-  const onChangeProfile = useCallback(async () => {
-    if (!newName && !newNickname) {
-      showMessage('warning', '이름과 닉네임을 입력해주세요.');
-      return;
-    }
-
-    if (newName && newNickname) {
-      await nameChangeMutate({ id: userInfo.id, newName });
-      setTimeout(() => {
-        nicknameChangeMutate({ id: userInfo.id, newNickname });
-      }, 1000);
-
-      setUserInfo({ ...userInfo, nickname: newNickname, name: newName });
-      sessionStorage.setItem(
-        'userInfo',
-        JSON.stringify({ ...userInfo, nickname: newNickname, name: newName })
-      );
-      setNewNickname('');
-      setNewName('');
-
-      showMessage('success', '이름, 닉네임 변경 완료!');
-    } else if (newName) {
-      nameChangeMutate({ id: userInfo.id, newName });
-
-      setUserInfo({ ...userInfo, name: newName });
-      sessionStorage.setItem('userInfo', JSON.stringify({ ...userInfo, name: newName }));
-      setNewName('');
-
-      showMessage('success', '이름 변경 완료!');
-    } else {
-      nicknameChangeMutate({ id: userInfo.id, newNickname });
-
-      setUserInfo({ ...userInfo, nickname: newNickname });
-      sessionStorage.setItem('userInfo', JSON.stringify({ ...userInfo, nickname: newNickname }));
-      setNewNickname('');
-
-      showMessage('success', '닉네임 변경 완료!');
-    }
-  }, [newName, newNickname]);
-
-  // 비밀번호 변경 모달
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const [isClickPwChange, setIsClickPwChange] = useState(false);
-
-  const onChangeIsClickPw = useCallback((chk: boolean) => {
-    setIsClickPwChange(chk);
-  }, []);
+  // const { mutate: nameChangeMutate } = useMutation(changeName, {
+  //   onError: () => {
+  //     showMessage('error', '이름 변경 실패!');
+  //   },
+  // });
+  // const { mutate: nicknameChangeMutate } = useMutation(changeNickname);
 
   // 이미지
   const [fileList, setFileList] = useState<UploadFile[]>([]);
@@ -96,6 +48,79 @@ export default function MyPage() {
     if (newFileList.length > 0) await encodeFileToBase64(newFileList[0]!.originFileObj!);
   };
 
+  const nowImage = useRef<string>();
+  const { mutate } = useMutation(updateMyInfo, {
+    onSuccess: (data) => {
+      if (data) nowImage.current = data;
+    },
+  });
+
+  const onChangeProfile = useCallback(async () => {
+    const imgChk = fileList?.[0]?.url === userInfo.image || fileList.length === 0;
+
+    if (!newName && !newNickname && imgChk) {
+      showMessage('warning', '프로필 변경을 해주세요.');
+      return;
+    }
+
+    const formData = new FormData();
+    let imageUrl: string | null = null;
+    if (fileList[0]) {
+      formData.append('file', fileList[0]!.originFileObj!);
+      imageUrl = await imageUpload(formData);
+    }
+
+    mutate({
+      newNickname: !newNickname ? null : newNickname,
+      newName: !newName ? null : newName,
+      image: imageUrl,
+    });
+
+    const temp = JSON.parse(JSON.stringify(userInfo));
+
+    setUserInfo({
+      ...temp,
+      nickname: !newNickname ? userInfo.nickname : newNickname,
+      name: !newName ? userInfo.name : newName,
+      image: imageUrl ? imageUrl : userInfo.image,
+    });
+    sessionStorage.setItem(
+      'userInfo',
+      JSON.stringify({
+        ...temp,
+        nickname: !newNickname ? userInfo.nickname : newNickname,
+        name: !newName ? userInfo.name : newName,
+        image: imageUrl ? imageUrl : userInfo.image,
+      })
+    );
+
+    setNewNickname('');
+    setNewName('');
+    showMessage('success', '프로필 변경 완료!');
+  }, [newName, newNickname, fileList, userInfo]);
+
+  // 비밀번호 변경 모달
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isClickPwChange, setIsClickPwChange] = useState(false);
+
+  const onChangeIsClickPw = useCallback((chk: boolean) => {
+    setIsClickPwChange(chk);
+  }, []);
+
+  useEffect(() => {
+    if (userInfo.image) {
+      const imageFile: UploadFile = {
+        uid: '-1',
+        name: 'image.png', // You can set a desired name here
+        status: 'done',
+        url: userInfo.image, // Set the URL of the image
+      };
+      setFileList([imageFile]);
+    }
+  }, []);
+
+  console.log(fileList?.[0]?.url);
+
   return (
     <section className={'mypage flex flex-col items-center w-full h-[68rem]'}>
       {contextHolder}
@@ -110,7 +135,7 @@ export default function MyPage() {
           <div className={'flex-row-center justify-between w-full h-[13%]'}>
             <div className={'flex-col-center items-start'}>
               <span className={'text-[1.4rem] font-bold'}>
-                {userInfo.nickname}({userInfo.name}) 프로필 관리
+                {userInfo?.nickname}({userInfo?.name}) 프로필 관리
               </span>
               <span className={'text-[1.1rem] text-gray-dark'}>{userInfo.email}</span>
             </div>

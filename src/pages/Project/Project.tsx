@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { BsChevronCompactDown } from 'react-icons/bs';
-import { SubGroup } from '@/typings/project.ts';
+import { SaveProjectInfo, SubGroup } from '@/typings/project.ts';
 import { Progress, Select, Space } from 'antd';
 import StatusBoard from '@/components/Project/Board/StatusBoard.tsx';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
@@ -12,13 +12,18 @@ import { taskState } from '@/recoil/Project/Task.ts';
 import { DragTaskIndexBody, TaskStatus } from '@/typings/task.ts';
 import { allStatusTaskList, updateTaskIndex } from '@/api/Project/Task.ts';
 import { useMutation, useQuery } from 'react-query';
+import { ProductInfo } from '@/typings/product.ts';
+import { Scrollbars } from 'rc-scrollbars';
 
 interface IndexID {
   [key: number]: number;
 }
 export default function Project() {
   const { product, project } = useParams();
-  const projectId = 10;
+  const nowProject: SaveProjectInfo = JSON.parse(sessionStorage.getItem('nowProject')!);
+  const nowProduct: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
+
+  const projectId = nowProject.id;
   const navigate = useNavigate();
   const [taskStatus, setTaskStatus] = useState<TaskStatus>('PROGRESS_BEFORE');
   const [dragUpdateData, setDragUpdateData] = useState<DragTaskIndexBody>({
@@ -238,67 +243,71 @@ export default function Project() {
   }, [filterGroup, childGroup]);
 
   return (
-    <section className={'flex-col justify-start w-noneSideBar h-full relative overflow-x-hidden'}>
-      <div className={'w-noneSideBar h-[13.8rem] flex-col'}>
+    <section
+      className={
+        'flex-col justify-start w-noneSideBar h-full relative overflow-x-hidden overflow-hidden'
+      }
+    >
+      <div className={'w-noneSideBar h-[10.8rem] flex-col overflow-y-hidden'}>
         <section className={'flex-row-center justify-start w-full h-[3.5rem] px-12 pt-4'}>
           {/*그룹 필터링*/}
-          <div className={'flex-row-center w-[25rem] justify-between'}>
-            {/*그룹 -> 하위로 바꾸기*/}
-            <Space wrap>
-              <Select
-                defaultValue={pGroup[0]}
-                style={{ width: 110 }}
-                onChange={handleParentGroupChange}
-                options={pGroup.map((group) => ({ label: group, value: group }))}
-                dropdownStyle={{
-                  backgroundColor: 'var(--gray-sideBar)',
-                  color: 'var(--black)',
-                  borderColor: 'var(--border-line)',
-                }}
-              />
-              <Select
-                style={{ width: 110 }}
-                value={childGroup}
-                onChange={onChildGroupChange}
-                options={parentGroup.map((group) => ({ label: group, value: group }))}
-                dropdownStyle={{
-                  backgroundColor: 'var(--gray-sideBar)',
-                  color: 'var(--black)',
-                  borderColor: 'var(--border-line)',
-                }}
-              />
-            </Space>
-          </div>
+          {/*<div className={'flex-row-center w-[25rem] justify-between'}>*/}
+          {/*  /!*그룹 -> 하위로 바꾸기*!/*/}
+          {/*  <Space wrap>*/}
+          {/*    <Select*/}
+          {/*      defaultValue={pGroup[0]}*/}
+          {/*      style={{ width: 110 }}*/}
+          {/*      onChange={handleParentGroupChange}*/}
+          {/*      options={pGroup.map((group) => ({ label: group, value: group }))}*/}
+          {/*      dropdownStyle={{*/}
+          {/*        backgroundColor: 'var(--gray-sideBar)',*/}
+          {/*        color: 'var(--black)',*/}
+          {/*        borderColor: 'var(--border-line)',*/}
+          {/*      }}*/}
+          {/*    />*/}
+          {/*    <Select*/}
+          {/*      style={{ width: 110 }}*/}
+          {/*      value={childGroup}*/}
+          {/*      onChange={onChildGroupChange}*/}
+          {/*      options={parentGroup.map((group) => ({ label: group, value: group }))}*/}
+          {/*      dropdownStyle={{*/}
+          {/*        backgroundColor: 'var(--gray-sideBar)',*/}
+          {/*        color: 'var(--black)',*/}
+          {/*        borderColor: 'var(--border-line)',*/}
+          {/*      }}*/}
+          {/*    />*/}
+          {/*  </Space>*/}
+          {/*</div>*/}
         </section>
         {/*칸반, 스크럼 선택*/}
-        <section className={'w-full h-[6rem]'}>
-          <div className={'flex-row-center justify-center w-full h-full px-2 '}>
+        <section className={'w-full h-[4rem]'}>
+          <div className={'flex-row-center justify-center w-full h-full px-2'}>
             <button type={'button'} onClick={() => onClickKanban(true)}>
               <span
                 className={`text-3xl  ${
                   isKanban ? 'text-black font-bold' : 'text-gray-border font-semibold'
                 } transition ease-in-out duration-300 hover:scale-110 hover:-translate-y-1`}
               >
-                칸반
+                칸반 보드
               </span>
             </button>
 
-            <div className={'mx-4 h-8 border-solid border-r border-[1px] border-gray-border'} />
+            {/*<div className={'mx-4 h-8 border-solid border-r border-[1px] border-gray-border'} />*/}
 
-            <button type={'button'} onClick={() => onClickKanban(false)}>
-              <span
-                className={`text-3xl transition ease-in-out duration-300 hover:scale-110  ${
-                  !isKanban ? 'text-black font-bold' : 'text-gray-border font-semibold'
-                }`}
-              >
-                스크럼
-              </span>
-            </button>
+            {/*<button type={'button'} onClick={() => onClickKanban(false)}>*/}
+            {/*  <span*/}
+            {/*    className={`text-3xl transition ease-in-out duration-300 hover:scale-110  ${*/}
+            {/*      !isKanban ? 'text-black font-bold' : 'text-gray-border font-semibold'*/}
+            {/*    }`}*/}
+            {/*  >*/}
+            {/*    스크럼*/}
+            {/*  </span>*/}
+            {/*</button>*/}
           </div>
         </section>
         {/*진행률*/}
 
-        <section className={'flex-row-center justify-between w-noneSideBar h-[4.3rem]'}>
+        <section className={'flex-row-center justify-between w-noneSideBar h-[3.3rem]'}>
           {/*TODO : 스크럼 주차 정보 데이터로 처리 + 화살표 기능 추가*/}
           <div className={'flex w-1/3 h-full'} />
           <div className={'flex-row-center w-1/3 h-full'}>
@@ -311,7 +320,10 @@ export default function Project() {
             )}
           </div>
 
-          <div className={'flex-row-center justify-end w-1/3 h-full pr-12'}>
+          <div
+            className={'flex-row-center justify-end w-1/3 h-full pr-12 cursor-pointer'}
+            onClick={() => navigate(`/workspace/${product}/${project}/scrumring`)}
+          >
             <span className={'flex-row-center text-[0.93rem] font-bold mr-4 text-gray-dark'}>
               진행률
             </span>
@@ -323,15 +335,11 @@ export default function Project() {
       </div>
 
       {/*보드*/}
-      <div className={'w-noneSideBar h-board flex-col'}>
+      <div className={'w-noneSideBar h-board flex-col pt-4'}>
         <section className={'flex-col-center w-noneSideBar h-[90%]'}>
           {/*dnd*/}
           <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
-            <div
-              className={
-                'flex-row-center justify-between w-full h-full pt-8 px-[12rem] overflow-x-auto'
-              }
-            >
+            <div className={'flex-row-center justify-between w-full h-full pt-8 px-[12rem]'}>
               <StatusBoard status={'PROGRESS_BEFORE'} tasks={taskStatusList['PROGRESS_BEFORE']} />
               <StatusBoard status={'PROGRESS_IN'} tasks={taskStatusList['PROGRESS_IN']} />
               <StatusBoard

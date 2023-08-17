@@ -2,18 +2,17 @@ import { FaUserCircle } from 'react-icons/fa';
 import { AiFillStar, AiOutlinePoweroff } from 'react-icons/ai';
 import { BiPencil } from 'react-icons/bi';
 import { useNavigate } from 'react-router-dom';
-import { loginStatus, profileOpen } from '@/recoil/User/atom.ts';
+import { loginStatus, profileOpen, user } from '@/recoil/User/atom.ts';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import { SaveUserInfo } from '@/typings/member.ts';
 import { logout } from '@/api/Members/Login-Signup.ts';
 import { useMutation } from 'react-query';
+import { Simulate } from 'react-dom/test-utils';
 
 export default function UserProfile() {
-  // TODO: 실제 userprofile 값으로 변경하기
-
-  const userInfo: SaveUserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
+  const [userInfo, setUserInfo] = useRecoilState(user);
 
   const navigate = useNavigate();
 
@@ -31,6 +30,9 @@ export default function UserProfile() {
 
     sessionStorage.removeItem('userInfo');
     sessionStorage.removeItem('accessToken');
+    sessionStorage.removeItem('nowProduct');
+    sessionStorage.removeItem('nowProject');
+    sessionStorage.removeItem('nowTeamId');
     removeCookie('refreshToken', { path: '/' });
     setIsLogin(false);
     setIsProfileClick(false);
@@ -48,7 +50,15 @@ export default function UserProfile() {
         {/*유저 정보*/}
         <div className={'flex-row-center w-[4rem] h-full'}>
           {/*TODO: 백엔드에서 로그인 정보 프로필 사진 추가해주면 됨*/}
-          {<FaUserCircle className={'text-[2.8rem] fill-gray-dark'} />}
+          {!userInfo?.image ? (
+            <FaUserCircle className={'text-[2.6rem] fill-gray-dark cursor-pointer'} />
+          ) : (
+            <img
+              src={userInfo?.image}
+              alt="userprofile"
+              className={'w-[2.6rem] h-[2.6rem] cursor-pointer ml-3 rounded-[50%]'}
+            />
+          )}
         </div>
         <div className={'flex-col-center w-[13rem] h-full pl-2'}>
           <span

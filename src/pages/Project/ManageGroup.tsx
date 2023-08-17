@@ -128,7 +128,7 @@ export default function ManageGroup() {
           return (
             <div key={idx} className={'mb-12'}>
               <div className={'border-b border-gray-light font-bold text-[1.4rem] pb-2 mb-4'}>
-                {group[0].group ?? '미소속'}
+                {group[0]?.group ?? '미소속'}
               </div>
               {group.map((member) => {
                 return (
@@ -180,8 +180,21 @@ export default function ManageGroup() {
           // isPreviewFocusable={false}
           selectAllOnFocus={false}
         >
-          <EditablePreview />
-          <EditableInput />
+          {/*<div className={'border h-full flex-row-center justify-start'}>*/}
+          <EditablePreview
+            height={'100%'}
+            display={'flex'}
+            flexDirection={'column'}
+            justifyContent={'center'}
+          />
+          {/*</div>*/}
+          <EditableInput
+            height={'100%'}
+            display={'flex'}
+            flexDirection={'column'}
+            justifyContent={'center'}
+            _focus={{ outline: 'none', border: 'none' }}
+          />
         </Editable>
       </article>
     </section>

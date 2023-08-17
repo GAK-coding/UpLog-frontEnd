@@ -12,6 +12,7 @@ export interface SignUpInfo extends LoginInfo {
 
 export interface GetUserInfo extends Omit<SignUpInfo, 'loginType' | 'password'> {
   id: number;
+  image: string;
   accessToken: string;
   refreshToken: string;
 }
@@ -27,7 +28,7 @@ export interface targetMemberInfo {
   id: number;
   name: string;
   nickname: string;
-  image?: string;
+  image?: string | null;
 }
 
 export interface EmailInfo {

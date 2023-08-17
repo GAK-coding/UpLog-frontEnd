@@ -4,20 +4,29 @@ import { BsBellFill, BsMoonFill, BsQuestionCircle, BsSearch, BsSunFill } from 'r
 import { FaUserCircle } from 'react-icons/fa';
 import useInput from '@/hooks/useInput.ts';
 import { useRecoilState } from 'recoil';
-import { loginStatus, profileOpen } from '@/recoil/User/atom.ts';
+import { loginStatus, profileOpen, user } from '@/recoil/User/atom.ts';
 import { PiCaretUpDownLight } from 'react-icons/pi';
 import { productOpen } from '@/recoil/Product/atom.ts';
 import { useOutsideAlerter } from '@/hooks/useOutsideAlerter.ts';
 import ProductList from '@/components/Product/Info/ProductList.tsx';
 import UserProfile from '@/components/Member/Header/UserProfile.tsx';
 import { themeState } from '@/recoil/Common/atom.ts';
+import { ProductInfo } from '@/typings/product.ts';
+import { BiChevronDown } from 'react-icons/bi';
+import { useGetAllProduct } from '@/components/Product/hooks/useGetAllProduct.ts';
+import { SaveUserInfo } from '@/typings/member.ts';
+import { useQueryClient } from 'react-query';
 
 export default function Header() {
   const navigate = useNavigate();
   const [darkMode, setDarkMode] = useRecoilState(themeState);
+  const nowProduct: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
+  const [productList, refetch] = useGetAllProduct()!;
+  const [userInfo, setUserInfo] = useRecoilState(user);
+  const queryClient = useQueryClient();
+  const isProductList = queryClient.getQueryData('myProductList');
 
-  // TODO: 실제 userprofile 값으로 변경하기
-  const userprofile = '';
+  const userprofile = userInfo?.image;
   // 검색
   const [searchTag, onChangeSearchTag] = useInput('');
   // 다크모드 localstorage에서 체크
@@ -34,7 +43,6 @@ export default function Header() {
   const product = parts[2];
 
   // 로그인 여부
-  //TODO : 섹션 storage 값으로 변경하기
   const [isLogin, setIsLogin] = useRecoilState(loginStatus);
 
   // userProfile click
@@ -63,9 +71,14 @@ export default function Header() {
     setDarkMode(!darkMode);
   }, [isChecked, darkMode]);
 
-  // 제품 list clickRef
-  const productRef = useRef<HTMLDivElement>(null);
-  useOutsideAlerter(productRef, 'product');
+  // 제품 list click
+  const onClickProductList = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      e.stopPropagation();
+      setIsProductClick(!isProductClick);
+    },
+    [isProductClick]
+  );
 
   // 프로필 clickRef
   const profileRef = useRef<HTMLDivElement>(null);
@@ -87,24 +100,41 @@ export default function Header() {
     }
   }, [isLogin]);
 
+  useEffect(() => {
+    console.log('뭐셩', JSON.parse(sessionStorage.getItem('userInfo')!));
+
+    setUserInfo({ ...JSON.parse(sessionStorage.getItem('userInfo')!) });
+  }, []);
+
   return (
     <header
       className={`fixed top-0 flex-row-center justify-between pt-[0.5rem] w-full h-[5.7rem] z-50
-      ${isNoneHeader ? 'bg-none-header' : 'border-solid border-b border-header-gray'}`}
+      ${
+        isNoneHeader || pathname === '/'
+          ? 'bg-none-header'
+          : 'border-solid border-b border-header-gray'
+      }`}
     >
       {/*로고 + 글자 (메인페이지로 이동)*/}
       <div
-        className={'relative flex-row-center justify-start w-[60%] h-full md:w-auto ml-8 md:ml-32'}
+        className={'relative flex-row-center justify-start w-[60%] h-full md:w-auto ml-12 md:ml-12'}
       >
-        <nav className={'flex-row-center cursor-pointer'} onClick={() => navigate('/')}>
-          <img className={'flex mr-4 h-10'} src={'/images/mainLogo.png'} alt={'main-logo'} />
-          <span className={'flex font-logo text-[2.3rem] font-semibold text-gray-dark mt-2'}>
+        <nav
+          className={'flex-row-center cursor-pointer'}
+          onClick={() => {
+            if (isLogin)
+              isLogin ? navigate(`/workspace/${productList?.[0]?.productId}`) : navigate('/');
+          }}
+        >
+          <img className={'flex mr-4 h-12'} src={'/images/mainLogo.png'} alt={'main-logo'} />
+          <span className={'flex font-logo text-[2.4rem] font-semibold text-gray-dark mt-2'}>
             upLog
           </span>
         </nav>
 
-        {isLogin && product !== '' && (
-          <div className={'flex-row-center ml-4'} ref={productRef}>
+        {/*{productList.length > 0 && pathname !== '/mypage' && isLogin && product !== '' && (*/}
+        {pathname !== '/mypage' && isLogin && product !== '' && (
+          <div className={'flex-row-center ml-4 h-full'} onClick={onClickProductList}>
             <div className={'flex-row-center h-9 border-solid border-r border-gray-light'} />
             <div
               className={'flex-row-center cursor-pointer '}
@@ -112,12 +142,28 @@ export default function Header() {
                 setIsProductClick(!isProductClick);
               }}
             >
-              <span className={'flex-row-center font-logo text-[2.3rem] font-semibold ml-4 mt-3'}>
-                {product}
-              </span>
-              <PiCaretUpDownLight
-                className={'flex-row-center text-[1.4rem] fill-gray-light ml-2'}
-              />
+              {pathname !== '/' && (
+                <span className={'flex items-center h-full'}>
+                  {nowProduct?.productImage ? (
+                    <img
+                      src={nowProduct.productImage}
+                      alt="userprofile"
+                      className={'ml-2 w-[2.6rem] h-[2.6rem]'}
+                      onClick={() => setIsProductClick(!isProductClick)}
+                    />
+                  ) : (
+                    <FaUserCircle className={'ml-2 w-[2.6rem] text-[2.4rem]'} />
+                  )}
+                  <span className={'flex-row-center ml-3 text-[2rem] font-bold text-gray-dark'}>
+                    {decodeURI(nowProduct?.productName)}
+                  </span>
+                </span>
+              )}
+              {isProductList && pathname === '/' ? (
+                <span className={'flex-row-center text-xl text-gray-light ml-2'}>제품 추가</span>
+              ) : (
+                <BiChevronDown className={'flex-row-center text-[2rem] fill-gray-light ml-2'} />
+              )}
               {isProductClick && <ProductList />}
             </div>
           </div>
@@ -163,11 +209,11 @@ export default function Header() {
           </div>
           <BsBellFill
             className={'text-[2rem] fill-gray-dark cursor-pointer'}
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/alarm')}
           />
           <BsQuestionCircle
             className={'text-[2rem] fill-gray-dark cursor-pointer'}
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/description')}
           />
 
           <div className={'relative'} ref={profileRef}>
@@ -181,7 +227,7 @@ export default function Header() {
                 src={userprofile}
                 alt="userprofile"
                 onClick={() => setIsProfileClick(!isProfileClick)}
-                className={'w-[2.1rem] h-[2.1rem] cursor-pointer ml-3'}
+                className={'w-[2.1rem] h-[2.1rem] cursor-pointer ml-3 rounded-[50%]'}
               />
             )}
             {isProfileClick && <UserProfile />}
@@ -200,19 +246,23 @@ export default function Header() {
             )}
           </div>
 
-          <span
-            className={'flex self-end text-gray-dark text-xl cursor-pointer'}
-            onClick={() => navigate('/login')}
-          >
-            로그인
-          </span>
-          <span className={'flex self-end text-gray-dark text-xl'}>&nbsp;•</span>
-          <span
-            className={'flex self-end text-gray-dark text-xl cursor-pointer'}
-            onClick={() => navigate('/signup')}
-          >
-            &nbsp;회원가입
-          </span>
+          {pathname !== '/' && (
+            <div className={'flex'}>
+              <span
+                className={'flex self-end text-gray-dark text-xl cursor-pointer'}
+                onClick={() => navigate('/login')}
+              >
+                로그인
+              </span>
+              <span className={'flex self-end text-gray-dark text-xl'}>&nbsp;•</span>
+              <span
+                className={'flex self-end text-gray-dark text-xl cursor-pointer'}
+                onClick={() => navigate('/signup')}
+              >
+                &nbsp;회원가입
+              </span>
+            </div>
+          )}
         </div>
       )}
     </header>
