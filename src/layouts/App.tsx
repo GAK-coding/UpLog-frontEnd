@@ -39,7 +39,7 @@ const queryClient = new QueryClient();
 const clientId = import.meta.env.VITE_GOOGLE_CLIENTID;
 
 function App() {
-  const [showDevtools, setShowDevtools] = useState(true);
+  const [showDevtools, setShowDevtools] = useState(false);
   const [isProductClick, setIsProductClick] = useRecoilState(productOpen);
 
   const onCloseProduct = useCallback(() => {
