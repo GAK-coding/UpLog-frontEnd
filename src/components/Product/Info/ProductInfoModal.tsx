@@ -17,7 +17,7 @@ import { RcFile } from 'antd/es/upload';
 import { FiUpload } from 'react-icons/fi';
 import { useMutation, useQueryClient } from 'react-query';
 import { createProduct, productEdit } from '@/api/Product/Product.ts';
-import { ProductBody, ProductEditBody } from '@/typings/product.ts';
+import { ProductBody, ProductEditBody, SaveProductInfo } from '@/typings/product.ts';
 import { useGetEachProduct } from '@/components/Product/hooks/useGetEachProduct.ts';
 import { useRecoilValue } from 'recoil';
 import { frontEndUrl } from '@/recoil/Common/atom.ts';
@@ -39,6 +39,7 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
   const baseUrl = useRecoilValue(frontEndUrl);
   const [check, setCheck] = useState(false);
   const [productList, allProductListRefetch] = useGetAllProduct(false);
+  const nowProduct: SaveProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
 
   const [productInfo, setProductInfo] = useState<ProductBody>({
     name: '',
@@ -108,6 +109,11 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
       const previousProductList = queryClient.getQueryData('myProductList');
 
       queryClient.setQueryData('myProductList', updateData);
+
+      sessionStorage.setItem(
+        'nowProduct',
+        JSON.stringify({ ...nowProduct, productName: updateProductInfo.newName })
+      );
 
       return () => queryClient.setQueryData('myProductList', previousProductList);
     },

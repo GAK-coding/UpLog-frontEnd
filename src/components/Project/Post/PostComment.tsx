@@ -273,19 +273,19 @@ export default function PostComment({ postId, menuId }: Props) {
                       </span>
                     </div>
                   </div>
-                  {nowProject.projectStatus !== 'PROGRESS_COMPLETE' &&
-                    userInfo.id === comment.memberId && (
-                      <div
-                        className={'flex justify-between w-[4rem] text-[0.8rem] text-gray-light'}
-                      >
-                        <span
-                          className={'cursor-pointer hover:text-orange'}
-                          onClick={() => deleteCommentMutate(comment.id)}
-                        >
-                          삭제
-                        </span>
-                      </div>
-                    )}
+                  {/*{userInfo.id === comment.memberId ||*/}
+                  {/*  (nowProject.projectStatus !== 'PROGRESS_COMPLETE' && (*/}
+                  {/*    <div*/}
+                  {/*      className={'flex justify-between w-[4rem] text-[0.8rem] text-gray-light'}*/}
+                  {/*    >*/}
+                  {/*      <span*/}
+                  {/*        className={'cursor-pointer hover:text-orange'}*/}
+                  {/*        onClick={() => deleteCommentMutate(comment.id)}*/}
+                  {/*      >*/}
+                  {/*        삭제*/}
+                  {/*      </span>*/}
+                  {/*    </div>*/}
+                  {/*  ))}*/}
                 </div>
                 {/*댓글 내용*/}
                 <span className={'flex w-full ml-[5.5rem] mb-1 text-[1rem] font-bold'}>

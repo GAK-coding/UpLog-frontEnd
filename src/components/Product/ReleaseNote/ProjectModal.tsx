@@ -63,7 +63,10 @@ export default function ProjectModal({
       const snapshot = queryClient.getQueryData(['getAllProductProjects', nowProduct?.productId]);
 
       queryClient.setQueriesData(['getAllProductProjects', nowProduct?.productId], () => {
-        const temp: Release[] = [...projects, { version, projectStatus: 'PROGRESS_IN', id: -1 }];
+        const temp: Release[] = [
+          ...JSON.parse(JSON.stringify(projects)),
+          { version, projectStatus: 'PROGRESS_IN', id: -1 },
+        ];
 
         return temp;
       });

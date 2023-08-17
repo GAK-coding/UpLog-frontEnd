@@ -23,9 +23,9 @@ export default function StatusBoard({ status, tasks }: Props) {
   const location = useLocation();
 
   // task 링크복사
-  const handleCopyClipBoard = (task: TaskData) => {
+  const handleCopyClipBoard = async (task: TaskData) => {
     try {
-      navigator.clipboard.writeText(setClipBoardUrl(task, location.pathname));
+      await navigator.clipboard?.writeText(setClipBoardUrl(task, location.pathname));
       showMessage('success', '링크가 복사되었습니다.');
     } catch (error) {
       console.log(error);
@@ -87,16 +87,16 @@ export default function StatusBoard({ status, tasks }: Props) {
                       >
                         {/*케밥 버튼*/}
                         <div className={'flex justify-end h-[0.7rem] relative'}>
-                          <GoKebabHorizontal
-                            className={'fill-gray-dark cursor-pointer z-50'}
-                            onClick={(e) => {
-                              e.preventDefault();
-                              setIsClickTaskDetail((prevState) => ({
-                                ...prevState,
-                                [task.id]: !prevState[task.id],
-                              }));
-                            }}
-                          />
+                          {/*<GoKebabHorizontal*/}
+                          {/*  className={'fill-gray-dark cursor-pointer z-50'}*/}
+                          {/*  onClick={(e) => {*/}
+                          {/*    e.preventDefault();*/}
+                          {/*    setIsClickTaskDetail((prevState) => ({*/}
+                          {/*      ...prevState,*/}
+                          {/*      [task.id]: !prevState[task.id],*/}
+                          {/*    }));*/}
+                          {/*  }}*/}
+                          {/*/>*/}
 
                           {
                             /*케밥 버튼 클릭시*/

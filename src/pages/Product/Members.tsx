@@ -64,12 +64,14 @@ export default function Members() {
             'error',
             `${failMemberList.join(', ')}님은 가입되어 있지 않아 초대에 실패했습니다.`
           );
+
           return;
         } else if (duplicatedCnt > 0) {
           showMessage(
             'error',
             `${duplicatedMemberList.join(', ')}님은 이미 존재하여 초대에 실패했습니다.`
           );
+
           return;
         }
 
@@ -80,7 +82,7 @@ export default function Members() {
     },
   });
 
-  const { data, isSuccess } = useQuery(
+  const { data, isSuccess, refetch } = useQuery(
     ['getProductMemberList', productId],
     () => getProductMemberList(productId),
     {
@@ -160,6 +162,7 @@ export default function Members() {
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['getProductMemberList', productId] });
+      refetch();
     },
   });
 
@@ -206,6 +209,7 @@ export default function Members() {
         newName: null,
         memberEmailList: memberEmailList,
         powerType: isLeader ? 'LEADER' : 'DEFAULT',
+        image: null,
       },
       productId,
     });
@@ -336,7 +340,7 @@ export default function Members() {
             autoHideDuration={200}
           >
             <div className={'px-9 pt-7'}>
-              <h2 className={'text-[1.4rem] font-bold mb-7'}>총 인원({members.length}명)</h2>
+              <h2 className={'text-[1.4rem] font-bold mb-7'}>총 인원({members?.length}명)</h2>
               <div>
                 {members?.map((member, idx) => {
                   return (
