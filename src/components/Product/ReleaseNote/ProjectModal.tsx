@@ -52,7 +52,7 @@ export default function ProjectModal({
         newProjectId.current = data.id;
         showMessage('success', '프로젝트가 생성되었습니다!');
       } else if (typeof data !== 'string' && 'message' in data) {
-        showMessage('warning', data.message);
+        showMessage('warning', '진행 중인 프로젝트가 있습니다.');
       } else {
         showMessage('error', '프로젝트 생성에 실패하였습니다.');
       }
