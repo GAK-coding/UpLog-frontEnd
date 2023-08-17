@@ -108,7 +108,7 @@ export default function Tables({
                     <div
                       key={idx}
                       className={`${
-                        eachProjectQueryResults[index]['data'].length - 1 !== idx && 'mb-5'
+                        eachProjectQueryResults[index]['data']!.length - 1 !== idx && 'mb-5'
                       } flex items-center`}
                     >
                       <span
