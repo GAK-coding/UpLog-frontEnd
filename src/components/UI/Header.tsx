@@ -4,7 +4,7 @@ import { BsBellFill, BsMoonFill, BsQuestionCircle, BsSearch, BsSunFill } from 'r
 import { FaUserCircle } from 'react-icons/fa';
 import useInput from '@/hooks/useInput.ts';
 import { useRecoilState } from 'recoil';
-import { loginStatus, profileOpen } from '@/recoil/User/atom.ts';
+import { loginStatus, profileOpen, user } from '@/recoil/User/atom.ts';
 import { PiCaretUpDownLight } from 'react-icons/pi';
 import { productOpen } from '@/recoil/Product/atom.ts';
 import { useOutsideAlerter } from '@/hooks/useOutsideAlerter.ts';
@@ -14,15 +14,16 @@ import { themeState } from '@/recoil/Common/atom.ts';
 import { ProductInfo } from '@/typings/product.ts';
 import { BiChevronDown } from 'react-icons/bi';
 import { useGetAllProduct } from '@/components/Product/hooks/useGetAllProduct.ts';
+import { SaveUserInfo } from '@/typings/member.ts';
 
 export default function Header() {
   const navigate = useNavigate();
   const [darkMode, setDarkMode] = useRecoilState(themeState);
   const nowProduct: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
-  const [productList, refetch] = useGetAllProduct(false)!;
+  const [productList, refetch] = useGetAllProduct()!;
+  const [userInfo, setUserInfo] = useRecoilState(user);
 
-  // TODO: 실제 userprofile 값으로 변경하기
-  const userprofile = '';
+  const userprofile = userInfo?.image;
   // 검색
   const [searchTag, onChangeSearchTag] = useInput('');
   // 다크모드 localstorage에서 체크
@@ -96,13 +97,6 @@ export default function Header() {
     }
   }, [isLogin]);
 
-  useEffect(() => {
-    if (productList?.length > 0) {
-      sessionStorage.setItem('nowProduct', JSON.stringify(productList[0]));
-      navigate(`/workspace/${productList[0].productId}`);
-    }
-  }, [productList]);
-
   return (
     <header
       className={`fixed top-0 flex-row-center justify-between pt-[0.5rem] w-full h-[5.7rem] z-50
@@ -116,14 +110,19 @@ export default function Header() {
       <div
         className={'relative flex-row-center justify-start w-[60%] h-full md:w-auto ml-12 md:ml-12'}
       >
-        <nav className={'flex-row-center cursor-pointer'} onClick={() => navigate('/')}>
+        <nav
+          className={'flex-row-center cursor-pointer'}
+          onClick={() => {
+            isLogin ? navigate(`/workspace/${productList?.[0]?.productId}`) : navigate('/');
+          }}
+        >
           <img className={'flex mr-4 h-12'} src={'/images/mainLogo.png'} alt={'main-logo'} />
           <span className={'flex font-logo text-[2.4rem] font-semibold text-gray-dark mt-2'}>
             upLog
           </span>
         </nav>
 
-        {isLogin && product !== '' && (
+        {productList.length > 0 && pathname !== '/mypage' && isLogin && product !== '' && (
           <div className={'flex-row-center ml-4 h-full'} onClick={onClickProductList}>
             <div className={'flex-row-center h-9 border-solid border-r border-gray-light'} />
             <div
@@ -201,7 +200,7 @@ export default function Header() {
                 src={userprofile}
                 alt="userprofile"
                 onClick={() => setIsProfileClick(!isProfileClick)}
-                className={'w-[2.1rem] h-[2.1rem] cursor-pointer ml-3'}
+                className={'w-[2.1rem] h-[2.1rem] cursor-pointer ml-3 rounded-[50%]'}
               />
             )}
             {isProfileClick && <UserProfile />}

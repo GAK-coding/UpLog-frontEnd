@@ -8,10 +8,9 @@ import { useMessage } from '@/hooks/useMessage.ts';
 import { GetUserInfo, LoginInfo, SaveUserInfo } from '@/typings/member.ts';
 import { useMutation } from 'react-query';
 import { useRecoilState } from 'recoil';
-import { loginStatus } from '@/recoil/User/atom.ts';
+import { loginStatus, user } from '@/recoil/User/atom.ts';
 import { useCookies } from 'react-cookie';
 import { loginAPI } from '@/api/Members/Login-Signup.ts';
-import { useGetAllProduct } from '@/components/Product/hooks/useGetAllProduct.ts';
 
 export default function Login() {
   const { showMessage, contextHolder } = useMessage();
@@ -20,6 +19,7 @@ export default function Login() {
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useRecoilState(loginStatus);
   const [cookies, setCookie, removeCookie] = useCookies();
+  const [userInfo, setUserInfo] = useRecoilState(user);
 
   const { mutate, isSuccess } = useMutation(loginAPI, {
     onSuccess: (data: GetUserInfo | string) => {
@@ -44,6 +44,7 @@ export default function Login() {
       setCookie('refreshToken', refreshToken, { path: '/' });
       sessionStorage.setItem('userInfo', JSON.stringify(userInfo));
       setIsLogin(true);
+      setUserInfo(userInfo);
 
       // const productList = useGetAllProduct();
       // console.log(productList);

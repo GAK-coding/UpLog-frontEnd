@@ -22,6 +22,7 @@ import { useGetEachProduct } from '@/components/Product/hooks/useGetEachProduct.
 import { useRecoilValue } from 'recoil';
 import { frontEndUrl } from '@/recoil/Common/atom.ts';
 import { imageUpload } from '@/api/Members/mypage.ts';
+import { useGetAllProduct } from '@/components/Product/hooks/useGetAllProduct.ts';
 
 interface Props {
   isOpen: boolean;
@@ -37,6 +38,7 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
   const { showMessage, contextHolder } = useMessage();
   const baseUrl = useRecoilValue(frontEndUrl);
   const [check, setCheck] = useState(false);
+  const [productList, allProductListRefetch] = useGetAllProduct(false);
 
   const [productInfo, setProductInfo] = useState<ProductBody>({
     name: '',
@@ -81,6 +83,7 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
             else showMessage('error', '제품 생성 권한이 없습니다.');
           } else {
             showMessage('success', '제품이 생성되었습니다.');
+            allProductListRefetch();
             setTimeout(() => onClose(), 2000);
           }
         }
