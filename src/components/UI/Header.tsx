@@ -13,12 +13,13 @@ import UserProfile from '@/components/Member/Header/UserProfile.tsx';
 import { themeState } from '@/recoil/Common/atom.ts';
 import { ProductInfo } from '@/typings/product.ts';
 import { BiChevronDown } from 'react-icons/bi';
-import * as path from 'path';
+import { useGetAllProduct } from '@/components/Product/hooks/useGetAllProduct.ts';
 
 export default function Header() {
   const navigate = useNavigate();
   const [darkMode, setDarkMode] = useRecoilState(themeState);
   const nowProduct: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
+  const [productList, refetch] = useGetAllProduct(false)!;
 
   // TODO: 실제 userprofile 값으로 변경하기
   const userprofile = '';
@@ -94,6 +95,13 @@ export default function Header() {
       navigate('/', { replace: true });
     }
   }, [isLogin]);
+
+  useEffect(() => {
+    if (productList?.length > 0) {
+      sessionStorage.setItem('nowProduct', JSON.stringify(productList[0]));
+      navigate(`/workspace/${productList[0].productId}`);
+    }
+  }, [productList]);
 
   return (
     <header
