@@ -197,7 +197,7 @@ export default function PostEach({ post, menuId, likeList, noticeId }: Props) {
       {/*좋아요, 댓글, 스크랩, 케밥 버튼*/}
       <div className={'flex-row-center justify-between w-[75%] h-[2.5rem] px-2'}>
         <div className={'flex-row-center justify-start w-1/2 h-full text-gray-dark'}>
-          {likeList.some((likePost) => likePost.id === post.id) ? (
+          {likeList && likeList.some((likePost) => likePost.id === post.id) ? (
             <BsHeartFill
               className={'flex text-[1.5rem] text-[#FF5733] mr-1.5 mt-1 cursor-pointer scale-110'}
               onClick={() => onClickLike(post.id)}
