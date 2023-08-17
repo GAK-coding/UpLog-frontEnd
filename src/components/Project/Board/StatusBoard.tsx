@@ -23,9 +23,9 @@ export default function StatusBoard({ status, tasks }: Props) {
   const location = useLocation();
 
   // task 링크복사
-  const handleCopyClipBoard = (task: TaskData) => {
+  const handleCopyClipBoard = async (task: TaskData) => {
     try {
-      navigator.clipboard.writeText(setClipBoardUrl(task, location.pathname));
+      await navigator.clipboard.writeText(setClipBoardUrl(task, location.pathname));
       showMessage('success', '링크가 복사되었습니다.');
     } catch (error) {
       console.log(error);
