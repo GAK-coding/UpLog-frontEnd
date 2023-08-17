@@ -111,7 +111,7 @@ export default function Groups() {
         >
           <BsDot /> 전체
         </NavLink>
-        {parentGroups.map((parent, index) => (
+        {parentGroups?.map((parent, index) => (
           <div key={`${parent.teamName}-${index}`}>
             <div className={'flex items-center mb-4'}>
               <NavLink
