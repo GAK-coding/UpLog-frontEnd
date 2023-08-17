@@ -8,7 +8,7 @@ import { typeBgColors } from '@/recoil/Product/ReleaseNote.ts';
 import { eachProductProjects } from '@/recoil/Project/atom.ts';
 import { editorChangeLog } from '@/recoil/Common/atom.ts';
 import { UseQueryResult } from 'react-query';
-import { ChangeLogData } from '@/typings/product.ts';
+import { ChangeLogData, Product, ProductInfo } from '@/typings/product.ts';
 
 interface Props {
   isClickKebab: boolean;
@@ -40,6 +40,7 @@ export default function Tables({
 
   const navigate = useNavigate();
   const { product, project } = useParams();
+  const nowProduct: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
 
   // 마우스 올렸을 때, kebab 버튼 나타남
   const [isHovering, setIsHovering] = useState(false);
@@ -143,47 +144,49 @@ export default function Tables({
             </Td>
 
             {/* Buttons for the "going" status */}
-            {version.projectStatus === 'PROGRESS_IN' && isHovering && (
-              <Td
-                position={'absolute'}
-                top={'-0.5rem'}
-                right={'-1rem'}
-                backgroundColor={'inherit'}
-                border={'none'}
-              >
-                <button onClick={onClickKebab}>
-                  <GoKebabHorizontal className={'fill-gray-dark text-2xl cursor-pointer'} />
-                </button>
-                {isClickKebab && (
-                  <div
-                    className={
-                      'absolute top-10 right-6 flex flex-col w-[7.5rem] h-20 border-solid border-[0.5px] border-gray-spring rounded text-xs shadow-release bg-white z-50'
-                    }
-                  >
-                    <button
-                      className={'h-1/2 hover:bg-orange-light-sideBar'}
-                      onClick={() => {
-                        navigate(`/workspace/${product}/newchange`);
-                        sessionStorage.setItem('nowProject', JSON.stringify(version));
-                        setEditChangeLog('');
-                      }}
+            {nowProduct?.powerType === 'MASTER' &&
+              version.projectStatus === 'PROGRESS_IN' &&
+              isHovering && (
+                <Td
+                  position={'absolute'}
+                  top={'-0.5rem'}
+                  right={'-1rem'}
+                  backgroundColor={'inherit'}
+                  border={'none'}
+                >
+                  <button onClick={onClickKebab}>
+                    <GoKebabHorizontal className={'fill-gray-dark text-2xl cursor-pointer'} />
+                  </button>
+                  {isClickKebab && (
+                    <div
+                      className={
+                        'absolute top-10 right-6 flex flex-col w-[7.5rem] h-20 border-solid border-[0.5px] border-gray-spring rounded text-xs shadow-release bg-white z-50'
+                      }
                     >
-                      변경이력 추가
-                    </button>
-                    <button
-                      className={'h-1/2 hover:bg-orange-light-sideBar'}
-                      onClick={() => {
-                        onClickComplete('complete');
-                        setTempVersion(version.version);
-                        setNowProjectId(version.id);
-                      }}
-                    >
-                      완료
-                    </button>
-                  </div>
-                )}
-              </Td>
-            )}
+                      <button
+                        className={'h-1/2 hover:bg-orange-light-sideBar'}
+                        onClick={() => {
+                          navigate(`/workspace/${product}/newchange`);
+                          sessionStorage.setItem('nowProject', JSON.stringify(version));
+                          setEditChangeLog('');
+                        }}
+                      >
+                        변경이력 추가
+                      </button>
+                      <button
+                        className={'h-1/2 hover:bg-orange-light-sideBar'}
+                        onClick={() => {
+                          onClickComplete('complete');
+                          setTempVersion(version.version);
+                          setNowProjectId(version.id);
+                        }}
+                      >
+                        완료
+                      </button>
+                    </div>
+                  )}
+                </Td>
+              )}
           </Tr>
         );
       })}
