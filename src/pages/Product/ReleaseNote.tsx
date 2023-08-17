@@ -11,6 +11,8 @@ import { getAllProductProjects, getChangeLogEachProject } from '@/api/Project/Ve
 import { useRecoilState } from 'recoil';
 import { eachProductProjects } from '@/recoil/Project/atom.ts';
 import { useMessage } from '@/hooks/useMessage.ts';
+import { BiPencil } from 'react-icons/bi';
+import { FaUserCircle } from 'react-icons/fa';
 export default function ReleaseNote() {
   // const dummy: Release[] = [
   //   {
@@ -198,11 +200,11 @@ export default function ReleaseNote() {
       {contextHolder}
       <div className={'min-w-[30em] flex justify-between mb-4'}>
         <span className={'flex items-center'}>
-          <img
-            src={nowProduct?.image ? nowProduct?.image : '/images/test.jpeg'}
-            alt={'제품 사진'}
-            className={'w-12 h-12 mr-4'}
-          />
+          {nowProduct?.productImage ? (
+            <img src={nowProduct?.productImage} alt={'제품 사진'} className={'w-12 h-12 mr-4'} />
+          ) : (
+            <FaUserCircle className={'w-12 h-12 mr-4 ml-2 text-3xl'} />
+          )}
           <span className={'text-[2.4rem] font-bold'}>{nowProduct?.productName}</span>
         </span>
         <button

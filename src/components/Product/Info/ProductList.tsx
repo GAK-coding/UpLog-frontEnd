@@ -13,6 +13,7 @@ import { SaveUserInfo } from '@/typings/member.ts';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { changeProductsSequence, getMyProducts } from '@/api/Product/Product.ts';
 import { useGetAllProduct } from '@/components/Product/hooks/useGetAllProduct.ts';
+import { FaUserCircle } from 'react-icons/fa';
 
 export default function ProductList() {
   const navigate = useNavigate();
@@ -69,7 +70,6 @@ export default function ProductList() {
 
         const updateIndexList: number[] = updatedProduct.map((item) => item.productId);
         mutate(updateIndexList);
-        console.log(updateIndexList);
 
         // 바로 쿼리에 업데이트
         queryClient.setQueriesData('myProductList', updatedProduct);
@@ -132,12 +132,16 @@ export default function ProductList() {
                               }
                               onClick={() => setIsProductClick(!isProductClick)}
                             />
-                            <img
-                              src={product.image}
-                              alt="userprofile"
-                              className={'ml-2 w-[2rem] h-[2rem]'}
-                              onClick={() => setIsProductClick(!isProductClick)}
-                            />
+                            {product.productImage ? (
+                              <img
+                                src={product.productImage}
+                                alt="userprofile"
+                                className={'ml-2 w-[2rem] h-[2rem]'}
+                                onClick={() => setIsProductClick(!isProductClick)}
+                              />
+                            ) : (
+                              <FaUserCircle className={'ml-2 w-[2rem] text-3xl'} />
+                            )}
                             <span
                               className={'ml-3 text-xl font-bold w-full'}
                               onClick={() => setIsProductClick(!isProductClick)}
