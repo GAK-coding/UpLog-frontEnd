@@ -31,11 +31,11 @@
   --hover: #e9ecef;
   --shadow: rgba(0, 0, 0, 0.1);
   --main-gray : #64635e;
-  --Feature: #deecdc;
-  --Changed: #faedcc;
-  --Deprecated: #f7e1dc;
-  --New: #d6e4ee;
-  --Fixed: #e3e2e0;
+  --FEATURE: #deecdc;
+  --CHANGED: #faedcc;
+  --DEPRECATED: #f7e1dc;
+  --NEW: #d6e4ee;
+  --FIXED: #e3e2e0;
 
   --PROGRESS_BEFORE: #FCCEC4;
   --PROGRESS_IN : #BBDCF4;

@@ -117,10 +117,12 @@ export default function TaskMain() {
 
   useEffect(() => {
     if (memberList !== undefined) {
-      const updateList: SelectMenu[] = memberList.map((memberItem) => ({
-        value: memberItem.memberId.toString(),
-        label: `${memberItem.memberNickName}(${memberItem.memberName})`,
-      }));
+      const updateList: SelectMenu[] = memberList
+        .filter((member) => member.powerType !== 'CLIENT')
+        .map((memberItem) => ({
+          value: memberItem.memberId.toString(),
+          label: `${memberItem.memberNickName}(${memberItem.memberName})`,
+        }));
 
       setMemberListData(updateList);
     }

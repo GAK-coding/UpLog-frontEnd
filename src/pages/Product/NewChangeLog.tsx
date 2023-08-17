@@ -15,7 +15,7 @@ import { useMutation } from 'react-query';
 import { createNewChangeLog } from '@/api/Project/Version.ts';
 import { useMessage } from '@/hooks/useMessage.ts';
 
-const typeList: changeType[] = ['New', 'Feature', 'Changed', 'Fixed', 'Deprecated'];
+const typeList: changeType[] = ['NEW', 'FEATURE', 'CHANGED', 'FIXED', 'DEPRECATED'];
 
 export default function NewChangeLog() {
   const { product } = useParams();
@@ -25,10 +25,10 @@ export default function NewChangeLog() {
   const [editChangeLog, setEditChangeLog] = useRecoilState(editorChangeLog);
 
   const [selectedType, setSelectedType] = useState(typeList[0]);
-  const onChangeSelectedType = useCallback((e: ChangeEvent<HTMLSelectElement>) => {
+  const onChangeSelectedType = (e: ChangeEvent<HTMLSelectElement>) => {
     setSelectedType(e.target.value as changeType);
     console.log(e.target.value);
-  }, []);
+  };
 
   const [title, onChangeTitle, setTitle] = useInput('');
   const today: Date = new Date();
@@ -72,6 +72,7 @@ export default function NewChangeLog() {
       ...newChangeLog,
       title: title,
       content: editChangeLog,
+      issueStatus: selectedType,
     });
 
     setCheck(true);

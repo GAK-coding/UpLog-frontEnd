@@ -58,7 +58,7 @@ export interface ProductEditData {
 }
 
 // ReleaseNote.tsx에서 사용
-export type changeType = 'Feature' | 'Changed' | 'Deprecated' | 'New' | 'Fixed';
+export type changeType = 'NEW' | 'FEATURE' | 'CHANGED' | 'FIXED' | 'DEPRECATED';
 
 export interface ProductMember {
   powerType: 'MASTER' | 'LEADER' | 'DEFAULT' | 'CLIENT';

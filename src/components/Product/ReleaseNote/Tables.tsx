@@ -32,7 +32,6 @@ export default function Tables({
   setNowProjectId,
   eachProjectQueryResults,
 }: Props) {
-  const bgColor = useRecoilValue(typeBgColors);
   const [editChangeLog, setEditChangeLog] = useRecoilState(editorChangeLog);
   const reverseEachProjectQueryResults = [...eachProjectQueryResults].reverse();
 
@@ -55,10 +54,6 @@ export default function Tables({
       setIsClickKebab(false);
     }
   }, []);
-
-  function capitalizeFirstLetter(str: string) {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  }
 
   return (
     <Tbody>
@@ -113,9 +108,13 @@ export default function Tables({
                       } flex items-center`}
                     >
                       <span
-                        className={`${
-                          bgColor[capitalizeFirstLetter(content.issueStatus.toLowerCase())]
-                        } text-[#292723] mr-4 p-2 rounded-[0.31rem]`}
+                        className={`${content.issueStatus === 'FEATURE' && 'bg-type-FEATURE'}
+                       ${content.issueStatus === 'NEW' && 'bg-type-NEW'} 
+                       ${content.issueStatus === 'CHANGED' && 'bg-type-CHANGED'}
+                       ${content.issueStatus === 'FIXED' && 'bg-type-FIXED'}
+                       ${
+                         content.issueStatus === 'DEPRECATED' && 'bg-type-DEPRECATED'
+                       } text-[#292723] mr-4 p-2 rounded-[0.31rem]`}
                       >
                         {content.issueStatus}
                       </span>
