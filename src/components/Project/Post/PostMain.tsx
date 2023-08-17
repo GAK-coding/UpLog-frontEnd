@@ -64,7 +64,7 @@ export default function PostMain() {
       {/*공지글이 존재할 때 확성기 추가*/}
       {noticePostInfo && (
         <div className={'flex items-center w-full h-[4.8rem]'}>
-          <BsFillMegaphoneFill className={'flex text-[2.5rem] text-gray-light'} />
+          <BsFillMegaphoneFill className={'flex text-[2.5rem] text-[#FF5733]'} />
           <span className={'ml-4 font-bold text-[1.5rem] text-gray-dark'}>공지</span>
         </div>
       )}
