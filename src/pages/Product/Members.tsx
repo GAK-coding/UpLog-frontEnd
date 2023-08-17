@@ -29,6 +29,7 @@ export default function Members() {
   const queryClient = useQueryClient();
   const userInfo: SaveUserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
   const { productId, powerType }: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
+  const nowProduct: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
 
   const [emails, , setEmails] = useInput('');
   const [isLeader, setIsLeader] = useState(false);
@@ -379,7 +380,9 @@ export default function Members() {
                       </div>
 
                       {/* TODO: 일반 멤버는 이게 뜨면 안됨 */}
-                      {member.memberEmail !== myId &&
+                      {nowProduct.powerType !== 'DEFAULT' &&
+                        nowProduct.powerType !== 'CLIENT' &&
+                        member.memberEmail !== myId &&
                         member.powerType !== 'MASTER' &&
                         member.powerType !== 'CLIENT' && (
                           <span
