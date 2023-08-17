@@ -13,6 +13,7 @@ import { DragTaskIndexBody, TaskStatus } from '@/typings/task.ts';
 import { allStatusTaskList, updateTaskIndex } from '@/api/Project/Task.ts';
 import { useMutation, useQuery } from 'react-query';
 import { ProductInfo } from '@/typings/product.ts';
+import { Scrollbars } from 'rc-scrollbars';
 
 interface IndexID {
   [key: number]: number;
@@ -338,11 +339,7 @@ export default function Project() {
         <section className={'flex-col-center w-noneSideBar h-[90%]'}>
           {/*dnd*/}
           <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
-            <div
-              className={
-                'flex-row-center justify-between w-full h-full pt-8 px-[12rem] overflow-x-auto'
-              }
-            >
+            <div className={'flex-row-center justify-between w-full h-full pt-8 px-[12rem]'}>
               <StatusBoard status={'PROGRESS_BEFORE'} tasks={taskStatusList['PROGRESS_BEFORE']} />
               <StatusBoard status={'PROGRESS_IN'} tasks={taskStatusList['PROGRESS_IN']} />
               <StatusBoard

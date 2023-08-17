@@ -299,6 +299,7 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
     const url = await imageUpload(formData);
 
     url && setImgUrl(url);
+    url && setUpdateProductInfo({ ...updateProductInfo, image: url });
     return url;
   };
 
@@ -307,6 +308,8 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
       getUrl(fileList[0].originFileObj!);
     }
   }, [fileList]);
+
+  console.log('으악으악새', updateProductInfo);
 
   return (
     <Modal isCentered onClose={onClose} isOpen={isOpen}>
