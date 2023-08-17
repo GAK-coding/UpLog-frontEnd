@@ -34,6 +34,7 @@ export default function Tables({
 }: Props) {
   const bgColor = useRecoilValue(typeBgColors);
   const [editChangeLog, setEditChangeLog] = useRecoilState(editorChangeLog);
+  const reverseEachProjectQueryResults = [...eachProjectQueryResults].reverse();
 
   const [projects, setProjects] = useRecoilState(eachProductProjects);
 
@@ -78,7 +79,6 @@ export default function Tables({
               onClick={() => {
                 const url = encodeURI(`/workspace/${product}/${version.id}`);
                 sessionStorage.setItem('nowProject', JSON.stringify(version));
-
                 navigate(url);
               }}
             >
@@ -89,7 +89,7 @@ export default function Tables({
               borderBottom={'1px solid var(--gray-table)'}
               textAlign={'center'}
             >
-              {version.projectStatus === 'PROGRESS_IN' ? '진행 중' : version.date}
+              {version.projectStatus === 'PROGRESS_IN' ? '진행 중' : version.endDate}
             </Td>
             <Td
               borderTop={'1px solid var(--gray-table)'}
@@ -123,9 +123,6 @@ export default function Tables({
                   );
                 })
               ) : (
-                // TODO: 콘텐츠 완료되면 처리하기
-                // {
-                //  version.projectStatus === 'PROGRESS_IN' &&
                 <button
                   className={
                     'flex items-center text-[1.2rem] text-gray-light font-bold cursor-pointer'
@@ -136,9 +133,12 @@ export default function Tables({
                     setEditChangeLog('');
                   }}
                 >
-                  <AiOutlinePlus className={'text-[1.6rem] mr-3'} /> 변경이력 추가
+                  {version.projectStatus === 'PROGRESS_IN' && (
+                    <>
+                      <AiOutlinePlus className={'text-[1.6rem] mr-3'} /> 변경이력 추가
+                    </>
+                  )}
                 </button>
-                // }
               )}
             </Td>
 
