@@ -15,7 +15,7 @@ export default function PostMain() {
   const [noticePostInfo, setNoticePostInfo] = useState<Post>();
   const [posts, setPosts] = useState<Post[]>();
   const [likeList, setLikeList] = useState<PostLikeList[]>();
-  const [commentLike, setCommentLike] = useState<CommentLikeList[]>();
+  // const [commentLike, setCommentLike] = useState<CommentLikeList[]>();
 
   // menuId 찾기
   const menuList = useRecoilValue(menuListData);
@@ -25,7 +25,8 @@ export default function PostMain() {
   const { refetch } = useQuery(['menuPostData', menuId], () => menuPostList(menuId!), {
     onSuccess: (data) => {
       if (typeof data !== 'string') {
-        setPosts(data['posts']);
+        const reversePosts = [...data['posts']].reverse();
+        setPosts(reversePosts);
         if (data.noticePost !== undefined) {
           setNoticePostInfo(data.noticePost);
         }
