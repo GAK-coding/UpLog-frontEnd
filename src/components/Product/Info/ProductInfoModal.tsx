@@ -21,6 +21,7 @@ import { ProductBody, ProductEditBody } from '@/typings/product.ts';
 import { useGetEachProduct } from '@/components/Product/hooks/useGetEachProduct.ts';
 import { useRecoilValue } from 'recoil';
 import { frontEndUrl } from '@/recoil/Common/atom.ts';
+import { imageUpload } from '@/api/Members/mypage.ts';
 
 interface Props {
   isOpen: boolean;
@@ -56,12 +57,18 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
   // 제품 이미지 업로드
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [imageSrc, setImageSrc] = useState('');
+  const [imgUrl, setImgUrl] = useState<undefined | string>(undefined);
 
   const queryClient = useQueryClient();
 
   // 제품 생성
   const { mutate: createProductMutate } = useMutation(
-    () => createProduct({ ...productInfo, clientEmail: !clientEmail ? null : clientEmail }),
+    () =>
+      createProduct({
+        ...productInfo,
+        clientEmail: !clientEmail ? null : clientEmail,
+        image: !imgUrl ? null : imgUrl,
+      }),
     {
       onSuccess: (data) => {
         if (data === 'create product fail') {
@@ -281,6 +288,19 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
     });
     setCheck(false);
   }, [check, isCreateProduct]);
+
+  useEffect(() => {
+    if (fileList[0]) {
+      const getUrl = async (file: File) => {
+        const url = await imageUpload(file);
+
+        url && setImgUrl(url);
+        return url;
+      };
+
+      getUrl(fileList[0].originFileObj!);
+    }
+  }, [fileList]);
 
   return (
     <Modal isCentered onClose={onClose} isOpen={isOpen}>
