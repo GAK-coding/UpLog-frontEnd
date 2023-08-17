@@ -40,13 +40,17 @@ export default function Menu() {
       <section className={'flex-row-center h-[5rem] w-full'}>
         {/*프로젝트 페이지로 이동하는 버튼*/}
 
-        {nowProject.projectStatus === 'PROGRESS_COMPLETE' ||
-        nowProduct.powerType === 'CLIENT' ? null : (
-          <BsChevronCompactUp
-            className={'text-[4rem] text-gray-light cursor-pointer'}
-            onClick={() => navigate(`/workspace/${product}/${project}`)}
-          />
-        )}
+        {/*{nowProject.projectStatus === 'PROGRESS_COMPLETE' ||*/}
+        {/*nowProduct.powerType === 'CLIENT' ? null : (*/}
+        {/*  <BsChevronCompactUp*/}
+        {/*    className={'text-[4rem] text-gray-light cursor-pointer'}*/}
+        {/*    onClick={() => navigate(`/workspace/${product}/${project}`)}*/}
+        {/*  />*/}
+        {/*)}*/}
+        <BsChevronCompactUp
+          className={'text-[4rem] text-gray-light cursor-pointer'}
+          onClick={() => navigate(`/workspace/${product}/${project}`)}
+        />
       </section>
       {/*메뉴 보드 Wrapper*/}
       <section className={'flex-col justify-start w-[80%] min-w-[80rem] h-menu pt-6'}>

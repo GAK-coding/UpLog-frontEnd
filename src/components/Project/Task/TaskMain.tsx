@@ -15,10 +15,14 @@ import { TaskData } from '@/typings/task.ts';
 import { getProductMemberList } from '@/api/Product/Product.ts';
 import { ProductInfo } from '@/typings/product.ts';
 import { allMemberList, productMemberList } from '@/recoil/Product/atom.ts';
+import { SaveProjectInfo } from '@/typings/project.ts';
+import { FaUserCircle } from 'react-icons/fa';
 
 export default function TaskMain() {
   const { product, project, menutitle } = useParams();
   const nowProduct: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
+  const nowProject: SaveProjectInfo = JSON.parse(sessionStorage.getItem('nowProject')!);
+
   const navigate = useNavigate();
   // task 추가 모달창
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -193,11 +197,11 @@ export default function TaskMain() {
           }
         >
           {/*task 정보*/}
-          {taskList.map((task) => (
+          {taskList.map((task, index) => (
             <section
               key={task.id}
               className={
-                'flex-row-center justify-start w-full min-h-[3.5rem] px-4 border-b border-gray-border cursor-pointer'
+                'flex-row-center justify-start w-full min-h-[3.5rem] border-b px-4 border-gray-border cursor-pointer'
               }
               onClick={() =>
                 navigate(`/workspace/${product}/${project}/menu/${menutitle}/task/${task.id}`)
@@ -228,7 +232,7 @@ export default function TaskMain() {
                   className={'mx-3 h-5 border-solid border-r border-[0.5px] border-gray-light'}
                 />
                 <span
-                  className={`flex items-center px-2 mr-3 h-[1.5rem] rounded-[0.31rem] text-[#292723] 
+                  className={`flex items-center px-2 mr-5 h-[1.5rem] rounded-[0.31rem] text-[#292723] 
                     ${task.taskStatus === 'PROGRESS_BEFORE' && 'bg-status-before'}
                   ${task.taskStatus === 'PROGRESS_IN' && 'bg-status-going'}
                   ${task.taskStatus === 'PROGRESS_COMPLETE' && 'bg-status-done'}`}
@@ -237,27 +241,29 @@ export default function TaskMain() {
                   {task.taskStatus === 'PROGRESS_IN' && '진행 중'}
                   {task.taskStatus === 'PROGRESS_COMPLETE' && '진행 후'}
                 </span>
-                {/*{!task.targetMember.image ? (*/}
-                {/*  <FaUserCircle className={'flex text-[2.2rem] fill-gray-dark'} />*/}
-                {/*) : (*/}
-                {/*  <img*/}
-                {/*    src={task.targetMember.image}*/}
-                {/*    alt="userprofile"*/}
-                {/*    className={'flex w-[2.2rem] h-[2.2rem]'}*/}
-                {/*  />*/}
-                {/*)}*/}
+                {!task.targetMemberInfoDTO.image ? (
+                  <FaUserCircle className={'flex text-[2.2rem] fill-gray-dark'} />
+                ) : (
+                  <img
+                    src={task.targetMemberInfoDTO.image}
+                    alt="userprofile"
+                    className={'flex w-[2.2rem] h-[2.2rem]'}
+                  />
+                )}
               </div>
             </section>
           ))}
-          <section
-            className={
-              'flex-row-center justify-start w-full min-h-[3.5rem] px-4 bg-post-bg text-gray-dark cursor-pointer'
-            }
-            onClick={() => onOpen()}
-          >
-            <AiOutlinePlus className={'text-[1.7rem]'} />
-            <span className={'ml-2 text-[1.1rem]'}>Task 생성하기</span>
-          </section>
+          {nowProject.projectStatus !== 'PROGRESS_COMPLETE' && (
+            <section
+              className={
+                'flex-row-center justify-start w-full min-h-[3.5rem] px-4 bg-post-bg text-gray-dark cursor-pointer'
+              }
+              onClick={() => onOpen()}
+            >
+              <AiOutlinePlus className={'text-[1.7rem]'} />
+              <span className={'ml-2 text-[1.1rem]'}>Task 생성하기</span>
+            </section>
+          )}
         </div>
       </section>
       <CreateTask isOpen={isOpen} onClose={onClose} menuId={menuId!} />
