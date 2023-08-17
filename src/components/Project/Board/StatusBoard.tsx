@@ -23,15 +23,15 @@ export default function StatusBoard({ status, tasks }: Props) {
   const location = useLocation();
 
   // task 링크복사
-  const handleCopyClipBoard = async (task: TaskData) => {
-    try {
-      await navigator.clipboard?.writeText(setClipBoardUrl(task, location.pathname));
-      showMessage('success', '링크가 복사되었습니다.');
-    } catch (error) {
-      console.log(error);
-      showMessage('error', '링크복사에 실패했습니다.');
-    }
-  };
+  // const handleCopyClipBoard = async (task: TaskData) => {
+  //   try {
+  //     await navigator.clipboard?.writeText(setClipBoardUrl(task, location.pathname));
+  //     showMessage('success', '링크가 복사되었습니다.');
+  //   } catch (error) {
+  //     console.log(error);
+  //     showMessage('error', '링크복사에 실패했습니다.');
+  //   }
+  // };
 
   // task 수정
   return (
@@ -98,37 +98,37 @@ export default function StatusBoard({ status, tasks }: Props) {
                           {/*  }}*/}
                           {/*/>*/}
 
-                          {
-                            /*케밥 버튼 클릭시*/
-                            isClickTaskDetail[task.id] && (
-                              <section
-                                className={
-                                  'absolute flex-col-center w-[5rem] h-[4.5rem] top-[1rem] task-detail-border cursor-pointer text-[0.5rem] text-gray-dark'
-                                }
-                              >
-                                <div
-                                  className={
-                                    'flex-row-center w-full h-1/2 hover:bg-orange-light-sideBar'
-                                  }
-                                  onClick={() => handleCopyClipBoard(task)}
-                                >
-                                  링크복사
-                                </div>
-                                <div
-                                  className={
-                                    'flex-row-center w-full h-1/2 hover:bg-orange-light-sideBar'
-                                  }
-                                  onClick={() => {
-                                    navigate(
-                                      `${location.pathname}/menu/${task.menuName}/task/${task.id}`
-                                    );
-                                  }}
-                                >
-                                  상세정보
-                                </div>
-                              </section>
-                            )
-                          }
+                          {/*{*/}
+                          {/*  /*케밥 버튼 클릭시*/}
+                          {/*  isClickTaskDetail[task.id] && (*/}
+                          {/*    <section*/}
+                          {/*      className={*/}
+                          {/*        'absolute flex-col-center w-[5rem] h-[4.5rem] top-[1rem] task-detail-border cursor-pointer text-[0.5rem] text-gray-dark'*/}
+                          {/*      }*/}
+                          {/*    >*/}
+                          {/*      <div*/}
+                          {/*        className={*/}
+                          {/*          'flex-row-center w-full h-1/2 hover:bg-orange-light-sideBar'*/}
+                          {/*        }*/}
+                          {/*        onClick={() => handleCopyClipBoard(task)}*/}
+                          {/*      >*/}
+                          {/*        링크복사*/}
+                          {/*      </div>*/}
+                          {/*      <div*/}
+                          {/*        className={*/}
+                          {/*          'flex-row-center w-full h-1/2 hover:bg-orange-light-sideBar'*/}
+                          {/*        }*/}
+                          {/*        onClick={() => {*/}
+                          {/*          navigate(*/}
+                          {/*            `${location.pathname}/menu/${task.menuName}/task/${task.id}`*/}
+                          {/*          );*/}
+                          {/*        }}*/}
+                          {/*      >*/}
+                          {/*        상세정보*/}
+                          {/*      </div>*/}
+                          {/*    </section>*/}
+                          {/*  )*/}
+                          {/*}*/}
                         </div>
                         {/*task제목*/}
                         <div className={'flex justify-start h-[2.5rem]'}>

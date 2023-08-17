@@ -1,6 +1,6 @@
 import { TaskData } from '@/typings/task.ts';
 
-export async function setClipBoardUrl(task: TaskData, location: string): string {
+export async function setClipBoardUrl(task: TaskData, location: string) {
   const isDeployment: boolean = import.meta.env.VITE_IS_DEPLOYMENT === 'true';
   const DEV_FRONTEND_URL = import.meta.env.VITE_DEV_FRONTEND_URL;
   const DEPLOYMENT_FRONTEND_URL = import.meta.env.VITE_DEPLOYMENT_FRONTEND_URL;
