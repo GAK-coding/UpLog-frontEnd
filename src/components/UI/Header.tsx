@@ -15,6 +15,7 @@ import { ProductInfo } from '@/typings/product.ts';
 import { BiChevronDown } from 'react-icons/bi';
 import { useGetAllProduct } from '@/components/Product/hooks/useGetAllProduct.ts';
 import { SaveUserInfo } from '@/typings/member.ts';
+import { useQueryClient } from 'react-query';
 
 export default function Header() {
   const navigate = useNavigate();
@@ -22,6 +23,8 @@ export default function Header() {
   const nowProduct: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
   const [productList, refetch] = useGetAllProduct()!;
   const [userInfo, setUserInfo] = useRecoilState(user);
+  const queryClient = useQueryClient();
+  const isProductList = queryClient.getQueryData('myProductList');
 
   const userprofile = userInfo?.image;
   // 검색
@@ -113,7 +116,8 @@ export default function Header() {
         <nav
           className={'flex-row-center cursor-pointer'}
           onClick={() => {
-            isLogin ? navigate(`/workspace/${productList?.[0]?.productId}`) : navigate('/');
+            if (isLogin)
+              isLogin ? navigate(`/workspace/${productList?.[0]?.productId}`) : navigate('/');
           }}
         >
           <img className={'flex mr-4 h-12'} src={'/images/mainLogo.png'} alt={'main-logo'} />
@@ -123,7 +127,7 @@ export default function Header() {
         </nav>
 
         {/*{productList.length > 0 && pathname !== '/mypage' && isLogin && product !== '' && (*/}
-        {isLogin && product !== '' && (
+        {pathname !== '/mypage' && isLogin && product !== '' && (
           <div className={'flex-row-center ml-4 h-full'} onClick={onClickProductList}>
             <div className={'flex-row-center h-9 border-solid border-r border-gray-light'} />
             <div
@@ -137,7 +141,11 @@ export default function Header() {
                   {decodeURI(nowProduct?.productName)}
                 </span>
               )}
-              <BiChevronDown className={'flex-row-center text-[2rem] fill-gray-light ml-2'} />
+              {isProductList && pathname === '/' ? (
+                <span className={'flex-row-center text-xl text-gray-light ml-2'}>제품 추가</span>
+              ) : (
+                <BiChevronDown className={'flex-row-center text-[2rem] fill-gray-light ml-2'} />
+              )}
               {isProductClick && <ProductList />}
             </div>
           </div>

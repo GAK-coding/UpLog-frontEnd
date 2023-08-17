@@ -38,8 +38,6 @@ export default function Login() {
         image,
       };
 
-      console.log(image);
-
       sessionStorage.setItem('accessToken', accessToken);
       setCookie('refreshToken', refreshToken, { path: '/' });
       sessionStorage.setItem('userInfo', JSON.stringify(userInfo));
