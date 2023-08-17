@@ -2,9 +2,9 @@ import { FaUserCircle } from 'react-icons/fa';
 import { AiFillStar, AiOutlinePoweroff } from 'react-icons/ai';
 import { BiPencil } from 'react-icons/bi';
 import { useNavigate } from 'react-router-dom';
-import { loginStatus, profileOpen } from '@/recoil/User/atom.ts';
+import { loginStatus, profileOpen, user } from '@/recoil/User/atom.ts';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import { SaveUserInfo } from '@/typings/member.ts';
 import { logout } from '@/api/Members/Login-Signup.ts';
@@ -12,7 +12,7 @@ import { useMutation } from 'react-query';
 import { Simulate } from 'react-dom/test-utils';
 
 export default function UserProfile() {
-  const userInfo: SaveUserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
+  const [userInfo, setUserInfo] = useRecoilState(user);
 
   const navigate = useNavigate();
 

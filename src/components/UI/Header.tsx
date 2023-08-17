@@ -100,6 +100,12 @@ export default function Header() {
     }
   }, [isLogin]);
 
+  useEffect(() => {
+    console.log('뭐셩', JSON.parse(sessionStorage.getItem('userInfo')!));
+
+    setUserInfo({ ...JSON.parse(sessionStorage.getItem('userInfo')!) });
+  }, []);
+
   return (
     <header
       className={`fixed top-0 flex-row-center justify-between pt-[0.5rem] w-full h-[5.7rem] z-50
