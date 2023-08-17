@@ -36,11 +36,11 @@ export default {
         hover: 'var(--hover)',
         'menu-arrow': 'var(--menu-arrow)',
         type: {
-          feature: 'var(--Feature)',
-          changed: 'var(--Changed)',
-          deprecated: 'var(--Deprecated)',
-          new: 'var(--New)',
-          fixed: 'var(--Fixed)',
+          FEATURE: 'var(--FEATURE)',
+          CHANGED: 'var(--CHANGED)',
+          DEPRECATED: 'var(--DEPRECATED)',
+          NEW: 'var(--NEW)',
+          FIXED: 'var(--FIXED)',
         },
         status: {
           before: 'var(--PROGRESS_BEFORE)',
