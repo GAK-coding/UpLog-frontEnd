@@ -122,7 +122,8 @@ export default function Header() {
           </span>
         </nav>
 
-        {productList.length > 0 && pathname !== '/mypage' && isLogin && product !== '' && (
+        {/*{productList.length > 0 && pathname !== '/mypage' && isLogin && product !== '' && (*/}
+        {isLogin && product !== '' && (
           <div className={'flex-row-center ml-4 h-full'} onClick={onClickProductList}>
             <div className={'flex-row-center h-9 border-solid border-r border-gray-light'} />
             <div
