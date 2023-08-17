@@ -206,6 +206,7 @@ export default function Members() {
         newName: null,
         memberEmailList: memberEmailList,
         powerType: isLeader ? 'LEADER' : 'DEFAULT',
+        image: null,
       },
       productId,
     });
