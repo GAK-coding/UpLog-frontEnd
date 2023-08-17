@@ -23,6 +23,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { productMemberList } from '@/recoil/Product/atom.ts';
 import { HiOutlineBuildingOffice } from 'react-icons/hi2';
 import { frontEndUrl } from '@/recoil/Common/atom.ts';
+import { FaUserCircle } from 'react-icons/fa';
 
 export default function Members() {
   const queryClient = useQueryClient();
@@ -353,11 +354,16 @@ export default function Members() {
                           )}
                         </span>
                         <div className={'flex items-center'}>
-                          <img
-                            src={member.profile ? member.profile : '/images/test_userprofile.png'}
-                            alt={`${member.memberNickName}의 프로필 서진`}
-                            className={'w-14 h-14 mr-4 rounded-[50%]'}
-                          />
+                          {member.image ? (
+                            <img
+                              src={member.image}
+                              alt={`${member.memberNickName}의 프로필 서진`}
+                              className={'w-10 h-10 mr-4 rounded-[50%]'}
+                            />
+                          ) : (
+                            <FaUserCircle className={'flex w-10 h-10 mr-4 fill-gray-dark'} />
+                          )}
+
                           {member.memberEmail === myId && (
                             <span className={'ml-[-0.25rem] mr-2 text-gray-light font-bold'}>
                               (나)

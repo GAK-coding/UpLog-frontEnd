@@ -66,6 +66,7 @@ export interface ProductMember {
   memberNickName: string;
   memberName: string;
   memberEmail: string;
+  image?: string;
   // TODO: 이미지 연결 후 수정
   profile?: string | null;
   // 케밥 버튼을 위한 변수이며 프론트에서 추가해줘야됨

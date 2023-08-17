@@ -42,7 +42,7 @@ export default function CreateTask({ isOpen, onClose, menuId }: Props) {
     endTime: '',
     menuId: 0,
     teamId: nowTeamId,
-    targetMemberId: 2,
+    targetMemberId: 0,
     taskDetail: '',
   });
 

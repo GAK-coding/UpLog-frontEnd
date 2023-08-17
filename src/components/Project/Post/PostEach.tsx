@@ -135,16 +135,15 @@ export default function PostEach({ post, menuId, likeList, noticeId }: Props) {
       {contextHolder}
       {/*작성자 정보 + 작성일자 시간*/}
       <div className={'flex-row-center justify-start w-full h-[5.8rem]'}>
-        <FaUserCircle className={'flex text-[3rem] fill-gray-dark'} />
-        {/*{post.authorInfoDTO.image === '' ? (*/}
-        {/*  <FaUserCircle className={'flex text-[3rem] fill-gray-dark'} />*/}
-        {/*) : (*/}
-        {/*  <img*/}
-        {/*    src={post.authorInfoDTO.image}*/}
-        {/*    alt="userprofile"*/}
-        {/*    className={'flex w-[3rem] fill-gray-dark'}*/}
-        {/*  />*/}
-        {/*)}*/}
+        {post.authorInfoDTO.image ? (
+          <img
+            src={post.authorInfoDTO.image}
+            alt="userprofile"
+            className={'flex w-[3rem] fill-gray-dark'}
+          />
+        ) : (
+          <FaUserCircle className={'flex text-[3rem] fill-gray-dark'} />
+        )}
         <div className={'flex-col w-auto h-[3.8rem] ml-4'}>
           <span
             className={'flex h-1/2 font-bold text-[1.2rem] mb-1.5'}
@@ -198,7 +197,7 @@ export default function PostEach({ post, menuId, likeList, noticeId }: Props) {
       {/*좋아요, 댓글, 스크랩, 케밥 버튼*/}
       <div className={'flex-row-center justify-between w-[75%] h-[2.5rem] px-2'}>
         <div className={'flex-row-center justify-start w-1/2 h-full text-gray-dark'}>
-          {likeList.some((likePost) => likePost.id === post.id) ? (
+          {likeList && likeList.some((likePost) => likePost.id === post.id) ? (
             <BsHeartFill
               className={'flex text-[1.5rem] text-[#FF5733] mr-1.5 mt-1 cursor-pointer scale-110'}
               onClick={() => onClickLike(post.id)}
@@ -228,7 +227,8 @@ export default function PostEach({ post, menuId, likeList, noticeId }: Props) {
           {/*    onClick={() => onClickScrap(post.id)}*/}
           {/*  />*/}
           {/*)}*/}
-          {productInfo.powerType !== 'CLIENT' && (
+          {productInfo.powerType === 'CLIENT' ||
+          nowProject.projectStatus === 'PROGRESS_COMPLETE' ? null : (
             <GoKebabHorizontal
               className={'flex text-[1.3rem] text-gray-light ml-1.5'}
               onClick={() =>
