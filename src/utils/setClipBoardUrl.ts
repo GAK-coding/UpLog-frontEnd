@@ -7,5 +7,5 @@ export async function setClipBoardUrl(task: TaskData, location: string): string 
 
   const baseURL = await (isDeployment ? DEPLOYMENT_FRONTEND_URL : DEV_FRONTEND_URL);
 
-  return `${baseURL}${location}/menu/${task.menuName}/task/${task.id}`;
+  return `http://61.109.214.41:10001/workspace/3/27`;
 }
