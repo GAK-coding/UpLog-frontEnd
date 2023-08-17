@@ -9,6 +9,7 @@ import { eachProductProjects } from '@/recoil/Project/atom.ts';
 import { editorChangeLog } from '@/recoil/Common/atom.ts';
 import { UseQueryResult } from 'react-query';
 import { ChangeLogData, Product, ProductInfo } from '@/typings/product.ts';
+import { SaveUserInfo } from '@/typings/member.ts';
 
 interface Props {
   isClickKebab: boolean;
@@ -75,7 +76,11 @@ export default function Tables({
               onClick={() => {
                 const url = encodeURI(`/workspace/${product}/${version.id}`);
                 sessionStorage.setItem('nowProject', JSON.stringify(version));
-                navigate(url);
+                {
+                  nowProduct.powerType === 'CLIENT'
+                    ? navigate(`${url}/menu/결과물`)
+                    : navigate(url);
+                }
               }}
             >
               {version.version}
