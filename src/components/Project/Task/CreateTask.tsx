@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { useMessage } from '@/hooks/useMessage.ts';
 import useInput from '@/hooks/useInput.ts';
-import { SubGroup } from '@/typings/project.ts';
+import { Project, SubGroup } from '@/typings/project.ts';
 import { SelectMenu } from '@/typings/menu.ts';
 import { DatePicker, DatePickerProps, Select } from 'antd';
 import { ChangeEvent, useCallback, useEffect, useState } from 'react';
@@ -24,7 +24,6 @@ import { createTask } from '@/api/Project/Task.ts';
 import { RangePickerProps } from 'antd/es/date-picker';
 import dayjs from 'dayjs';
 import { ProductInfo, ProductMember } from '@/typings/product.ts';
-import { getProductMemberList } from '@/api/Product/Product.ts';
 
 interface Props {
   isOpen: boolean;
@@ -34,6 +33,7 @@ interface Props {
 export default function CreateTask({ isOpen, onClose, menuId }: Props) {
   const { showMessage, contextHolder } = useMessage();
   const nowTeamId: number = JSON.parse(sessionStorage.getItem('nowTeamId')!);
+  const nowProject: Project = JSON.parse(sessionStorage.getItem('nowProject')!);
 
   const [taskName, onChangeTaskName, setTaskName] = useInput('');
   const [newTask, setNewTask] = useState<TaskBody>({
@@ -73,6 +73,7 @@ export default function CreateTask({ isOpen, onClose, menuId }: Props) {
     }));
 
   const member = useRecoilValue(allMemberList);
+  console.log(member);
 
   const [isCustom, setIsCustom] = useState(true);
   const [isGroup, setIsGroup] = useState(false);
@@ -123,6 +124,7 @@ export default function CreateTask({ isOpen, onClose, menuId }: Props) {
     onSettled: () => {
       // success or error, invalidate해서 새로 받아옴
       return queryClient.invalidateQueries(['getMenuTaskList', menuId]);
+      queryClient.invalidateQueries(['menu']);
     },
   });
 
