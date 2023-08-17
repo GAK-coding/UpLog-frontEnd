@@ -87,16 +87,16 @@ export default function StatusBoard({ status, tasks }: Props) {
                       >
                         {/*케밥 버튼*/}
                         <div className={'flex justify-end h-[0.7rem] relative'}>
-                          <GoKebabHorizontal
-                            className={'fill-gray-dark cursor-pointer z-50'}
-                            onClick={(e) => {
-                              e.preventDefault();
-                              setIsClickTaskDetail((prevState) => ({
-                                ...prevState,
-                                [task.id]: !prevState[task.id],
-                              }));
-                            }}
-                          />
+                          {/*<GoKebabHorizontal*/}
+                          {/*  className={'fill-gray-dark cursor-pointer z-50'}*/}
+                          {/*  onClick={(e) => {*/}
+                          {/*    e.preventDefault();*/}
+                          {/*    setIsClickTaskDetail((prevState) => ({*/}
+                          {/*      ...prevState,*/}
+                          {/*      [task.id]: !prevState[task.id],*/}
+                          {/*    }));*/}
+                          {/*  }}*/}
+                          {/*/>*/}
 
                           {
                             /*케밥 버튼 클릭시*/
