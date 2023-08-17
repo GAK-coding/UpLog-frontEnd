@@ -1,7 +1,6 @@
 import { instance } from '@/api';
 import { AxiosResponse } from 'axios';
 import { FailProject, Project, ProjectGroup, ProjectTeams } from '@/typings/project.ts';
-import { data } from 'autoprefixer';
 import { ChangeLogBody, ChangeLogData, FailProduct } from '@/typings/product.ts';
 
 export const getAllProductProjects = async (productId: number) => {
