@@ -251,7 +251,7 @@ export default function ReleaseNote() {
                 onClickComplete={onClickProjectModal}
                 setTempVersion={setTempVersion}
                 setNowProjectId={setNowProjectId}
-                eachProjectQueryResults={eachProjectQueryResults}
+                eachProjectQueryResults={eachProjectQueryResults.reverse()}
               />
             )}
           </Table>
