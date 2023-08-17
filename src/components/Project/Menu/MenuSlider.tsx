@@ -16,6 +16,7 @@ import { createMenu, editMenu } from '@/api/Project/Menu.ts';
 import { FailMenu, MenuInfo } from '@/typings/menu.ts';
 import { useGetMenuList } from '@/components/Project/hooks/useGetMenuList.ts';
 import { SaveProjectInfo } from '@/typings/project.ts';
+import { ProductInfo } from '@/typings/product.ts';
 
 interface Props {
   product: string;
@@ -43,6 +44,7 @@ const CustomNextSlider = styled.div`
 
 export default function MenuSlider({ product, project, menutitle }: Props) {
   const { showMessage, contextHolder } = useMessage();
+
   const [menuList, setMenuList] = useRecoilState(menuListData);
   const [plusMenu, setPlusMenu] = useState(false);
   const navigate = useNavigate();
@@ -215,6 +217,7 @@ export default function MenuSlider({ product, project, menutitle }: Props) {
             }
             key={menu.id}
           >
+            {contextHolder}
             {menutitle === menu.menuName && menu.menuName !== '결과물' && (
               <IoIosClose
                 className={
