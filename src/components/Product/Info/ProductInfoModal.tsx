@@ -292,15 +292,18 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
     setCheck(false);
   }, [check, isCreateProduct]);
 
+  const getUrl = async (file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const url = await imageUpload(formData);
+
+    url && setImgUrl(url);
+    return url;
+  };
+
   useEffect(() => {
     if (fileList[0]) {
-      const getUrl = async (file: File) => {
-        const url = await imageUpload(file);
-
-        url && setImgUrl(url);
-        return url;
-      };
-
       getUrl(fileList[0].originFileObj!);
     }
   }, [fileList]);
