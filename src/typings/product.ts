@@ -12,6 +12,7 @@ export interface GetProductList {
   memberName: string;
   powerType: 'MASTER' | 'LEADER' | 'DEFAULT' | 'CLIENT';
   indexNum: number;
+  image: null | string;
 }
 
 export interface ProductInfo extends Omit<GetProductList, 'memberName'> {
