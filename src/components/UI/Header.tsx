@@ -143,8 +143,20 @@ export default function Header() {
               }}
             >
               {pathname !== '/' && (
-                <span className={'flex-row-center -mt-2 ml-4 text-[2rem] font-bold text-gray-dark'}>
-                  {decodeURI(nowProduct?.productName)}
+                <span className={'flex items-center h-full'}>
+                  {nowProduct?.productImage ? (
+                    <img
+                      src={nowProduct.productImage}
+                      alt="userprofile"
+                      className={'ml-2 w-[2.6rem] h-[2.6rem]'}
+                      onClick={() => setIsProductClick(!isProductClick)}
+                    />
+                  ) : (
+                    <FaUserCircle className={'ml-2 w-[2.6rem] text-[2.4rem]'} />
+                  )}
+                  <span className={'flex-row-center ml-3 text-[2rem] font-bold text-gray-dark'}>
+                    {decodeURI(nowProduct?.productName)}
+                  </span>
                 </span>
               )}
               {isProductList && pathname === '/' ? (

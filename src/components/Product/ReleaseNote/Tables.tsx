@@ -148,7 +148,7 @@ export default function Tables({
             </Td>
 
             {/* Buttons for the "going" status */}
-            {nowProduct?.powerType === 'MASTER' &&
+            {(nowProduct?.powerType === 'MASTER' || nowProduct?.powerType === 'LEADER') &&
               version.projectStatus === 'PROGRESS_IN' &&
               isHovering && (
                 <Td
