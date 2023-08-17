@@ -93,7 +93,8 @@ export default function PostMain() {
         )}
 
       {/*noticePost가 없으면 그냥 posts만 보여줌*/}
-      {posts &&
+      {!noticePostInfo &&
+        posts &&
         posts.map((post) => (
           <PostEach key={post.id} post={post} menuId={menuId!} likeList={likeList!} />
         ))}
