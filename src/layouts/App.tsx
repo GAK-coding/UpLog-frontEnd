@@ -29,6 +29,7 @@ const Menu = loadable(() => import('@/pages/Project/Menu.tsx'));
 const TaskDetail = loadable(() => import('@/pages/Project/TaskDetail.tsx'));
 const ManageGroup = loadable(() => import('@/pages/Project/ManageGroup.tsx'));
 const Error = loadable(() => import('@/pages/Error.tsx'));
+const InComplete = loadable(() => import('@/pages/InComplete.tsx'));
 
 // jest에서 .env 이용하려고 넣은 코드
 const { MODE: ENVIRONMENT } = import.meta.env;
@@ -67,17 +68,23 @@ function App() {
                   <Route path={'/signup'} element={<SignUp />} />
                   <Route path={'/pwinquiry'} element={<PwInquiry />} />
                   <Route path={'/mypage'} element={<MyPage />} />
+                  <Route path={'/description'} element={<InComplete />} />
+                  <Route path={'/alarm'} element={<InComplete />} />
+                  <Route path={'/search/:searchTag'} element={<InComplete />} />
                   <Route path={'/workspace'} element={<Workspace />}>
                     <Route path={':product'} element={<ReleaseNote />} />
                     <Route path={':product/members'} element={<Members />} />
-                    <Route path={':product/chats'} element={<Chats />} />
-                    <Route path={':product/calendar'} element={<Calendar />} />
+                    {/*<Route path={':product/chats'} element={<Chats />} />*/}
+                    {/*<Route path={':product/calendar'} element={<Calendar />} />*/}
+                    <Route path={':product/chats'} element={<InComplete />} />
+                    <Route path={':product/calendar'} element={<InComplete />} />
                     <Route path={':product/newchange'} element={<NewChangeLog />} />
                     <Route path={':product/:project/menu/:menutitle'} element={<Menu />} />
                     <Route
                       path={':product/:project/menu/:menutitle/task/:taskid'}
                       element={<TaskDetail />}
                     />
+                    <Route path={':product/:project/scrumring'} element={<InComplete />} />
                     {/* group의 그룹들 */}
                     <Route path={':product/:project'} element={<Project />} />
                     <Route path={':product/:project/group/:parentgroup'} element={<Project />} />

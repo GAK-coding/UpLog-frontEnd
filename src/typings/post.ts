@@ -12,7 +12,7 @@ export interface Post {
   postType: PostType;
   content: string;
   createTime: string;
-  tagList?: string[];
+  postTags: { id: number; content: string }[];
   likeCount: number;
   commentCount: number;
 }
@@ -23,6 +23,7 @@ export interface Posts {
 }
 
 export interface PostBody extends Pick<Post, 'title' | 'content' | 'menuId' | 'postType'> {
+  tagContents: string[];
   productId: number;
   projectId: number;
 }

@@ -24,6 +24,7 @@ import { createPost, eachPost, updatePost } from '@/api/Project/Post.ts';
 import { useParams } from 'react-router-dom';
 import { ProductInfo } from '@/typings/product.ts';
 import { SaveProjectInfo } from '@/typings/project.ts';
+import { postTagList } from '@/recoil/Project/Post.ts';
 
 interface Props {
   isOpen: boolean;
@@ -69,10 +70,11 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
   const [postMenu, setPostMenu] = useState(-1);
   const [postType, setPostType] = useState<PostType>(null);
   const [postContent, setPostContent] = useRecoilState(editorPost);
-  // const [postTag, setPostTag] = useRecoilState(postTagList);
+  const [postTag, setPostTag] = useRecoilState(postTagList);
   const [createData, setCreateData] = useState<PostBody>({
     title: '',
     menuId: -1,
+    tagContents: [],
     postType: null,
     content: '',
     productId: -1,
@@ -199,10 +201,12 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
       return;
     }
 
+    console.log(postTag);
     setCreateData({
       title: postName,
       menuId: postMenu,
       postType: postType === 'DEFAULT' ? null : postType,
+      tagContents: postTag,
       content: postContent,
       productId: productInfo.productId,
       projectId: projectId,
@@ -213,9 +217,8 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
       updatePostContent: postContent,
     });
 
-    console.log('내용', postContent);
     setCheck(true);
-  }, [postName, postMenu, postType, postContent]);
+  }, [postName, postMenu, postType, postContent, postTag]);
 
   // 자꾸 깜빡거리는거 방지
   useLayoutEffect(() => {
@@ -267,6 +270,7 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
         title: '',
         menuId: -1,
         postType: null,
+        tagContents: [],
         content: '',
         productId: -1,
         projectId: -1,
@@ -275,6 +279,7 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
       setPostName('');
       setPostType(null);
       setPostMenu(-1);
+      setPostTag([]);
       setPostContent('');
     }
   }, [isOpen, isEdit]);

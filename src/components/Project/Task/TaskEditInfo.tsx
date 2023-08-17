@@ -2,20 +2,24 @@ import { DatePicker, DatePickerProps, Select } from 'antd';
 import { SaveProjectInfo, SubGroup } from '@/typings/project.ts';
 import { SelectMenu } from '@/typings/menu.ts';
 import { TaskData } from '@/typings/task.ts';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 import * as dayjs from 'dayjs';
-import { productMemberList } from '@/recoil/Product/atom.ts';
+import { allMemberList, productMemberList } from '@/recoil/Product/atom.ts';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useGetMenuList } from '@/components/Project/hooks/useGetMenuList.ts';
 import { editTaskInfo } from '@/recoil/Project/Task.ts';
 import { RangePickerProps } from 'antd/es/date-picker';
+import { getProductMemberList } from '@/api/Product/Product.ts';
+import { useQuery } from 'react-query';
+import { ProductInfo } from '@/typings/product.ts';
 
 interface Props {
   isEdit: boolean;
   taskInfo: TaskData;
 }
 export default function TaskEditInfo({ isEdit, taskInfo }: Props) {
+  const nowProduct: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
   const nowProject: SaveProjectInfo = JSON.parse(sessionStorage.getItem('nowProject')!);
   const projectId = nowProject.id;
   const [editTaskData, setEditTask] = useRecoilState(editTaskInfo);
@@ -38,11 +42,22 @@ export default function TaskEditInfo({ isEdit, taskInfo }: Props) {
     label: menuItem.menuName,
   }));
 
-  const member = useRecoilValue(productMemberList);
-  const memberList: SelectMenu[] = member.map((memberItem) => ({
-    value: memberItem.memberId.toString(),
-    label: `${memberItem.memberNickName}(${memberItem.memberName})`,
-  }));
+  const [memberList, setMemberList] = useRecoilState(productMemberList);
+  const [memberListData, setMemberListData] = useRecoilState(allMemberList);
+  const member = useRecoilValue(allMemberList);
+
+  // 멤버 리스트 조회
+  const { data } = useQuery(
+    ['getMemberList', nowProduct.productId],
+    () => getProductMemberList(nowProduct.productId),
+    {
+      onSuccess: (data) => {
+        if (typeof data !== 'string') {
+          setMemberList(data);
+        }
+      },
+    }
+  );
 
   // 시작 날짜 입력 값
   const onChangeStartTime: DatePickerProps['onChange'] = (date, dateString) => {
@@ -82,6 +97,7 @@ export default function TaskEditInfo({ isEdit, taskInfo }: Props) {
         updateTargetMemberId: +value.value,
       };
 
+      console.log(value.value);
       setEditTask(updatedTask);
     }
   };
@@ -122,11 +138,24 @@ export default function TaskEditInfo({ isEdit, taskInfo }: Props) {
     setEditTask(updatedTask);
   };
 
+  useEffect(() => {
+    if (memberList !== undefined) {
+      const updateList: SelectMenu[] = memberList.map((memberItem) => ({
+        value: memberItem.memberId.toString(),
+        label: `${memberItem.memberNickName}(${memberItem.memberName})`,
+      }));
+
+      setMemberListData(updateList);
+    }
+  }, [data]);
+
   return (
-    <section className={'flex-col justify-start items-start w-[80%] h-[15rem] pl-[3rem]'}>
+    // 그룹 설정하면 이걸로 바꾸기 -> 그리고 다 h-1/5로 바꾸기
+    // <section className={'flex-col justify-start items-start w-[80%] h-[15rem] pl-[3rem]'}>
+    <section className={'flex-col justify-start items-start w-[80%] h-[12rem] pl-[3rem]'}>
       {/*시작날짜*/}
       <div
-        className={'flex items-center justify-start w-[17rem] h-1/5 text-gray-light text-[1rem]'}
+        className={'flex items-center justify-start w-[17rem] h-1/4 text-gray-light text-[1rem]'}
       >
         {/*제목 | */}
         <div className={'flex w-[6rem] items-center justify-end h-auto'}>
@@ -149,7 +178,7 @@ export default function TaskEditInfo({ isEdit, taskInfo }: Props) {
 
       {/*종료날짜*/}
       <div
-        className={'flex items-center justify-start w-[17rem] h-1/5 text-gray-light text-[1rem]'}
+        className={'flex items-center justify-start w-[17rem] h-1/4 text-gray-light text-[1rem]'}
       >
         <div className={'flex w-[6rem] items-center justify-end h-auto'}>
           <span>종료날짜</span>
@@ -169,7 +198,7 @@ export default function TaskEditInfo({ isEdit, taskInfo }: Props) {
       </div>
       {/*메뉴*/}
       <div
-        className={'flex items-center justify-start w-[17rem] h-1/5 text-gray-light text-[1rem]'}
+        className={'flex items-center justify-start w-[17rem] h-1/4 text-gray-light text-[1rem]'}
       >
         <div className={'flex w-[6rem] items-center justify-end h-auto'}>
           <span>메뉴</span>
@@ -195,50 +224,50 @@ export default function TaskEditInfo({ isEdit, taskInfo }: Props) {
       </div>
 
       {/*그룹*/}
-      <div
-        className={'flex items-center justify-start w-[25rem] h-1/5 text-gray-light text-[1rem]'}
-      >
-        <div className={'flex w-[6rem] items-center justify-end h-auto'}>
-          <span>그룹</span>
-          <div className={'ml-3 h-4 border-solid border-r border-[0.2px] border-gray-border'} />
-        </div>
-        {isEdit ? (
-          <div className={'flex justify-between pr-7'}>
-            {/*TODO : projectTeamParentId 값 존재에 따라 defaultValue 값 변경하기*/}
-            <Select
-              defaultValue={pGroup[0]}
-              style={{ width: 100 }}
-              onChange={handleParentGroupChange}
-              bordered={false}
-              options={pGroup.map((group) => ({ label: group, value: group }))}
-              dropdownStyle={{
-                backgroundColor: 'var(--gray-sideBar)',
-                color: 'var(--black)',
-                borderColor: 'var(--border-line)',
-              }}
-            />
+      {/*<div*/}
+      {/*  className={'flex items-center justify-start w-[25rem] h-1/5 text-gray-light text-[1rem]'}*/}
+      {/*>*/}
+      {/*  <div className={'flex w-[6rem] items-center justify-end h-auto'}>*/}
+      {/*    <span>그룹</span>*/}
+      {/*    <div className={'ml-3 h-4 border-solid border-r border-[0.2px] border-gray-border'} />*/}
+      {/*  </div>*/}
+      {/*  {isEdit ? (*/}
+      {/*    <div className={'flex justify-between pr-7'}>*/}
+      {/*      /!*TODO : projectTeamParentId 값 존재에 따라 defaultValue 값 변경하기*!/*/}
+      {/*      <Select*/}
+      {/*        defaultValue={pGroup[0]}*/}
+      {/*        style={{ width: 100 }}*/}
+      {/*        onChange={handleParentGroupChange}*/}
+      {/*        bordered={false}*/}
+      {/*        options={pGroup.map((group) => ({ label: group, value: group }))}*/}
+      {/*        dropdownStyle={{*/}
+      {/*          backgroundColor: 'var(--gray-sideBar)',*/}
+      {/*          color: 'var(--black)',*/}
+      {/*          borderColor: 'var(--border-line)',*/}
+      {/*        }}*/}
+      {/*      />*/}
 
-            <Select
-              style={{ width: 100 }}
-              value={childGroup}
-              onChange={onChildGroupChange}
-              options={parentGroup.map((group) => ({ label: group, value: group }))}
-              bordered={false}
-              dropdownStyle={{
-                backgroundColor: 'var(--gray-sideBar)',
-                color: 'var(--black)',
-                borderColor: 'var(--border-line)',
-              }}
-            />
-          </div>
-        ) : (
-          <span className={'ml-3 text-gray-dark'}>{taskInfo.teamName}</span>
-        )}
-      </div>
+      {/*      <Select*/}
+      {/*        style={{ width: 100 }}*/}
+      {/*        value={childGroup}*/}
+      {/*        onChange={onChildGroupChange}*/}
+      {/*        options={parentGroup.map((group) => ({ label: group, value: group }))}*/}
+      {/*        bordered={false}*/}
+      {/*        dropdownStyle={{*/}
+      {/*          backgroundColor: 'var(--gray-sideBar)',*/}
+      {/*          color: 'var(--black)',*/}
+      {/*          borderColor: 'var(--border-line)',*/}
+      {/*        }}*/}
+      {/*      />*/}
+      {/*    </div>*/}
+      {/*  ) : (*/}
+      {/*    <span className={'ml-3 text-gray-dark'}>{taskInfo.teamName}</span>*/}
+      {/*  )}*/}
+      {/*</div>*/}
 
       {/*할당자*/}
       <div
-        className={'flex items-center justify-start w-[20rem] h-1/5 text-gray-light text-[1rem]'}
+        className={'flex items-center justify-start w-[20rem] h-1/4 text-gray-light text-[1rem]'}
       >
         <div className={'flex w-[6rem] items-center justify-end h-auto'}>
           <span>할당자</span>
@@ -263,7 +292,7 @@ export default function TaskEditInfo({ isEdit, taskInfo }: Props) {
             onChange={handleChange('targetMember')}
             style={{ width: 120 }}
             bordered={false}
-            options={memberList}
+            options={member}
             dropdownStyle={{
               backgroundColor: 'var(--gray-sideBar)',
               color: 'var(--black)',

@@ -17,12 +17,14 @@ import { DatePicker, DatePickerProps, Select } from 'antd';
 import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { menuListData } from '@/recoil/Project/Menu.ts';
-import { productMemberList } from '@/recoil/Product/atom.ts';
+import { allMemberList, productMemberList } from '@/recoil/Product/atom.ts';
 import { TaskBody, TaskData } from '@/typings/task.ts';
-import { useMutation, useQueryClient } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { createTask } from '@/api/Project/Task.ts';
 import { RangePickerProps } from 'antd/es/date-picker';
 import dayjs from 'dayjs';
+import { ProductInfo, ProductMember } from '@/typings/product.ts';
+import { getProductMemberList } from '@/api/Product/Product.ts';
 
 interface Props {
   isOpen: boolean;
@@ -67,17 +69,15 @@ export default function CreateTask({ isOpen, onClose, menuId }: Props) {
     label: menuItem.menuName,
   }));
 
-  const member = useRecoilValue(productMemberList);
-  const memberList: SelectMenu[] = member.map((memberItem) => ({
-    value: memberItem.memberId.toString(),
-    label: `${memberItem.memberNickName}(${memberItem.memberName})`,
-  }));
+  const member = useRecoilValue(allMemberList);
 
   const [isCustom, setIsCustom] = useState(true);
   const [isGroup, setIsGroup] = useState(false);
 
   const [parentGroup, setParentGroup] = useState(cGroup[pGroup[0] as ChildGroup]);
   const [childGroup, setChildGroup] = useState(cGroup[pGroup[0] as ChildGroup][0]);
+  const [memberList, setMemberList] = useState<ProductMember[]>();
+  const [memberListData, setMemberListData] = useState<SelectMenu[]>();
 
   const queryClient = useQueryClient();
 
@@ -416,37 +416,37 @@ export default function CreateTask({ isOpen, onClose, menuId }: Props) {
               </div>
 
               {/*그룹*/}
-              <div className={'w-full mb-5 text-[1rem]'}>
-                <div className={'flex'}>
-                  <span className={'flex mb-[0.5rem] text-gray-dark font-bold'}>그룹</span>
-                  <span className={'text-[#E06469]'}>&nbsp;*</span>
-                </div>
-                <div className={'flex justify-between pr-7'}>
-                  <Select
-                    defaultValue={pGroup[0]}
-                    style={{ width: 120 }}
-                    onChange={handleParentGroupChange}
-                    options={pGroup.map((group) => ({ label: group, value: group }))}
-                    dropdownStyle={{
-                      backgroundColor: 'var(--gray-sideBar)',
-                      color: 'var(--black)',
-                      borderColor: 'var(--border-line)',
-                    }}
-                  />
+              {/*<div className={'w-full mb-5 text-[1rem]'}>*/}
+              {/*  <div className={'flex'}>*/}
+              {/*    <span className={'flex mb-[0.5rem] text-gray-dark font-bold'}>그룹</span>*/}
+              {/*    <span className={'text-[#E06469]'}>&nbsp;*</span>*/}
+              {/*  </div>*/}
+              {/*  <div className={'flex justify-between pr-7'}>*/}
+              {/*    <Select*/}
+              {/*      defaultValue={pGroup[0]}*/}
+              {/*      style={{ width: 120 }}*/}
+              {/*      onChange={handleParentGroupChange}*/}
+              {/*      options={pGroup.map((group) => ({ label: group, value: group }))}*/}
+              {/*      dropdownStyle={{*/}
+              {/*        backgroundColor: 'var(--gray-sideBar)',*/}
+              {/*        color: 'var(--black)',*/}
+              {/*        borderColor: 'var(--border-line)',*/}
+              {/*      }}*/}
+              {/*    />*/}
 
-                  <Select
-                    style={{ width: 120 }}
-                    value={childGroup}
-                    onChange={onChildGroupChange}
-                    options={parentGroup.map((group) => ({ label: group, value: group }))}
-                    dropdownStyle={{
-                      backgroundColor: 'var(--gray-sideBar)',
-                      color: 'var(--black)',
-                      borderColor: 'var(--border-line)',
-                    }}
-                  />
-                </div>
-              </div>
+              {/*    <Select*/}
+              {/*      style={{ width: 120 }}*/}
+              {/*      value={childGroup}*/}
+              {/*      onChange={onChildGroupChange}*/}
+              {/*      options={parentGroup.map((group) => ({ label: group, value: group }))}*/}
+              {/*      dropdownStyle={{*/}
+              {/*        backgroundColor: 'var(--gray-sideBar)',*/}
+              {/*        color: 'var(--black)',*/}
+              {/*        borderColor: 'var(--border-line)',*/}
+              {/*      }}*/}
+              {/*    />*/}
+              {/*  </div>*/}
+              {/*</div>*/}
 
               {/*메뉴 + 할당자*/}
               <div className={'flex-row-center w-full mb-5 text-[1rem]'}>
@@ -473,19 +473,21 @@ export default function CreateTask({ isOpen, onClose, menuId }: Props) {
                     <span className={'flex mb-[0.5rem] text-gray-dark font-bold'}>할당자</span>
                     <span className={'text-[#E06469]'}>&nbsp;*</span>
                   </div>
-                  <Select
-                    labelInValue
-                    defaultValue={{ value: '-1', label: '할당자 선택' }}
-                    onChange={handleChange('targetMemberId')}
-                    style={{ width: 120 }}
-                    options={memberList}
-                    dropdownStyle={{
-                      backgroundColor: 'var(--gray-sideBar)',
-                      color: 'var(--black)',
-                      borderColor: 'var(--border-line)',
-                    }}
-                    disabled={!isGroup}
-                  />
+                  {member !== undefined && (
+                    <Select
+                      labelInValue
+                      defaultValue={{ value: '-1', label: '할당자 선택' }}
+                      onChange={handleChange('targetMemberId')}
+                      style={{ width: 120 }}
+                      options={member}
+                      dropdownStyle={{
+                        backgroundColor: 'var(--gray-sideBar)',
+                        color: 'var(--black)',
+                        borderColor: 'var(--border-line)',
+                      }}
+                      // disabled={!isGroup}
+                    />
+                  )}
                 </div>
               </div>
 

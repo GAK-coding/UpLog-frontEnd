@@ -90,7 +90,7 @@ export default function DeleteDialog({ isOpen, onClose, task, post, menuId, isTa
         showMessage('error', 'Post 삭제에 실패했습니다.');
       } else if (typeof data !== 'string' && 'message' in data) {
         showMessage('error', 'Post 삭제에 실패했습니다.');
-      } else if (data === 'delete') {
+      } else if (data === 'delete 완료') {
         showMessage('success', 'Post가 삭제되었습니다.');
         setTimeout(() => {
           onClose();

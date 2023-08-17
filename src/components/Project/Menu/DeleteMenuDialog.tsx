@@ -56,10 +56,10 @@ export default function DeleteMenuDialog({ isOpen, onClose, menu, menuId }: Prop
     onSuccess: (data) => {
       if (data === 'delete menu fail') {
         showMessage('error', '메뉴 삭제에 실패했습니다.');
-        setTimeout(() => onClose(), 1000);
+        setTimeout(() => onClose(), 2000);
       } else if (data === 'delete') {
         showMessage('success', '해당 메뉴가 삭제되었습니다.');
-        setTimeout(() => onClose(), 1000);
+        setTimeout(() => onClose(), 2000);
       }
     },
     onError: (error, value, rollback) => {
@@ -78,8 +78,8 @@ export default function DeleteMenuDialog({ isOpen, onClose, menu, menuId }: Prop
   });
 
   const onClickDelete = useCallback(() => {
-    const updatedMenuList = menuList.filter((eachMenu) => eachMenu.menuName !== menu);
-    setMenuList(updatedMenuList);
+    // const updatedMenuList = menuList.filter((eachMenu) => eachMenu.menuName !== menu);
+    // setMenuList(updatedMenuList);
 
     deleteMenuMutate();
     navigate(`/workspace/${product}/${project}/menu/${menuList[0].menuName}`);

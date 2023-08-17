@@ -102,7 +102,7 @@ export const menuTaskList = async (menuId: number) => {
 // task 수정
 export const editTask = async (data: UpdateTaskBody, taskId: number) => {
   try {
-    const res: AxiosResponse<TaskData> = await instance.patch(`/tasks/${taskId}`, data);
+    const res: AxiosResponse<TaskData | FailTask> = await instance.patch(`/tasks/${taskId}`, data);
     return res.data;
   } catch (error) {
     console.log(error);

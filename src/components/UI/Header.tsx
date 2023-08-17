@@ -175,11 +175,11 @@ export default function Header() {
           </div>
           <BsBellFill
             className={'text-[2rem] fill-gray-dark cursor-pointer'}
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/alarm')}
           />
           <BsQuestionCircle
             className={'text-[2rem] fill-gray-dark cursor-pointer'}
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/description')}
           />
 
           <div className={'relative'} ref={profileRef}>
@@ -212,19 +212,23 @@ export default function Header() {
             )}
           </div>
 
-          <span
-            className={'flex self-end text-gray-dark text-xl cursor-pointer'}
-            onClick={() => navigate('/login')}
-          >
-            로그인
-          </span>
-          <span className={'flex self-end text-gray-dark text-xl'}>&nbsp;•</span>
-          <span
-            className={'flex self-end text-gray-dark text-xl cursor-pointer'}
-            onClick={() => navigate('/signup')}
-          >
-            &nbsp;회원가입
-          </span>
+          {pathname !== '/' && (
+            <div className={'flex'}>
+              <span
+                className={'flex self-end text-gray-dark text-xl cursor-pointer'}
+                onClick={() => navigate('/login')}
+              >
+                로그인
+              </span>
+              <span className={'flex self-end text-gray-dark text-xl'}>&nbsp;•</span>
+              <span
+                className={'flex self-end text-gray-dark text-xl cursor-pointer'}
+                onClick={() => navigate('/signup')}
+              >
+                &nbsp;회원가입
+              </span>
+            </div>
+          )}
         </div>
       )}
     </header>

@@ -112,7 +112,7 @@ export default function StatusBoard({ status, tasks }: Props) {
                                   );
                                 }}
                               >
-                                이동
+                                상세정보
                               </div>
                             </section>
                           )
@@ -124,7 +124,8 @@ export default function StatusBoard({ status, tasks }: Props) {
                       </div>
                       {/*그룹정보*/}
                       <div className={'flex justify-start items-center mb-2'}>
-                        <span className={'text-gray-dark text-[0.65rem]'}>{task.teamName}</span>
+                        <span className={'text-gray-dark text-[0.65rem]'}>&nbsp;</span>
+                        {/*<span className={'text-gray-dark text-[0.65rem]'}>{task.teamName}</span>*/}
                       </div>
                       {/*menu, 할당자 정보 */}
                       <div

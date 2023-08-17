@@ -54,8 +54,10 @@ export default function TaskDetail() {
     (editTaskData: UpdateTaskBody) => editTask(editTaskData, +taskid!),
     {
       onSuccess: (data) => {
-        if (typeof data === 'string') {
-          setEditSuccess(false);
+        if (typeof data === 'object' && 'message' in data) {
+          showMessage('warning', data.message);
+        } else if (typeof data === 'object' && 'id' in data) {
+          showMessage('success', 'Task 수정에 성공했습니다.');
         }
       },
       onSettled: () => {
@@ -78,14 +80,15 @@ export default function TaskDetail() {
       showMessage('warning', 'Task의 정보를 모두 작성해주세요');
       return;
     }
+
     editTaskMutate(editTaskData);
 
-    if (!editSuccess) {
-      showMessage('error', 'Task 수정에 실패했습니다.');
-      return;
-    }
-
-    showMessage('success', 'Task 수정에 성공했습니다.');
+    // if (!editSuccess) {
+    //   showMessage('error', 'Task 수정에 실패했습니다.');
+    //   return;
+    // }
+    //
+    // showMessage('success', 'Task 수정에 성공했습니다.');
     setTimeout(() => onClose(), 2000);
     setIsEdit(false);
   }, [isEdit, editTaskData, editSuccess]);

@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import { BsChevronCompactUp } from 'react-icons/bs';
 import MenuSlider from '@/components/Project/Menu/MenuSlider.tsx';
 import TaskMain from '@/components/Project/Task/TaskMain.tsx';
@@ -10,15 +10,23 @@ import PostModal from '@/components/Project/Post/PostModal.tsx';
 import { postMain } from '@/recoil/Project/Post.ts';
 import { useEffect } from 'react';
 import { menuListData } from '@/recoil/Project/Menu.ts';
+import { ProductInfo } from '@/typings/product.ts';
+import { useGetMenuList } from '@/components/Project/hooks/useGetMenuList.ts';
+import { SaveProjectInfo } from '@/typings/project.ts';
 
 export default function Menu() {
   const { product, project, menutitle } = useParams();
+  const productInfo: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
+  const nowProject: SaveProjectInfo = JSON.parse(sessionStorage.getItem('nowProject')!);
+
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const menuList = useRecoilValue(menuListData);
 
   // post, task 구분
   const [isPost, setIsPost] = useRecoilState(postMain);
+
+  const [getMenuList] = useGetMenuList(nowProject.id);
+  const menuList = useRecoilValue(menuListData);
 
   // 존재하지 않는 메뉴 페이지로 이동하면 결과물 페이지로 이동하게 수정
   useEffect(() => {
@@ -47,7 +55,22 @@ export default function Menu() {
           {/*메뉴 list*/}
           <div className={'flex-row-center w-full h-[5rem] border-b border-gray-border '}>
             <div className={'w-full min-w-[70rem] h-full items-center justify-center'}>
-              <MenuSlider product={product!} project={project!} menutitle={menutitle!} />
+              {productInfo.powerType === 'CLIENT' && menuList.length > 0 ? (
+                <NavLink
+                  to={`/workspace/${product}/${project}/menu/${menuList[0].menuName}`}
+                  className={({ isActive }) =>
+                    `flex-row-center justify-start  m-auto h-[5rem] w-full border-r border-gray-border ${
+                      isActive && 'bg-orange text-black'
+                    }`
+                  }
+                >
+                  <span className={'flex-row-center h-full w-full text-[1.25rem] font-bold'}>
+                    {menuList[0].menuName}
+                  </span>
+                </NavLink>
+              ) : (
+                <MenuSlider product={product!} project={project!} menutitle={menutitle!} />
+              )}
             </div>
           </div>
           {menutitle !== '결과물' ? (
@@ -81,7 +104,7 @@ export default function Menu() {
               <PostMain />
             </div>
           )}
-          {isPost && (
+          {isPost && productInfo.powerType !== 'CLIENT' && (
             <button
               className={
                 'absolute flex justify-between items-center px-2.5 w-[5.5rem] h-[2rem] top-[6.5rem] right-10 text-[0.93rem] border border-line rounded'
