@@ -14,7 +14,7 @@ export function useGetAllProduct(isEnabled = true): [ProductInfo[] | [], () => v
             indexNum: item.indexNum,
             draggableId: item.productId.toString(),
             // TODO: 이미지 수정 필요
-            image: '/images/test_userprofile.png',
+            image: !item.image ? '/images/test_userprofile.png' : item.image,
           };
         });
 
