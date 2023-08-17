@@ -12,7 +12,6 @@ import { useNavigate } from 'react-router-dom';
 import { SaveUserInfo } from '@/typings/member.ts';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { changeProductsSequence, getMyProducts } from '@/api/Product/Product.ts';
-import { GetProductList, ProductInfo } from '@/typings/product.ts';
 import { useGetAllProduct } from '@/components/Product/hooks/useGetAllProduct.ts';
 
 export default function ProductList() {
@@ -36,6 +35,8 @@ export default function ProductList() {
   const [isCreateProduct, setIsCreateProduct] = useState(true);
 
   const [productList, refetch] = useGetAllProduct();
+
+  console.log(productList);
 
   const { mutate } = useMutation(changeProductsSequence);
 
