@@ -24,6 +24,7 @@ export interface ProductBody {
   masterEmail: string;
   clientEmail: string | null;
   link: string;
+  image: null | string;
 }
 export interface FailProduct {
   httpStatus: 'NOT_FOUND' | 'FORBIDDEN';
@@ -39,6 +40,7 @@ export interface ProductsData extends Product {
 
 export interface ProductEditBody {
   link: string | null;
+  image: null | string;
   newName: string | null;
   memberEmailList: string[] | null;
   powerType: 'MASTER' | 'LEADER' | 'DEFAULT' | 'CLIENT' | null;
@@ -83,6 +85,7 @@ export interface ChangeLogData {
   issueStatus: issueStatus;
   createdTime: string;
   modifiedTime: string;
+  title: string;
 }
 
 export interface SaveProductInfo {
