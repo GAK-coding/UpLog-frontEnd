@@ -1,4 +1,4 @@
-export function formatCreteaDate(date: string) {
+export function formatCreateDate(date: string) {
   const options: Intl.DateTimeFormatOptions = {
     year: 'numeric',
     month: 'long',

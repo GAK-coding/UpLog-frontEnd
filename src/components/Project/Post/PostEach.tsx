@@ -1,5 +1,5 @@
 import { Post, PostLikeList } from '@/typings/post.ts';
-import { formatCreteaDate } from '@/utils/fotmatCreateDate.ts';
+import { formatCreateDate } from '@/utils/fotmatCreateDate.ts';
 import PostModal from '@/components/Project/Post/PostModal.tsx';
 import DeleteDialog from '@/components/Common/DeleteDialog.tsx';
 import PostComment from '@/components/Project/Post/PostComment.tsx';
@@ -148,7 +148,7 @@ export default function PostEach({ post, menuId, likeList, noticeId }: Props) {
           <span
             className={'flex h-1/2 font-bold text-[1.2rem] mb-1.5'}
           >{`${post.authorInfoDTO.nickname}(${post.authorInfoDTO.name})`}</span>
-          <span className={'flex h-1/2 text-[0.8rem]'}>{formatCreteaDate(post.createTime)}</span>
+          <span className={'flex h-1/2 text-[0.8rem]'}>{formatCreateDate(post.createTime)}</span>
         </div>
       </div>
 

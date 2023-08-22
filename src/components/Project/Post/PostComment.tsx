@@ -1,5 +1,5 @@
 import { FaUserCircle } from 'react-icons/fa';
-import { formatCreteaDate } from '@/utils/fotmatCreateDate.ts';
+import { formatCreateDate } from '@/utils/fotmatCreateDate.ts';
 import { useCallback, useEffect, useState } from 'react';
 import useInput from '@/hooks/useInput.ts';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
@@ -269,7 +269,7 @@ export default function PostComment({ postId, menuId }: Props) {
                         className={'flex h-1/2 text-[0.93rem]'}
                       >{`${comment.nickName}(${comment.name})`}</span>
                       <span className={'flex h-1/2 text-[0.8rem] text-gray-light'}>
-                        {formatCreteaDate(comment.createTime)}
+                        {formatCreateDate(comment.createTime)}
                       </span>
                     </div>
                   </div>

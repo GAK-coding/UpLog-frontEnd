@@ -1,4 +1,4 @@
-import { formatCreteaDate } from '@/utils/fotmatCreateDate.ts';
+import { formatCreateDate } from '@/utils/fotmatCreateDate.ts';
 import { FaUserCircle } from 'react-icons/fa';
 import { BsHeart, BsHeartFill } from 'react-icons/bs';
 import { useCallback, useState } from 'react';
@@ -58,7 +58,7 @@ export default function PostChildComment({ commentList, commentId, isChildClick 
                     className={'flex h-1/2 text-[0.93rem]'}
                   >{`${child.nickName}(${child.name})`}</span>
                   <span className={'flex h-1/2 text-[0.8rem] text-gray-light'}>
-                    {formatCreteaDate(child.createTime)}
+                    {formatCreateDate(child.createTime)}
                   </span>
                 </div>
               </div>
