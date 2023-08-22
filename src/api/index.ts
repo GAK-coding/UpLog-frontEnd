@@ -9,6 +9,7 @@ export const instance = axios.create({
   baseURL: URL,
 });
 
+// test
 instance.interceptors.request.use(
   (config) => {
     const accessToken = sessionStorage.getItem('accessToken'); // localStorage에서 accessToken 값을 가져옴
