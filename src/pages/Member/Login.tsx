@@ -89,10 +89,11 @@ export default function Login() {
     [email, password]
   );
 
-  const login = useGoogleLogin({
-    onSuccess: (codeResponse) => console.log(codeResponse),
-    flow: 'auth-code',
-  });
+  // TODO : 구글 로그인
+  // const login = useGoogleLogin({
+  //   onSuccess: (codeResponse) => console.log(codeResponse),
+  //   flow: 'auth-code',
+  // });
 
   useEffect(() => {
     if (sessionStorage.getItem('accessToken') && sessionStorage.getItem('userInfo')) navigate('/');

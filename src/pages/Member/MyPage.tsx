@@ -119,7 +119,7 @@ export default function MyPage() {
     }
   }, []);
 
-  console.log(fileList?.[0]?.url);
+  // console.log(fileList?.[0]?.url);
 
   return (
     <section className={'mypage flex flex-col items-center w-full h-[68rem]'}>

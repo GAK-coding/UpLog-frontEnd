@@ -28,7 +28,7 @@ export default function NewChangeLog() {
   const [selectedType, setSelectedType] = useState(typeList[0]);
   const onChangeSelectedType = (e: ChangeEvent<HTMLSelectElement>) => {
     setSelectedType(e.target.value as changeType);
-    console.log(e.target.value);
+    // console.log(e.target.value);
   };
 
   const [title, onChangeTitle, setTitle] = useInput('');
