@@ -11,6 +11,7 @@ import { useRecoilState } from 'recoil';
 import { loginStatus, user } from '@/recoil/User/atom.ts';
 import { useCookies } from 'react-cookie';
 import { loginAPI } from '@/api/Members/Login-Signup.ts';
+import { sendLog } from '@/api/Log';
 
 export default function Login() {
   const { showMessage, contextHolder } = useMessage();
@@ -50,20 +51,40 @@ export default function Login() {
     },
     onError: () => {
       showMessage('error', '아이디 또는 비밀번호를 잘못 입력하셨습니다.');
+      sendLogMutate({ page: 'login', status: false, message: 'login fail' });
     },
   });
+
+  const { mutate: sendLogMutate } = useMutation(sendLog);
 
   const onSubmit = useCallback(
     (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
-      if (!email || !password) {
+      if (!email && !password) {
         showMessage('warning', '이메일과 비밀번호를 입력해주세요.');
+        sendLogMutate({ page: 'login', status: false, message: 'all' });
+
+        return;
+      }
+
+      if (!email) {
+        showMessage('warning', '이메일을 입력해주세요.');
+        sendLogMutate({ page: 'login', status: false, message: 'email' });
+
+        return;
+      }
+
+      if (!password) {
+        showMessage('warning', '비밀번호를 입력해주세요.');
+        sendLogMutate({ page: 'login', status: false, message: 'password' });
+
         return;
       }
 
       const loginInfo: LoginInfo = { email, password };
       mutate(loginInfo);
+      sendLogMutate({ page: 'login', status: true, message: 'success' });
     },
     [email, password]
   );

@@ -16,6 +16,7 @@ import { EmailInfo, SignUpInfo } from '@/typings/member.ts';
 import { useNavigate } from 'react-router-dom';
 import { loginStatus } from '@/recoil/User/atom.ts';
 import { useRecoilState } from 'recoil';
+import { sendLog } from '@/api/Log';
 const time = 300;
 export default function SignUp() {
   const [name, onChangeName, setName] = useInput('');
@@ -36,6 +37,7 @@ export default function SignUp() {
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useRecoilState(loginStatus);
   const [correctAuth, setCorrectAuth] = useState('');
+  const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
 
   const { mutate: emailMutate } = useMutation(emailRequest, {
     onSuccess: (data) => {
@@ -62,6 +64,8 @@ export default function SignUp() {
     position: isEach ? 'INDIVIDUAL' : 'COMPANY',
     loginType: 'UPLOG',
   };
+
+  const { mutate: sendLogMutate } = useMutation(sendLog);
 
   /** 인증번호 전송 함수, 재전송에서도 활용하기 위해서 밖으로 뺌 */
   const sendAuth = useCallback(() => {
@@ -112,20 +116,49 @@ export default function SignUp() {
     (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
-      if (!name || !nickname || !email || !isAuth || !isCheckPw) {
+      if (!name && !nickname && !email && !isAuth && !isCheckPw) {
         showMessage('warning', '모든 정보를 입력해주세요.');
+
+        sendLogMutate({ page: 'singup', status: false, message: 'all' });
+        return;
+      }
+
+      if (!name) {
+        showMessage('warning', '이름을 입력해주세요.');
+        sendLogMutate({ page: 'singup', status: false, message: 'name' });
+        return;
+      }
+
+      if (!nickname) {
+        showMessage('warning', '닉네임을 입력해주세요.');
+        sendLogMutate({ page: 'singup', status: false, message: 'nickname' });
 
         return;
       }
 
-      const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
       if (!emailRegex.test(email)) {
         showMessage('warning', '이메일이 유효하지 않습니다.');
+        sendLogMutate({ page: 'signup', status: false, message: 'email' });
+
+        return;
+      }
+
+      if (!isAuth) {
+        showMessage('warning', '인증번호 확인을 해주세요.');
+        sendLogMutate({ page: 'signup', status: false, message: 'authNumber' });
+
+        return;
+      }
+
+      if (!isCheckPw) {
+        showMessage('warning', '비밀번호를 확인 해주세요.');
+        sendLogMutate({ page: 'signup', status: false, message: 'password' });
 
         return;
       }
 
       mutate(signUpInfo);
+      sendLogMutate({ page: 'signup', status: true, message: 'success' });
     },
     [name, nickname, email, isAuth, isCheckPw, signUpInfo, isSuccess]
   );
@@ -266,7 +299,9 @@ export default function SignUp() {
               >
                 <label className={'w-h-full flex-row-center '}>
                   <span className={'w-1/6 h-full flex-row-center text-[1.7rem]'}>
-                    <MdOutlineMailOutline className={email ? 'fill-orange' : 'fill-gray-light'} />
+                    <MdOutlineMailOutline
+                      className={emailRegex.test(email) ? 'fill-orange' : 'fill-gray-light'}
+                    />
                   </span>
                   <input
                     type="text"
