@@ -201,7 +201,6 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
       return;
     }
 
-    console.log(postTag);
     setCreateData({
       title: postName,
       menuId: postMenu,

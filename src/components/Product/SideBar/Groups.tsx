@@ -39,8 +39,6 @@ export default function Groups() {
     {
       onSuccess: (data) => {
         if (data && typeof data !== 'string') {
-          console.log(data.childTeamInfoDTOList);
-
           const temp: ScreenProjectTeams[] = data.childTeamInfoDTOList?.map((group) => {
             return { ...JSON.parse(JSON.stringify(group)), isOpen: false, isHover: false };
           });
