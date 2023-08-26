@@ -298,11 +298,21 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
   useEffect(() => {
     console.log('바뀜', clientEmail);
   }, [clientEmail]);
+
   useEffect(() => {
+    // if (check) {
+    //   isCreateProduct
+    //     ? createProductMutate()
+    //     : updateProduct({ data: updateProductInfo, productId });
+    // }
+
     if (check) {
-      isCreateProduct
-        ? createProductMutate()
-        : updateProduct({ data: updateProductInfo, productId });
+      if (isCreateProduct) {
+        createProductMutate();
+        sendLogMutate({ page: 'product', status: true, message: 'success' });
+      } else {
+        updateProduct({ data: updateProductInfo, productId });
+      }
     }
 
     setUpdateProductInfo({
