@@ -6,7 +6,6 @@ export function useGetAllProduct(isEnabled = true): [ProductInfo[] | [], () => v
   const { refetch, data } = useQuery('myProductList', getMyProducts, {
     select: (data) => {
       if (typeof data !== 'string') {
-        console.log(data);
         const list: ProductInfo[] = data.map((item: GetProductList) => {
           return {
             productId: item.productId,

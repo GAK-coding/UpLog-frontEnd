@@ -33,7 +33,6 @@ export default function TagInput() {
 
     // 입력할 tagItem 초기화
     setTagItem('');
-    console.log(tagList);
   };
 
   // tagItem 삭제

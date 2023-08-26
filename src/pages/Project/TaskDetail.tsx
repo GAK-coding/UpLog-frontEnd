@@ -112,7 +112,6 @@ export default function TaskDetail() {
       ...editTaskData,
       updateTaskDetail: e.target.value,
     };
-    console.log();
     setEditTask(updatedTask);
   };
 

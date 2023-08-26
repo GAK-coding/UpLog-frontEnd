@@ -48,8 +48,6 @@ export default function PostEditor({ isPost }: Props) {
   };
 
   const onUploadImage = async (blob: Blob, callback: (url: string, altText: string) => void) => {
-    console.log(blob);
-
     // 이건 로컬에서만 가능
     callback(URL.createObjectURL(blob), '사진');
 

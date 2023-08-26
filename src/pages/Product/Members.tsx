@@ -24,6 +24,8 @@ import { productMemberList } from '@/recoil/Product/atom.ts';
 import { HiOutlineBuildingOffice } from 'react-icons/hi2';
 import { frontEndUrl } from '@/recoil/Common/atom.ts';
 import { FaUserCircle } from 'react-icons/fa';
+import { sendLog } from '@/api/Log';
+import show = Mocha.reporters.Base.cursor.show;
 
 export default function Members() {
   const queryClient = useQueryClient();
@@ -44,12 +46,23 @@ export default function Members() {
   // 방출인지 권한 위임인지
   const [isOut, setIsOut] = useState(false);
   const { showMessage, contextHolder } = useMessage();
+  const [wrongEmail, setWrongEmail] = useState(0);
+  const { mutate: sendLogMutate } = useMutation(sendLog);
 
   const { mutate } = useMutation(productEdit, {
     onSuccess: (data) => {
       if (typeof data !== 'string' && data.updateResultDTO) {
         const { failCnt, failMemberList, duplicatedCnt, duplicatedMemberList } =
           data.updateResultDTO;
+
+        !!failCnt &&
+          Array.from({ length: failCnt }).map(() =>
+            sendLogMutate({ page: 'member', status: false, message: 'fail' })
+          );
+        !!duplicatedCnt &&
+          Array.from({ length: duplicatedCnt }).map(() =>
+            sendLogMutate({ page: 'member', status: false, message: 'duplicated' })
+          );
 
         if (failCnt > 0 && duplicatedCnt > 0) {
           showMessage(
@@ -181,6 +194,13 @@ export default function Members() {
   );
 
   const onClickInvite = useCallback(() => {
+    if (emails === '') {
+      showMessage('warning', '이메일을 입력해주세요.');
+      sendLogMutate({ page: 'member', status: false, message: 'all' });
+
+      return;
+    }
+
     let isEmailFormat = true;
     const memberEmailList = emails
       .split(',')
@@ -188,6 +208,7 @@ export default function Members() {
         const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
         if (!emailRegex.test(email.trim()) && email.trim() !== '') {
           isEmailFormat = false;
+          setWrongEmail((prev) => prev + 1);
         }
 
         if (email.trim() !== '') {
@@ -213,7 +234,7 @@ export default function Members() {
       },
       productId,
     });
-  }, [emails, isLeader]);
+  }, [emails, isLeader, wrongEmail]);
 
   const onChangeEmails = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {
     setEmails(e.target.value);
@@ -276,6 +297,14 @@ export default function Members() {
       setMembers(data!);
     }
   }, [isSuccess]);
+
+  useEffect(() => {
+    if (wrongEmail > 0) {
+      Array.from({ length: wrongEmail }).map(() =>
+        sendLogMutate({ page: 'member', status: false, message: 'email' })
+      );
+    }
+  }, [wrongEmail]);
 
   return (
     <section

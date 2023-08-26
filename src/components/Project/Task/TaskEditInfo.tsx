@@ -98,7 +98,6 @@ export default function TaskEditInfo({ isEdit, taskInfo }: Props) {
         updateTargetMemberId: +value.value,
       };
 
-      console.log(value.value);
       setEditTask(updatedTask);
     }
   };
