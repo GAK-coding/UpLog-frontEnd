@@ -101,8 +101,6 @@ export default function Header() {
   }, [isLogin]);
 
   useEffect(() => {
-    console.log('뭐셩', JSON.parse(sessionStorage.getItem('userInfo')!));
-
     setUserInfo({ ...JSON.parse(sessionStorage.getItem('userInfo')!) });
   }, []);
 

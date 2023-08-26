@@ -54,7 +54,6 @@ export default function TaskMain() {
       if (typeof data === 'object' && 'tasks' in data) {
         setTaskList(data.tasks);
         setFirstTaskList(data.tasks);
-        console.log(data);
       }
     },
     staleTime: 0, // 10분

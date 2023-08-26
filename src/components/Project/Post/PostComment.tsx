@@ -219,7 +219,6 @@ export default function PostComment({ postId, menuId }: Props) {
     if (e.key === 'Enter') {
       setCreateData({ ...createData, content: commentValue });
       setCheck(true);
-      console.log(commentValue);
       setCommentValue('');
     }
   };

@@ -73,7 +73,6 @@ export default function CreateTask({ isOpen, onClose, menuId }: Props) {
     }));
 
   const member = useRecoilValue(allMemberList);
-  console.log(member);
 
   const [isCustom, setIsCustom] = useState(true);
   const [isGroup, setIsGroup] = useState(false);
@@ -158,7 +157,6 @@ export default function CreateTask({ isOpen, onClose, menuId }: Props) {
           };
 
           setNewTask(updatedTask);
-          console.log(newTask);
         }
         break;
       }
@@ -181,7 +179,6 @@ export default function CreateTask({ isOpen, onClose, menuId }: Props) {
         setNewTask(updatedTask);
       }
     }
-    console.log(newTask);
   };
 
   // 종료날짜 제한
@@ -227,7 +224,6 @@ export default function CreateTask({ isOpen, onClose, menuId }: Props) {
     };
 
     setNewTask(updatedTask);
-    console.log(newTask);
   };
 
   // 종료 날짜 입력 값
@@ -238,7 +234,6 @@ export default function CreateTask({ isOpen, onClose, menuId }: Props) {
     };
 
     setNewTask(updatedTask);
-    console.log(newTask);
   };
 
   // task 상세설명 입력 값
@@ -249,7 +244,6 @@ export default function CreateTask({ isOpen, onClose, menuId }: Props) {
     };
 
     setNewTask(updatedTask);
-    console.log(newTask);
   };
 
   // 완료 버튼 눌렀을 때

@@ -182,13 +182,11 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
   const onClickMakeProduct = useCallback(() => {
     if (!isCreateProduct) {
       if (!productName) {
-        console.log(clientEmail);
         showMessage('warning', '제품 이름을 입력해주세요.');
         return;
       }
 
       // 변경된 사항이 없으면 수정 요청 보내지 않음
-      console.log(productName, productGetData, clientEmail);
       if ('name' in productGetData && productName === productGetData.name && clientEmail === '') {
         showMessage('warning', '변경된 정보가 없습니다.');
         return;
@@ -278,9 +276,7 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
     }
   }, [isOpen, isCreateProduct, productId]);
 
-  useEffect(() => {
-    console.log('바뀜', clientEmail);
-  }, [clientEmail]);
+  useEffect(() => {}, [clientEmail]);
   useEffect(() => {
     if (check) {
       isCreateProduct
@@ -314,8 +310,6 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
       getUrl(fileList[0].originFileObj!);
     }
   }, [fileList]);
-
-  console.log('으악으악새', updateProductInfo);
 
   return (
     <Modal isCentered onClose={onClose} isOpen={isOpen}>

@@ -113,13 +113,10 @@ export default function DeleteDialog({ isOpen, onClose, task, post, menuId, isTa
 
   const onClickDelete = useCallback(() => {
     if (isTask) {
-      console.log('task 삭제', task);
-      console.log(taskList);
       deleteTaskMutate();
     }
 
     if (!isTask) {
-      console.log('post 삭제', post);
       deletePostMutate();
     }
   }, [post, task, isTask]);
