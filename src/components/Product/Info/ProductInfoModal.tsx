@@ -23,6 +23,7 @@ import { useRecoilValue } from 'recoil';
 import { frontEndUrl } from '@/recoil/Common/atom.ts';
 import { imageUpload } from '@/api/Members/mypage.ts';
 import { useGetAllProduct } from '@/components/Product/hooks/useGetAllProduct.ts';
+import { sendLog } from '@/api/Log';
 
 interface Props {
   isOpen: boolean;
@@ -63,6 +64,9 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
   const [imgUrl, setImgUrl] = useState<undefined | string>(undefined);
 
   const queryClient = useQueryClient();
+
+  // 로그
+  const { mutate: sendLogMutate } = useMutation(sendLog);
 
   // 제품 생성
   const { mutate: createProductMutate } = useMutation(
@@ -235,6 +239,19 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
 
     // 필수 정보를 입력하지 않았을 때
     if (!productName || !masterEmail) {
+      // log : 모든 정보를 입력하지 않았을 때
+      if (!productName && !masterEmail) {
+        sendLogMutate({ page: 'product', status: false, message: 'all' });
+      }
+      // log : 제품 이름만 입력하지 않았을 때
+      else if (!productName) {
+        sendLogMutate({ page: 'product', status: false, message: 'name' });
+      }
+      // log : 마스터 이메일만 입력하지 않았을 때
+      else if (!masterEmail) {
+        sendLogMutate({ page: 'product', status: false, message: 'master' });
+      }
+
       showMessage('warning', '필수 정보를 입력해주세요.');
       return;
     }
