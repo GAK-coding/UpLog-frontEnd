@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
  echo "> FE 배포"
- mkdir /home/ubuntu/123
+ cd /home/ubuntu
+ run pm2 restart "yarn dev"
