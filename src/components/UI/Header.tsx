@@ -126,7 +126,7 @@ export default function Header() {
         >
           <img className={'flex mr-4 h-12'} src={'/images/mainLogo.png'} alt={'main-logo'} />
           <span className={'flex font-logo text-[2.4rem] font-semibold text-gray-dark mt-2'}>
-            upLog'o'
+            upLog
           </span>
         </nav>
 
