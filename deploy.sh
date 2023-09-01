@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
- echo "> FE 배포"
+ echo "> 프론트엔드 배포"
