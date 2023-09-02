@@ -15,9 +15,8 @@ jobs:
 
 # Github Repository Secrets를 통해 환경 변수 파일을 생성합니다.
       - name: Generate Environment Variables File for Production
-        run: |
-           echo "VITE_IS_DEPLOYMENT=$VITE_IS_DEPLOYMENT" >> .env.production
-         env:
+        run: echo "VITE_IS_DEPLOYMENT=$VITE_IS_DEPLOYMENT" >> .env.production
+        env:
           VITE_IS_DEPLOYMENT: ${{ secrets.VITE_IS_DEPLOYMENT }}
 
       - name: Install Dependencies # 의존 파일 설치
