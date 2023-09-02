@@ -15,7 +15,12 @@ jobs:
 
       - name: Setting .env
         run: |
+          echo "VITE_GOOGLE_CLIENTID: ${{ secrets.VITE_GOOGLE_CLIENTID }}" >> .env
           echo "VITE_IS_DEPLOYMENT: ${{ secrets.VITE_IS_DEPLOYMENT }}" >> .env
+          echo "VITE_DEV_FRONTEND_URL: ${{ secrets.VITE_DEV_FRONTEND_URL }}" >> .env
+          echo "VITE_DEPLOYMENT_FRONTEND_URL: ${{ secrets.VITE_DEPLOYMENT_FRONTEND_URL }}" >> .env
+          echo "VITE_DEV_BACKEND_URL: ${{ secrets.VITE_DEV_BACKEND_URL }}" >> .env
+          echo "VITE_DEPLOYMENT_BACKEND_URL: ${{ secrets.VITE_DEPLOYMENT_BACKEND_URL }}" >> .env
           cat .env
 
       - name: Install Dependencies # 의존 파일 설치
