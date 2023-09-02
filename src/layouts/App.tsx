@@ -37,9 +37,10 @@ export { ENVIRONMENT };
 
 const queryClient = new QueryClient();
 const clientId = import.meta.env.VITE_GOOGLE_CLIENTID;
+const isDeployment: boolean = import.meta.env.VITE_IS_DEPLOYMENT === 'true';
 
 function App() {
-  const [showDevtools, setShowDevtools] = useState(false);
+  const [showDevtools, setShowDevtools] = useState(!isDeployment);
   const [isProductClick, setIsProductClick] = useRecoilState(productOpen);
 
   const onCloseProduct = useCallback(() => {
