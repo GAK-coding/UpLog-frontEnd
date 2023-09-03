@@ -13,7 +13,7 @@ jobs:
       - name: Check Node v # Node v 확인
         run: node -v
 
-      - name: Setting .env
+      - name: Create .env file
         run: |
           echo "VITE_GOOGLE_CLIENTID: ${{ secrets.VITE_GOOGLE_CLIENTID }}" >> .env
           echo "VITE_IS_DEPLOYMENT: ${{ secrets.VITE_IS_DEPLOYMENT }}" >> .env
