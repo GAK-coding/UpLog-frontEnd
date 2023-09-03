@@ -90,10 +90,10 @@ export default function Login() {
   );
 
   // TODO : 구글 로그인
-  // const login = useGoogleLogin({
-  //   onSuccess: (codeResponse) => console.log(codeResponse),
-  //   flow: 'auth-code',
-  // });
+  const login = useGoogleLogin({
+    onSuccess: (codeResponse) => console.log(codeResponse),
+    flow: 'auth-code',
+  });
 
   useEffect(() => {
     if (sessionStorage.getItem('accessToken') && sessionStorage.getItem('userInfo')) navigate('/');
@@ -185,17 +185,17 @@ export default function Login() {
               <button>회원가입</button>
             </Link>
           </nav>
-          {/*<div className={'flex-col-center w-full'}>*/}
-          {/*  <span className={'mb-7 text-lg font-bold'}>간편 로그인</span>*/}
-          {/*  <div className={'w-3/5 flex-row-center justify-evenly'}>*/}
-          {/*    <button onClick={() => login()}>*/}
-          {/*      <img className={'w-12'} src={'google.svg'} alt={'google'} />*/}
-          {/*    </button>*/}
-          {/*    <button>*/}
-          {/*      <img className={'w-12'} src={'kakao.svg'} alt={'kakao'} />*/}
-          {/*    </button>*/}
-          {/*  </div>*/}
-          {/*</div>*/}
+          <div className={'flex-col-center w-full'}>
+            <span className={'mb-7 text-lg font-bold'}>간편 로그인</span>
+            <div className={'w-3/5 flex-row-center justify-evenly'}>
+              <button onClick={() => login()}>
+                <img className={'w-12'} src={'google.svg'} alt={'google'} />
+              </button>
+              <button>
+                <img className={'w-12'} src={'kakao.svg'} alt={'kakao'} />
+              </button>
+            </div>
+          </div>
         </article>
       </div>
     </section>
