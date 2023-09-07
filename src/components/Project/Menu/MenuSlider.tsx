@@ -67,10 +67,10 @@ export default function MenuSlider({ product, project, menutitle }: Props) {
     (nextValue: string) => createMenu(projectId, nextValue),
     {
       onSuccess: (data: FailMenu | MenuInfo | string) => {
-        if (typeof data === 'object' && 'menuName' in data) {
-          showMessage('success', '메뉴가 생성되었습니다.');
-        } else if (typeof data === 'object' && 'message' in data) {
+        if (typeof data === 'object' && 'message' in data) {
           showMessage('error', data.message);
+        } else if (data === 'success') {
+          showMessage('success', '메뉴가 생성되었습니다.');
         } else {
           showMessage('error', '메뉴 생성에 실패하였습니다.');
         }
@@ -85,8 +85,10 @@ export default function MenuSlider({ product, project, menutitle }: Props) {
   // menu edit
   const { mutate: editMenuMutate } = useMutation((newName: string) => editMenu(menuId, newName), {
     onSuccess: (data) => {
-      if (typeof data !== 'string' && 'menuName' in data) {
+      if (data === 'success') {
         showMessage('success', '메뉴 이름이 변경되었습니다.');
+      } else {
+        showMessage('error', '메뉴 이름 변경에 실패하였습니다.');
       }
     },
     onSettled: () => {
