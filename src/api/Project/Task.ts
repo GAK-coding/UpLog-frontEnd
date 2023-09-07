@@ -15,7 +15,7 @@ import { instance } from '@/api';
 // task 생성
 export const createTask = async (data: TaskBody) => {
   try {
-    const res: AxiosResponse<TaskData | FailTask> = await instance.post('/tasks', data);
+    const res: AxiosResponse<string | FailTask> = await instance.post('/tasks', data);
 
     return res.data;
   } catch (error) {

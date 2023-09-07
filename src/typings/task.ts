@@ -19,6 +19,8 @@ export interface TaskData {
   taskIndex: number;
 }
 
+export interface MenuTaskData extends Omit<TaskData, 'taskIndex'> {}
+
 export interface StatusTaskData {
   PROGRESS_BEFORE: TaskData[];
   PROGRESS_IN: TaskData[];
@@ -54,7 +56,7 @@ export interface UpdateTaskBody {
 
 export interface MenuTasks {
   menuInfo: MenuInfo;
-  tasks: TaskData[];
+  tasks: MenuTaskData[];
 }
 
 export interface DragTaskIndexBody {

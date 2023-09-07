@@ -196,7 +196,7 @@ export default function TaskMain() {
           }
         >
           {/*task 정보*/}
-          {taskList.map((task, index) => (
+          {taskList.map((task) => (
             <section
               key={task.id}
               className={
