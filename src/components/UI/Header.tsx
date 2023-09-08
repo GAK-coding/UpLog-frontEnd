@@ -16,6 +16,7 @@ import { BiChevronDown } from 'react-icons/bi';
 import { useGetAllProduct } from '@/components/Product/hooks/useGetAllProduct.ts';
 import { SaveUserInfo } from '@/typings/member.ts';
 import { useQueryClient } from 'react-query';
+import { useCookies } from 'react-cookie';
 
 export default function Header() {
   const navigate = useNavigate();
