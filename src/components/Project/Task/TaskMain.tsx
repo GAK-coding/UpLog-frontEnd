@@ -11,7 +11,7 @@ import { useQuery } from 'react-query';
 import { menuTaskList } from '@/api/Project/Task.ts';
 import { useEffect, useState } from 'react';
 import { menuListData } from '@/recoil/Project/Menu.ts';
-import { TaskData } from '@/typings/task.ts';
+import { MenuTaskData, TaskData } from '@/typings/task.ts';
 import { getProductMemberList } from '@/api/Product/Product.ts';
 import { ProductInfo } from '@/typings/product.ts';
 import { allMemberList, productMemberList } from '@/recoil/Product/atom.ts';
@@ -29,7 +29,7 @@ export default function TaskMain() {
   const menuList = useRecoilValue(menuListData);
   const menuId = menuList.find((menu) => menu.menuName === menutitle)?.id;
   const [taskList, setTaskList] = useRecoilState(taskAll);
-  const [firstTaskList, setFirstTaskList] = useState<TaskData[]>([]);
+  const [firstTaskList, setFirstTaskList] = useState<MenuTaskData[]>([]);
   const [memberList, setMemberList] = useRecoilState(productMemberList);
   const [memberListData, setMemberListData] = useRecoilState(allMemberList);
 
@@ -196,7 +196,7 @@ export default function TaskMain() {
           }
         >
           {/*task 정보*/}
-          {taskList.map((task, index) => (
+          {taskList.map((task) => (
             <section
               key={task.id}
               className={

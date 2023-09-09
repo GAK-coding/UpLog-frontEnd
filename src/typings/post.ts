@@ -7,8 +7,6 @@ export interface Post {
   authorInfoDTO: targetMemberInfo;
   menuId: number;
   menuName: string;
-  productName: string;
-  projectName: string;
   postType: PostType;
   content: string;
   createTime: string;
@@ -54,13 +52,11 @@ export interface CommentInfo {
 export interface NoticeMenu {
   id: number;
   menuName: string;
-  projectId: number;
-  version: string;
+  noticePostId: number;
 }
 
 export interface LikeInfo {
   id: number;
-  memberNickname: string;
   cnt: number;
 }
 

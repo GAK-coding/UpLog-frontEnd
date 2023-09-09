@@ -19,7 +19,8 @@ import { SaveProjectInfo } from '@/typings/project.ts';
 export default function TaskDetail() {
   const nowProject: SaveProjectInfo = JSON.parse(sessionStorage.getItem('nowProject')!);
 
-  const { product, project, menutitle, taskid } = useParams();
+  // const { product, project, menutitle, taskid } = useParams();
+  const { taskid } = useParams();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { showMessage, contextHolder } = useMessage();
   const [editSuccess, setEditSuccess] = useState<boolean>(true);

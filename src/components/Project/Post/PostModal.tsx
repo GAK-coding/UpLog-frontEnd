@@ -105,7 +105,7 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
       return () => queryClient.setQueryData(['menuPostData', menuId], previousData);
     },
     onSuccess: (data) => {
-      if (typeof data !== 'string' && 'id' in data) {
+      if (data === 'success') {
         showMessage('success', 'Post 생성에 성공했습니다.');
       } else if (typeof data !== 'string' && 'message' in data) {
         showMessage('warning', data.message);
@@ -154,7 +154,7 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
         return () => queryClient.setQueryData(['menuPostData', menuId], previousData);
       },
       onSuccess: (data) => {
-        if (typeof data !== 'string' && 'id' in data) {
+        if (data === 'success') {
           showMessage('success', 'Post 수정에 성공했습니다.');
         } else if (typeof data !== 'string' && 'message' in data) {
           showMessage('warning', data.message);

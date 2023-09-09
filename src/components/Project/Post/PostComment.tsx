@@ -69,7 +69,7 @@ export default function PostComment({ postId, menuId }: Props) {
     onSuccess: (data) => {
       if (typeof data !== 'string' && 'message' in data) {
         showMessage('warning', data.message);
-      } else if (typeof data !== 'string') {
+      } else if (data === 'success') {
         showMessage('success', '댓글이 등록되었습니다.');
       } else showMessage('error', '댓글 등록에 실패했습니다.');
     },
