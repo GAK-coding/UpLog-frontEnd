@@ -2,22 +2,22 @@ import { AxiosResponse } from 'axios';
 import {
   CommentBody,
   CommentInfo,
+  CommentLikeList,
   FailPost,
+  LikeInfo,
   NoticeMenu,
   Post,
   PostBody,
-  LikeInfo,
   PostLikeList,
   Posts,
   UpdatePostBody,
-  CommentLikeList,
 } from '@/typings/post.ts';
 import { instance } from '@/api';
 
 // post 생성
 export const createPost = async (data: PostBody) => {
   try {
-    const res: AxiosResponse<Post | FailPost> = await instance.post('/posts', data);
+    const res: AxiosResponse<string | FailPost> = await instance.post('/posts', data);
     return res.data;
   } catch (error) {
     console.log(error);
@@ -61,7 +61,7 @@ export const deletePost = async (postId: number) => {
 // post 수정
 export const updatePost = async (postId: number, data: UpdatePostBody) => {
   try {
-    const res: AxiosResponse<Post | FailPost> = await instance.patch(`/posts/${postId}`, data);
+    const res: AxiosResponse<string | FailPost> = await instance.patch(`/posts/${postId}`, data);
     return res.data;
   } catch (error) {
     console.log(error);
@@ -86,7 +86,7 @@ export const noticePost = async (menuId: number, updateNoticePostId: number) => 
 // post 공지 해제
 export const unNoticePost = async (menuId: number) => {
   try {
-    const res: AxiosResponse<NoticeMenu | FailPost> = await instance.delete(
+    const res: AxiosResponse<string | FailPost> = await instance.delete(
       `/menus/${menuId}/reset-notice`
     );
     return res.data;

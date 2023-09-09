@@ -54,7 +54,7 @@ export default function PostEach({ post, menuId, likeList, noticeId }: Props) {
   // 공지글 해제
   const { mutate: unNoticePostMutate } = useMutation(() => unNoticePost(menuId), {
     onSuccess: (data) => {
-      if (typeof data !== 'string' && 'id' in data) {
+      if (data === 'delete') {
         showMessage('success', '공지글이 해제 되었습니다.');
       } else showMessage('error', '공지글 해제에 실패했습니다.');
     },

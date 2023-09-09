@@ -55,7 +55,6 @@ export interface UpdateTaskBody {
 }
 
 export interface MenuTasks {
-  menuInfo: MenuInfo;
   tasks: MenuTaskData[];
 }
 
