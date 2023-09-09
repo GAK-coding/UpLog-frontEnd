@@ -132,7 +132,7 @@ export const postLikeList = async () => {
 // comment 생성
 export const createComment = async (postId: number, data: CommentBody) => {
   try {
-    const res: AxiosResponse<Comment | FailPost> = await instance.post(`/comments/${postId}`, data);
+    const res: AxiosResponse<string | FailPost> = await instance.post(`/comments/${postId}`, data);
     return res.data;
   } catch (error) {
     console.log(error);
