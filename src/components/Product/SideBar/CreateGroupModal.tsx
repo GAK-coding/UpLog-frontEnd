@@ -123,6 +123,8 @@ export default function CreateGroupModal({ isOpen, onClose, showMessage, parentG
       projectId: nowProject?.id,
     });
     onClose();
+    setInviteMembers([]);
+    setGroupName('');
     showMessage('success', '그룹이 생성되었습니다.');
   }, [groupName, nowProject, inviteMembers]);
 
