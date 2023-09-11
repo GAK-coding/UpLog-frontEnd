@@ -6,8 +6,6 @@ import { NavLink, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { IoIosArrowDown, IoMdSettings } from 'react-icons/io';
 import CreateGroupModal from '@/components/Product/SideBar/CreateGroupModal.tsx';
 import { Project, ScreenProjectTeams } from '@/typings/project.ts';
-import { useQuery } from 'react-query';
-import { getProjectTeams } from '@/api/Project/Version.ts';
 import { useMessage } from '@/hooks/useMessage.ts';
 import { useGetProjectGroups } from '@/components/Project/hooks/useGetProjectGroups.ts';
 
@@ -23,30 +21,30 @@ export default function Groups() {
 
   const getGroups = useGetProjectGroups(nowProject.id);
 
-  const childGroups: string[][] = [
-    // ['프론트엔드', '백엔드', '풀스택'],
-    // ['콘텐츠', '디자인'],
-    // ['SNS', '기사'],
-    // ['김윤정'],
-    // ['박은령'],
-    // ['오채영'],
-    // ['장준'],
-  ];
+  // const childGroups: string[][] = [
+  //   // ['프론트엔드', '백엔드', '풀스택'],
+  //   // ['콘텐츠', '디자인'],
+  //   // ['SNS', '기사'],
+  //   // ['김윤정'],
+  //   // ['박은령'],
+  //   // ['오채영'],
+  //   // ['장준'],
+  // ];
 
-  const { data } = useQuery(
-    ['getProjectTeams', nowProject?.id],
-    () => getProjectTeams(nowProject?.id),
-    {
-      onSuccess: (data) => {
-        if (data && typeof data !== 'string') {
-          const temp: ScreenProjectTeams[] = data.childTeamInfoDTOList?.map((group) => {
-            return { ...JSON.parse(JSON.stringify(group)), isOpen: false, isHover: false };
-          });
-          setParentGroups(temp);
-        }
-      },
-    }
-  );
+  // const { data } = useQuery(
+  //   ['getProjectTeams', nowProject?.id],
+  //   () => getProjectTeams(nowProject?.id),
+  //   {
+  //     onSuccess: (data) => {
+  //       if (data && typeof data !== 'string') {
+  //         const temp: ScreenProjectTeams[] = data.childTeamInfoDTOList?.map((group) => {
+  //           return { ...JSON.parse(JSON.stringify(group)), isOpen: false, isHover: false };
+  //         });
+  //         setParentGroups(temp);
+  //       }
+  //     },
+  //   }
+  // );
 
   /** 부모 집합 펼치는 함수 */
   const onToggle = useCallback(
