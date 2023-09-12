@@ -33,6 +33,7 @@ export default function UserProfile() {
     sessionStorage.removeItem('nowProduct');
     sessionStorage.removeItem('nowProject');
     sessionStorage.removeItem('nowTeamId');
+    sessionStorage.removeItem('nowGroupId');
     removeCookie('refreshToken', { path: '/' });
     setIsLogin(false);
     setIsProfileClick(false);
