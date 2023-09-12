@@ -1,11 +1,4 @@
-import React, {
-  ChangeEvent,
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
+import React, { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
 import {
   Modal,
   ModalBody,
@@ -18,7 +11,7 @@ import {
 import useInput from '@/hooks/useInput.ts';
 import { createProjectTeam } from '@/api/Project/Version.ts';
 import { useMutation, useQueryClient } from 'react-query';
-import { Project, ScreenProjectTeams } from '@/typings/project.ts';
+import { ParentGroup, ParentGroupWithStates, Project } from '@/typings/project.ts';
 import { ProductInfo, ProductMember } from '@/typings/product.ts';
 import { useGetProductMembers } from '@/pages/Product/hooks/useGetProductMembers.ts';
 import { AiOutlinePlus } from 'react-icons/ai';
@@ -30,8 +23,8 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   showMessage: (type: MessageType, content: string) => void;
-  parentGroups: ScreenProjectTeams[];
-  setParentGroups: Dispatch<SetStateAction<ScreenProjectTeams[]>>;
+  parentGroups: ParentGroupWithStates[];
+  setParentGroups: Dispatch<SetStateAction<ParentGroupWithStates[]>>;
 }
 
 export default function CreateGroupModal({ isOpen, onClose, showMessage, parentGroups }: Props) {
@@ -82,22 +75,33 @@ export default function CreateGroupModal({ isOpen, onClose, showMessage, parentG
 
   const queryClient = useQueryClient();
 
-  const { mutate } = useMutation(createProjectTeam, {
+  const {
+    mutate,
+    // isSuccess: isCreateProjectTeamSuccess,
+  } = useMutation(createProjectTeam, {
+    onSuccess: (data) => {
+      if (typeof data === 'string' && data === '프로젝트 내에서 팀 이름이 중복됩니다.') {
+        showMessage('warning', '프로젝트 내에서 팀 이름이 중복됩니다.');
+        return;
+      } else if (typeof data !== 'string') {
+        onClose();
+        setInviteMembers([]);
+        setGroupName('');
+        showMessage('success', '그룹이 생성되었습니다.');
+      }
+    },
     onMutate: async () => {
-      await queryClient.cancelQueries(['getProjectTeams', nowProject?.id]);
+      await queryClient.cancelQueries(['getProjectGroups', nowProject?.id]);
 
-      const snapshot = queryClient.getQueryData(['getProjectTeams', nowProject?.id]);
+      const snapshot = queryClient.getQueryData(['getProjectGroups', nowProject?.id]);
 
-      queryClient.setQueriesData(['getProjectTeams', nowProject?.id], () => {
-        const temp: ScreenProjectTeams[] = [
+      queryClient.setQueriesData(['getProjectGroups', nowProject?.id], () => {
+        const temp: ParentGroup[] = [
           ...parentGroups,
           {
             teamName: groupName,
-            teamId: -1,
+            id: -1,
             depth: 1,
-            childTeamInfoDTOList: [],
-            isOpen: false,
-            isHover: false,
           },
         ];
         return temp;
@@ -106,14 +110,19 @@ export default function CreateGroupModal({ isOpen, onClose, showMessage, parentG
       return { snapshot };
     },
     onError: (error, newTodo, context) => {
-      queryClient.setQueriesData(['getProjectTeams', nowProject?.id], context?.snapshot);
+      queryClient.setQueriesData(['getProjectGroups', nowProject?.id], context?.snapshot);
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['getProjectTeams', nowProject?.id] });
+      queryClient.invalidateQueries(['getProjectGroups', nowProject?.id]);
     },
   });
 
   const onClickCreate = useCallback(() => {
+    if (groupName === '') {
+      showMessage('warning', '그룹 이름을 입력해주세요.');
+      return;
+    }
+
     // TODO: link 처리 필요
     mutate({
       name: groupName,
@@ -122,10 +131,6 @@ export default function CreateGroupModal({ isOpen, onClose, showMessage, parentG
       link: '/',
       projectId: nowProject?.id,
     });
-    onClose();
-    setInviteMembers([]);
-    setGroupName('');
-    showMessage('success', '그룹이 생성되었습니다.');
   }, [groupName, nowProject, inviteMembers]);
 
   useEffect(() => {
@@ -140,6 +145,10 @@ export default function CreateGroupModal({ isOpen, onClose, showMessage, parentG
       onClose={() => {
         onClose();
         onCloseMemberList();
+        setGroupName('');
+        productMembers.map((member) => {
+          member.isOpen = false;
+        });
       }}
       isOpen={isOpen}
     >
@@ -171,7 +180,7 @@ export default function CreateGroupModal({ isOpen, onClose, showMessage, parentG
         <ModalBody>
           <section className={'flex flex-col justify-evenly items-start w-h-full'}>
             <div className={'mx-auto'}>
-              <span className={'text-gray-dark font-bold text-[1.2rem]'}>그룹 이름</span>
+              <span className={'text-gray-dark font-bold text-[1.2rem]'}>그룹 이름 (필수)</span>
               <div className={'flex items-center'}>
                 <input
                   className={`border-base mt-4 mb-2 w-[29rem] h-14 rounded-xl px-4 py-2 text-[1.1rem] text-black `}

@@ -1,6 +1,6 @@
 import { instance } from '@/api';
 import { AxiosResponse } from 'axios';
-import { FailProject, ParentGroup, Project, ProjectTeams } from '@/typings/project.ts';
+import { FailProject, ParentGroup, Project, ChildGroup } from '@/typings/project.ts';
 import { ChangeLogBody, ChangeLogData, FailProduct } from '@/typings/product.ts';
 
 export const getAllProductProjects = async (productId: number) => {
@@ -43,7 +43,7 @@ export const completeProject = async (data: { projectId: number; version: string
   }
 };
 
-export const getProjectGroups = async (projectId: number) => {
+export const getParentGroups = async (projectId: number) => {
   try {
     const res: AxiosResponse<ParentGroup[]> = await instance.get(`/projects/${projectId}/teams`);
 
@@ -53,9 +53,9 @@ export const getProjectGroups = async (projectId: number) => {
   }
 };
 
-export const getProjectTeams = async (teamId: number) => {
+export const getChildGroups = async (teamId: number) => {
   try {
-    const res: AxiosResponse<{ childTeamInfoDTOList: ProjectTeams[] }> = await instance.get(
+    const res: AxiosResponse<{ childTeamInfoDTOList: ChildGroup[] }> = await instance.get(
       `/teams/${teamId}/child-team`
     );
 
