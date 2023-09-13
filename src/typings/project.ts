@@ -39,27 +39,28 @@ export interface Release extends Project {
   // projectStatus: 'PROGRESS_IN' | 'PROGRESS_COMPLETE';
 }
 
-export interface ProjectGroup {
+export interface ParentGroup {
   id: number;
   teamName: string;
   depth: number;
 }
 
-export interface childTeamInfoDTO {
+export interface ChildTeamInfoDTO {
   teamId: number;
   teamName: string;
   depth: number;
 }
 
-export interface ProjectTeams {
+export interface ChildGroup {
   teamId: number;
   teamName: string;
   depth: number;
-  childTeamInfoDTOList: childTeamInfoDTO[];
+  childTeamInfoDTOList: ChildTeamInfoDTO[];
 }
 
-export interface ScreenProjectTeams extends ProjectTeams {
+export interface ParentGroupWithStates extends ParentGroup {
   isHover: boolean;
   isOpen: boolean;
 }
+
 export interface SaveProjectInfo extends Project {}
