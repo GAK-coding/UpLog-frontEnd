@@ -4,7 +4,6 @@ import useInput from '@/hooks/useInput.ts';
 import { AiOutlineLock } from 'react-icons/ai';
 import { Link, useNavigate } from 'react-router-dom';
 import { useGoogleLogin } from '@react-oauth/google';
-import { useMessage } from '@/hooks/useMessage.ts';
 import { GetUserInfo, LoginInfo, SaveUserInfo } from '@/typings/member.ts';
 import { useMutation } from 'react-query';
 import { useRecoilState } from 'recoil';
@@ -12,9 +11,11 @@ import { loginStatus, user } from '@/recoil/User/atom.ts';
 import { useCookies } from 'react-cookie';
 import { loginAPI } from '@/api/Members/Login-Signup.ts';
 import { sendLog } from '@/api/Log';
+import { message } from '@/recoil/Common/atom.ts';
 
 export default function Login() {
-  const { showMessage, contextHolder } = useMessage();
+  const [messageInfo, setMessageInfo] = useRecoilState(message);
+
   const [email, onChangeEmail, setEmail] = useInput('');
   const [password, onChangePassword, setPassword] = useInput('');
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ export default function Login() {
   const { mutate, isSuccess } = useMutation(loginAPI, {
     onSuccess: (data: GetUserInfo | string) => {
       if (typeof data === 'string') {
-        showMessage('error', '아이디 또는 비밀번호를 잘못 입력하셨습니다.');
+        setMessageInfo({ type: 'error', content: '아이디 또는 비밀번호를 잘못 입력하셨습니다.' });
         return;
       }
 
@@ -50,7 +51,7 @@ export default function Login() {
       navigate('/workspace/1', { state: { isLogin: true } });
     },
     onError: () => {
-      showMessage('error', '아이디 또는 비밀번호를 잘못 입력하셨습니다.');
+      setMessageInfo({ type: 'error', content: '아이디 또는 비밀번호를 잘못 입력하셨습니다.' });
       sendLogMutate({ page: 'login', status: false, message: 'login fail' });
     },
   });
@@ -62,21 +63,21 @@ export default function Login() {
       e.preventDefault();
 
       if (!email && !password) {
-        showMessage('warning', '이메일과 비밀번호를 입력해주세요.');
+        setMessageInfo({ type: 'warning', content: '이메일과 비밀번호를 입력해주세요.' });
         sendLogMutate({ page: 'login', status: false, message: 'all' });
 
         return;
       }
 
       if (!email) {
-        showMessage('warning', '이메일을 입력해주세요.');
+        setMessageInfo({ type: 'warning', content: '이메일을 입력해주세요.' });
         sendLogMutate({ page: 'login', status: false, message: 'email' });
 
         return;
       }
 
       if (!password) {
-        showMessage('warning', '비밀번호를 입력해주세요.');
+        setMessageInfo({ type: 'warning', content: '비밀번호를 입력해주세요.' });
         sendLogMutate({ page: 'login', status: false, message: 'password' });
 
         return;
@@ -101,7 +102,7 @@ export default function Login() {
 
   return (
     <section className={'h-full'}>
-      {contextHolder}
+      {/*{contextHolder}*/}
       <div className={'w-h-full flex-col-center'}>
         <article>
           <img className={'w-[5.7rem] h-[6.7rem]'} src={'logo.svg'} alt={'logo'} />

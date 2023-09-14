@@ -9,14 +9,13 @@ import { Editable, EditableInput, EditablePreview, useDisclosure } from '@chakra
 import { useRecoilState } from 'recoil';
 import { menuListData } from '@/recoil/Project/Menu.ts';
 import { useCallback, useState } from 'react';
-import { useMessage } from '@/hooks/useMessage.ts';
 import DeleteMenuDialog from '@/components/Project/Menu/DeleteMenuDialog.tsx';
 import { useMutation, useQueryClient } from 'react-query';
 import { createMenu, editMenu } from '@/api/Project/Menu.ts';
 import { FailMenu, MenuInfo } from '@/typings/menu.ts';
 import { useGetMenuList } from '@/components/Project/hooks/useGetMenuList.ts';
 import { SaveProjectInfo } from '@/typings/project.ts';
-import { ProductInfo } from '@/typings/product.ts';
+import { message } from '@/recoil/Common/atom.ts';
 
 interface Props {
   product: string;
@@ -43,7 +42,7 @@ const CustomNextSlider = styled.div`
 `;
 
 export default function MenuSlider({ product, project, menutitle }: Props) {
-  const { showMessage, contextHolder } = useMessage();
+  const [messageInfo, setMessageInfo] = useRecoilState(message);
 
   const [menuList, setMenuList] = useRecoilState(menuListData);
   const [plusMenu, setPlusMenu] = useState(false);
@@ -68,11 +67,11 @@ export default function MenuSlider({ product, project, menutitle }: Props) {
     {
       onSuccess: (data: FailMenu | MenuInfo | string) => {
         if (typeof data === 'object' && 'message' in data) {
-          showMessage('error', data.message);
+          setMessageInfo({ type: 'error', content: data.message });
         } else if (data === 'success') {
-          showMessage('success', '메뉴가 생성되었습니다.');
+          setMessageInfo({ type: 'success', content: '메뉴가 생성되었습니다.' });
         } else {
-          showMessage('error', '메뉴 생성에 실패하였습니다.');
+          setMessageInfo({ type: 'error', content: '메뉴 생성에 실패하였습니다.' });
         }
       },
       onSettled: () => {
@@ -86,9 +85,9 @@ export default function MenuSlider({ product, project, menutitle }: Props) {
   const { mutate: editMenuMutate } = useMutation((newName: string) => editMenu(menuId, newName), {
     onSuccess: (data) => {
       if (data === 'success') {
-        showMessage('success', '메뉴 이름이 변경되었습니다.');
+        setMessageInfo({ type: 'success', content: '메뉴 이름이 변경되었습니다.' });
       } else {
-        showMessage('error', '메뉴 이름 변경에 실패하였습니다.');
+        setMessageInfo({ type: 'error', content: '메뉴 이름 변경에 실패하였습니다.' });
       }
     },
     onSettled: () => {
@@ -111,7 +110,7 @@ export default function MenuSlider({ product, project, menutitle }: Props) {
     (menuId: number) => (nextValue: string) => {
       // 빈 문자열인 경우
       if (editMenuName === '') {
-        showMessage('warning', '메뉴 이름을 입력해주세요.');
+        setMessageInfo({ type: 'warning', content: '메뉴 이름을 입력해주세요.' });
         // 바뀐 menuName에 맞게 주소값도 다시 설정
         navigate(`/workspace/${product}/${project}/menu/menu${menuId}`);
         // menu edit api 요청
@@ -121,7 +120,7 @@ export default function MenuSlider({ product, project, menutitle }: Props) {
 
       const checkDuplicate = menuList.some((menu) => menu.menuName === nextValue);
       if (checkDuplicate) {
-        showMessage('warning', '중복된 메뉴 이름입니다.');
+        setMessageInfo({ type: 'warning', content: '중복된 메뉴 이름입니다.' });
 
         const updatedMenuList = menuList.map((menu) =>
           menu.id === menuId ? { ...menu, menuName: nextValue } : menu
@@ -149,7 +148,7 @@ export default function MenuSlider({ product, project, menutitle }: Props) {
 
       // 특수문자는 불가
       // if (!regex.test(nextValue)) {
-      //   showMessage('warning', '메뉴 이름은 한글, 영문만 가능합니다.');
+      // setMessageInfo({ type: 'warning', content: '메뉴 이름은 한글, 영문만 가능합니다.' });
       //   setPlusMenu(false);
       //   return;
       // }
@@ -219,7 +218,6 @@ export default function MenuSlider({ product, project, menutitle }: Props) {
             }
             key={menu.id}
           >
-            {contextHolder}
             {menutitle === menu.menuName && menu.menuName !== '결과물' && (
               <IoIosClose
                 className={

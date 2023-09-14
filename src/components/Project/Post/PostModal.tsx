@@ -8,7 +8,6 @@ import {
   ModalHeader,
   ModalOverlay,
 } from '@chakra-ui/react';
-import { useMessage } from '@/hooks/useMessage.ts';
 import useInput from '@/hooks/useInput.ts';
 import { Select } from 'antd';
 import { menuListData } from '@/recoil/Project/Menu.ts';
@@ -18,7 +17,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import PostEditor from '@/components/Common/PostEditor.tsx';
 import TagInput from '@/components/Project/Post/TagInput.tsx';
-import { editorPost, themeState } from '@/recoil/Common/atom.ts';
+import { editorPost, message, themeState } from '@/recoil/Common/atom.ts';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { createPost, eachPost, updatePost } from '@/api/Project/Post.ts';
 import { useParams } from 'react-router-dom';
@@ -35,7 +34,7 @@ interface Props {
 
 export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
   const { product, project, menutitle } = useParams();
-  const { showMessage, contextHolder } = useMessage();
+  const [messageInfo, setMessageInfo] = useRecoilState(message);
   const productInfo: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
   const nowProject: SaveProjectInfo = JSON.parse(sessionStorage.getItem('nowProject')!);
   const projectId = nowProject.id;
@@ -106,17 +105,17 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
     },
     onSuccess: (data) => {
       if (data === 'success') {
-        showMessage('success', 'Post 생성에 성공했습니다.');
+        setMessageInfo({ type: 'success', content: 'Post 생성에 성공했습니다.' });
       } else if (typeof data !== 'string' && 'message' in data) {
-        showMessage('warning', data.message);
-      } else showMessage('error', 'Post 생성에 실패했습니다.');
+        setMessageInfo({ type: 'warning', content: data.message });
+      } else setMessageInfo({ type: 'error', content: 'Post 생성에 실패했습니다.' });
     },
     onError: (error, newData, rollback) => {
       if (rollback) {
         rollback();
-        showMessage('error', 'Post 생성에 실패했습니다.');
+        setMessageInfo({ type: 'error', content: 'Post 생성에 실패했습니다.' });
       } else {
-        showMessage('error', 'Post 생성에 실패했습니다.');
+        setMessageInfo({ type: 'error', content: 'Post 생성에 실패했습니다.' });
       }
     },
     onSettled: () => {
@@ -155,17 +154,17 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
       },
       onSuccess: (data) => {
         if (data === 'success') {
-          showMessage('success', 'Post 수정에 성공했습니다.');
+          setMessageInfo({ type: 'success', content: 'Post 수정에 성공했습니다.' });
         } else if (typeof data !== 'string' && 'message' in data) {
-          showMessage('warning', data.message);
-        } else showMessage('error', 'Post 수정에 실패했습니다.');
+          setMessageInfo({ type: 'warning', content: data.message });
+        } else setMessageInfo({ type: 'error', content: 'Post 수정에 실패했습니다.' });
       },
       onError: (error, newData, rollback) => {
         if (rollback) {
           rollback();
-          showMessage('error', 'Post 수정에 실패했습니다.');
+          setMessageInfo({ type: 'error', content: 'Post 수정에 실패했습니다.' });
         } else {
-          showMessage('error', 'Post 수정에 실패했습니다.');
+          setMessageInfo({ type: 'error', content: 'Post 수정에 실패했습니다.' });
         }
       },
       onSettled: () => {
@@ -192,12 +191,12 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
   const handleFinishClick = useCallback(() => {
     // 빈 값이 있는지 예외처리
     if (postName === '') {
-      showMessage('warning', 'Post 제목을 입력해주세요.');
+      setMessageInfo({ type: 'warning', content: 'Post 제목을 입력해주세요.' });
       return;
     }
 
     if (postMenu === -1) {
-      showMessage('warning', '메뉴를 선택해주세요.');
+      setMessageInfo({ type: 'warning', content: '메뉴를 선택해주세요.' });
       return;
     }
 
@@ -285,7 +284,6 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
 
   return (
     <Modal isCentered onClose={onClose} isOpen={isOpen}>
-      {contextHolder}
       <ModalOverlay />
       <ModalContent
         minW="65rem"

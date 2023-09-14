@@ -16,7 +16,7 @@ import { completeProject, createProject } from '@/api/Project/Version.ts';
 import { useMutation, useQueryClient } from 'react-query';
 import { ProductInfo } from '@/typings/product.ts';
 import { eachProductProjects } from '@/recoil/Project/atom.ts';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { SetterOrUpdater, useRecoilState, useRecoilValue } from 'recoil';
 import { Release } from '@/typings/project.ts';
 import { frontEndUrl } from '@/recoil/Common/atom.ts';
 type MessageType = 'success' | 'error' | 'warning';
@@ -26,7 +26,7 @@ interface Props {
   onClose: () => void;
   isAdd: boolean;
   versionName: string;
-  showMessage: (type: MessageType, content: string) => void;
+  setMessageInfo: SetterOrUpdater<{ type: MessageType; content: string } | null>;
   nowProjectId: number;
 }
 export default function ProjectModal({
@@ -34,7 +34,7 @@ export default function ProjectModal({
   onClose,
   isAdd,
   versionName,
-  showMessage,
+  setMessageInfo,
   nowProjectId,
 }: Props) {
   const nowProduct: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
@@ -50,11 +50,11 @@ export default function ProjectModal({
     onSuccess: (data) => {
       if (typeof data !== 'string' && 'id' in data) {
         newProjectId.current = data.id;
-        showMessage('success', '프로젝트가 생성되었습니다!');
+        setMessageInfo({ type: 'success', content: '프로젝트가 생성되었습니다!' });
       } else if (typeof data !== 'string' && 'message' in data) {
-        showMessage('warning', '진행 중인 프로젝트가 있습니다.');
+        setMessageInfo({ type: 'warning', content: '진행 중인 프로젝트가 있습니다.' });
       } else {
-        showMessage('error', '프로젝트 생성에 실패하였습니다.');
+        setMessageInfo({ type: 'error', content: '프로젝트 생성에 실패하였습니다.' });
       }
     },
     onMutate: async ({ version }) => {
@@ -116,7 +116,7 @@ export default function ProjectModal({
 
   const onClickCreateProject = useCallback(() => {
     if (projects.some((project) => project.version === text)) {
-      showMessage('error', '이미 존재하는 버전입니다!');
+      setMessageInfo({ type: 'error', content: '이미 존재하는 버전입니다!' });
       return;
     }
 
@@ -131,7 +131,7 @@ export default function ProjectModal({
 
   const onClickCompleteProject = useCallback(() => {
     if (projects.some((project) => project.version === text)) {
-      showMessage('error', '이미 존재하는 버전입니다!');
+      setMessageInfo({ type: 'error', content: '이미 존재하는 버전입니다!' });
       return;
     }
 
@@ -139,7 +139,7 @@ export default function ProjectModal({
       projectId: nowProjectId === -1 ? newProjectId.current : nowProjectId,
       version: text,
     });
-    showMessage('success', '프로젝트 완료!');
+    setMessageInfo({ type: 'success', content: '프로젝트 완료!' });
     onClose();
     setText('');
   }, [text, newProjectId]);
