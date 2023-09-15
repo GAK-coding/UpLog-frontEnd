@@ -1,17 +1,16 @@
-import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { Collapse, useDisclosure } from '@chakra-ui/react';
 import { BsDot } from 'react-icons/bs';
 import { NavLink, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { IoIosArrowDown, IoMdSettings } from 'react-icons/io';
 import CreateGroupModal from '@/components/Product/SideBar/CreateGroupModal.tsx';
-import { ChildGroup, ChildTeamInfoDTO, ParentGroupWithStates, Project } from '@/typings/project.ts';
-import { useMessage } from '@/hooks/useMessage.ts';
+import { ChildTeamInfoDTO, ParentGroupWithStates, Project } from '@/typings/project.ts';
 import { useGetProjectGroups } from '@/components/Project/hooks/useGetProjectGroups.ts';
-import { useMutation } from '@tanstack/react-query';
 import { useQuery } from 'react-query';
 import { getChildGroups } from '@/api/Project/Version.ts';
-import useInput from '@/hooks/useInput.ts';
+import { message } from '@/recoil/Common/atom.ts';
+import { useRecoilState } from 'recoil';
 
 export default function Groups() {
   const { product, project, parentgroup, childgroup } = useParams();
@@ -19,7 +18,7 @@ export default function Groups() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const nowProject: Project = JSON.parse(sessionStorage.getItem('nowProject')!);
-  const { showMessage, contextHolder } = useMessage();
+  const [messageInfo, setMessageInfo] = useRecoilState(message);
   const [parentGroups, setParentGroups] = useState<ParentGroupWithStates[]>([]);
   const [nowParentGroupId, setNowParentGroupId] = useState(-1);
   const [nowParentGroupIdx, setNowParentGroupIdx] = useState(-1);
@@ -115,7 +114,7 @@ export default function Groups() {
 
   useEffect(() => {
     if (typeof getChildGroup !== 'string' && getChildGroup?.childTeamInfoDTOList.length === 0) {
-      showMessage('warning', '하위 그룹이 없습니다!');
+      setMessageInfo({ type: 'warning', content: '하위 그룹이 없습니다!' });
 
       const temp = [...parentGroups];
       temp[nowParentGroupIdx]['isOpen'] = false;
@@ -125,7 +124,6 @@ export default function Groups() {
 
   return (
     <section className={'px-10'}>
-      {contextHolder}
       <div className={'h-20 flex-row-center justify-between'}>
         <header className={'text-[1.4rem] font-bold'}>Group</header>
         {/* 그룹 최대 개수 30갸 */}
@@ -223,7 +221,7 @@ export default function Groups() {
       <CreateGroupModal
         isOpen={isOpen}
         onClose={onClose}
-        showMessage={showMessage}
+        setMessageInfo={setMessageInfo}
         parentGroups={parentGroups}
         setParentGroups={setParentGroups}
       />

@@ -10,11 +10,11 @@ import { TaskStatus, UpdateTaskBody } from '@/typings/task.ts';
 import DeleteDialog from '@/components/Common/DeleteDialog.tsx';
 import { eachTask, editTask } from '@/api/Project/Task.ts';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { useMessage } from '@/hooks/useMessage.ts';
 import { checkTaskEditValue } from '@/utils/checkTaskEditValue.ts';
 import { useRecoilState } from 'recoil';
 import { eachTaskInfo, editTaskInfo } from '@/recoil/Project/Task.ts';
 import { SaveProjectInfo } from '@/typings/project.ts';
+import { message } from '@/recoil/Common/atom.ts';
 
 export default function TaskDetail() {
   const nowProject: SaveProjectInfo = JSON.parse(sessionStorage.getItem('nowProject')!);
@@ -22,7 +22,7 @@ export default function TaskDetail() {
   // const { product, project, menutitle, taskid } = useParams();
   const { taskid } = useParams();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { showMessage, contextHolder } = useMessage();
+  const [messageInfo, setMessageInfo] = useRecoilState(message);
   const [editSuccess, setEditSuccess] = useState<boolean>(true);
   const queryClient = useQueryClient();
 
@@ -59,9 +59,9 @@ export default function TaskDetail() {
     {
       onSuccess: (data) => {
         if (typeof data === 'object' && 'message' in data) {
-          showMessage('warning', data.message);
+          setMessageInfo({ type: 'warning', content: data.message });
         } else if (typeof data === 'object' && 'id' in data) {
-          showMessage('success', 'Task 수정에 성공했습니다.');
+          setMessageInfo({ type: 'success', content: 'Task 수정에 성공했습니다.' });
         }
       },
       onSettled: () => {
@@ -81,18 +81,18 @@ export default function TaskDetail() {
     const checkEmpty = checkTaskEditValue(editTaskData);
 
     if (!checkEmpty) {
-      showMessage('warning', 'Task의 정보를 모두 작성해주세요');
+      setMessageInfo({ type: 'warning', content: 'Task의 정보를 모두 작성해주세요' });
       return;
     }
 
     editTaskMutate(editTaskData);
 
     // if (!editSuccess) {
-    //   showMessage('error', 'Task 수정에 실패했습니다.');
+    // setMessageInfo({ type: 'error', content: 'Task 수정에 실패했습니다.' });
     //   return;
     // }
     //
-    // showMessage('success', 'Task 수정에 성공했습니다.');
+    // setMessageInfo('success', 'Task 수정에 성공했습니다.');
     setTimeout(() => onClose(), 2000);
     setIsEdit(false);
   }, [isEdit, editTaskData, editSuccess]);
@@ -128,7 +128,6 @@ export default function TaskDetail() {
 
   return (
     <section className={'flex w-full h-auto py-20'}>
-      {contextHolder}
       {/*돌아가기 버튼*/}
       <article className={'pt-4 flex justify-center w-[10%] min-w-[6rem] lg:w-[16%]'}>
         <div className={'flex justify-center text-[1.3rem] text-gray-dark font-bold'}>

@@ -17,17 +17,18 @@ import { useGetProductMembers } from '@/pages/Product/hooks/useGetProductMembers
 import { AiOutlinePlus } from 'react-icons/ai';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { convertNumberArrayToStringArray } from '@/utils/convertNumberArrayToStringArray.ts';
+import { SetterOrUpdater } from 'recoil';
 type MessageType = 'success' | 'error' | 'warning';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  showMessage: (type: MessageType, content: string) => void;
+  setMessageInfo: SetterOrUpdater<{ type: MessageType; content: string } | null>;
   parentGroups: ParentGroupWithStates[];
   setParentGroups: Dispatch<SetStateAction<ParentGroupWithStates[]>>;
 }
 
-export default function CreateGroupModal({ isOpen, onClose, showMessage, parentGroups }: Props) {
+export default function CreateGroupModal({ isOpen, onClose, setMessageInfo, parentGroups }: Props) {
   // TODO: 그룹 이름 중복 안되게 해야됨
   const [groupName, onChangeGroupName, setGroupName] = useInput('');
   const [isClickMemberList, setIsClickMemberList] = useState(false);
@@ -81,13 +82,13 @@ export default function CreateGroupModal({ isOpen, onClose, showMessage, parentG
   } = useMutation(createProjectTeam, {
     onSuccess: (data) => {
       if (typeof data === 'string' && data === '프로젝트 내에서 팀 이름이 중복됩니다.') {
-        showMessage('warning', '프로젝트 내에서 팀 이름이 중복됩니다.');
+        setMessageInfo({ type: 'warning', content: '프로젝트 내에서 팀 이름이 중복됩니다.' });
         return;
       } else if (typeof data !== 'string') {
         onClose();
         setInviteMembers([]);
         setGroupName('');
-        showMessage('success', '그룹이 생성되었습니다.');
+        setMessageInfo({ type: 'success', content: '그룹이 생성되었습니다.' });
       }
     },
     onMutate: async () => {
@@ -119,7 +120,7 @@ export default function CreateGroupModal({ isOpen, onClose, showMessage, parentG
 
   const onClickCreate = useCallback(() => {
     if (groupName === '') {
-      showMessage('warning', '그룹 이름을 입력해주세요.');
+      setMessageInfo({ type: 'warning', content: '그룹 이름을 입력해주세요.' });
       return;
     }
 

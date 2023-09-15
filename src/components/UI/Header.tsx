@@ -10,14 +10,18 @@ import { productOpen } from '@/recoil/Product/atom.ts';
 import { useOutsideAlerter } from '@/hooks/useOutsideAlerter.ts';
 import ProductList from '@/components/Product/Info/ProductList.tsx';
 import UserProfile from '@/components/Member/Header/UserProfile.tsx';
-import { themeState } from '@/recoil/Common/atom.ts';
+import { message, themeState } from '@/recoil/Common/atom.ts';
 import { ProductInfo } from '@/typings/product.ts';
 import { BiChevronDown } from 'react-icons/bi';
 import { useGetAllProduct } from '@/components/Product/hooks/useGetAllProduct.ts';
 import { SaveUserInfo } from '@/typings/member.ts';
 import { useQueryClient } from 'react-query';
+import { useMessage } from '@/hooks/useMessage.ts';
 
 export default function Header() {
+  const { showMessage, contextHolder } = useMessage();
+  const [messageInfo, setMessageInfo] = useRecoilState(message);
+
   const navigate = useNavigate();
   const [darkMode, setDarkMode] = useRecoilState(themeState);
   const nowProduct: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
@@ -104,6 +108,10 @@ export default function Header() {
     setUserInfo({ ...JSON.parse(sessionStorage.getItem('userInfo')!) });
   }, []);
 
+  useEffect(() => {
+    if (messageInfo !== null) showMessage(messageInfo.type, messageInfo.content);
+  }, [messageInfo]);
+
   return (
     <header
       className={`fixed top-0 flex-row-center justify-between pt-[0.5rem] w-full h-[5.7rem] z-50
@@ -113,6 +121,7 @@ export default function Header() {
           : 'border-solid border-b border-header-gray'
       }`}
     >
+      {contextHolder}
       {/*로고 + 글자 (메인페이지로 이동)*/}
       <div
         className={'relative flex-row-center justify-start w-[60%] h-full md:w-auto ml-12 md:ml-12'}

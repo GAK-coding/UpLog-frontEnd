@@ -9,13 +9,12 @@ import {
   ModalOverlay,
   Textarea,
 } from '@chakra-ui/react';
-import { useMessage } from '@/hooks/useMessage.ts';
 import useInput from '@/hooks/useInput.ts';
 import { Project, SubGroup } from '@/typings/project.ts';
 import { SelectMenu } from '@/typings/menu.ts';
 import { DatePicker, DatePickerProps, Select } from 'antd';
 import { ChangeEvent, useCallback, useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { menuListData } from '@/recoil/Project/Menu.ts';
 import { allMemberList, productMemberList } from '@/recoil/Product/atom.ts';
 import { TaskBody, TaskData } from '@/typings/task.ts';
@@ -24,6 +23,7 @@ import { createTask } from '@/api/Project/Task.ts';
 import { RangePickerProps } from 'antd/es/date-picker';
 import dayjs from 'dayjs';
 import { ProductInfo, ProductMember } from '@/typings/product.ts';
+import { message } from '@/recoil/Common/atom.ts';
 
 interface Props {
   isOpen: boolean;
@@ -31,7 +31,7 @@ interface Props {
   menuId: number;
 }
 export default function CreateTask({ isOpen, onClose, menuId }: Props) {
-  const { showMessage, contextHolder } = useMessage();
+  const [messageInfo, setMessageInfo] = useRecoilState(message);
   const nowTeamId: number = JSON.parse(sessionStorage.getItem('nowTeamId')!);
   const nowProject: Project = JSON.parse(sessionStorage.getItem('nowProject')!);
 
@@ -103,11 +103,11 @@ export default function CreateTask({ isOpen, onClose, menuId }: Props) {
     },
     onSuccess: (data) => {
       if (typeof data === 'object' && 'message' in data) {
-        showMessage('error', data.message);
+        setMessageInfo('error', data.message);
       } else if (data === 'create task fail') {
-        showMessage('error', 'Task 생성에 실패했습니다.');
+        setMessageInfo({ type: 'error', content: 'Task 생성에 실패했습니다.' });
       } else {
-        showMessage('success', 'Task가 생성되었습니다.');
+        setMessageInfo({ type: 'success', content: 'Task가 생성되었습니다.' });
         setTimeout(() => onClose(), 2000);
       }
     },
@@ -115,9 +115,9 @@ export default function CreateTask({ isOpen, onClose, menuId }: Props) {
       // rollback은 onMutate의 return값
       if (rollback) {
         rollback();
-        showMessage('error', 'Task 생성에 실패했습니다.');
+        setMessageInfo({ type: 'error', content: 'Task 생성에 실패했습니다.' });
       } else {
-        showMessage('error', 'Task 생성에 실패했습니다.');
+        setMessageInfo({ type: 'error', content: 'Task 생성에 실패했습니다.' });
       }
     },
     onSettled: () => {
@@ -250,29 +250,29 @@ export default function CreateTask({ isOpen, onClose, menuId }: Props) {
   const onClickCreateTask = useCallback(() => {
     // 빈 값이 있는지 예외처리
     if (newTask.taskName === '') {
-      showMessage('warning', 'Task 이름을 입력해주세요.');
+      setMessageInfo({ type: 'warning', content: 'Task 이름을 입력해주세요.' });
       return;
     }
 
     if (newTask.startTime === '' || newTask.endTime === '') {
-      showMessage('warning', '날짜를 선택해주세요.');
+      setMessageInfo({ type: 'warning', content: '날짜를 선택해주세요.' });
       return;
     }
 
     // TODO : 그룹, 할당자 정보 가져오면 주석 다시 풀기
     // if (newTask.teamId === 0) {
-    //   showMessage('warning', '그룹을 선택해주세요.');
+    // setMessageInfo({ type: 'warning', content: '그룹을 선택해주세요.' });
     //   return;
     // }
 
     if (newTask.menuId === 0) {
-      showMessage('warning', '메뉴를 선택해주세요.');
+      setMessageInfo({ type: 'warning', content: '메뉴를 선택해주세요.' });
       return;
     }
 
     // TODO : 그룹, 할당자 정보 가져오면 주석 다시 풀기
     // if (newTask.targetMemberId === 0) {
-    //   showMessage('warning', '할당자를 선택해주세요.');
+    // setMessageInfo({ type: 'warning', content: '할당자를 선택해주세요.' });
     //   return;
     // }
 
@@ -347,8 +347,6 @@ export default function CreateTask({ isOpen, onClose, menuId }: Props) {
         <ModalBody>
           <Flex justifyContent={'center'} h={'100%'}>
             <section className={'flex-col-center justify-evenly w-[80%] h-full'}>
-              {contextHolder}
-
               {/*Task 정보 입력 -> 제목*/}
               <div className={'w-full mt-4 mb-5 text-[1rem]'}>
                 <div className={'flex'}>

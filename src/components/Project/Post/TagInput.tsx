@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { TiDelete } from 'react-icons/ti';
-import { useMessage } from '@/hooks/useMessage.ts';
 import { useRecoilState } from 'recoil';
 import { postTagList } from '@/recoil/Project/Post.ts';
+import { message } from '@/recoil/Common/atom.ts';
 
 export default function TagInput() {
-  const { showMessage, contextHolder } = useMessage();
+  const [messageInfo, setMessageInfo] = useRecoilState(message);
   const [tagItem, setTagItem] = useState('');
   const [tagList, setTagList] = useRecoilState(postTagList);
 
@@ -17,7 +17,7 @@ export default function TagInput() {
     if (e.key === 'Enter') {
       // tagList가 10개 이상일 경우 추가 안됨
       if (tagList.length >= 10) {
-        showMessage('error', '태그는 10개까지만 입력 가능합니다.');
+        setMessageInfo({ type: 'error', content: '태그는 10개까지만 입력 가능합니다.' });
         return;
       }
       submitTagItem();
@@ -44,7 +44,6 @@ export default function TagInput() {
 
   return (
     <div className={'flex-row-center flex-wrap justify-start w-[80%] h-auto '}>
-      {contextHolder}
       {tagList.map((tagItem, index) => {
         return (
           <div
