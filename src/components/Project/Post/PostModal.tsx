@@ -310,7 +310,6 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
         <ModalBody>
           <Flex justifyContent={'center'} h={'100%'}>
             <section className={'flex-col-center justify-start w-[82%] h-full'}>
-              {contextHolder}
               <section className={'flex-row-center justify-start w-full h-[4rem]'}>
                 <input
                   value={postName}
