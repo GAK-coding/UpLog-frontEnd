@@ -53,13 +53,11 @@ export default function DeleteMenuDialog({ isOpen, onClose, menu, menuId }: Prop
       return () => queryClient.setQueryData(['menuList', projectId], previousData);
     },
     onSuccess: (data) => {
-      if (data === 'delete menu fail') {
+      if (data === 'delete menu fail')
         setMessageInfo({ type: 'error', content: '메뉴 삭제에 실패했습니다.' });
-        setTimeout(() => onClose(), 2000);
-      } else if (data === 'delete') {
-        setMessageInfo({ type: 'success', content: '해당 메뉴가 삭제되었습니다.' });
-        setTimeout(() => onClose(), 2000);
-      }
+      else setMessageInfo({ type: 'success', content: '해당 메뉴가 삭제되었습니다.' });
+
+      onClose();
     },
     onError: (error, value, rollback) => {
       // rollback은 onMutate의 return값

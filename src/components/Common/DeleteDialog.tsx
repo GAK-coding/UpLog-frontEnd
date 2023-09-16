@@ -48,17 +48,15 @@ export default function DeleteDialog({ isOpen, onClose, task, post, menuId, isTa
       return () => queryClient.setQueryData(['getTaskEach', taskId], previousData);
     },
     onSuccess: (data) => {
-      if (data === 'delete task fail') {
-        setMessageInfo({ type: 'error', content: 'Task 삭제에 실패했습니다.' });
-      } else if (typeof data !== 'string' && 'message' in data) {
-        setMessageInfo({ type: 'error', content: 'Task 삭제에 실패했습니다.' });
-      } else if (data === 'delete') {
-        setMessageInfo({ type: 'success', content: 'Task가 삭제되었습니다.' });
-        setTimeout(() => {
+      if (typeof data !== 'string') {
+        if ('message' in data)
+          setMessageInfo({ type: 'error', content: 'Task 삭제에 실패했습니다.' });
+        else if ('id' in data) {
+          setMessageInfo({ type: 'success', content: 'Task가 삭제되었습니다.' });
           onClose();
-          navigate(`/workspace/${product}/${project}/menu/${menutitle}`);
-        }, 2000);
-      }
+        }
+      } else if (data === 'delete task fail')
+        setMessageInfo({ type: 'error', content: 'Task 삭제에 실패했습니다.' });
     },
     onError: (error, value, rollback) => {
       if (rollback) {
