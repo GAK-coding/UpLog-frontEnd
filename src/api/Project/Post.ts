@@ -5,7 +5,6 @@ import {
   CommentLikeList,
   FailPost,
   LikeInfo,
-  NoticeMenu,
   Post,
   PostBody,
   PostLikeList,
@@ -13,11 +12,12 @@ import {
   UpdatePostBody,
 } from '@/typings/post.ts';
 import { instance } from '@/api';
+import { commonResponse } from '@/typings';
 
 // post 생성
 export const createPost = async (data: PostBody) => {
   try {
-    const res: AxiosResponse<string | FailPost> = await instance.post('/posts', data);
+    const res: AxiosResponse<commonResponse | FailPost> = await instance.post('/posts', data);
     return res.data;
   } catch (error) {
     console.log(error);
@@ -50,7 +50,7 @@ export const menuPostList = async (menuId: number) => {
 // post 삭제
 export const deletePost = async (postId: number) => {
   try {
-    const res: AxiosResponse<string | FailPost> = await instance.delete(`/posts/${postId}`);
+    const res: AxiosResponse<commonResponse | FailPost> = await instance.delete(`/posts/${postId}`);
     return res.data;
   } catch (error) {
     console.log(error);
@@ -61,7 +61,10 @@ export const deletePost = async (postId: number) => {
 // post 수정
 export const updatePost = async (postId: number, data: UpdatePostBody) => {
   try {
-    const res: AxiosResponse<string | FailPost> = await instance.patch(`/posts/${postId}`, data);
+    const res: AxiosResponse<commonResponse | FailPost> = await instance.patch(
+      `/posts/${postId}`,
+      data
+    );
     return res.data;
   } catch (error) {
     console.log(error);
@@ -72,7 +75,7 @@ export const updatePost = async (postId: number, data: UpdatePostBody) => {
 // post 공지 등록
 export const noticePost = async (menuId: number, updateNoticePostId: number) => {
   try {
-    const res: AxiosResponse<NoticeMenu | FailPost> = await instance.patch(
+    const res: AxiosResponse<commonResponse | FailPost> = await instance.patch(
       `/menus/${menuId}/notice-post`,
       { updateNoticePostId: updateNoticePostId }
     );
@@ -86,7 +89,7 @@ export const noticePost = async (menuId: number, updateNoticePostId: number) => 
 // post 공지 해제
 export const unNoticePost = async (menuId: number) => {
   try {
-    const res: AxiosResponse<string | FailPost> = await instance.delete(
+    const res: AxiosResponse<commonResponse | FailPost> = await instance.delete(
       `/menus/${menuId}/reset-notice`
     );
     return res.data;

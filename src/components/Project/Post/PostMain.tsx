@@ -75,7 +75,6 @@ export default function PostMain() {
         style={{ width: '100%', height: '100%' }}
         autoHide
         autoHideTimeout={1000}
-        // Duration for hide animation in ms.
         autoHideDuration={200}
       >
         <article className={'px-[10rem]'}>
