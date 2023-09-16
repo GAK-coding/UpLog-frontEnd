@@ -24,6 +24,7 @@ export default function Groups() {
   const [nowParentGroupIdx, setNowParentGroupIdx] = useState(-1);
   // 자식 그룹 없는 useEffect에서 사용
   const [change, setChange] = useState(false);
+  const [isShowSettingIcon, setIsShowSettingIcon] = useState(false);
 
   const getParentGroups = useGetProjectGroups(nowProject.id, (data) => {
     if (data && typeof data !== 'string') {
@@ -61,12 +62,20 @@ export default function Groups() {
     [parentGroups]
   );
 
-  /** 설정 이모티콘 보이게 하는 함수*/
-  const onHover = useCallback(
+  /** 설정 이모티콘 지금 hover된거만 보이게 하는 함수*/
+  const onShowSettingIcon = useCallback(
     (num: number) => {
       const temp: ParentGroupWithStates[] = JSON.parse(JSON.stringify(parentGroups));
-      temp[num].isHover = true;
-      setParentGroups(temp);
+
+      setParentGroups(
+        temp.map((group) => {
+          if (group.id === num) group.isHover = true;
+          else group.isHover = false;
+
+          return group;
+        })
+      );
+      setIsShowSettingIcon(true);
     },
     [parentGroups]
   );
@@ -126,7 +135,7 @@ export default function Groups() {
     <section className={'px-10'}>
       <div className={'h-20 flex-row-center justify-between'}>
         <header className={'text-[1.4rem] font-bold'}>Group</header>
-        {/* 그룹 최대 개수 30갸 */}
+        {/* 그룹 최대 개수 30개 */}
         {parentGroups.length <= 30 && (
           <span className={'cursor-pointer'} onClick={onOpen}>
             <AiOutlinePlus className={'text-2xl fill-gray-light'} />
@@ -158,7 +167,7 @@ export default function Groups() {
                       isActive && !pathname.includes('setting') && 'text-orange-sideBar'
                     }`
                   }
-                  onMouseEnter={() => onHover(index)}
+                  onMouseEnter={() => onShowSettingIcon(parent.id)}
                   onMouseLeave={() => onLeave(index)}
                   onClick={() => onSetNowGroupId(parent.id)}
                 >
