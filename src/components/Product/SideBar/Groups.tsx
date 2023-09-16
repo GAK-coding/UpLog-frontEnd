@@ -24,7 +24,6 @@ export default function Groups() {
   const [nowParentGroupIdx, setNowParentGroupIdx] = useState(-1);
   // 자식 그룹 없는 useEffect에서 사용
   const [change, setChange] = useState(false);
-  const [isShowSettingIcon, setIsShowSettingIcon] = useState(false);
 
   const getParentGroups = useGetProjectGroups(nowProject.id, (data) => {
     if (data && typeof data !== 'string') {
@@ -49,17 +48,30 @@ export default function Groups() {
     () => getChildGroups(nowParentGroupId),
     {
       enabled: false,
-    }
-  );
+      onSuccess: (data) => {
+        if (typeof data !== 'string' && data.childTeamInfoDTOList.length === 0) {
+          setMessageInfo({ type: 'warning', content: '하위 그룹이 없습니다!' });
 
-  /** 부모 집합 펼치는 함수 */
-  const onToggle = useCallback(
-    (id: number) => {
-      const temp = [...parentGroups];
-      temp[id].isOpen = !temp[id].isOpen;
-      setParentGroups(temp);
-    },
-    [parentGroups]
+          const temp: ParentGroupWithStates[] = JSON.parse(JSON.stringify(parentGroups));
+
+          setParentGroups(
+            temp.map((group) => {
+              return { ...group, isOpen: false };
+            })
+          );
+
+          return;
+        }
+
+        const temp = [...parentGroups];
+        setParentGroups(
+          temp.map((group) => {
+            if (group.id === nowParentGroupId) return { ...group, isOpen: true };
+            else return { ...group, isOpen: false };
+          })
+        );
+      },
+    }
   );
 
   /** 설정 이모티콘 지금 hover된거만 보이게 하는 함수*/
@@ -75,7 +87,6 @@ export default function Groups() {
           return group;
         })
       );
-      setIsShowSettingIcon(true);
     },
     [parentGroups]
   );
@@ -109,27 +120,8 @@ export default function Groups() {
   useEffect(() => {
     if (nowParentGroupId !== -1) {
       refetch();
-
-      const temp = [...parentGroups].map((group) => {
-        if (group.id === nowParentGroupId) group.isOpen = true;
-        else group.isOpen = false;
-
-        return group;
-      });
-
-      setParentGroups(temp);
     }
-  }, [nowParentGroupId]);
-
-  useEffect(() => {
-    if (typeof getChildGroup !== 'string' && getChildGroup?.childTeamInfoDTOList.length === 0) {
-      setMessageInfo({ type: 'warning', content: '하위 그룹이 없습니다!' });
-
-      const temp = [...parentGroups];
-      temp[nowParentGroupIdx]['isOpen'] = false;
-      setParentGroups(temp);
-    }
-  }, [getChildGroup, nowParentGroupIdx, change]);
+  }, [nowParentGroupId, change]);
 
   return (
     <section className={'px-10'}>
@@ -185,7 +177,7 @@ export default function Groups() {
                 <span
                   className={'w-[10%]'}
                   onClick={() => {
-                    onToggle(index);
+                    // onToggle(index);
                     onChangeNowParentId(parent.id);
                     onChnageNowParentGroupIdx(index);
                     setChange(!change);
