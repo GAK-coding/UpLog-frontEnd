@@ -149,12 +149,7 @@ export default function Groups() {
           if (index === 0) return;
 
           return (
-            <div
-              key={`${parent.teamName}-${index}`}
-              className={'border mb-4'}
-              onMouseEnter={() => onHover(index)}
-              onMouseLeave={() => onLeave(index)}
-            >
+            <div key={`${parent.teamName}-${index}`}>
               <div className={'flex items-center mb-4'}>
                 <NavLink
                   to={`/workspace/${product}/${project}/group/${parent.teamName}`}
@@ -163,9 +158,11 @@ export default function Groups() {
                       isActive && !pathname.includes('setting') && 'text-orange-sideBar'
                     }`
                   }
+                  onMouseEnter={() => onHover(index)}
+                  onMouseLeave={() => onLeave(index)}
                   onClick={() => onSetNowGroupId(parent.id)}
                 >
-                  <span className={'flex items-center h-full border border-red-600'}>
+                  <span className={'flex items-center h-full'}>
                     <BsDot /> {parent.teamName}
                     {parent.isHover && (
                       <IoMdSettings
