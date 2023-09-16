@@ -5,12 +5,11 @@ import { BsDot } from 'react-icons/bs';
 import { NavLink, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { IoIosArrowDown, IoMdSettings } from 'react-icons/io';
 import CreateGroupModal from '@/components/Product/SideBar/CreateGroupModal.tsx';
-import { ChildTeamInfoDTO, ParentGroupWithStates, Project } from '@/typings/project.ts';
+import { ChildGroup, ChildTeamInfoDTO, ParentGroupWithStates, Project } from '@/typings/project.ts';
 import { useGetProjectGroups } from '@/components/Project/hooks/useGetProjectGroups.ts';
-import { useQuery } from 'react-query';
-import { getChildGroups } from '@/api/Project/Version.ts';
 import { message } from '@/recoil/Common/atom.ts';
 import { useRecoilState } from 'recoil';
+import { useGetChildGroups } from '@/components/Product/hooks/useGetChildGroups.ts';
 
 export default function Groups() {
   const { product, project, parentgroup, childgroup } = useParams();
@@ -39,39 +38,41 @@ export default function Groups() {
     setNowParentGroupId(id);
   }, []);
 
-  const onChnageNowParentGroupIdx = useCallback((idx: number) => {
+  const onChangeNowParentGroupIdx = useCallback((idx: number) => {
     setNowParentGroupIdx(idx);
   }, []);
 
-  const { data: getChildGroup, refetch } = useQuery(
-    ['childGroup', nowParentGroupId],
-    () => getChildGroups(nowParentGroupId),
-    {
-      enabled: false,
-      onSuccess: (data) => {
-        if (typeof data !== 'string' && data.childTeamInfoDTOList.length === 0) {
-          setMessageInfo({ type: 'warning', content: '하위 그룹이 없습니다!' });
-
-          const temp: ParentGroupWithStates[] = JSON.parse(JSON.stringify(parentGroups));
-
-          setParentGroups(
-            temp.map((group) => {
-              return { ...group, isOpen: false };
-            })
-          );
-
-          return;
-        }
+  const onSuccessGetChildGroup = useCallback(
+    (data: { childTeamInfoDTOList: ChildGroup[] } | 'fail getProjectTeams') => {
+      if (typeof data !== 'string' && data.childTeamInfoDTOList.length === 0) {
+        setMessageInfo({ type: 'warning', content: '하위 그룹이 없습니다!' });
 
         const temp = [...parentGroups];
+
         setParentGroups(
           temp.map((group) => {
-            if (group.id === nowParentGroupId) return { ...group, isOpen: true };
-            else return { ...group, isOpen: false };
+            return { ...group, isOpen: false };
           })
         );
-      },
-    }
+
+        return;
+      }
+
+      const temp = [...parentGroups];
+      setParentGroups(
+        temp.map((group) => {
+          if (group.id === nowParentGroupId) return { ...group, isOpen: true };
+          else return { ...group, isOpen: false };
+        })
+      );
+    },
+    [parentGroups, nowParentGroupId]
+  );
+
+  const [getChildGroup, refetch] = useGetChildGroups(
+    nowParentGroupId,
+    false,
+    onSuccessGetChildGroup
   );
 
   /** 설정 이모티콘 지금 hover된거만 보이게 하는 함수*/
@@ -118,10 +119,20 @@ export default function Groups() {
   }, [getParentGroups]);
 
   useEffect(() => {
+    const temp: ParentGroupWithStates[] = JSON.parse(JSON.stringify(parentGroups));
+
+    // 여기선 자식 그룹을 조회한 상황
+    if (temp[nowParentGroupIdx]?.isOpen) {
+      temp[nowParentGroupIdx].isOpen = false;
+      setParentGroups(temp);
+      return;
+    }
+
+    // 여기선 자식 그룹을 조회하지 않은 상황
     if (nowParentGroupId !== -1) {
       refetch();
     }
-  }, [nowParentGroupId, change]);
+  }, [nowParentGroupId, nowParentGroupIdx, change]);
 
   return (
     <section className={'px-10'}>
@@ -177,9 +188,8 @@ export default function Groups() {
                 <span
                   className={'w-[10%]'}
                   onClick={() => {
-                    // onToggle(index);
                     onChangeNowParentId(parent.id);
-                    onChnageNowParentGroupIdx(index);
+                    onChangeNowParentGroupIdx(index);
                     setChange(!change);
                   }}
                 >
@@ -195,23 +205,23 @@ export default function Groups() {
                 <div className={'mb-2'}>
                   <Collapse in={parent.isOpen} startingHeight={20}>
                     {typeof getChildGroup !== 'string' &&
-                      (getChildGroup?.childTeamInfoDTOList as ChildTeamInfoDTO[])?.map(
-                        (child, idx) => (
-                          <NavLink
-                            to={`/workspace/${product}/${project}/group/${parent.teamName}/${child.teamName}`}
-                            key={`${parent.teamName}-${child.teamName}-${idx}`}
-                            className={({ isActive }) =>
-                              `w-[90%] flex justify-between items-center font-bold text-[1.1rem] ml-4 mb-4 ${
-                                isActive && 'text-orange-sideBar'
-                              }`
-                            }
-                          >
-                            <span className={'flex items-center'}>
-                              <BsDot /> {child.teamName}
-                            </span>
-                          </NavLink>
-                        )
-                      )}
+                      (
+                        getChildGroup as { childTeamInfoDTOList: ChildGroup[] }
+                      )?.childTeamInfoDTOList?.map((child, idx) => (
+                        <NavLink
+                          to={`/workspace/${product}/${project}/group/${parent.teamName}/${child.teamName}`}
+                          key={`${parent.teamName}-${child.teamName}-${idx}`}
+                          className={({ isActive }) =>
+                            `w-[90%] flex justify-between items-center font-bold text-[1.1rem] ml-4 mb-4 ${
+                              isActive && 'text-orange-sideBar'
+                            }`
+                          }
+                        >
+                          <span className={'flex items-center'}>
+                            <BsDot /> {child.teamName}
+                          </span>
+                        </NavLink>
+                      ))}
                   </Collapse>
                 </div>
               )}
