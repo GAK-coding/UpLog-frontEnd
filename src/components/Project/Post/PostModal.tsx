@@ -104,7 +104,7 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
       return () => queryClient.setQueryData(['menuPostData', menuId], previousData);
     },
     onSuccess: (data) => {
-      if (data === 'success') {
+      if (typeof data !== 'string' && 'id' in data) {
         setMessageInfo({ type: 'success', content: 'Post 생성에 성공했습니다.' });
       } else if (typeof data !== 'string' && 'message' in data) {
         setMessageInfo({ type: 'warning', content: data.message });
@@ -143,21 +143,21 @@ export default function PostModal({ isOpen, onClose, post, isEdit }: Props) {
     (data: UpdatePostBody) => updatePost(post!, data),
 
     {
-      onMutate: async (newData: UpdatePostBody) => {
+      onMutate: async (data: UpdatePostBody) => {
         await queryClient.cancelQueries(['menuPostData', menuId]);
 
         const previousData: Posts | undefined = queryClient.getQueryData(['menuPostData', menuId]);
 
-        queryClient.setQueryData(['menuPostData', menuId], newData);
+        queryClient.setQueryData(['menuPostData', menuId], data);
 
         return () => queryClient.setQueryData(['menuPostData', menuId], previousData);
       },
       onSuccess: (data) => {
-        if (data === 'success') {
+        if (typeof data !== 'string' && 'id' in data)
           setMessageInfo({ type: 'success', content: 'Post 수정에 성공했습니다.' });
-        } else if (typeof data !== 'string' && 'message' in data) {
+        else if (typeof data !== 'string' && 'message' in data)
           setMessageInfo({ type: 'warning', content: data.message });
-        } else setMessageInfo({ type: 'error', content: 'Post 수정에 실패했습니다.' });
+        else setMessageInfo({ type: 'error', content: 'Post 수정에 실패했습니다.' });
       },
       onError: (error, newData, rollback) => {
         if (rollback) {

@@ -16,6 +16,7 @@ import { FailMenu, MenuInfo } from '@/typings/menu.ts';
 import { useGetMenuList } from '@/components/Project/hooks/useGetMenuList.ts';
 import { SaveProjectInfo } from '@/typings/project.ts';
 import { message } from '@/recoil/Common/atom.ts';
+import { commonResponse } from '@/typings';
 
 interface Props {
   product: string;
@@ -65,14 +66,13 @@ export default function MenuSlider({ product, project, menutitle }: Props) {
   const { mutate: createMenuMutate } = useMutation(
     (nextValue: string) => createMenu(projectId, nextValue),
     {
-      onSuccess: (data: FailMenu | MenuInfo | string) => {
-        if (typeof data === 'object' && 'message' in data) {
-          setMessageInfo({ type: 'error', content: data.message });
-        } else if (data === 'success') {
-          setMessageInfo({ type: 'success', content: '메뉴가 생성되었습니다.' });
-        } else {
+      onSuccess: (data) => {
+        if (typeof data !== 'string') {
+          if ('message' in data) setMessageInfo({ type: 'error', content: data.message });
+          else if ('id' in data)
+            setMessageInfo({ type: 'success', content: '메뉴가 생성되었습니다.' });
+        } else if (data === 'create menu fail')
           setMessageInfo({ type: 'error', content: '메뉴 생성에 실패하였습니다.' });
-        }
       },
       onSettled: () => {
         // success or error, invalidate해서 새로 받아옴
@@ -84,11 +84,9 @@ export default function MenuSlider({ product, project, menutitle }: Props) {
   // menu edit
   const { mutate: editMenuMutate } = useMutation((newName: string) => editMenu(menuId, newName), {
     onSuccess: (data) => {
-      if (data === 'success') {
+      if (typeof data !== 'string' && 'id' in data)
         setMessageInfo({ type: 'success', content: '메뉴 이름이 변경되었습니다.' });
-      } else {
-        setMessageInfo({ type: 'error', content: '메뉴 이름 변경에 실패하였습니다.' });
-      }
+      else setMessageInfo({ type: 'error', content: '메뉴 이름 변경에 실패하였습니다.' });
     },
     onSettled: () => {
       // success or error, invalidate해서 새로 받아옴

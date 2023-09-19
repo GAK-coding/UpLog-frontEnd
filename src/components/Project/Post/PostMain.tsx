@@ -1,21 +1,19 @@
 import { BsFillMegaphoneFill } from 'react-icons/bs';
-import { CommentLikeList, Post, PostLikeList, Posts } from '@/typings/post.ts';
+import { Post, PostLikeList, Posts } from '@/typings/post.ts';
 import PostEach from '@/components/Project/Post/PostEach.tsx';
 import { useQuery } from 'react-query';
 import { menuListData } from '@/recoil/Project/Menu.ts';
 import { useParams } from 'react-router-dom';
-import { commentLikeList, menuPostList, postLikeList } from '@/api/Project/Post.ts';
+import { menuPostList, postLikeList } from '@/api/Project/Post.ts';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { SaveProjectInfo } from '@/typings/project.ts';
 import { Scrollbars } from 'rc-scrollbars';
 
 export default function PostMain() {
   const { product, project, menutitle } = useParams();
 
   //메뉴별로 Post 조회한 데이터
-  const [noticePostInfo, setNoticePostInfo] = useState<Post>();
-  const [posts, setPosts] = useState<Post[]>();
+  const [posts, setPosts] = useState<Posts>();
   const [likeList, setLikeList] = useState<PostLikeList[]>();
   // const [commentLike, setCommentLike] = useState<CommentLikeList[]>();
 
@@ -27,11 +25,22 @@ export default function PostMain() {
   const { refetch } = useQuery(['menuPostData', menuId], () => menuPostList(menuId!), {
     onSuccess: (data) => {
       if (typeof data !== 'string') {
-        // const reversePosts = [...data['posts']].reverse();
-        // setPosts(reversePosts);
-        setPosts(data['posts']);
-        if (data.noticePost !== undefined) {
-          setNoticePostInfo(data.noticePost);
+        if (data.noticePost !== null) {
+          if (data.noticePost!.id === data.posts[0].id) {
+            setPosts({
+              posts: data.posts.slice(1),
+              noticePost: data.noticePost,
+            });
+          } else {
+            setPosts({
+              posts: data.posts,
+              noticePost: data.noticePost,
+            });
+          }
+        } else {
+          setPosts({
+            posts: data.posts,
+          });
         }
       }
     },
@@ -66,44 +75,30 @@ export default function PostMain() {
         style={{ width: '100%', height: '100%' }}
         autoHide
         autoHideTimeout={1000}
-        // Duration for hide animation in ms.
         autoHideDuration={200}
       >
         <article className={'px-[10rem]'}>
           {/*공지글이 존재할 때 확성기 추가*/}
-          {noticePostInfo && (
+          {posts && posts.noticePost && (
             <div className={'flex items-center w-full h-[4.8rem]'}>
               <BsFillMegaphoneFill className={'flex text-[2.5rem] text-[#FF5733]'} />
               <span className={'ml-4 font-bold text-[1.5rem] text-gray-dark'}>공지</span>
             </div>
           )}
-          {noticePostInfo && (
+
+          {/*공지글이 존재할 때 공지글 보여주기*/}
+          {posts && posts.noticePost && (
             <PostEach
-              post={noticePostInfo}
+              post={posts.noticePost}
               menuId={menuId!}
               likeList={likeList!}
-              noticeId={noticePostInfo.id}
+              noticeId={posts.noticePost.id}
             />
           )}
 
-          {/*noticePost id가 맨 첫번째 id와 같다면 보여주지 않음 posts 배열 map*/}
-          {noticePostInfo &&
-            posts &&
-            posts.map((post, index) =>
-              index === 0 && post.id === noticePostInfo.id ? null : (
-                <PostEach
-                  key={post.id}
-                  post={post}
-                  menuId={menuId!}
-                  likeList={likeList!}
-                  noticeId={noticePostInfo.id}
-                />
-              )
-            )}
-
-          {/*noticePost가 없으면 그냥 posts만 보여줌*/}
+          {/*posts만 보여줌*/}
           {posts &&
-            posts.map((post) => (
+            posts.posts.map((post: Post) => (
               <PostEach key={post.id} post={post} menuId={menuId!} likeList={likeList!} />
             ))}
         </article>

@@ -102,14 +102,13 @@ export default function CreateTask({ isOpen, onClose, menuId }: Props) {
       return () => queryClient.setQueryData(['getMenuTaskList', menuId], previousTaskList);
     },
     onSuccess: (data) => {
-      if (typeof data === 'object' && 'message' in data) {
-        setMessageInfo('error', data.message);
-      } else if (data === 'create task fail') {
-        setMessageInfo({ type: 'error', content: 'Task 생성에 실패했습니다.' });
-      } else {
+      if (typeof data === 'object' && 'message' in data)
+        setMessageInfo({ type: 'error', content: data.message });
+      else if (typeof data !== 'string' && 'id' in data) {
         setMessageInfo({ type: 'success', content: 'Task가 생성되었습니다.' });
-        setTimeout(() => onClose(), 2000);
-      }
+        onClose();
+      } else if (data === 'create task fail')
+        setMessageInfo({ type: 'error', content: 'Task 생성에 실패했습니다.' });
     },
     onError: (error, value, rollback) => {
       // rollback은 onMutate의 return값
