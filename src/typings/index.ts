@@ -10,3 +10,7 @@ export class CustomError<T> extends Error {
     };
   }
 }
+
+export interface commonResponse {
+  id: number;
+}

@@ -58,11 +58,12 @@ export default function TaskDetail() {
     (editTaskData: UpdateTaskBody) => editTask(editTaskData, +taskid!),
     {
       onSuccess: (data) => {
-        if (typeof data === 'object' && 'message' in data) {
-          setMessageInfo({ type: 'warning', content: data.message });
-        } else if (typeof data === 'object' && 'id' in data) {
-          setMessageInfo({ type: 'success', content: 'Task 수정에 성공했습니다.' });
-        }
+        if (typeof data !== 'string') {
+          if ('message' in data) setMessageInfo({ type: 'warning', content: data.message });
+          else if ('id' in data)
+            setMessageInfo({ type: 'success', content: 'Task 수정에 성공했습니다.' });
+        } else if (data === 'edit task fail')
+          setMessageInfo({ type: 'error', content: 'Task 수정에 실패했습니다.' });
       },
       onSettled: () => {
         queryClient.invalidateQueries(['getTaskEach', taskid]);
