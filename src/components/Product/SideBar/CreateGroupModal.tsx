@@ -29,7 +29,6 @@ interface Props {
 }
 
 export default function CreateGroupModal({ isOpen, onClose, setMessageInfo, parentGroups }: Props) {
-  // TODO: 그룹 이름 중복 안되게 해야됨
   const [groupName, onChangeGroupName, setGroupName] = useInput('');
   const [isClickMemberList, setIsClickMemberList] = useState(false);
   const nowProject: Project = JSON.parse(sessionStorage.getItem('nowProject')!);
