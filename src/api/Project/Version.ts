@@ -1,6 +1,12 @@
 import { instance } from '@/api';
 import { AxiosResponse } from 'axios';
-import { FailProject, ParentGroup, Project, ChildGroup } from '@/typings/project.ts';
+import {
+  FailProject,
+  ParentGroup,
+  Project,
+  ChildGroup,
+  ChildGroupMember,
+} from '@/typings/project.ts';
 import { ChangeLogBody, ChangeLogData, FailProduct } from '@/typings/product.ts';
 
 export const getAllProductProjects = async (productId: number) => {
@@ -62,6 +68,17 @@ export const getChildGroups = async (teamId: number) => {
     return res.data;
   } catch (err) {
     return 'fail getProjectTeams';
+  }
+};
+
+export const getChildGroupMembers = async (teamId: number) => {
+  try {
+    const res: AxiosResponse<{ verySimpleMemberInfoDTOList: ChildGroupMember[] }> =
+      await instance.get(`/teams/${teamId}/child-team/members`);
+
+    return res.data;
+  } catch (err) {
+    return 'fail getChildGroupMembers';
   }
 };
 
