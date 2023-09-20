@@ -64,3 +64,11 @@ export interface ParentGroupWithStates extends ParentGroup {
 }
 
 export interface SaveProjectInfo extends Project {}
+
+// 자식 팀의 멤버 조회
+export interface ChildGroupMember {
+  id: number;
+  image: string;
+  name: string;
+  nickname: string;
+}
