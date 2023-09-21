@@ -2,19 +2,44 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { AiFillCaretDown, AiOutlinePlus } from 'react-icons/ai';
 import { Select } from '@chakra-ui/react';
-import { Scrollbars } from 'rc-scrollbars';
 import { useGetChildGroups } from '@/components/Product/hooks/useGetChildGroups.ts';
-import { ChildGroup, ChildGroupMember } from '@/typings/project.ts';
+import { ChildGroup, ChildGroupMember, ParentGroupMember } from '@/typings/project.ts';
 import { useQueries, useQuery } from 'react-query';
-import { getChildGroupMembers } from '@/api/Project/Version.ts';
+import { getChildGroupMembers, getParentGroupMembers } from '@/api/Project/Version.ts';
 import AddChildGroup from '@/components/Project/ManageGroup/AddChildGroup.tsx';
+import AddParentGroupMemberModal from '@/components/Project/ManageGroup/AddParentGroupMemberModal.tsx';
+import NotTeamGroup from '@/components/Project/ManageGroup/NotTeamGroup.tsx';
+import { useGetProductMembers } from '@/pages/Product/hooks/useGetProductMembers.ts';
+import { ProductInfo, ProductMember } from '@/typings/product.ts';
 
 export default function ManageGroup() {
   const { parentgroup } = useParams();
   const [isClickMemberAdd, setIsClickMemberAdd] = useState(false);
   const nowParentGroupId = +sessionStorage.getItem('nowGroupId')!;
-  const [getChildGroup, refetch] = useGetChildGroups(nowParentGroupId);
+  const [getChildGroup] = useGetChildGroups(nowParentGroupId);
   const [childGroupIds, setChildGroupIds] = useState<number[]>([]);
+  const { productId }: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
+
+  // 제품 전체 멤버
+  const [productMembers, isSuccess] = useGetProductMembers(productId);
+
+  const { data: childGroupAllMembers } = useQuery(
+    ['childGroupAllMembers', nowParentGroupId],
+    () => getParentGroupMembers(nowParentGroupId),
+    {
+      staleTime: 300000, // 5분
+      cacheTime: 600000, // 10분
+      refetchOnMount: false, // 마운트(리렌더링)될 때 데이터를 다시 가져오지 않음
+      refetchOnWindowFocus: false, // 브라우저를 포커싱했을때 데이터를 가져오지 않음
+      refetchOnReconnect: false, // 네트워크가 다시 연결되었을때 다시 가져오지 않음
+      select: (data) => {
+        if (typeof data !== 'string') {
+          const temp = data?.map((member) => member.memberId);
+          return [data, temp];
+        }
+      },
+    }
+  );
 
   const childGroupMembers = useQueries(
     childGroupIds?.map((id) => ({
@@ -33,6 +58,8 @@ export default function ManageGroup() {
       },
     }))
   );
+
+  // console.log(getChildGroup, childGroupAllMembers[0]);
 
   const onClickMemberAdd = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
@@ -72,38 +99,11 @@ export default function ManageGroup() {
         </button>
 
         {isClickMemberAdd && (
-          <div
-            className={
-              'absolute top-[3rem] right-0 w-48 h-80 z-20 bg-white shadow-sign-up rounded-[0.3rem]'
-            }
-          >
-            <Scrollbars
-              style={{ width: '100%', height: '100%' }}
-              autoHide
-              autoHideTimeout={1000}
-              // Duration for hide animation in ms.
-              autoHideDuration={200}
-            >
-              {/*{addMemberList.map((member, idx) => {*/}
-              {/*  return (*/}
-              {/*    <div key={idx} className={'flex p-2 mb-1 cursor-pointer hover:bg-orange-light'}>*/}
-              {/*      <img*/}
-              {/*        src={member.profile ? member.profile : '/images/test_userprofile.png'}*/}
-              {/*        alt={`${member.nickName}의 프로필 서진`}*/}
-              {/*        className={'w-10 h-10 mr-4 rounded-[50%]'}*/}
-              {/*      />*/}
-              {/*      <div*/}
-              {/*        className={'flex flex-col justify-center text-xs font-bold text-gray-dark'}*/}
-              {/*      >*/}
-              {/*        <span>*/}
-              {/*          {member.nickName} ({member.name})*/}
-              {/*        </span>*/}
-              {/*      </div>*/}
-              {/*    </div>*/}
-              {/*  );*/}
-              {/*})}*/}
-            </Scrollbars>
-          </div>
+          <AddParentGroupMemberModal
+            onCloseMemberAdd={onCloseMemberAdd}
+            productMembers={productMembers as ProductMember[]}
+            childGroupAllMembers={childGroupAllMembers?.[1] as number[]}
+          />
         )}
       </article>
 
@@ -113,7 +113,7 @@ export default function ManageGroup() {
             return (
               <div key={`child-${group['teamId']}`} className={'mb-12'}>
                 <div className={'border-b border-gray-light font-bold text-[1.4rem] pb-2 mb-4'}>
-                  {group['teamName'] ?? '미소속'}
+                  {group['teamName']}
                 </div>
                 {childGroupMembers?.map((members, idx) => {
                   if (index !== idx) return;
@@ -144,10 +144,9 @@ export default function ManageGroup() {
                           height={'1.6rem'}
                           color={'var(--gray-dark)'}
                           fontSize={'0.75rem'}
-                          defaultValue={group['teamName'] ?? '미소속'}
+                          defaultValue={group['teamName']}
                           icon={<AiFillCaretDown fill={'var(--gray-light)'} />}
                         >
-                          {!group['teamName'] && <option value={'미소속'}>미소속</option>}
                           {(getChildGroup as { childTeamInfoDTOList: ChildGroup[] })?.[
                             'childTeamInfoDTOList'
                           ]?.map((group) => {
@@ -166,6 +165,13 @@ export default function ManageGroup() {
             );
           }
         )}
+
+        <NotTeamGroup
+          productMembers={productMembers as ProductMember[]}
+          childGroupAllMembers={childGroupAllMembers?.[0] as ParentGroupMember[]}
+          childGroupMembers={childGroupMembers}
+          getChildGroup={getChildGroup as { childTeamInfoDTOList: ChildGroup[] }}
+        />
 
         <AddChildGroup getChildGroup={getChildGroup as { childTeamInfoDTOList: ChildGroup[] }} />
       </article>
