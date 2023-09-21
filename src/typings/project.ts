@@ -51,7 +51,7 @@ export interface ParentGroupMember {
   memberName: string;
   memberNickname: string;
   powerType: string;
-  delStatus: boolean;
+  delStatus?: boolean;
 }
 
 export interface ChildTeamInfoDTO {
