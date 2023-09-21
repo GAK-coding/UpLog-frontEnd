@@ -45,6 +45,15 @@ export interface ParentGroup {
   depth: number;
 }
 
+export interface ParentGroupMember {
+  memberId: number;
+  memberEmail: string;
+  memberName: string;
+  memberNickname: string;
+  powerType: string;
+  delStatus: boolean;
+}
+
 export interface ChildTeamInfoDTO {
   teamId: number;
   teamName: string;
