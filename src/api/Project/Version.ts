@@ -126,6 +126,19 @@ export const createProjectTeam = async (data: {
   }
 };
 
+export const addParentGroupMembers = async (data: {
+  teamId: number;
+  addMemberIdList: number[];
+  link: string;
+}) => {
+  try {
+    const { teamId, addMemberIdList, link } = data;
+    await instance.patch(`/teams/${teamId}`, { addMemberIdList, link });
+  } catch (err) {
+    return 'fail addParentGroupMembers';
+  }
+};
+
 // 변경이력 생성
 export const createNewChangeLog = async (data: ChangeLogBody, projectId: number) => {
   try {
