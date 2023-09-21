@@ -219,10 +219,10 @@ export default function CreateGroupModal({ isOpen, onClose, setMessageInfo, pare
                         >
                           <img
                             src={member.image ?? '/public/images/test_userprofile.png'}
-                            alt={`${member.memberName}님의 이미지`}
+                            alt={`${member.memberName}님의 프로필 사진`}
                             className={'w-8 h-8 mr-3 rounded-[50%]'}
                           />
-                          <span className={'ellipsis'}>
+                          <span className={'ellipsis text-xs font-bold text-gray-dark'}>
                             {member.memberName}({member.memberName})
                           </span>
                         </span>
@@ -266,10 +266,10 @@ export default function CreateGroupModal({ isOpen, onClose, setMessageInfo, pare
                           >
                             <img
                               src={member.image ?? '/public/images/test_userprofile.png'}
-                              alt={`${member.memberName}님의 이미지`}
+                              alt={`${member.memberName}의 프로필 서진`}
                               className={'w-8 h-8 mr-3 rounded-[50%]'}
                             />
-                            <span className={'ellipsis'}>
+                            <span className={'ellipsis text-xs font-bold text-gray-dark'}>
                               {member.memberName}({member.memberName})
                             </span>
                           </span>
