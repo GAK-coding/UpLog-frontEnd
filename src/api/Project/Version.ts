@@ -6,6 +6,7 @@ import {
   Project,
   ChildGroup,
   ChildGroupMember,
+  ParentGroupMember,
 } from '@/typings/project.ts';
 import { ChangeLogBody, ChangeLogData, FailProduct } from '@/typings/product.ts';
 
@@ -56,6 +57,16 @@ export const getParentGroups = async (projectId: number) => {
     return res.data;
   } catch (err) {
     return 'fail getProjectGroups';
+  }
+};
+
+export const getParentGroupMembers = async (teamId: number) => {
+  try {
+    const res: AxiosResponse<ParentGroupMember[]> = await instance.get(`/teams/${teamId}/members`);
+
+    return res.data;
+  } catch (err) {
+    return 'fail getParentGroupMembers';
   }
 };
 
