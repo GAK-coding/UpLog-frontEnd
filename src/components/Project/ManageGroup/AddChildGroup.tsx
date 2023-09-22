@@ -38,7 +38,7 @@ export default function AddChildGroup({ getChildGroup }: Props) {
       queryClient.setQueriesData(['childGroup', nowParentGroupId], () => {
         const temp: { childTeamInfoDTOList: ChildGroup[] } = { ...getChildGroup };
 
-        console.log(temp['childTeamInfoDTOList']);
+        // console.log(temp['childTeamInfoDTOList']);
         temp['childTeamInfoDTOList'].push({
           teamId: -1,
           teamName: '테스트',
@@ -57,18 +57,18 @@ export default function AddChildGroup({ getChildGroup }: Props) {
     },
   });
 
-  // const onSumbit = useCallback(
-  //   (name: string) => {
-  //     mutate({
-  //       projectId: +project!,
-  //       memberIdList: [],
-  //       name: name,
-  //       parentTeamId: nowParentGroupId,
-  //       link: '',
-  //     });
-  //   },
-  //   [project, nowParentGroupId]
-  // );
+  const onSumbit = useCallback(
+    (name: string) => {
+      mutate({
+        projectId: +project!,
+        memberIdList: [],
+        name: name,
+        parentTeamId: nowParentGroupId,
+        link: '',
+      });
+    },
+    [project, nowParentGroupId]
+  );
 
   const handleKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -87,16 +87,6 @@ export default function AddChildGroup({ getChildGroup }: Props) {
     [project, nowParentGroupId]
   );
 
-  // mutate({
-  //   projectId: +project!,
-  //   memberIdList: [],
-  //   name: name,
-  //   parentTeamId: nowParentGroupId,
-  //   link: '',
-  // });
-
-  console.log('name', name);
-
   return (
     <Editable
       border={'1px solid var(--gray-light)'}
@@ -104,9 +94,7 @@ export default function AddChildGroup({ getChildGroup }: Props) {
       height={'3.75rem'}
       placeholder={'서브그룹 추가하기'}
       padding={'0 2rem'}
-      // onSubmit={(value) => {
-      //   onSumbit(value);
-      // }}
+      onSubmit={onSumbit}
       // isPreviewFocusable={false}
       selectAllOnFocus={false}
     >
@@ -119,9 +107,9 @@ export default function AddChildGroup({ getChildGroup }: Props) {
       />
       {/*</div>*/}
       <EditableInput
-        value={name}
-        onChange={onChangeName}
-        onKeyDown={handleKeyDown}
+        // value={name}
+        // onChange={onChangeName}
+        // onKeyDown={handleKeyDown}
         height={'100%'}
         display={'flex'}
         flexDirection={'column'}
