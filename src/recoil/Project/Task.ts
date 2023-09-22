@@ -1,6 +1,6 @@
 import { GroupMember } from '@/typings/project.ts';
 import { atom } from 'recoil';
-import { StatusTaskData, TaskData, UpdateTaskBody } from '@/typings/task.ts';
+import { MenuTaskData, StatusTaskData, TaskData, UpdateTaskBody } from '@/typings/task.ts';
 
 export const editTaskInfo = atom<UpdateTaskBody>({
   key: 'editTaskInfo',
@@ -41,7 +41,7 @@ export const eachTaskInfo = atom<TaskData>({
   },
 });
 
-export const taskAll = atom<TaskData[]>({
+export const taskAll = atom<MenuTaskData[]>({
   key: 'taskAll',
   default: [],
 });

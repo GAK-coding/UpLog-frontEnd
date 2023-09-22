@@ -9,18 +9,17 @@ import { formatDate } from '@/utils/formatDate.ts';
 import PostEditor from '@/components/Common/PostEditor.tsx';
 import { SaveUserInfo } from '@/typings/member.ts';
 import { Project } from '@/typings/project.ts';
-import { editorChangeLog } from '@/recoil/Common/atom.ts';
+import { editorChangeLog, message } from '@/recoil/Common/atom.ts';
 import { useRecoilState } from 'recoil';
 import { useMutation } from 'react-query';
 import { createNewChangeLog } from '@/api/Project/Version.ts';
-import { useMessage } from '@/hooks/useMessage.ts';
 import { user } from '@/recoil/User/atom.ts';
 
 const typeList: changeType[] = ['NEW', 'FEATURE', 'CHANGED', 'FIXED', 'DEPRECATED'];
 
 export default function NewChangeLog() {
   const { product } = useParams();
-  const { showMessage, contextHolder } = useMessage();
+  const [messageInfo, setMessageInfo] = useRecoilState(message);
   const [userInfo, setUserInfo] = useRecoilState(user);
   const nowProject: Project = JSON.parse(sessionStorage.getItem('nowProject')!);
   const [editChangeLog, setEditChangeLog] = useRecoilState(editorChangeLog);
@@ -47,14 +46,14 @@ export default function NewChangeLog() {
     {
       onSuccess: (data) => {
         if (typeof data !== 'string' && 'projectId' in data) {
-          showMessage('success', '변경사항이 성공적으로 등록되었습니다.');
+          setMessageInfo({ type: 'success', content: '변경사항이 성공적으로 등록되었습니다.' });
           setTimeout(() => {
             history.back();
           }, 2000);
         } else if (typeof data !== 'string' && 'message' in data) {
-          showMessage('warning', data.message);
+          setMessageInfo({ type: 'warning', content: data.message });
         } else {
-          showMessage('error', '변경사항 등록에 실패하였습니다.');
+          setMessageInfo({ type: 'error', content: '변경사항 등록에 실패하였습니다.' });
         }
       },
     }
@@ -62,11 +61,11 @@ export default function NewChangeLog() {
 
   const onClickCreate = useCallback(() => {
     if (title === '') {
-      showMessage('warning', '변경사항 제목을 입력해주세요.');
+      setMessageInfo({ type: 'warning', content: '변경사항 제목을 입력해주세요.' });
       return;
     }
     if (editChangeLog === '') {
-      showMessage('warning', '변경사항 내용을 입력해주세요.');
+      setMessageInfo({ type: 'warning', content: '변경사항 내용을 입력해주세요.' });
       return;
     }
     setNewChangeLog({
@@ -98,7 +97,6 @@ export default function NewChangeLog() {
 
   return (
     <section className={'w-full h-auto flex py-20'}>
-      {contextHolder}
       <article className={'pt-4 flex justify-center w-[10%] min-w-[6rem] lg:w-[16%]'}>
         <Link
           to={`/workspace/${product}`}

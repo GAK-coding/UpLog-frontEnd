@@ -10,9 +10,10 @@ import {
   updateComment,
 } from '@/api/Project/Post.ts';
 import { CommentBody, CommentInfo } from '@/typings/post.ts';
-import { useMessage } from '@/hooks/useMessage.ts';
 import { SaveUserInfo } from '@/typings/member.ts';
 import { SaveProjectInfo } from '@/typings/project.ts';
+import { message } from '@/recoil/Common/atom.ts';
+import { useRecoilState } from 'recoil';
 
 interface Props {
   postId: number;
@@ -20,7 +21,7 @@ interface Props {
 }
 
 export default function PostComment({ postId, menuId }: Props) {
-  const { showMessage, contextHolder } = useMessage();
+  const [messageInfo, setMessageInfo] = useRecoilState(message);
   const userInfo: SaveUserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
   const nowProject: SaveProjectInfo = JSON.parse(sessionStorage.getItem('nowProject')!);
 
@@ -68,17 +69,17 @@ export default function PostComment({ postId, menuId }: Props) {
     },
     onSuccess: (data) => {
       if (typeof data !== 'string' && 'message' in data) {
-        showMessage('warning', data.message);
-      } else if (typeof data !== 'string') {
-        showMessage('success', '댓글이 등록되었습니다.');
-      } else showMessage('error', '댓글 등록에 실패했습니다.');
+        setMessageInfo({ type: 'warning', content: data.message });
+      } else if (data === 'success') {
+        setMessageInfo({ type: 'success', content: '댓글이 등록되었습니다.' });
+      } else setMessageInfo({ type: 'error', content: '댓글 등록에 실패했습니다.' });
     },
     onError: (error, value, rollback) => {
       if (rollback) {
         rollback();
-        showMessage('error', '댓글 등록에 실패했습니다.');
+        setMessageInfo({ type: 'error', content: '댓글 등록에 실패했습니다.' });
       } else {
-        showMessage('error', '댓글 등록에 실패했습니다.');
+        setMessageInfo({ type: 'error', content: '댓글 등록에 실패했습니다.' });
       }
     },
     onSettled: () => {
@@ -106,15 +107,15 @@ export default function PostComment({ postId, menuId }: Props) {
       },
       onSuccess: (data) => {
         if (typeof data === 'string' && data === 'DELETE OK') {
-          showMessage('success', '댓글이 삭제되었습니다.');
+          setMessageInfo({ type: 'success', content: '댓글이 삭제되었습니다.' });
         }
       },
       onError: (error, value, rollback) => {
         if (rollback) {
           rollback();
-          showMessage('error', '댓글 삭제에 실패했습니다.');
+          setMessageInfo({ type: 'error', content: '댓글 삭제에 실패했습니다.' });
         } else {
-          showMessage('error', '댓글 삭제에 실패했습니다.');
+          setMessageInfo({ type: 'error', content: '댓글 삭제에 실패했습니다.' });
         }
       },
       onSettled: () => {
@@ -129,9 +130,9 @@ export default function PostComment({ postId, menuId }: Props) {
   //   onSuccess: (data) => {
   //     if (typeof data !== 'string' && 'cnt' in data) {
   //       if (commentLikeData.some((like) => like.id === commentId)) {
-  //         showMessage('success', '🥲🥲');
+  //         setMessageInfo('success', '🥲🥲');
   //       } else {
-  //         showMessage('success', '😍️😍');
+  //         setMessageInfo('success', '😍️😍');
   //       }
   //     }
   //   },
@@ -227,7 +228,7 @@ export default function PostComment({ postId, menuId }: Props) {
   useEffect(() => {
     if (check) {
       if (createData.content === '') {
-        showMessage('warning', '댓글을 입력해주세요.');
+        setMessageInfo({ type: 'warning', content: '댓글을 입력해주세요.' });
         return;
       }
 
@@ -243,7 +244,6 @@ export default function PostComment({ postId, menuId }: Props) {
 
   return (
     <div className={'flex-col-center justify-start w-[60%] h-auto'}>
-      {contextHolder}
       {/*댓글 */}
       {commentList !== undefined &&
         Array.from(commentList)

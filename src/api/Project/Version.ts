@@ -1,6 +1,6 @@
 import { instance } from '@/api';
 import { AxiosResponse } from 'axios';
-import { FailProject, Project, ProjectGroup, ProjectTeams } from '@/typings/project.ts';
+import { FailProject, ParentGroup, Project, ChildGroup } from '@/typings/project.ts';
 import { ChangeLogBody, ChangeLogData, FailProduct } from '@/typings/product.ts';
 
 export const getAllProductProjects = async (productId: number) => {
@@ -43,9 +43,9 @@ export const completeProject = async (data: { projectId: number; version: string
   }
 };
 
-export const getProjectGroups = async (projectId: number) => {
+export const getParentGroups = async (projectId: number) => {
   try {
-    const res: AxiosResponse<ProjectGroup[]> = await instance.get(`/projects/${projectId}/teams`);
+    const res: AxiosResponse<ParentGroup[]> = await instance.get(`/projects/${projectId}/teams`);
 
     return res.data;
   } catch (err) {
@@ -53,9 +53,9 @@ export const getProjectGroups = async (projectId: number) => {
   }
 };
 
-export const getProjectTeams = async (teamId: number) => {
+export const getChildGroups = async (teamId: number) => {
   try {
-    const res: AxiosResponse<{ childTeamInfoDTOList: ProjectTeams[] }> = await instance.get(
+    const res: AxiosResponse<{ childTeamInfoDTOList: ChildGroup[] }> = await instance.get(
       `/teams/${teamId}/child-team`
     );
 
@@ -75,15 +75,26 @@ export const createProjectTeam = async (data: {
   try {
     const { projectId, memberIdList, name, parentTeamId, link } = data;
 
-    const res: AxiosResponse<{ id: number }> = await instance.post(`/projects/${projectId}/teams`, {
-      memberIdList,
-      name,
-      parentTeamId,
-      link,
-    });
+    const res: AxiosResponse<{ id: number; message?: string }> = await instance.post(
+      `/projects/${projectId}/teams`,
+      {
+        memberIdList,
+        name,
+        parentTeamId,
+        link,
+      }
+    );
+
+    if (res.data.message === '프로젝트 내에서 팀 이름이 중복됩니다.') {
+      throw new Error(res.data.message);
+    }
+
     return res.data;
   } catch (err) {
-    return 'fail createProjectTeam';
+    if (err instanceof Error) {
+      if (err.message === '프로젝트 내에서 팀 이름이 중복됩니다.') return err.message;
+      else return 'fail createProjectTeam';
+    }
   }
 };
 

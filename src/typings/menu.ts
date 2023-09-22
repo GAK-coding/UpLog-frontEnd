@@ -1,8 +1,7 @@
 export interface MenuInfo {
   id: number;
   menuName: string;
-  projectId: number;
-  version: string;
+  noticePostId: number;
 }
 
 export interface FailMenu {

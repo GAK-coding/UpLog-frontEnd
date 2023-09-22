@@ -10,9 +10,9 @@ import { useQueries, useQuery } from 'react-query';
 import { getAllProductProjects, getChangeLogEachProject } from '@/api/Project/Version.ts';
 import { useRecoilState } from 'recoil';
 import { eachProductProjects } from '@/recoil/Project/atom.ts';
-import { useMessage } from '@/hooks/useMessage.ts';
 import { BiPencil } from 'react-icons/bi';
 import { FaUserCircle } from 'react-icons/fa';
+import { message } from '@/recoil/Common/atom.ts';
 export default function ReleaseNote() {
   // const dummy: Release[] = [
   //   {
@@ -111,7 +111,7 @@ export default function ReleaseNote() {
   const { state } = useLocation();
   const [isLogin, setIsLogin] = useState(state?.isLogin);
   const [productList, refetch] = useGetAllProduct(false)!;
-  const { showMessage, contextHolder } = useMessage();
+  const [messageInfo, setMessageInfo] = useRecoilState(message);
   const { pathname } = useLocation();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -197,7 +197,6 @@ export default function ReleaseNote() {
 
   return (
     <section className={'w-full min-w-[50em] py-32 px-14 xl:px-56'} onClick={onCloseKebab}>
-      {contextHolder}
       <div className={'min-w-[30em] flex justify-between mb-4'}>
         <span className={'flex items-center'}>
           {nowProduct?.productImage ? (
@@ -211,7 +210,7 @@ export default function ReleaseNote() {
           className={'mr-2 text-gray-dark font-bold underline self-end'}
           onClick={() => {
             if (projects?.[0].projectStatus === 'PROGRESS_IN') {
-              showMessage('warning', '현재 진행 중인 프로젝트가 있습니다.');
+              setMessageInfo({ type: 'warning', content: '현재 진행 중인 프로젝트가 있습니다.' });
               return;
             }
 
@@ -292,7 +291,7 @@ export default function ReleaseNote() {
         onClose={onClose}
         isAdd={isAdd}
         versionName={tempVersion}
-        showMessage={showMessage}
+        setMessageInfo={setMessageInfo}
         nowProjectId={nowProjectId}
       />
     </section>

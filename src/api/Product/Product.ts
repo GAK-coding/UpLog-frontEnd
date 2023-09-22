@@ -9,11 +9,12 @@ import {
 } from '@/typings/product.ts';
 import { AxiosResponse } from 'axios';
 import { instance } from '@/api';
+import { commonResponse } from '@/typings';
 
 // 제품 생성
 export const createProduct = async (data: ProductBody) => {
   try {
-    const res: AxiosResponse<ProductsData | FailProduct> = await instance.post(
+    const res: AxiosResponse<commonResponse | FailProduct> = await instance.post(
       '/products',
 
       data,

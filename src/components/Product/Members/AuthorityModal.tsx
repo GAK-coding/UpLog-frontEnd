@@ -10,7 +10,7 @@ import {
   Select,
 } from '@chakra-ui/react';
 import { productMemberList } from '@/recoil/Product/atom.ts';
-import { useRecoilState } from 'recoil';
+import { SetterOrUpdater, useRecoilState } from 'recoil';
 import { AiFillCaretDown } from 'react-icons/ai';
 type MessageType = 'success' | 'error' | 'warning';
 
@@ -20,7 +20,7 @@ interface Props {
   onClickChangeRoleLeader: (memberId: number) => void;
   onClickChangeRoleDefault: (memberId: number) => void;
   nowSelectedMemberId: number;
-  showMessage: (type: MessageType, content: string) => void;
+  setMessageInfo: SetterOrUpdater<{ type: MessageType; content: string } | null>;
 }
 
 export default function AuthorityModal({
@@ -29,7 +29,7 @@ export default function AuthorityModal({
   onClickChangeRoleLeader,
   onClickChangeRoleDefault,
   nowSelectedMemberId,
-  showMessage,
+  setMessageInfo,
 }: Props) {
   const [members, setMembers] = useRecoilState(productMemberList);
   const [selectedMember, setSelectedMember] = useState('-1');
@@ -109,7 +109,7 @@ export default function AuthorityModal({
                 onChangeLeader();
               }, 500);
               onClose();
-              showMessage('success', '권한이 변경되었습니다.');
+              setMessageInfo({ type: 'success', content: '권한이 변경되었습니다.' });
             }}
           >
             완료

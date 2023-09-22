@@ -10,20 +10,20 @@ import { SaveUserInfo } from '@/typings/member.ts';
 import useInput from '@/hooks/useInput.ts';
 import { useMutation } from 'react-query';
 import { changeName, changeNickname, imageUpload, updateMyInfo } from '@/api/Members/mypage.ts';
-import { useMessage } from '@/hooks/useMessage.ts';
 import { useRecoilState } from 'recoil';
 import { user } from '@/recoil/User/atom.ts';
+import { message } from '@/recoil/Common/atom.ts';
 
 export default function MyPage() {
   // const userInfo: SaveUserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
   const [userInfo, setUserInfo] = useRecoilState(user);
   const [newName, onChangeNewName, setNewName] = useInput('');
   const [newNickname, onChangeNewNickname, setNewNickname] = useInput('');
-  const { showMessage, contextHolder } = useMessage();
+  const [messageInfo, setMessageInfo] = useRecoilState(message);
 
   // const { mutate: nameChangeMutate } = useMutation(changeName, {
   //   onError: () => {
-  //     showMessage('error', '이름 변경 실패!');
+  // setMessageInfo({ type: 'error', content: '이름 변경 실패!' });
   //   },
   // });
   // const { mutate: nicknameChangeMutate } = useMutation(changeNickname);
@@ -59,7 +59,7 @@ export default function MyPage() {
     const imgChk = fileList?.[0]?.url === userInfo.image || fileList.length === 0;
 
     if (!newName && !newNickname && imgChk) {
-      showMessage('warning', '프로필 변경을 해주세요.');
+      setMessageInfo({ type: 'warning', content: '프로필 변경을 해주세요.' });
       return;
     }
 
@@ -96,7 +96,7 @@ export default function MyPage() {
 
     setNewNickname('');
     setNewName('');
-    showMessage('success', '프로필 변경 완료!');
+    setMessageInfo({ type: 'success', content: '프로필 변경 완료!' });
   }, [newName, newNickname, fileList, userInfo]);
 
   // 비밀번호 변경 모달
@@ -123,7 +123,6 @@ export default function MyPage() {
 
   return (
     <section className={'mypage flex flex-col items-center w-full h-[68rem]'}>
-      {contextHolder}
       <article className={'w-[46rem] h-[44rem] mt-12'}>
         <h1 className={'h-[10%] text-3xl font-bold'}>프로필 수정</h1>
         <div
@@ -242,7 +241,7 @@ export default function MyPage() {
         isOpen={isOpen}
         onClose={onClose}
         isClickPwChange={isClickPwChange}
-        showMessage={showMessage}
+        setMessageInfo={setMessageInfo}
       />
     </section>
   );

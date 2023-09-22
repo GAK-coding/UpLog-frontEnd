@@ -8,6 +8,7 @@ import {
   AlertDialogOverlay,
   Button,
 } from '@chakra-ui/react';
+import { SetterOrUpdater } from 'recoil';
 type MessageType = 'success' | 'error' | 'warning';
 
 interface Props {
@@ -17,7 +18,7 @@ interface Props {
   nickName: string;
   onClickChangeRoleLeader: (memberId: number) => void;
   nowSelectedMemberId: number;
-  showMessage: (type: MessageType, content: string) => void;
+  setMessageInfo: SetterOrUpdater<{ type: MessageType; content: string } | null>;
 }
 export default function MemberListManageAlert({
   isOut,
@@ -26,14 +27,14 @@ export default function MemberListManageAlert({
   nickName,
   onClickChangeRoleLeader,
   nowSelectedMemberId,
-  showMessage,
+  setMessageInfo,
 }: Props) {
   const cancelRef = useRef<HTMLButtonElement>(null);
 
   const onClickChange = useCallback(() => {
     onClickChangeRoleLeader(nowSelectedMemberId);
     onClose();
-    showMessage('success', '권한이 변경되었습니다.');
+    setMessageInfo({ type: 'success', content: '권한이 변경되었습니다.' });
   }, [nowSelectedMemberId]);
 
   return (
