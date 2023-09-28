@@ -8,6 +8,7 @@ const DEPLOYMENT_BACKEND_URL = import.meta.env.VITE_DEPLOYMENT_BACKEND_URL;
 const URL = isDeployment ? DEPLOYMENT_BACKEND_URL : DEV_BACKEND_URL;
 export const instance = axios.create({
   baseURL: URL,
+  withCredentials: true,
 });
 
 // const [cookies, setCookie, removeCookie] = useCookies();
@@ -66,9 +67,13 @@ instance.interceptors.response.use(
 
 instance.interceptors.request.use(
   (config) => {
-    const accessToken = sessionStorage.getItem('accessToken'); // localStorage에서 accessToken 값을 가져옴
+    // const accessToken = sessionStorage.getItem('accessToken'); // localStorage에서 accessToken 값을 가져옴
+    const accessToken = Cookies.get('Access');
+
+    // console.log('없음?', accessToken);
+
     if (accessToken) {
-      config.headers.Authorization = `Bearer ${accessToken}`; // headers에 accessToken을 추가함
+      config.headers.Cookie = `Access=${accessToken}`; // headers에 accessToken을 추가함
     }
     return config;
   },
