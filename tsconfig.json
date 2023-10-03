@@ -41,7 +41,8 @@
       "@/types/*": ["src/types/*"],
       "@/utils/*": ["src/utils/*"],
       "@/typings/*": ["src/typings/*"],
-      "@/api/*": ["src/api/*"]
+      "@/api/*": ["src/api/*"],
+      "@/mock/*": ["src/mock/*"]
     }
   },
   "include": ["lib", "src", "types", "**/*.ts", "test/**/**.ts"],
