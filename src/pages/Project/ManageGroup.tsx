@@ -24,6 +24,7 @@ export default function ManageGroup() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isSeeMores, setIsSeeMores] = useState<boolean[]>([]);
   const [isInclude, setIsInclude] = useState(false);
+  // const [childGroupMemberIds, setChildGroupMemberIds] = useState<number[][]>([[]]);
   const userInfo: SaveUserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
 
   // 제품 전체 멤버
@@ -59,11 +60,14 @@ export default function ManageGroup() {
       enabled: !!getChildGroup && !!childGroupIds,
       select: (data: { verySimpleMemberInfoDTOList: ChildGroupMember[] } | string) => {
         if (typeof data !== 'string') {
-          return data.verySimpleMemberInfoDTOList;
+          const memberIds: number[] = data.verySimpleMemberInfoDTOList.map((member) => member.id);
+          return [data.verySimpleMemberInfoDTOList, memberIds];
         }
       },
     }))
   );
+
+  // console.log(childGroupMembers?.[0]?.data?.[1]);
 
   const onClickMemberAdd = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
@@ -96,15 +100,23 @@ export default function ManageGroup() {
     }
   }, [getChildGroup]);
 
+  // useEffect(() => {
+  //   if (childGroupMembers) {
+  //     const temp = childGroupMembers.map((member) => member?.['data']?.[1] ?? []);
+  //
+  //     setChildGroupMemberIds(temp as number[][]);
+  //   }
+  // }, []);
+  //
+  // console.log(childGroupMemberIds);
+
   // 내가 이 그룹에 있는지
   useEffect(() => {
     if (childGroupAllMembers && userInfo) {
-      //   고쳐야됨
-      setIsInclude(childGroupAllMembers[1].includes(userInfo.id));
+      const temp: number[] = JSON.parse(JSON.stringify(childGroupAllMembers[1]));
+      setIsInclude(temp.includes(userInfo.id));
     }
   }, [childGroupAllMembers]);
-
-  console.log(childGroupAllMembers?.[1]);
 
   return (
     <section className={'w-full px-20 py-20'} onClick={onCloseMemberAdd}>
@@ -153,12 +165,16 @@ export default function ManageGroup() {
         <GroupMembers
           productMembers={productMembers as ProductMember[]}
           childGroupAllMembers={childGroupAllMembers?.[0] as ParentGroupMember[]}
-          // childGroupMembers={childGroupMembers}
           getChildGroup={getChildGroup as { childTeamInfoDTOList: ChildGroup[] }}
+          isInclude={isInclude}
         />
 
         {(getChildGroup as { childTeamInfoDTOList: ChildGroup[] })?.['childTeamInfoDTOList'].map(
           (group, index) => {
+            const membersId: number[] = JSON.parse(
+              JSON.stringify(childGroupMembers?.[index]?.data?.[1] ?? [])
+            );
+
             return (
               <div key={`child-${group['teamId']}`} className={'mb-12'}>
                 <div
@@ -167,22 +183,24 @@ export default function ManageGroup() {
                   }
                 >
                   <div className={'font-bold text-[1.4rem]'}>
-                    {group['teamName']}({childGroupMembers?.[index]?.['data']?.length ?? 0}명)
+                    {group['teamName']}({childGroupMembers?.[index]?.['data']?.[0].length ?? 0}명)
                   </div>
-                  <button
-                    className={
-                      'bg-orange rounded font-bold text-white text-sm w-16 h-8 flex-row-center'
-                    }
-                    onClick={() => {}}
-                  >
-                    나가기
-                  </button>
+                  {isInclude && membersId.includes(userInfo.id) && (
+                    <button
+                      className={
+                        'bg-orange rounded font-bold text-white text-sm w-16 h-8 flex-row-center'
+                      }
+                      onClick={() => {}}
+                    >
+                      나가기
+                    </button>
+                  )}
                 </div>
                 {childGroupMembers?.map((members, idx) => {
                   // 이거 안해두면 모든 하위 팀의 멤버들이 합쳐져서 보임
                   if (index !== idx) return;
 
-                  const memberList = members?.['data'] ?? [];
+                  const memberList = (members?.['data']?.[0] as ChildGroupMember[]) ?? [];
 
                   return (
                     <div key={idx}>
