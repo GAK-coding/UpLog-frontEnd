@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { AiFillCaretDown, AiOutlinePlus } from 'react-icons/ai';
-import { Select, useDisclosure } from '@chakra-ui/react';
+import { AiOutlinePlus } from 'react-icons/ai';
+import { useDisclosure } from '@chakra-ui/react';
 import { useGetChildGroups } from '@/components/Product/hooks/useGetChildGroups.ts';
 import { ChildGroup, ChildGroupMember, ParentGroupMember } from '@/typings/project.ts';
 import { useQueries, useQuery } from 'react-query';
@@ -24,7 +24,6 @@ export default function ManageGroup() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isSeeMores, setIsSeeMores] = useState<boolean[]>([]);
   const [isInclude, setIsInclude] = useState(false);
-  // const [childGroupMemberIds, setChildGroupMemberIds] = useState<number[][]>([[]]);
   const userInfo: SaveUserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
 
   // 제품 전체 멤버
@@ -67,8 +66,6 @@ export default function ManageGroup() {
     }))
   );
 
-  // console.log(childGroupMembers?.[0]?.data?.[1]);
-
   const onClickMemberAdd = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     setIsClickMemberAdd((prev) => !prev);
@@ -99,16 +96,6 @@ export default function ManageGroup() {
       setIsSeeMores(temp?.map(() => false) ?? []);
     }
   }, [getChildGroup]);
-
-  // useEffect(() => {
-  //   if (childGroupMembers) {
-  //     const temp = childGroupMembers.map((member) => member?.['data']?.[1] ?? []);
-  //
-  //     setChildGroupMemberIds(temp as number[][]);
-  //   }
-  // }, []);
-  //
-  // console.log(childGroupMemberIds);
 
   // 내가 이 그룹에 있는지
   useEffect(() => {
