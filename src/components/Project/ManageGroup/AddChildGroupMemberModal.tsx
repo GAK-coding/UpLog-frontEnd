@@ -30,7 +30,7 @@ export default function AddChildGroupMemberModal({ isOpen, onClose, getChildGrou
 
   const queryClient = useQueryClient();
 
-  const { mutate } = useMutation(createProjectTeam, {
+  const { mutate, isLoading } = useMutation(createProjectTeam, {
     onSuccess: (data) => {
       if (typeof data === 'string' && data === '프로젝트 내에서 팀 이름이 중복됩니다.') {
         setMessageInfo({ type: 'warning', content: '프로젝트 내에서 팀 이름이 중복됩니다.' });
@@ -79,6 +79,10 @@ export default function AddChildGroupMemberModal({ isOpen, onClose, getChildGrou
       link: '',
     });
   }, [project, nowParentGroupId, teamName]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <Modal isCentered onClose={onClose} isOpen={isOpen}>
