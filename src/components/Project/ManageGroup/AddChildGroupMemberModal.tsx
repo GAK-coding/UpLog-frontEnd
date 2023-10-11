@@ -30,7 +30,7 @@ export default function AddChildGroupMemberModal({ isOpen, onClose, getChildGrou
 
   const queryClient = useQueryClient();
 
-  const { mutate, isLoading } = useMutation(createProjectTeam, {
+  const { mutate } = useMutation(createProjectTeam, {
     onSuccess: (data) => {
       if (typeof data === 'string' && data === '프로젝트 내에서 팀 이름이 중복됩니다.') {
         setMessageInfo({ type: 'warning', content: '프로젝트 내에서 팀 이름이 중복됩니다.' });
@@ -44,11 +44,8 @@ export default function AddChildGroupMemberModal({ isOpen, onClose, getChildGrou
 
       const snapshot = queryClient.getQueryData(['childGroup', nowParentGroupId]);
 
-      console.log('여기가 전: ', snapshot);
-
       queryClient.setQueriesData(['childGroup', nowParentGroupId], () => {
         const temp: { childTeamInfoDTOList: ChildGroup[] } = { ...getChildGroup };
-        console.log('여기가 후: ', temp);
 
         temp['childTeamInfoDTOList'].push({
           teamId: -1,
@@ -56,6 +53,8 @@ export default function AddChildGroupMemberModal({ isOpen, onClose, getChildGrou
           depth: 2,
           childTeamInfoDTOList: [],
         });
+
+        return temp;
       });
 
       setTeamName('');
@@ -79,10 +78,6 @@ export default function AddChildGroupMemberModal({ isOpen, onClose, getChildGrou
       link: '',
     });
   }, [project, nowParentGroupId, teamName]);
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <Modal isCentered onClose={onClose} isOpen={isOpen}>
