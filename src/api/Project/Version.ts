@@ -126,14 +126,23 @@ export const createProjectTeam = async (data: {
   }
 };
 
-export const addParentGroupMembers = async (data: {
+export const addGroupMembers = async (data: {
   teamId: number;
   addMemberIdList: number[];
   link: string;
+  memberInfo?: ParentGroupMember;
 }) => {
   try {
     const { teamId, addMemberIdList, link } = data;
-    await instance.patch(`/teams/${teamId}`, { addMemberIdList, link });
+    const res: AxiosResponse<{ duplicatedMemberList: number[] }> = await instance.patch(
+      `/teams/${teamId}`,
+      {
+        addMemberIdList,
+        link,
+      }
+    );
+
+    return res.data.duplicatedMemberList.length;
   } catch (err) {
     return 'fail addParentGroupMembers';
   }
