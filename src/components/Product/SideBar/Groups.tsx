@@ -5,7 +5,7 @@ import { BsDot } from 'react-icons/bs';
 import { NavLink, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { IoIosArrowDown, IoMdSettings } from 'react-icons/io';
 import CreateGroupModal from '@/components/Product/SideBar/CreateGroupModal.tsx';
-import { ChildGroup, ChildTeamInfoDTO, ParentGroupWithStates, Project } from '@/typings/project.ts';
+import { ChildGroup, ParentGroupWithStates, Project } from '@/typings/project.ts';
 import { useGetProjectGroups } from '@/components/Project/hooks/useGetProjectGroups.ts';
 import { message } from '@/recoil/Common/atom.ts';
 import { useRecoilState } from 'recoil';
@@ -114,7 +114,8 @@ export default function Groups() {
   useEffect(() => {
     if (getParentGroups) {
       sessionStorage.setItem('nowTeamId', getParentGroups[0]?.id.toString());
-      setParentGroups(getParentGroups);
+
+      setParentGroups(getParentGroups.filter((group) => group.depth === 1));
     }
   }, [getParentGroups]);
 
@@ -132,7 +133,7 @@ export default function Groups() {
     if (nowParentGroupId !== -1) {
       refetch();
     }
-  }, [nowParentGroupId, nowParentGroupIdx, change]);
+  }, [nowParentGroupId, nowParentGroupIdx, change, refetch]);
 
   return (
     <section className={'px-10'}>
@@ -159,6 +160,7 @@ export default function Groups() {
         </NavLink>
         {(parentGroups as ParentGroupWithStates[])?.map((parent, index) => {
           if (index === 0) return;
+          if (parent.depth === 2) return;
 
           return (
             <div key={`${parent.teamName}-${index}`}>
