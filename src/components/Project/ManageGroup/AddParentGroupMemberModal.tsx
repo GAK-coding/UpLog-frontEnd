@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { ProductMember } from '@/typings/product.ts';
 import { Scrollbars } from 'react-custom-scrollbars';
-import { addParentGroupMembers } from '@/api/Project/Version.ts';
+import { addGroupMembers } from '@/api/Project/Version.ts';
 import { useMutation, useQueryClient } from 'react-query';
 import { ParentGroupMember } from '@/typings/project.ts';
 import { message } from '@/recoil/Common/atom.ts';
@@ -47,7 +47,7 @@ export default function AddParentGroupMemberModal({
 
   const queryClient = useQueryClient();
 
-  const { mutate } = useMutation(addParentGroupMembers, {
+  const { mutate } = useMutation(addGroupMembers, {
     onMutate: async () => {
       await queryClient.cancelQueries(['childGroupAllMembers', nowParentGroupId]);
 
@@ -75,6 +75,11 @@ export default function AddParentGroupMemberModal({
   });
 
   const onClickAddMember = useCallback(() => {
+    if (selectMember.size === 0) {
+      setMessageInfo({ type: 'warning', content: '멤버를 선택해주세요.' });
+      return;
+    }
+
     mutate({
       teamId: nowParentGroupId,
       addMemberIdList: Array.from(selectMember.keys()),
@@ -84,20 +89,23 @@ export default function AddParentGroupMemberModal({
 
   return (
     <div
-      className={
-        'absolute top-[3rem] right-0 w-48 h-80 z-20 bg-white shadow-sign-up rounded-t-[0.3rem]'
-      }
+      className={'absolute top-[3rem] right-0 w-48 z-20 bg-white shadow-sign-up rounded-t-[0.3rem]'}
       onClick={(e) => e.stopPropagation()}
     >
       <Scrollbars
-        style={{ width: '100%', height: '100%' }}
+        style={{ width: '100%' }}
         autoHide
         autoHideTimeout={1000}
         // Duration for hide animation in ms.
         autoHideDuration={200}
+        autoHeight
+        autoHeightMin={40}
+        autoHeightMax={250}
       >
         {(productMembers as ProductMember[])?.map((member) => {
-          if (childGroupAllMembers?.includes(member.memberId) || !childGroupAllMembers) return;
+          if (childGroupAllMembers?.includes(member.memberId) || !childGroupAllMembers) {
+            return;
+          }
 
           const isSelect = Array.from(selectMember.keys()).includes(member.memberId);
 
