@@ -13,6 +13,7 @@ import { ProductInfo, ProductMember } from '@/typings/product.ts';
 import AddChildGroupMemberModal from '@/components/Project/ManageGroup/AddChildGroupMemberModal.tsx';
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md';
 import { SaveUserInfo } from '@/typings/member.ts';
+import { v4 as uuidv4 } from 'uuid';
 
 export default function ManageGroup() {
   const { parentgroup } = useParams();
@@ -190,14 +191,14 @@ export default function ManageGroup() {
                   const memberList = (members?.['data']?.[0] as ChildGroupMember[]) ?? [];
 
                   return (
-                    <div key={idx}>
+                    <div key={`${group['teamId']}-${idx}`}>
                       {(memberList.length > 5 && !isSeeMores[index]
                         ? memberList.slice(0, 5)
                         : memberList
                       ).map((member) => {
                         return (
                           <div
-                            key={member['id']}
+                            key={uuidv4()}
                             className={'flex justify-between items-center px-8 mb-6'}
                           >
                             <div className={'flex'}>
