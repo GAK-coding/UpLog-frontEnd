@@ -1,11 +1,15 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { ChildGroup, ParentGroupMember } from '@/typings/project.ts';
+import { ChildGroup, ChildGroupMember, ParentGroupMember } from '@/typings/project.ts';
 import { ProductMember } from '@/typings/product.ts';
 import { AiFillCaretDown } from 'react-icons/ai';
 import { Select } from '@chakra-ui/react';
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md';
 import { useParams } from 'react-router-dom';
 import { SaveUserInfo } from '@/typings/member.ts';
+import { useMutation, useQueryClient } from 'react-query';
+import { addGroupMembers } from '@/api/Project/Version.ts';
+import { message } from '@/recoil/Common/atom.ts';
+import { useRecoilState } from 'recoil';
 
 interface Props {
   childGroupAllMembers: ParentGroupMember[];
@@ -25,9 +29,55 @@ export default function GroupMembers({
   const [isSeeMore, setIsSeeMore] = useState(false);
   const { parentgroup } = useParams();
   const userInfo: SaveUserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
+  const [messageInfo, setMessageInfo] = useRecoilState(message);
 
   const onClickSeeMore = useCallback(() => {
     setIsSeeMore((prev) => !prev);
+  }, []);
+
+  const queryClient = useQueryClient();
+
+  const { mutate: assignMemberMutate } = useMutation(addGroupMembers, {
+    onSuccess: (data) => {
+      if (typeof data === 'number' && data > 0) {
+        setMessageInfo({ type: 'error', content: '이미 멤버가 속해 있습니다.' });
+      } else setMessageInfo({ type: 'success', content: '멤버가 추가되었습니다!' });
+    },
+    onMutate: async ({ teamId, memberInfo }) => {
+      await queryClient.cancelQueries(['childGroupMembers', teamId]);
+
+      const snapshot = queryClient.getQueryData(['childGroupMembers', teamId]);
+
+      queryClient.setQueriesData(['childGroupMembers', teamId], () => {
+        const temp: { verySimpleMemberInfoDTOList: ChildGroupMember[] } = JSON.parse(
+          JSON.stringify(snapshot)
+        );
+
+        const { memberId, memberName, memberNickname } = memberInfo!;
+
+        temp.verySimpleMemberInfoDTOList.push({
+          id: memberId,
+          name: memberName,
+          nickname: memberNickname,
+          image: productMembersHash.get(memberId)?.image ?? null,
+        });
+
+        return temp;
+      });
+
+      return { snapshot };
+    },
+    onError: (error, variables, context) => {
+      queryClient.setQueriesData(['childGroupMembers', variables.teamId], context?.snapshot);
+    },
+    onSettled: (data, error, variables) => {
+      queryClient.invalidateQueries(['childGroupMembers', variables.teamId]);
+    },
+  });
+
+  const onClickAssignMember = useCallback((teamId: number, memberInfo: ParentGroupMember) => {
+    // TODO: link 적용
+    assignMemberMutate({ teamId, addMemberIdList: [memberInfo.memberId], link: '', memberInfo });
   }, []);
 
   // 제품 전체 멤버에서 사진 가져오려고 만듬
@@ -91,15 +141,21 @@ export default function GroupMembers({
               height={'1.7rem'}
               color={'var(--gray-dark)'}
               fontSize={'0.75rem'}
-              defaultValue={'미소속'}
               icon={<AiFillCaretDown fill={'var(--gray-light)'} />}
+              onChange={(event) => {
+                if (event.target.value === '하위 그룹 배정') return;
+                else {
+                  onClickAssignMember(+event.target.value, member);
+                  event.target.value = '하위 그룹 배정';
+                }
+              }}
             >
               <option defaultValue={'하위 그룹 배정'}>하위 그룹 배정</option>
               {(getChildGroup as { childTeamInfoDTOList: ChildGroup[] })?.[
                 'childTeamInfoDTOList'
               ]?.map((group) => {
                 return (
-                  <option key={group['teamId']} value={group['teamName']}>
+                  <option key={group['teamId']} value={group['teamId']}>
                     {group['teamName']}
                   </option>
                 );
