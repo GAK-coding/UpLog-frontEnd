@@ -77,7 +77,7 @@ export interface SaveProjectInfo extends Project {}
 // 자식 팀의 멤버 조회
 export interface ChildGroupMember {
   id: number;
-  image: string;
+  image: string | null;
   name: string;
   nickname: string;
 }
