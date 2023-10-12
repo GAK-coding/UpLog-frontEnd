@@ -28,7 +28,7 @@ export default function TaskMain() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const menuList = useRecoilValue(menuListData);
   const menuId = menuList.find((menu) => menu.menuName === menutitle)?.id;
-  const [taskList, setTaskList] = useState<MenuTaskData[]>([]);
+  const [taskList, setTaskList] = useRecoilState(taskAll);
   const [firstTaskList, setFirstTaskList] = useState<MenuTaskData[]>([]);
   const [memberList, setMemberList] = useRecoilState(productMemberList);
   const [memberListData, setMemberListData] = useRecoilState(allMemberList);
@@ -51,7 +51,6 @@ export default function TaskMain() {
   // 메뉴별 task 데이터 가져오기
   const getMenuTaskList = useQuery(['getMenuTaskList', menuId], () => menuTaskList(menuId!), {
     onSuccess: (data) => {
-      console.log(data);
       if (typeof data !== 'string') {
         setTaskList(data);
         setFirstTaskList(data);
@@ -143,21 +142,21 @@ export default function TaskMain() {
               'flex-row-center text-[0.9rem] text-gray-dark task-status-ring border-status-before'
             }
           >
-            <span>{taskList.filter((task) => task.taskStatus === 'PROGRESS_BEFORE').length}</span>
+            {firstTaskList.filter((task) => task.taskStatus === 'PROGRESS_BEFORE').length}
           </div>
           <div
             className={
               'flex-row-center text-[0.9rem] text-gray-dark task-status-ring border-status-going'
             }
           >
-            {taskList.filter((task) => task.taskStatus === 'PROGRESS_IN').length}
+            {firstTaskList.filter((task) => task.taskStatus === 'PROGRESS_IN').length}
           </div>
           <div
             className={
               'flex-row-center text-[0.9rem] text-gray-dark task-status-ring border-status-done'
             }
           >
-            {taskList.filter((task) => task.taskStatus === 'PROGRESS_COMPLETE').length}
+            {firstTaskList.filter((task) => task.taskStatus === 'PROGRESS_COMPLETE').length}
           </div>
         </div>
         <div className={'flex-row-center justify-between w-[18rem] px-4 z-10'}>
@@ -198,7 +197,7 @@ export default function TaskMain() {
           }
         >
           {/*task 정보*/}
-          {taskList.map((task) => (
+          {firstTaskList.map((task) => (
             <section
               key={task.id}
               className={
