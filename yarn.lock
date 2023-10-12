@@ -6019,6 +6019,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/react-infinite-scroller@npm:^1.2.3":
+  version: 1.2.3
+  resolution: "@types/react-infinite-scroller@npm:1.2.3"
+  dependencies:
+    "@types/react": "*"
+  checksum: ae11063b5e114bff1f06e9d3d2ca0948a3a224f13b4a30fbfe56f84e535ee6232de9667456695bbbb409de51887d701f8558fd28c36a2ea172e8593346de85d1
+  languageName: node
+  linkType: hard
+
 "@types/react-redux@npm:^7.1.20":
   version: 7.1.25
   resolution: "@types/react-redux@npm:7.1.25"
@@ -6878,6 +6887,7 @@ __metadata:
     "@types/react-beautiful-dnd": ^13.1.4
     "@types/react-custom-scrollbars": ^4.0.10
     "@types/react-dom": ^18.0.11
+    "@types/react-infinite-scroller": ^1.2.3
     "@types/react-slick": ^0.23.10
     "@types/react-slider": ^1.3.1
     "@types/react-test-renderer": ^18.0.0
