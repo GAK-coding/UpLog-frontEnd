@@ -18,6 +18,7 @@ import { AiOutlinePlus } from 'react-icons/ai';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { convertNumberArrayToStringArray } from '@/utils/convertNumberArrayToStringArray.ts';
 import { SetterOrUpdater } from 'recoil';
+import { SaveUserInfo } from '@/typings/member.ts';
 type MessageType = 'success' | 'error' | 'warning';
 
 interface Props {
@@ -29,11 +30,12 @@ interface Props {
 }
 
 export default function CreateGroupModal({ isOpen, onClose, setMessageInfo, parentGroups }: Props) {
-  // TODO: 그룹 이름 중복 안되게 해야됨
   const [groupName, onChangeGroupName, setGroupName] = useInput('');
   const [isClickMemberList, setIsClickMemberList] = useState(false);
   const nowProject: Project = JSON.parse(sessionStorage.getItem('nowProject')!);
   const nowProduct: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
+  const userInfo: SaveUserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
+
   // 프로젝트 멤버 가져오는 훅
   const [data, isSuccess, refetch] = useGetProductMembers(nowProduct.productId);
   const [productMembers, setProductMembers] = useState<ProductMember[]>([]);
@@ -220,10 +222,10 @@ export default function CreateGroupModal({ isOpen, onClose, setMessageInfo, pare
                         >
                           <img
                             src={member.image ?? '/public/images/test_userprofile.png'}
-                            alt={`${member.memberName}님의 이미지`}
+                            alt={`${member.memberName}님의 프로필 사진`}
                             className={'w-8 h-8 mr-3 rounded-[50%]'}
                           />
-                          <span className={'ellipsis'}>
+                          <span className={'ellipsis text-xs font-bold text-gray-dark'}>
                             {member.memberName}({member.memberName})
                           </span>
                         </span>
@@ -257,6 +259,8 @@ export default function CreateGroupModal({ isOpen, onClose, setMessageInfo, pare
                       autoHideDuration={200}
                     >
                       {productMembers?.map((member: ProductMember, index) => {
+                        if (member.memberId === userInfo.id) return;
+
                         return (
                           <span
                             key={member.memberId}
@@ -267,10 +271,10 @@ export default function CreateGroupModal({ isOpen, onClose, setMessageInfo, pare
                           >
                             <img
                               src={member.image ?? '/public/images/test_userprofile.png'}
-                              alt={`${member.memberName}님의 이미지`}
+                              alt={`${member.memberName}의 프로필 서진`}
                               className={'w-8 h-8 mr-3 rounded-[50%]'}
                             />
-                            <span className={'ellipsis'}>
+                            <span className={'ellipsis text-xs font-bold text-gray-dark'}>
                               {member.memberName}({member.memberName})
                             </span>
                           </span>
