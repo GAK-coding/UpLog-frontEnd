@@ -7,8 +7,8 @@ import { AiOutlinePlus } from 'react-icons/ai';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDisclosure } from '@chakra-ui/react';
 import CreateTask from '@/components/Project/Task/CreateTask.tsx';
-import { useQuery } from 'react-query';
-import { menuTaskList } from '@/api/Project/Task.ts';
+import { useInfiniteQuery, useQuery } from 'react-query';
+import { menuTaskList, taskPagination } from '@/api/Project/Task.ts';
 import { useEffect, useState } from 'react';
 import { menuListData } from '@/recoil/Project/Menu.ts';
 import { MenuTaskData, TaskData } from '@/typings/task.ts';
@@ -17,6 +17,7 @@ import { ProductInfo } from '@/typings/product.ts';
 import { allMemberList, productMemberList } from '@/recoil/Product/atom.ts';
 import { SaveProjectInfo } from '@/typings/project.ts';
 import { FaUserCircle } from 'react-icons/fa';
+import { getPreviousPageParam } from 'react-query/types/core/infiniteQueryBehavior';
 
 export default function TaskMain() {
   const { product, project, menutitle } = useParams();
@@ -61,6 +62,24 @@ export default function TaskMain() {
     cacheTime: 80000, // 12분
     refetchOnWindowFocus: false, // 브라우저를 포커싱했을때 데이터를 가져오지 않음
   });
+
+  // task pagination
+  const {
+    data: taskData,
+    fetchNextPage,
+    hasNextPage,
+  } = useInfiniteQuery(
+    ['taskPages', menuId],
+    ({ pageParam = 0 }) => taskPagination(menuId!, pageParam, 20),
+    {
+      // TODO :  return true 값 숫자 형태로 변경하기
+      getNextPageParam: (lastPage) => {
+        if (typeof lastPage !== 'string') {
+          return lastPage.nextPage ? lastPage.nextPage : undefined;
+        }
+      },
+    }
+  );
 
   // 멤버 리스트 조회
   const { data } = useQuery(
