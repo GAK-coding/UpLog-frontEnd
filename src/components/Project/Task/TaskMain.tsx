@@ -28,7 +28,7 @@ export default function TaskMain() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const menuList = useRecoilValue(menuListData);
   const menuId = menuList.find((menu) => menu.menuName === menutitle)?.id;
-  const [taskList, setTaskList] = useRecoilState(taskAll);
+  const [taskList, setTaskList] = useState<MenuTaskData[]>([]);
   const [firstTaskList, setFirstTaskList] = useState<MenuTaskData[]>([]);
   const [memberList, setMemberList] = useRecoilState(productMemberList);
   const [memberListData, setMemberListData] = useRecoilState(allMemberList);
@@ -51,11 +51,13 @@ export default function TaskMain() {
   // 메뉴별 task 데이터 가져오기
   const getMenuTaskList = useQuery(['getMenuTaskList', menuId], () => menuTaskList(menuId!), {
     onSuccess: (data) => {
-      if (typeof data === 'object' && 'tasks' in data) {
-        setTaskList(data.tasks);
-        setFirstTaskList(data.tasks);
+      console.log(data);
+      if (typeof data !== 'string') {
+        setTaskList(data);
+        setFirstTaskList(data);
       }
     },
+
     staleTime: 0, // 10분
     cacheTime: 80000, // 12분
     refetchOnWindowFocus: false, // 브라우저를 포커싱했을때 데이터를 가져오지 않음
@@ -141,7 +143,7 @@ export default function TaskMain() {
               'flex-row-center text-[0.9rem] text-gray-dark task-status-ring border-status-before'
             }
           >
-            {taskList.filter((task) => task.taskStatus === 'PROGRESS_BEFORE').length}
+            <span>{taskList.filter((task) => task.taskStatus === 'PROGRESS_BEFORE').length}</span>
           </div>
           <div
             className={

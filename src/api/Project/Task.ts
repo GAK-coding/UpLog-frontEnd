@@ -2,6 +2,7 @@
 import {
   DragTaskIndexBody,
   FailTask,
+  MenuTaskData,
   MenuTasks,
   StatusTaskData,
   TaskBody,
@@ -91,7 +92,7 @@ export const allTaskList = async (projectId: number) => {
 // 메뉴별로 task 전체 조회
 export const menuTaskList = async (menuId: number) => {
   try {
-    const res: AxiosResponse<MenuTasks> = await instance.get(`/menus/${menuId}/tasks`);
+    const res: AxiosResponse<MenuTaskData[]> = await instance.get(`/menus/${menuId}/tasks`);
 
     return res.data;
   } catch (error) {
