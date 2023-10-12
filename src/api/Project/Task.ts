@@ -3,10 +3,10 @@ import {
   DragTaskIndexBody,
   FailTask,
   MenuTaskData,
-  MenuTasks,
   StatusTaskData,
   TaskBody,
   TaskData,
+  TaskPaging,
   TaskStatus,
   UpdateTaskBody,
 } from '@/typings/task.ts';
@@ -123,5 +123,21 @@ export const updateTaskIndex = async (data: DragTaskIndexBody, taskStatus: TaskS
   } catch (error) {
     console.log(error);
     return 'update task index fail';
+  }
+};
+
+//task pagination
+export const taskPagination = async (menuId: number, page: number, size: number) => {
+  try {
+    const res: AxiosResponse<TaskPaging> = await instance.get(`/menus/${menuId}/tasks/pages`, {
+      params: {
+        page,
+        size,
+      },
+    });
+
+    return res.data;
+  } catch (error) {
+    return 'get task pages fail';
   }
 };

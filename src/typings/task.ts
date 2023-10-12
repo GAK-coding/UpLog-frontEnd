@@ -63,3 +63,13 @@ export interface DragTaskIndexBody {
   movedTaskId: number | null;
   updateTaskIndexList: number[];
 }
+
+export interface PagingData {
+  menuInfo: MenuInfo;
+  tasks: MenuTaskData[];
+}
+
+export interface TaskPaging {
+  nextPage: boolean;
+  pagingTaskData: PagingData[];
+}

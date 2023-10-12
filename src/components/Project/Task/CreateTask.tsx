@@ -17,7 +17,7 @@ import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { menuListData } from '@/recoil/Project/Menu.ts';
 import { allMemberList, productMemberList } from '@/recoil/Product/atom.ts';
-import { TaskBody, TaskData } from '@/typings/task.ts';
+import { MenuTaskData, TaskBody, TaskData } from '@/typings/task.ts';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { createTask } from '@/api/Project/Task.ts';
 import { RangePickerProps } from 'antd/es/date-picker';
@@ -91,7 +91,7 @@ export default function CreateTask({ isOpen, onClose, menuId }: Props) {
       await queryClient.cancelQueries(['getMenuTaskList', menuId]);
 
       // 이전 쿼리 데이터를 가져옴
-      const previousTaskList: TaskData[] | undefined = queryClient.getQueryData([
+      const previousTaskList: MenuTaskData[] | undefined = queryClient.getQueryData([
         'getMenuTaskList',
         menuId,
       ]);
@@ -122,7 +122,7 @@ export default function CreateTask({ isOpen, onClose, menuId }: Props) {
     onSettled: () => {
       // success or error, invalidate해서 새로 받아옴
       return queryClient.invalidateQueries(['getMenuTaskList', menuId]);
-      queryClient.invalidateQueries(['menu']);
+      // queryClient.invalidateQueries(['menu']);
     },
   });
 
