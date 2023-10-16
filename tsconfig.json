@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6",
     "useDefineForClassFields": true,
-    "lib": ["es5", "DOM", "DOM.Iterable"],
+    "lib": ["es6", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
     //    "jsxImportSource": "@emotion/react",
@@ -41,7 +41,8 @@
       "@/types/*": ["src/types/*"],
       "@/utils/*": ["src/utils/*"],
       "@/typings/*": ["src/typings/*"],
-      "@/api/*": ["src/api/*"]
+      "@/api/*": ["src/api/*"],
+      "@/mock/*": ["src/mock/*"]
     }
   },
   "include": ["lib", "src", "types", "**/*.ts", "test/**/**.ts"],

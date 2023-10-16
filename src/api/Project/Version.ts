@@ -1,6 +1,13 @@
 import { instance } from '@/api';
 import { AxiosResponse } from 'axios';
-import { FailProject, ParentGroup, Project, ChildGroup } from '@/typings/project.ts';
+import {
+  FailProject,
+  ParentGroup,
+  Project,
+  ChildGroup,
+  ChildGroupMember,
+  ParentGroupMember,
+} from '@/typings/project.ts';
 import { ChangeLogBody, ChangeLogData, FailProduct } from '@/typings/product.ts';
 
 export const getAllProductProjects = async (productId: number) => {
@@ -53,6 +60,16 @@ export const getParentGroups = async (projectId: number) => {
   }
 };
 
+export const getParentGroupMembers = async (teamId: number) => {
+  try {
+    const res: AxiosResponse<ParentGroupMember[]> = await instance.get(`/teams/${teamId}/members`);
+
+    return res.data;
+  } catch (err) {
+    return 'fail getParentGroupMembers';
+  }
+};
+
 export const getChildGroups = async (teamId: number) => {
   try {
     const res: AxiosResponse<{ childTeamInfoDTOList: ChildGroup[] }> = await instance.get(
@@ -62,6 +79,17 @@ export const getChildGroups = async (teamId: number) => {
     return res.data;
   } catch (err) {
     return 'fail getProjectTeams';
+  }
+};
+
+export const getChildGroupMembers = async (teamId: number) => {
+  try {
+    const res: AxiosResponse<{ verySimpleMemberInfoDTOList: ChildGroupMember[] }> =
+      await instance.get(`/teams/${teamId}/child-team/members`);
+
+    return res.data;
+  } catch (err) {
+    return 'fail getChildGroupMembers';
   }
 };
 
@@ -95,6 +123,28 @@ export const createProjectTeam = async (data: {
       if (err.message === '프로젝트 내에서 팀 이름이 중복됩니다.') return err.message;
       else return 'fail createProjectTeam';
     }
+  }
+};
+
+export const addGroupMembers = async (data: {
+  teamId: number;
+  addMemberIdList: number[];
+  link: string;
+  memberInfo?: ParentGroupMember;
+}) => {
+  try {
+    const { teamId, addMemberIdList, link } = data;
+    const res: AxiosResponse<{ duplicatedMemberList: number[] }> = await instance.patch(
+      `/teams/${teamId}`,
+      {
+        addMemberIdList,
+        link,
+      }
+    );
+
+    return res.data.duplicatedMemberList.length;
+  } catch (err) {
+    return 'fail addParentGroupMembers';
   }
 };
 
