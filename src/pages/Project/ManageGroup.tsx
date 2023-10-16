@@ -14,6 +14,8 @@ import AddChildGroupMemberModal from '@/components/Project/ManageGroup/AddChildG
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md';
 import { SaveUserInfo } from '@/typings/member.ts';
 import { v4 as uuidv4 } from 'uuid';
+import { message } from '@/recoil/Common/atom.ts';
+import { useRecoilState } from 'recoil';
 
 export default function ManageGroup() {
   const { parentgroup } = useParams();
@@ -26,6 +28,7 @@ export default function ManageGroup() {
   const [isSeeMores, setIsSeeMores] = useState<boolean[]>([]);
   const [isInclude, setIsInclude] = useState(false);
   const userInfo: SaveUserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
+  const [messageInfo, setMessageInfo] = useRecoilState(message);
 
   // 제품 전체 멤버
   const [productMembers, isSuccess] = useGetProductMembers(productId);
@@ -122,7 +125,19 @@ export default function ManageGroup() {
             className={
               'bg-orange rounded font-bold text-white w-[6.5rem] h-10 flex-row-center mr-6'
             }
-            onClick={onOpen}
+            onClick={() => {
+              if (
+                (getChildGroup as { childTeamInfoDTOList: ChildGroup[] })?.childTeamInfoDTOList
+                  .length > 10
+              ) {
+                setMessageInfo({
+                  type: 'warning',
+                  content: '그룹은 최대 10개까지 생성 가능합니다.',
+                });
+                return;
+              }
+              onOpen();
+            }}
           >
             <AiOutlinePlus className={'text-xl mr-1'} /> 그룹 추가
           </button>
