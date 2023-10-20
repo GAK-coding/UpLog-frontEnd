@@ -11,10 +11,10 @@ import { useCallback, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQueryClient } from 'react-query';
 import { deleteTask } from '@/api/Project/Task.ts';
-import { useMessage } from '@/hooks/useMessage.ts';
 import { taskAll } from '@/recoil/Project/Task.ts';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { deletePost } from '@/api/Project/Post.ts';
+import { message } from '@/recoil/Common/atom.ts';
 
 interface Props {
   isOpen: boolean;
@@ -28,7 +28,7 @@ interface Props {
 export default function DeleteDialog({ isOpen, onClose, task, post, menuId, isTask }: Props) {
   const cancelRef = useRef<HTMLButtonElement>(null);
   const { product, project, menutitle } = useParams();
-  const { showMessage, contextHolder } = useMessage();
+  const [messageInfo, setMessageInfo] = useRecoilState(message);
   const taskList = useRecoilValue(taskAll);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -48,24 +48,22 @@ export default function DeleteDialog({ isOpen, onClose, task, post, menuId, isTa
       return () => queryClient.setQueryData(['getTaskEach', taskId], previousData);
     },
     onSuccess: (data) => {
-      if (data === 'delete task fail') {
-        showMessage('error', 'Task 삭제에 실패했습니다.');
-      } else if (typeof data !== 'string' && 'message' in data) {
-        showMessage('error', 'Task 삭제에 실패했습니다.');
-      } else if (data === 'delete') {
-        showMessage('success', 'Task가 삭제되었습니다.');
-        setTimeout(() => {
+      if (typeof data !== 'string') {
+        if ('message' in data)
+          setMessageInfo({ type: 'error', content: 'Task 삭제에 실패했습니다.' });
+        else if ('id' in data) {
+          setMessageInfo({ type: 'success', content: 'Task가 삭제되었습니다.' });
           onClose();
-          navigate(`/workspace/${product}/${project}/menu/${menutitle}`);
-        }, 2000);
-      }
+        }
+      } else if (data === 'delete task fail')
+        setMessageInfo({ type: 'error', content: 'Task 삭제에 실패했습니다.' });
     },
     onError: (error, value, rollback) => {
       if (rollback) {
         rollback();
-        showMessage('error', 'Task 삭제에 실패했습니다.');
+        setMessageInfo({ type: 'error', content: 'Task 삭제에 실패했습니다.' });
       } else {
-        showMessage('error', 'Task 삭제에 실패했습니다.');
+        setMessageInfo({ type: 'error', content: 'Task 삭제에 실패했습니다.' });
       }
     },
     onSettled: () => {
@@ -86,24 +84,20 @@ export default function DeleteDialog({ isOpen, onClose, task, post, menuId, isTa
       return () => queryClient.setQueryData(['menuPostData', menuId], previousData);
     },
     onSuccess: (data) => {
-      if (data === 'delete post fail') {
-        showMessage('error', 'Post 삭제에 실패했습니다.');
-      } else if (typeof data !== 'string' && 'message' in data) {
-        showMessage('error', 'Post 삭제에 실패했습니다.');
-      } else if (data === 'delete 완료') {
-        showMessage('success', 'Post가 삭제되었습니다.');
-        setTimeout(() => {
-          onClose();
-          navigate(`/workspace/${product}/${project}/menu/${menutitle}`);
-        }, 2000);
+      if (typeof data !== 'string' && 'id' in data) {
+        setMessageInfo({ type: 'success', content: 'Post가 삭제되었습니다.' });
+        onClose();
+        navigate(`/workspace/${product}/${project}/menu/${menutitle}`);
+      } else {
+        setMessageInfo({ type: 'error', content: 'Post 삭제에 실패했습니다.' });
       }
     },
     onError: (error, value, rollback) => {
       if (rollback) {
         rollback();
-        showMessage('error', 'Post 삭제에 실패했습니다.');
+        setMessageInfo({ type: 'error', content: 'Post 삭제에 실패했습니다.' });
       } else {
-        showMessage('error', 'Post 삭제에 실패했습니다.');
+        setMessageInfo({ type: 'error', content: 'Post 삭제에 실패했습니다.' });
       }
     },
     onSettled: () => {
@@ -128,7 +122,6 @@ export default function DeleteDialog({ isOpen, onClose, task, post, menuId, isTa
       onClose={onClose}
       isCentered={true}
     >
-      {contextHolder}
       <AlertDialogOverlay>
         <AlertDialogContent maxW={'30rem'}>
           <AlertDialogHeader bgColor={'var(--white)'} color={'var(--black)'}>

@@ -17,16 +17,21 @@ import { useMutation } from 'react-query';
 import { changePassword, deleteAccount } from '@/api/Members/mypage.ts';
 import { SaveUserInfo } from '@/typings/member.ts';
 import { loginStatus } from '@/recoil/User/atom.ts';
-import { useSetRecoilState } from 'recoil';
+import { SetterOrUpdater, useSetRecoilState } from 'recoil';
 import { useCookies } from 'react-cookie';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
   isClickPwChange: boolean;
-  showMessage: (type: MessageType, content: string) => void;
+  setMessageInfo: SetterOrUpdater<{ type: MessageType; content: string } | null>;
 }
-export default function UserManageModal({ isOpen, onClose, isClickPwChange, showMessage }: Props) {
+export default function UserManageModal({
+  isOpen,
+  onClose,
+  isClickPwChange,
+  setMessageInfo,
+}: Props) {
   const userInfo: SaveUserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
   const [password, onChangePassword, setPassword] = useInput('');
   const [newPassword, onChangeNewPassword, setNewPassword] = useInput('');
@@ -45,22 +50,22 @@ export default function UserManageModal({ isOpen, onClose, isClickPwChange, show
   const { mutate: changePasswordMutate } = useMutation(changePassword, {
     onSuccess: (data) => {
       if (data && 'message' in data) {
-        showMessage('warning', '현재 비밀번호가 일치하지 않습니다.');
+        setMessageInfo({ type: 'warning', content: '현재 비밀번호가 일치하지 않습니다.' });
         return;
       }
 
       resetPw();
-      showMessage('success', '비밀번호 변경 완료!');
+      setMessageInfo({ type: 'success', content: '비밀번호 변경 완료!' });
     },
     onError: () => {
-      showMessage('error', '다시 시도해주세요.');
+      setMessageInfo({ type: 'error', content: '다시 시도해주세요.' });
     },
   });
 
   const { mutate: deleteAccountMutate } = useMutation(deleteAccount, {
     onSuccess: (data) => {
       if (typeof data !== 'string') {
-        showMessage('warning', data.message);
+        setMessageInfo({ type: 'warning', content: data.message });
         return;
       }
 
@@ -73,18 +78,18 @@ export default function UserManageModal({ isOpen, onClose, isClickPwChange, show
       navigator('/');
     },
     onError: () => {
-      showMessage('error', '다시 시도해주세요.');
+      setMessageInfo({ type: 'error', content: '다시 시도해주세요.' });
     },
   });
 
   const onClickChangePassword = useCallback(() => {
     if (!password || !newPassword) {
-      showMessage('warning', '비밀번호를 입력해주세요.');
+      setMessageInfo({ type: 'warning', content: '비밀번호를 입력해주세요.' });
       return;
     }
 
     if (!isCheckPw) {
-      showMessage('warning', '올바른 새로운 비밀번호를 입력해주세요.');
+      setMessageInfo({ type: 'warning', content: '올바른 새로운 비밀번호를 입력해주세요.' });
       return;
     }
 
@@ -93,7 +98,7 @@ export default function UserManageModal({ isOpen, onClose, isClickPwChange, show
 
   const onClickDeleteAccount = useCallback(() => {
     if (!password) {
-      showMessage('warning', '비밀번호를 입력해주세요.');
+      setMessageInfo({ type: 'warning', content: '비밀번호를 입력해주세요.' });
       return;
     }
 

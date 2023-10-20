@@ -5,11 +5,11 @@ import { BsDot } from 'react-icons/bs';
 import { NavLink, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { IoIosArrowDown, IoMdSettings } from 'react-icons/io';
 import CreateGroupModal from '@/components/Product/SideBar/CreateGroupModal.tsx';
-import { Project, ScreenProjectTeams } from '@/typings/project.ts';
-import { useQuery } from 'react-query';
-import { getProjectTeams } from '@/api/Project/Version.ts';
-import { useMessage } from '@/hooks/useMessage.ts';
+import { ChildGroup, ParentGroupWithStates, Project } from '@/typings/project.ts';
 import { useGetProjectGroups } from '@/components/Project/hooks/useGetProjectGroups.ts';
+import { message } from '@/recoil/Common/atom.ts';
+import { useRecoilState } from 'recoil';
+import { useGetChildGroups } from '@/components/Product/hooks/useGetChildGroups.ts';
 
 export default function Groups() {
   const { product, project, parentgroup, childgroup } = useParams();
@@ -17,53 +17,77 @@ export default function Groups() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const nowProject: Project = JSON.parse(sessionStorage.getItem('nowProject')!);
-  const { showMessage, contextHolder } = useMessage();
+  const [messageInfo, setMessageInfo] = useRecoilState(message);
+  const [parentGroups, setParentGroups] = useState<ParentGroupWithStates[]>([]);
+  const [nowParentGroupId, setNowParentGroupId] = useState(-1);
+  const [nowParentGroupIdx, setNowParentGroupIdx] = useState(-1);
+  // 자식 그룹 없는 useEffect에서 사용
+  const [change, setChange] = useState(false);
 
-  const [parentGroups, setParentGroups] = useState<ScreenProjectTeams[]>([]);
+  const getParentGroups = useGetProjectGroups(nowProject.id, (data) => {
+    if (data && typeof data !== 'string') {
+      const temp: ParentGroupWithStates[] = data.map((group) => {
+        return { ...group, isOpen: false, isHover: false };
+      });
 
-  const getGroups = useGetProjectGroups(nowProject.id);
-
-  const childGroups: string[][] = [
-    // ['프론트엔드', '백엔드', '풀스택'],
-    // ['콘텐츠', '디자인'],
-    // ['SNS', '기사'],
-    // ['김윤정'],
-    // ['박은령'],
-    // ['오채영'],
-    // ['장준'],
-  ];
-
-  const { data } = useQuery(
-    ['getProjectTeams', nowProject?.id],
-    () => getProjectTeams(nowProject?.id),
-    {
-      onSuccess: (data) => {
-        if (data && typeof data !== 'string') {
-          const temp: ScreenProjectTeams[] = data.childTeamInfoDTOList?.map((group) => {
-            return { ...JSON.parse(JSON.stringify(group)), isOpen: false, isHover: false };
-          });
-          setParentGroups(temp);
-        }
-      },
+      return temp;
     }
-  );
+  }) as ParentGroupWithStates[];
 
-  /** 부모 집합 펼치는 함수 */
-  const onToggle = useCallback(
-    (id: number) => {
+  const onChangeNowParentId = useCallback((id: number) => {
+    setNowParentGroupId(id);
+  }, []);
+
+  const onChangeNowParentGroupIdx = useCallback((idx: number) => {
+    setNowParentGroupIdx(idx);
+  }, []);
+
+  const onSuccessGetChildGroup = useCallback(
+    (data: { childTeamInfoDTOList: ChildGroup[] } | 'fail getProjectTeams') => {
+      if (typeof data !== 'string' && data.childTeamInfoDTOList.length === 0) {
+        setMessageInfo({ type: 'warning', content: '하위 그룹이 없습니다!' });
+
+        const temp = [...parentGroups];
+
+        setParentGroups(
+          temp.map((group) => {
+            return { ...group, isOpen: false };
+          })
+        );
+
+        return;
+      }
+
       const temp = [...parentGroups];
-      temp[id].isOpen = !temp[id].isOpen;
-      setParentGroups(temp);
+      setParentGroups(
+        temp.map((group) => {
+          if (group.id === nowParentGroupId) return { ...group, isOpen: true };
+          else return { ...group, isOpen: false };
+        })
+      );
     },
-    [parentGroups]
+    [parentGroups, nowParentGroupId]
   );
 
-  /** 설정 이모티콘 보이게 하는 함수*/
-  const onHover = useCallback(
+  const [getChildGroup, refetch] = useGetChildGroups(
+    nowParentGroupId,
+    false,
+    onSuccessGetChildGroup
+  );
+
+  /** 설정 이모티콘 지금 hover된거만 보이게 하는 함수*/
+  const onShowSettingIcon = useCallback(
     (num: number) => {
-      const temp = JSON.parse(JSON.stringify(parentGroups));
-      temp[num].isHover = true;
-      setParentGroups(temp);
+      const temp: ParentGroupWithStates[] = JSON.parse(JSON.stringify(parentGroups));
+
+      setParentGroups(
+        temp.map((group) => {
+          if (group.id === num) group.isHover = true;
+          else group.isHover = false;
+
+          return group;
+        })
+      );
     },
     [parentGroups]
   );
@@ -71,7 +95,7 @@ export default function Groups() {
   /**설정 이모티콘 안보이게 하는 함수*/
   const onLeave = useCallback(
     (num: number) => {
-      const temp = JSON.parse(JSON.stringify(parentGroups));
+      const temp: ParentGroupWithStates[] = JSON.parse(JSON.stringify(parentGroups));
       temp[num].isHover = false;
       setParentGroups(temp);
     },
@@ -83,20 +107,44 @@ export default function Groups() {
     navigate(`/workspace/${product}/${project}/group/${group}/setting`);
   }, []);
 
+  const onSetNowGroupId = useCallback((id: number) => {
+    sessionStorage.setItem('nowGroupId', id.toString());
+  }, []);
+
   useEffect(() => {
-    if (getGroups) {
-      sessionStorage.setItem('nowTeamId', getGroups[0]?.id.toString());
+    if (getParentGroups) {
+      sessionStorage.setItem('nowTeamId', getParentGroups[0]?.id.toString());
+
+      setParentGroups(getParentGroups.filter((group) => group.depth === 1));
     }
-  }, [getGroups]);
+  }, [getParentGroups]);
+
+  useEffect(() => {
+    const temp: ParentGroupWithStates[] = JSON.parse(JSON.stringify(parentGroups));
+
+    // 여기선 자식 그룹을 조회한 상황
+    if (temp[nowParentGroupIdx]?.isOpen) {
+      temp[nowParentGroupIdx].isOpen = false;
+      setParentGroups(temp);
+      return;
+    }
+
+    // 여기선 자식 그룹을 조회하지 않은 상황
+    if (nowParentGroupId !== -1) {
+      refetch();
+    }
+  }, [nowParentGroupId, nowParentGroupIdx, change, refetch]);
 
   return (
     <section className={'px-10'}>
-      {contextHolder}
       <div className={'h-20 flex-row-center justify-between'}>
         <header className={'text-[1.4rem] font-bold'}>Group</header>
-        <span className={'cursor-pointer'} onClick={onOpen}>
-          <AiOutlinePlus className={'text-2xl fill-gray-light'} />
-        </span>
+        {/* 그룹 최대 개수 30개 */}
+        {parentGroups.length <= 30 && (
+          <span className={'cursor-pointer'} onClick={onOpen}>
+            <AiOutlinePlus className={'text-2xl fill-gray-light'} />
+          </span>
+        )}
       </div>
       <div>
         <NavLink
@@ -106,72 +154,87 @@ export default function Groups() {
               isActive && !parentgroup && !childgroup && 'text-orange-sideBar'
             }`
           }
+          onClick={() => onSetNowGroupId(+sessionStorage.getItem('nowTeamId')!)}
         >
           <BsDot /> 전체
         </NavLink>
-        {parentGroups?.map((parent, index) => (
-          <div key={`${parent.teamName}-${index}`}>
-            <div className={'flex items-center mb-4'}>
-              <NavLink
-                to={`/workspace/${product}/${project}/group/${parent.teamName}`}
-                className={({ isActive }) =>
-                  `w-[90%] flex justify-between items-center font-bold text-[1.1rem] ${
-                    isActive && !pathname.includes('setting') && 'text-orange-sideBar'
-                  }`
-                }
-                onMouseEnter={() => onHover(index)}
-                onMouseLeave={() => onLeave(index)}
-              >
-                <span className={'flex items-center h-full'}>
-                  <BsDot /> {parent.teamName}
-                  {parent.isHover && (
-                    <IoMdSettings
-                      className={'ml-2 fill-gray-light text-[1.4rem]'}
-                      onClick={(e) => onClickSetting(e, parent.teamName)}
-                    />
-                  )}
-                </span>
-              </NavLink>
+        {(parentGroups as ParentGroupWithStates[])?.map((parent, index) => {
+          if (index === 0) return;
+          if (parent.depth === 2) return;
 
-              <span className={'w-[10%]'} onClick={() => onToggle(index)}>
-                {parent.childTeamInfoDTOList.length > 0 && (
+          return (
+            <div key={`${parent.teamName}-${index}`}>
+              <div className={'flex items-center mb-4'}>
+                <NavLink
+                  to={`/workspace/${product}/${project}/group/${parent.teamName}`}
+                  className={({ isActive }) =>
+                    `w-[90%] flex justify-between items-center font-bold text-[1.1rem] ${
+                      isActive && !pathname.includes('setting') && 'text-orange-sideBar'
+                    }`
+                  }
+                  onMouseEnter={() => onShowSettingIcon(parent.id)}
+                  onMouseLeave={() => onLeave(index)}
+                  onClick={() => onSetNowGroupId(parent.id)}
+                >
+                  <span className={'flex items-center h-full'}>
+                    <BsDot /> {parent.teamName}
+                    {parent.isHover && (
+                      <IoMdSettings
+                        className={'ml-2 fill-gray-light text-[1.4rem]'}
+                        onClick={(e) => onClickSetting(e, parent.teamName)}
+                      />
+                    )}
+                  </span>
+                </NavLink>
+
+                <span
+                  className={'w-[10%]'}
+                  onClick={() => {
+                    onChangeNowParentId(parent.id);
+                    onChangeNowParentGroupIdx(index);
+                    setChange(!change);
+                  }}
+                >
                   <IoIosArrowDown
                     className={`fill-gray-dark text-xl cursor-pointer ${
                       parent.isOpen ? 'arrowDown' : 'arrowUp'
                     }`}
                   />
-                )}
-              </span>
-            </div>
-
-            {parent.isOpen && (
-              <div className={'mb-2'}>
-                <Collapse in={parent.isOpen} startingHeight={20}>
-                  {parent.childTeamInfoDTOList.map((child, idx) => (
-                    <NavLink
-                      to={`/workspace/${product}/${project}/group/${parent.teamName}/${child.teamName}`}
-                      key={`${parent.teamName}-${child.teamName}-${idx}`}
-                      className={({ isActive }) =>
-                        `w-[90%] flex justify-between items-center font-bold text-[1.1rem] ml-4 mb-4 ${
-                          isActive && 'text-orange-sideBar'
-                        }`
-                      }
-                    >
-                      <span className={'flex items-center'}>
-                        <BsDot /> {child.teamName}
-                      </span>
-                    </NavLink>
-                  ))}
-                </Collapse>
+                </span>
               </div>
-            )}
-          </div>
-        ))}
+
+              {parent.isOpen && (
+                <div className={'mb-2'}>
+                  <Collapse in={parent.isOpen} startingHeight={20}>
+                    {typeof getChildGroup !== 'string' &&
+                      (
+                        getChildGroup as { childTeamInfoDTOList: ChildGroup[] }
+                      )?.childTeamInfoDTOList?.map((child, idx) => (
+                        <NavLink
+                          to={`/workspace/${product}/${project}/group/${parent.teamName}/${child.teamName}`}
+                          key={`${parent.teamName}-${child.teamName}-${idx}`}
+                          className={({ isActive }) =>
+                            `w-[90%] flex justify-between items-center font-bold text-[1.1rem] ml-4 mb-4 ${
+                              isActive && 'text-orange-sideBar'
+                            }`
+                          }
+                        >
+                          <span className={'flex items-center'}>
+                            <BsDot /> {child.teamName}
+                          </span>
+                        </NavLink>
+                      ))}
+                  </Collapse>
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
       <CreateGroupModal
         isOpen={isOpen}
         onClose={onClose}
-        showMessage={showMessage}
+        setMessageInfo={setMessageInfo}
         parentGroups={parentGroups}
         setParentGroups={setParentGroups}
       />

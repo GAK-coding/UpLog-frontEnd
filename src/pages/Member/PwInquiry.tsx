@@ -1,16 +1,17 @@
 import React, { FormEvent, useCallback, useState } from 'react';
-import { useMessage } from '@/hooks/useMessage.ts';
 import { MdOutlineMailOutline } from 'react-icons/md';
 import useInput from '@/hooks/useInput.ts';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from 'react-query';
 import { emailRequest } from '@/api/Members/Login-Signup.ts';
+import { message } from '@/recoil/Common/atom.ts';
+import { useRecoilState } from 'recoil';
 
 export default function PwInquiry() {
   const navigate = useNavigate();
   const [email, onChangeEmail, setEmail] = useInput('');
   const [isSend, setIsSend] = useState(false);
-  const { showMessage, contextHolder } = useMessage();
+  const [messageInfo, setMessageInfo] = useRecoilState(message);
 
   const { mutate } = useMutation(emailRequest);
 
@@ -21,7 +22,7 @@ export default function PwInquiry() {
       if (!isSend) {
         const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
         if (!emailRegex.test(email)) {
-          showMessage('warning', '이메일이 유효하지 않습니다.');
+          setMessageInfo({ type: 'warning', content: '이메일이 유효하지 않습니다.' });
           return;
         }
 
@@ -36,7 +37,7 @@ export default function PwInquiry() {
       }
 
       if (!email) {
-        showMessage('warning', '이메일을 입력해주세요.');
+        setMessageInfo({ type: 'warning', content: '이메일을 입력해주세요.' });
         return;
       }
     },
@@ -45,7 +46,6 @@ export default function PwInquiry() {
 
   return (
     <section className={'h-full'}>
-      {contextHolder}
       <div className={'w-h-full flex-col-center'}>
         <article>
           <img className={'w-[5.7rem] h-[6.7rem]'} src={'logo.svg'} alt={'logo'} />

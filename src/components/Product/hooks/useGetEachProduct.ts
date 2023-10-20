@@ -2,19 +2,20 @@ import { eachProduct } from '@/api/Product/Product.ts';
 import { useQuery } from 'react-query';
 import { Dispatch, SetStateAction } from 'react';
 import { ProductsData } from '@/typings/product.ts';
+import { SetterOrUpdater } from 'recoil';
 
 type MessageType = 'success' | 'error' | 'warning';
 
 export function useGetEachProduct(
   productId: number,
-  showMessage: (type: MessageType, content: string) => void,
+  setMessageInfo: SetterOrUpdater<{ type: MessageType; content: string } | null>,
   setProductName?: Dispatch<SetStateAction<string>>,
   isEnabled = true
 ): [ProductsData | [], () => void] {
   const { refetch, data } = useQuery(['getProjectInfo', productId], () => eachProduct(productId), {
     onSuccess: (data) => {
       if (typeof data === 'object' && 'message' in data) {
-        showMessage('error', '제품 정보를 불러오는데 실패했습니다.');
+        setMessageInfo({ type: 'error', content: '제품 정보를 불러오는데 실패했습니다.' });
       } else if (typeof data !== 'string' && 'name' in data && setProductName) {
         setProductName(data.name);
       }

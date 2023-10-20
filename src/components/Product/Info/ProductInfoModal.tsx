@@ -10,7 +10,6 @@ import {
 } from '@chakra-ui/react';
 import useInput from '@/hooks/useInput.ts';
 import { useCallback, useEffect, useState } from 'react';
-import { useMessage } from '@/hooks/useMessage.ts';
 import ImageCrop from '@/components/Member/MyPage/ImageCrop.tsx';
 import { UploadFile, UploadProps } from 'antd/lib';
 import { RcFile } from 'antd/es/upload';
@@ -19,8 +18,8 @@ import { useMutation, useQueryClient } from 'react-query';
 import { createProduct, productEdit } from '@/api/Product/Product.ts';
 import { ProductBody, ProductEditBody, SaveProductInfo } from '@/typings/product.ts';
 import { useGetEachProduct } from '@/components/Product/hooks/useGetEachProduct.ts';
-import { useRecoilValue } from 'recoil';
-import { frontEndUrl } from '@/recoil/Common/atom.ts';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { frontEndUrl, message } from '@/recoil/Common/atom.ts';
 import { imageUpload } from '@/api/Members/mypage.ts';
 import { useGetAllProduct } from '@/components/Product/hooks/useGetAllProduct.ts';
 import { sendLog } from '@/api/Log';
@@ -36,7 +35,7 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
   const [productName, onChangeProductName, setProductName] = useInput('');
   const [masterEmail, onChangeMasterEmail, setMasterEmail] = useInput('');
   const [clientEmail, onChangeClientEmail, setClientEmail] = useInput<string>('');
-  const { showMessage, contextHolder } = useMessage();
+  const [messageInfo, setMessageInfo] = useRecoilState(message);
   const baseUrl = useRecoilValue(frontEndUrl);
   const [check, setCheck] = useState(false);
   const [productList, allProductListRefetch] = useGetAllProduct(false);
@@ -79,15 +78,15 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
     {
       onSuccess: (data) => {
         if (data === 'create product fail') {
-          showMessage('error', '중복된 제품 이름입니다.');
+          setMessageInfo({ type: 'error', content: '중복된 제품 이름입니다.' });
           return;
         } else {
           if (typeof data === 'object' && 'message' in data) {
             if (data.httpStatus === 'NOT_FOUND')
-              showMessage('warning', '마스터 정보가 올바르지 않습니다.');
-            else showMessage('error', '제품 생성 권한이 없습니다.');
+              setMessageInfo({ type: 'warning', content: '마스터 정보가 올바르지 않습니다.' });
+            else setMessageInfo({ type: 'error', content: '제품 생성 권한이 없습니다.' });
           } else {
-            showMessage('success', '제품이 생성되었습니다.');
+            setMessageInfo({ type: 'success', content: '제품이 생성되었습니다.' });
             allProductListRefetch();
             setTimeout(() => onClose(), 2000);
           }
@@ -100,7 +99,7 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
   // 제품 정보 조회
   const [productGetData, refetch] = useGetEachProduct(
     productId,
-    showMessage,
+    setMessageInfo,
     setProductName,
     false
   );
@@ -127,37 +126,39 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
           data.updateResultDTO;
 
         if (failCnt > 0 && duplicatedCnt > 0) {
-          showMessage(
-            'error',
-            `${failMemberList.join(', ')}님 가입되어 있지 않고, ${duplicatedMemberList.join(
+          setMessageInfo({
+            type: 'error',
+            content: `${failMemberList.join(
               ', '
-            )}님은 이미 존재하여 초대에 실패했습니다.`
-          );
+            )}님 가입되어 있지 않고, ${duplicatedMemberList.join(
+              ', '
+            )}님은 이미 존재하여 초대에 실패했습니다.`,
+          });
           return;
         } else if (failCnt > 0) {
-          showMessage(
-            'error',
-            `${failMemberList.join(', ')}님은 가입되어 있지 않아 초대에 실패했습니다.`
-          );
+          setMessageInfo({
+            type: 'error',
+            content: `${failMemberList.join(', ')}님은 가입되어 있지 않아 초대에 실패했습니다.`,
+          });
           return;
         } else if (duplicatedCnt > 0) {
-          showMessage(
-            'error',
-            `${duplicatedMemberList.join(', ')}님은 이미 존재하여 초대에 실패했습니다.`
-          );
+          setMessageInfo({
+            type: 'error',
+            content: `${duplicatedMemberList.join(', ')}님은 이미 존재하여 초대에 실패했습니다.`,
+          });
           return;
         }
 
-        showMessage('success', '제품 수정이 완료되었습니다.');
+        setMessageInfo({ type: 'success', content: '제품 수정이 완료되었습니다.' });
         setTimeout(() => onClose(), 2000);
       }
     },
     onError: (error, value, rollback) => {
       if (rollback) {
         rollback();
-        showMessage('error', '제품 정보 변경에 실패했습니다.');
+        setMessageInfo({ type: 'error', content: '제품 정보 변경에 실패했습니다.' });
       } else {
-        showMessage('error', '제품 정보 변경에 실패했습니다.');
+        setMessageInfo({ type: 'error', content: '제품 정보 변경에 실패했습니다.' });
       }
     },
     onSettled: () => {
@@ -186,13 +187,13 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
   const onClickMakeProduct = useCallback(() => {
     if (!isCreateProduct) {
       if (!productName) {
-        showMessage('warning', '제품 이름을 입력해주세요.');
+        setMessageInfo({ type: 'warning', content: '제품 이름을 입력해주세요.' });
         return;
       }
 
       // 변경된 사항이 없으면 수정 요청 보내지 않음
       if ('name' in productGetData && productName === productGetData.name && clientEmail === '') {
-        showMessage('warning', '변경된 정보가 없습니다.');
+        setMessageInfo({ type: 'warning', content: '변경된 정보가 없습니다.' });
         return;
       }
 
@@ -220,7 +221,10 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
           .filter((email) => email !== null) as string[];
 
         if (!isEmailFormat) {
-          showMessage('warning', '이메일 형식이 올바르지 않은 메일이 존재합니다.');
+          setMessageInfo({
+            type: 'warning',
+            content: '이메일 형식이 올바르지 않은 메일이 존재합니다.',
+          });
           return;
         }
 
@@ -250,7 +254,7 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
         sendLogMutate({ page: 'product', status: false, message: 'master' });
       }
 
-      showMessage('warning', '필수 정보를 입력해주세요.');
+      setMessageInfo({ type: 'warning', content: '필수 정보를 입력해주세요.' });
       return;
     }
 
@@ -365,8 +369,6 @@ export default function ProductInfoModal({ isOpen, onClose, isCreateProduct, pro
         <ModalBody>
           <Flex justifyContent={'center'} h={'100%'}>
             <section className={'flex-col-center justify-evenly w-[25rem] h-full'}>
-              {contextHolder}
-
               {/*제품 이름*/}
               <div className={'w-full mt-4 mb-5 text-[1rem]'}>
                 <div className={'flex mb-[0.93rem]'}>

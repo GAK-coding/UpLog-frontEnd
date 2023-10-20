@@ -12,10 +12,11 @@ import { useDisclosure } from '@chakra-ui/react';
 import { Viewer } from '@toast-ui/react-editor';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { noticePost, postLike, postLikeCount, unNoticePost } from '@/api/Project/Post.ts';
-import { useMessage } from '@/hooks/useMessage.ts';
 import { SaveUserInfo } from '@/typings/member.ts';
 import { ProductInfo } from '@/typings/product.ts';
 import { SaveProjectInfo } from '@/typings/project.ts';
+import { message } from '@/recoil/Common/atom.ts';
+import { useRecoilState } from 'recoil';
 
 interface Props {
   post: Post;
@@ -24,7 +25,7 @@ interface Props {
   noticeId?: number;
 }
 export default function PostEach({ post, menuId, likeList, noticeId }: Props) {
-  const { showMessage, contextHolder } = useMessage();
+  const [messageInfo, setMessageInfo] = useRecoilState(message);
   const productInfo: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
   const nowProject: SaveProjectInfo = JSON.parse(sessionStorage.getItem('nowProject')!);
 
@@ -43,8 +44,8 @@ export default function PostEach({ post, menuId, likeList, noticeId }: Props) {
   const { mutate: noticePostMutate } = useMutation(() => noticePost(menuId, post.id), {
     onSuccess: (data) => {
       if (typeof data !== 'string' && 'id' in data) {
-        showMessage('success', '공지글로 등록되었습니다.');
-      } else showMessage('error', '공지글 등록에 실패했습니다.');
+        setMessageInfo({ type: 'success', content: '공지글로 등록되었습니다.' });
+      } else setMessageInfo({ type: 'error', content: '공지글 등록에 실패했습니다.' });
     },
     onSettled: () => {
       return queryClient.invalidateQueries(['menuPostData', menuId], { refetchInactive: true });
@@ -54,9 +55,9 @@ export default function PostEach({ post, menuId, likeList, noticeId }: Props) {
   // 공지글 해제
   const { mutate: unNoticePostMutate } = useMutation(() => unNoticePost(menuId), {
     onSuccess: (data) => {
-      if (data === 'delete') {
-        showMessage('success', '공지글이 해제 되었습니다.');
-      } else showMessage('error', '공지글 해제에 실패했습니다.');
+      if (typeof data !== 'string' && 'id' in data) {
+        setMessageInfo({ type: 'success', content: '공지글이 해제되었습니다.' });
+      } else setMessageInfo({ type: 'error', content: '공지글 해제에 실패했습니다.' });
     },
     onSettled: () => {
       return queryClient.invalidateQueries(['menuPostData', menuId], { refetchInactive: true });
@@ -77,14 +78,14 @@ export default function PostEach({ post, menuId, likeList, noticeId }: Props) {
     onSuccess: (data) => {
       if (typeof data !== 'string' && 'cnt' in data) {
         if (likeList.some((likePost) => likePost.id === post.id)) {
-          showMessage('success', '🥲🥲');
+          setMessageInfo({ type: 'success', content: '🥲🥲' });
         } else {
-          showMessage('success', '😍️😍');
+          setMessageInfo({ type: 'success', content: '😍️😍' });
         }
       } else if (typeof data !== 'string' && 'message' in data) {
-        showMessage('warning', data.message);
+        setMessageInfo({ type: 'warning', content: data.message });
       } else {
-        showMessage('error', '좋아요 실패');
+        setMessageInfo({ type: 'error', content: '좋아요 실패' });
       }
     },
     onSettled: () => {
@@ -132,7 +133,6 @@ export default function PostEach({ post, menuId, likeList, noticeId }: Props) {
         'flex-col-center justify-start w-full h-auto border border-line bg-post-bg py-[1.8rem] px-[3.3rem] mb-12'
       }
     >
-      {contextHolder}
       {/*작성자 정보 + 작성일자 시간*/}
       <div className={'flex-row-center justify-start w-full h-[5.8rem]'}>
         {post.authorInfoDTO.image ? (

@@ -11,21 +11,19 @@ import { IoMdClose } from 'react-icons/io';
 import { Scrollbars } from 'rc-scrollbars';
 import AuthorityModal from '@/components/Product/Members/AuthorityModal.tsx';
 import MemberListManageAlert from '@/components/Product/Members/MemberListManageAlert.tsx';
-import { useMessage } from '@/hooks/useMessage.ts';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import {
   changeProductMemberRole,
-  getProductMemberList,
+  // getProductMemberList,
   productEdit,
 } from '@/api/Product/Product.ts';
 import { SaveUserInfo } from '@/typings/member.ts';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { productMemberList } from '@/recoil/Product/atom.ts';
-import { HiOutlineBuildingOffice } from 'react-icons/hi2';
-import { frontEndUrl } from '@/recoil/Common/atom.ts';
+import { frontEndUrl, message } from '@/recoil/Common/atom.ts';
 import { FaUserCircle } from 'react-icons/fa';
 import { sendLog } from '@/api/Log';
-import show = Mocha.reporters.Base.cursor.show;
+import { useGetProductMembers } from '@/pages/Product/hooks/useGetProductMembers.ts';
 
 export default function Members() {
   const queryClient = useQueryClient();
@@ -45,7 +43,7 @@ export default function Members() {
   const baseUrl = useRecoilValue(frontEndUrl);
   // 방출인지 권한 위임인지
   const [isOut, setIsOut] = useState(false);
-  const { showMessage, contextHolder } = useMessage();
+  const [messageInfo, setMessageInfo] = useRecoilState(message);
   const [wrongEmail, setWrongEmail] = useState(0);
   const { mutate: sendLogMutate } = useMutation(sendLog);
 
@@ -65,77 +63,44 @@ export default function Members() {
           );
 
         if (failCnt > 0 && duplicatedCnt > 0) {
-          showMessage(
-            'error',
-            `${failMemberList.join(', ')}님 가입되어 있지 않고, ${duplicatedMemberList.join(
+          setMessageInfo({
+            type: 'error',
+            content: `${failMemberList.join(
               ', '
-            )}님은 이미 존재하여 초대에 실패했습니다.`
-          );
+            )}님 가입되어 있지 않고, ${duplicatedMemberList.join(
+              ', '
+            )}님은 이미 존재하여 초대에 실패했습니다.`,
+          });
           return;
         } else if (failCnt > 0) {
-          showMessage(
-            'error',
-            `${failMemberList.join(', ')}님은 가입되어 있지 않아 초대에 실패했습니다.`
-          );
+          setMessageInfo({
+            type: 'error',
+            content: `${failMemberList.join(', ')}님은 가입되어 있지 않아 초대에 실패했습니다.`,
+          });
 
           return;
         } else if (duplicatedCnt > 0) {
-          showMessage(
-            'error',
-            `${duplicatedMemberList.join(', ')}님은 이미 존재하여 초대에 실패했습니다.`
-          );
+          setMessageInfo({
+            type: 'error',
+            content: `${duplicatedMemberList.join(', ')}님은 이미 존재하여 초대에 실패했습니다.`,
+          });
 
           return;
         }
 
         location.reload();
-        showMessage('success', '성공적으로 초대되었습니다.');
+        setMessageInfo({ type: 'success', content: '성공적으로 초대되었습니다.' });
         setEmails('');
       }
     },
   });
 
-  const { data, isSuccess, refetch } = useQuery(
-    ['getProductMemberList', productId],
-    () => getProductMemberList(productId),
-    {
-      select: (data) => {
-        if (typeof data !== 'string') {
-          const temp: ProductMember[] = [];
-          data.forEach((member) => {
-            temp.push({
-              ...member,
-              isOpen: false,
-            });
-          });
-
-          const powerTypePriority = {
-            MASTER: 1,
-            LEADER: 2,
-            CLIENT: 3,
-            DEFAULT: 4,
-          };
-
-          const sortedData = temp.sort((a, b) => {
-            const priorityA = powerTypePriority[a.powerType];
-            const priorityB = powerTypePriority[b.powerType];
-            return priorityA - priorityB;
-          });
-
-          return sortedData;
-        }
-      },
-      staleTime: 60000, // 1분
-      cacheTime: 80000, // 1분 20초
-      refetchOnMount: false, // 마운트(리렌더링)될 때 데이터를 다시 가져오지 않음
-      refetchOnWindowFocus: false, // 브라우저를 포커싱했을때 데이터를 가져오지 않음
-      refetchOnReconnect: false, // 네트워크가 다시 연결되었을때 다시 가져오지 않음
-    }
-  );
+  // 제품 멤버 가져오는 훅
+  const [data, isSuccess, refetch] = useGetProductMembers(productId);
 
   const { mutate: changeProductMemberRoleMutate } = useMutation(changeProductMemberRole, {
     onSuccess: (data) => {
-      if (data) showMessage('error', '권한 변경에 실패하였습니다.');
+      if (data) setMessageInfo({ type: 'error', content: '권한 변경에 실패하였습니다.' });
     },
     onMutate: async ({ newPowerType, memberId }) => {
       await queryClient.cancelQueries(['getProductMemberList', productId]);
@@ -195,7 +160,7 @@ export default function Members() {
 
   const onClickInvite = useCallback(() => {
     if (emails === '') {
-      showMessage('warning', '이메일을 입력해주세요.');
+      setMessageInfo({ type: 'warning', content: '이메일을 입력해주세요.' });
       sendLogMutate({ page: 'member', status: false, message: 'all' });
 
       return;
@@ -220,7 +185,10 @@ export default function Members() {
       .filter((email) => email !== null) as string[];
 
     if (!isEmailFormat) {
-      showMessage('warning', '이메일 형식이 올바르지 않은 메일이 존재합니다.');
+      setMessageInfo({
+        type: 'warning',
+        content: '이메일 형식이 올바르지 않은 메일이 존재합니다.',
+      });
       return;
     }
 
@@ -311,7 +279,6 @@ export default function Members() {
       className={'w-full min-w-[50em] flex-col-center justify-start px-[30rem] py-14'}
       onClick={onCloseMemberKebab}
     >
-      {contextHolder}
       {(powerType === 'LEADER' || powerType === 'MASTER') && (
         <article className={'mb-20'}>
           <h1 className={'text-3xl font-bold mb-7'}>멤버 추가</h1>
@@ -472,7 +439,7 @@ export default function Members() {
         onClickChangeRoleLeader={onClickChangeRoleLeader}
         onClickChangeRoleDefault={onClickChangeRoleDefault}
         nowSelectedMemberId={nowSelectedMemberId}
-        showMessage={showMessage}
+        setMessageInfo={setMessageInfo}
       />
       <MemberListManageAlert
         isOut={isOut}
@@ -481,7 +448,7 @@ export default function Members() {
         nickName={nowSelectedMember}
         onClickChangeRoleLeader={onClickChangeRoleLeader}
         nowSelectedMemberId={nowSelectedMemberId}
-        showMessage={showMessage}
+        setMessageInfo={setMessageInfo}
       />
     </section>
   );

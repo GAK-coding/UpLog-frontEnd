@@ -1,13 +1,12 @@
 import { TaskData, TaskStatus } from '@/typings/task.ts';
-import { GoKebabHorizontal } from 'react-icons/go';
 import { FaUserCircle } from 'react-icons/fa';
 import { useState } from 'react';
 import { formatStatus } from '@/utils/formatStatus.ts';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useMessage } from '@/hooks/useMessage.ts';
-import { setClipBoardUrl } from '@/utils/setClipBoardUrl.ts';
 import { Scrollbars } from 'rc-scrollbars';
+import { message } from '@/recoil/Common/atom.ts';
+import { useRecoilState } from 'recoil';
 
 interface Props {
   status: TaskStatus;
@@ -16,7 +15,7 @@ interface Props {
 export default function StatusBoard({ status, tasks }: Props) {
   const convertStatus = formatStatus(status);
   const navigate = useNavigate();
-  const { showMessage, contextHolder } = useMessage();
+  const [messageInfo, setMessageInfo] = useRecoilState(message);
   // task detail 클릭 여부
   const [isClickTaskDetail, setIsClickTaskDetail] = useState<{ [key: number]: boolean }>({});
 
@@ -26,10 +25,10 @@ export default function StatusBoard({ status, tasks }: Props) {
   // const handleCopyClipBoard = async (task: TaskData) => {
   //   try {
   //     await navigator.clipboard?.writeText(setClipBoardUrl(task, location.pathname));
-  //     showMessage('success', '링크가 복사되었습니다.');
+  //     setMessageInfo({ type: 'success', content: '링크가 복사되었습니다.' });
   //   } catch (error) {
   //     console.log(error);
-  //     showMessage('error', '링크복사에 실패했습니다.');
+  //     setMessageInfo({ type: 'error', content: '링크복사에 실패했습니다.' });
   //   }
   // };
 
@@ -43,7 +42,6 @@ export default function StatusBoard({ status, tasks }: Props) {
           ref={provided.innerRef}
           {...provided.droppableProps}
         >
-          {contextHolder}
           {/*제목, 개수*/}
           <div
             className={

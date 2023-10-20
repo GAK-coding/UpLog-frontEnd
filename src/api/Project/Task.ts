@@ -11,11 +11,12 @@ import {
 } from '@/typings/task.ts';
 import { AxiosResponse } from 'axios';
 import { instance } from '@/api';
+import { commonResponse } from '@/typings';
 
 // task 생성
 export const createTask = async (data: TaskBody) => {
   try {
-    const res: AxiosResponse<string | FailTask> = await instance.post('/tasks', data);
+    const res: AxiosResponse<commonResponse | FailTask> = await instance.post('/tasks', data);
 
     return res.data;
   } catch (error) {
@@ -27,7 +28,7 @@ export const createTask = async (data: TaskBody) => {
 // task 삭제
 export const deleteTask = async (taskId: number) => {
   try {
-    const res: AxiosResponse<string | FailTask> = await instance.delete(`/tasks/${taskId}`);
+    const res: AxiosResponse<commonResponse | FailTask> = await instance.delete(`/tasks/${taskId}`);
 
     return res.data;
   } catch (error) {
@@ -102,7 +103,10 @@ export const menuTaskList = async (menuId: number) => {
 // task 수정
 export const editTask = async (data: UpdateTaskBody, taskId: number) => {
   try {
-    const res: AxiosResponse<TaskData | FailTask> = await instance.patch(`/tasks/${taskId}`, data);
+    const res: AxiosResponse<commonResponse | FailTask> = await instance.patch(
+      `/tasks/${taskId}`,
+      data
+    );
     return res.data;
   } catch (error) {
     console.log(error);
