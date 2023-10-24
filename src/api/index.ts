@@ -13,10 +13,10 @@ export const instance = axios.create({
 
 // const [cookies, setCookie, removeCookie] = useCookies();
 export async function reissuanceJwt() {
-  const refreshToken = Cookies.get('refreshToken');
-  const accessToken = sessionStorage.getItem('accessToken');
+  // const refreshToken = Cookies.get('refreshToken');
+  // const accessToken = sessionStorage.getItem('accessToken');
 
-  const res = await axios.post(`${URL}/members/refresh`, { refreshToken, accessToken });
+  const res = await axios.post(`${URL}/members/refresh`, null, { withCredentials: true });
 
   return res;
 }
@@ -34,15 +34,22 @@ instance.interceptors.response.use(
       response: { status },
     } = error;
 
+    console.log('만료됨');
+
     //토큰이 만료되을 때
-    if (status === 401) {
-      console.log(error);
+    if (status === 409 || status === 410) {
+      // console.log(error);
+      console.log('일단 여기');
       // if (error.response.data.message === 'Unauthorized') {
       const originRequest = config;
       //리프레시 토큰 api
       const response = await reissuanceJwt();
+
+      // console.log('리프레시 감?', response);
+
       //리프레시 토큰 요청이 성공할 때
       if (response.status === 200) {
+        console.log('여기까지 감?');
         const newAccessToken = response.data.accessToken;
         sessionStorage.setItem('accessToken', response.data.accessToken);
         // setCookie('refreshToken', response.data.refreshToken);
