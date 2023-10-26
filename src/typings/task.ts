@@ -68,5 +68,5 @@ export interface PagingData {
 export interface TaskPaging {
   nextPage: boolean;
   currentPage: number;
-  pagingTaskData: PagingData[] | string;
+  pagingTaskData: PagingData[];
 }

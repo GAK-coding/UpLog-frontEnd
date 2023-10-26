@@ -11,7 +11,7 @@ import { useInfiniteQuery, useQuery } from 'react-query';
 import { menuTaskList, taskPagination } from '@/api/Project/Task.ts';
 import { useEffect, useState } from 'react';
 import { menuListData } from '@/recoil/Project/Menu.ts';
-import { MenuTaskData } from '@/typings/task.ts';
+import { MenuTaskData, TaskPaging } from '@/typings/task.ts';
 import { getProductMemberList } from '@/api/Product/Product.ts';
 import { ProductInfo } from '@/typings/product.ts';
 import { allMemberList, productMemberList } from '@/recoil/Product/atom.ts';
@@ -74,9 +74,9 @@ export default function TaskMain() {
         }
       },
       onSuccess: (data) => {
-        if (typeof data !== 'string' && data.pages.length > 0) {
+        if (typeof data.pages !== 'string') {
           // task 데이터만 따로 저장
-          const taskData: MenuTaskData[] = data.pages.flatMap(
+          const taskData: MenuTaskData[] = (data.pages as TaskPaging[]).flatMap(
             (page) => page.pagingTaskData[0].tasks
           );
           setTaskList(taskData);
