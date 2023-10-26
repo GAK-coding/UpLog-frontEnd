@@ -15,7 +15,7 @@ import { instance } from '@/api';
 import { commonResponse } from '@/typings';
 
 // task 생성
-export const createTask = async (data: TaskBody) => {
+export const createTask = async (data: MenuTaskData) => {
   try {
     const res: AxiosResponse<commonResponse | FailTask> = await instance.post('/tasks', data);
 

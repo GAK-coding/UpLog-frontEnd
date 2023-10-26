@@ -10,19 +10,18 @@ import {
   Textarea,
 } from '@chakra-ui/react';
 import useInput from '@/hooks/useInput.ts';
-import { Project, SubGroup } from '@/typings/project.ts';
+import { SubGroup } from '@/typings/project.ts';
 import { SelectMenu } from '@/typings/menu.ts';
 import { DatePicker, DatePickerProps, Select } from 'antd';
 import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { menuListData } from '@/recoil/Project/Menu.ts';
-import { allMemberList, productMemberList } from '@/recoil/Product/atom.ts';
-import { MenuTaskData, TaskBody, TaskData } from '@/typings/task.ts';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { allMemberList } from '@/recoil/Product/atom.ts';
+import { MenuTaskData } from '@/typings/task.ts';
+import { useMutation, useQueryClient } from 'react-query';
 import { createTask } from '@/api/Project/Task.ts';
 import { RangePickerProps } from 'antd/es/date-picker';
 import dayjs from 'dayjs';
-import { ProductInfo, ProductMember } from '@/typings/product.ts';
 import { message } from '@/recoil/Common/atom.ts';
 
 interface Props {
@@ -33,16 +32,25 @@ interface Props {
 export default function CreateTask({ isOpen, onClose, menuId }: Props) {
   const [messageInfo, setMessageInfo] = useRecoilState(message);
   const nowTeamId: number = JSON.parse(sessionStorage.getItem('nowTeamId')!);
-  const nowProject: Project = JSON.parse(sessionStorage.getItem('nowProject')!);
+  // const nowProject: Project = JSON.parse(sessionStorage.getItem('nowProject')!);
 
   const [taskName, onChangeTaskName, setTaskName] = useInput('');
-  const [newTask, setNewTask] = useState<TaskBody>({
+  const [newTask, setNewTask] = useState<MenuTaskData>({
+    id: -1,
     taskName: '',
     startTime: '',
     endTime: '',
     menuId: 0,
+    targetMemberInfoDTO: {
+      id: -1,
+      name: '',
+      nickname: '',
+    },
+    menuName: '',
     teamId: nowTeamId,
-    targetMemberId: 0,
+    teamName: '',
+    parentTeamId: null,
+    taskStatus: 'PROGRESS_BEFORE',
     taskDetail: '',
   });
 
@@ -77,30 +85,30 @@ export default function CreateTask({ isOpen, onClose, menuId }: Props) {
   const [isCustom, setIsCustom] = useState(true);
   const [isGroup, setIsGroup] = useState(false);
 
-  const [parentGroup, setParentGroup] = useState(cGroup[pGroup[0] as ChildGroup]);
-  const [childGroup, setChildGroup] = useState(cGroup[pGroup[0] as ChildGroup][0]);
-  const [memberList, setMemberList] = useState<ProductMember[]>();
-  const [memberListData, setMemberListData] = useState<SelectMenu[]>();
+  // const [parentGroup, setParentGroup] = useState(cGroup[pGroup[0] as ChildGroup]);
+  // const [childGroup, setChildGroup] = useState(cGroup[pGroup[0] as ChildGroup][0]);
+  // const [memberList, setMemberList] = useState<ProductMember[]>();
+  // const [memberListData, setMemberListData] = useState<SelectMenu[]>();
 
   const queryClient = useQueryClient();
 
   // task 생성 api
-  const { mutate: createTaskMutate } = useMutation((newTask: TaskBody) => createTask(newTask), {
-    // onMutate: async (newData: TaskBody) => {
-    //   // optimistic update를 덮어쓰지 않기 위해 쿼리를 수동으로 삭제
-    //   await queryClient.cancelQueries(['getMenuTaskList', menuId]);
-    //
-    //   // 이전 쿼리 데이터를 가져옴
-    //   const previousTaskList: MenuTaskData[] | undefined = queryClient.getQueryData([
-    //     'getMenuTaskList',
-    //     menuId,
-    //   ]);
-    //
-    //   // 새로운 task를 추가한 데이터를 쿼리에 추가
-    //   queryClient.setQueryData(['getMenuTaskList', menuId], newData);
-    //
-    //   return () => queryClient.setQueryData(['getMenuTaskList', menuId], previousTaskList);
-    // },
+  const { mutate: createTaskMutate } = useMutation((newTask: MenuTaskData) => createTask(newTask), {
+    onMutate: async (newData: MenuTaskData) => {
+      // optimistic update를 덮어쓰지 않기 위해 쿼리를 수동으로 삭제
+      await queryClient.cancelQueries(['getMenuTaskList', menuId]);
+
+      // 이전 쿼리 데이터를 가져옴
+      const previousTaskList: MenuTaskData[] | undefined = queryClient.getQueryData([
+        'getMenuTaskList',
+        menuId,
+      ]);
+
+      // 새로운 task를 추가한 데이터를 쿼리에 추가
+      queryClient.setQueryData(['getMenuTaskList', menuId], newData);
+
+      return () => queryClient.setQueryData(['getMenuTaskList', menuId], previousTaskList);
+    },
     onSuccess: (data) => {
       if (typeof data === 'object' && 'message' in data)
         setMessageInfo({ type: 'error', content: data.message });
@@ -110,19 +118,19 @@ export default function CreateTask({ isOpen, onClose, menuId }: Props) {
       } else if (data === 'create task fail')
         setMessageInfo({ type: 'error', content: 'Task 생성에 실패했습니다.' });
     },
-    // onError: (error, value, rollback) => {
-    //   // rollback은 onMutate의 return값
-    //   if (rollback) {
-    //     rollback();
-    //     setMessageInfo({ type: 'error', content: 'Task 생성에 실패했습니다.' });
-    //   } else {
-    //     setMessageInfo({ type: 'error', content: 'Task 생성에 실패했습니다.' });
-    //   }
-    // },
+    onError: (error, value, rollback) => {
+      // rollback은 onMutate의 return값
+      if (rollback) {
+        rollback();
+        setMessageInfo({ type: 'error', content: 'Task 생성에 실패했습니다.' });
+      } else {
+        setMessageInfo({ type: 'error', content: 'Task 생성에 실패했습니다.' });
+      }
+    },
     onSettled: () => {
       // success or error, invalidate해서 새로 받아옴
-      return queryClient.invalidateQueries(['getMenuTaskList', menuId]);
-      // queryClient.invalidateQueries(['menu']);
+      queryClient.invalidateQueries(['taskPages', menuId]);
+      queryClient.invalidateQueries(['menu']);
     },
   });
 
@@ -304,12 +312,21 @@ export default function CreateTask({ isOpen, onClose, menuId }: Props) {
   // 모달창이 새로 열릴 때 마다 값 초기화
   useEffect(() => {
     setNewTask({
+      id: -1,
       taskName: '',
       startTime: '',
       endTime: '',
       menuId: 0,
+      targetMemberInfoDTO: {
+        id: -1,
+        name: '',
+        nickname: '',
+      },
+      menuName: '',
       teamId: nowTeamId,
-      targetMemberId: 2,
+      teamName: '',
+      parentTeamId: null,
+      taskStatus: 'PROGRESS_BEFORE',
       taskDetail: '',
     });
     setIsCustom(true);
