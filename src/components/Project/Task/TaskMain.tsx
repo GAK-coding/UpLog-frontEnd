@@ -53,6 +53,7 @@ export default function TaskMain() {
   const getMenuTaskList = useQuery(['getMenuTaskList', menuId], () => menuTaskList(menuId!), {
     onSuccess: (data) => {
       if (typeof data !== 'string') {
+        console.log('이곳', data);
         setTaskList(data);
         setFirstTaskList(data);
       }
@@ -161,21 +162,21 @@ export default function TaskMain() {
               'flex-row-center text-[0.9rem] text-gray-dark task-status-ring border-status-before'
             }
           >
-            {firstTaskList.filter((task) => task.taskStatus === 'PROGRESS_BEFORE').length}
+            {/*{firstTaskList.filter((task) => task.taskStatus === 'PROGRESS_BEFORE').length}*/}
           </div>
           <div
             className={
               'flex-row-center text-[0.9rem] text-gray-dark task-status-ring border-status-going'
             }
           >
-            {firstTaskList.filter((task) => task.taskStatus === 'PROGRESS_IN').length}
+            {/*{firstTaskList.filter((task) => task.taskStatus === 'PROGRESS_IN').length}*/}
           </div>
           <div
             className={
               'flex-row-center text-[0.9rem] text-gray-dark task-status-ring border-status-done'
             }
           >
-            {firstTaskList.filter((task) => task.taskStatus === 'PROGRESS_COMPLETE').length}
+            {/*{firstTaskList.filter((task) => task.taskStatus === 'PROGRESS_COMPLETE').length}*/}
           </div>
         </div>
         <div className={'flex-row-center justify-between w-[18rem] px-4 z-10'}>
@@ -216,7 +217,7 @@ export default function TaskMain() {
           }
         >
           {/*task 정보*/}
-          {firstTaskList.map((task) => (
+          {firstTaskList?.map((task) => (
             <section
               key={task.id}
               className={
@@ -272,7 +273,7 @@ export default function TaskMain() {
               </div>
             </section>
           ))}
-          {nowProject.projectStatus !== 'PROGRESS_COMPLETE' && (
+          {nowProject?.projectStatus !== 'PROGRESS_COMPLETE' && (
             <section
               className={
                 'flex-row-center justify-start w-full min-h-[3.5rem] px-4 bg-post-bg text-gray-dark cursor-pointer'
