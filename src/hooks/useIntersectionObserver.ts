@@ -1,11 +1,16 @@
 import { useEffect, useState } from 'react';
 import { TaskPaging } from '@/typings/task.ts';
 import { InfiniteQueryObserverResult } from 'react-query';
+import { PostPaging } from '@/typings/post.ts';
 
 interface ObserverProps {
   threshold?: number;
   hasNextPage: boolean | undefined;
-  fetchNextPage: () => Promise<InfiniteQueryObserverResult<TaskPaging | 'get task pages fail'>>;
+  fetchNextPage: () => Promise<
+    InfiniteQueryObserverResult<
+      TaskPaging | PostPaging | 'get post pages fail' | 'get task pages fail'
+    >
+  >;
 }
 
 export const useIntersectionObserver = ({
