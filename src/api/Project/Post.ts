@@ -8,6 +8,7 @@ import {
   Post,
   PostBody,
   PostLikeList,
+  PostPaging,
   Posts,
   UpdatePostBody,
 } from '@/typings/post.ts';
@@ -44,6 +45,22 @@ export const menuPostList = async (menuId: number) => {
   } catch (error) {
     console.log(error);
     return 'get menu posts fail';
+  }
+};
+
+// post 메뉴별 pagination
+export const menuPagination = async (menuId: number, page: number, size: number) => {
+  try {
+    const res: AxiosResponse<PostPaging> = await instance.get(`/menus/${menuId}/posts/pages`, {
+      params: {
+        page,
+        size,
+      },
+    });
+
+    return res.data;
+  } catch (error) {
+    return 'get post pages fail';
   }
 };
 

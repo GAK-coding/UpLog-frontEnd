@@ -1,4 +1,5 @@
 import { targetMemberInfo } from '@/typings/member.ts';
+import { TaskPaging } from '@/typings/task.ts';
 
 export type PostType = 'DEFAULT' | 'REQUEST_READ' | 'REQUEST_REQUIREMENT' | null;
 export interface Post {
@@ -36,6 +37,11 @@ export interface UpdatePostBody {
   updatePostContent: string | null;
   updatePostType: PostType | null;
   updateMenuId: number | null;
+}
+
+export interface PostPaging extends Omit<TaskPaging, 'pagingTaskData'> {
+  noticePost?: Post;
+  posts: Post[];
 }
 
 export interface CommentInfo {
