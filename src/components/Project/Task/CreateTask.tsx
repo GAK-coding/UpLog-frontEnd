@@ -86,21 +86,21 @@ export default function CreateTask({ isOpen, onClose, menuId }: Props) {
 
   // task 생성 api
   const { mutate: createTaskMutate } = useMutation((newTask: TaskBody) => createTask(newTask), {
-    onMutate: async (newData: TaskBody) => {
-      // optimistic update를 덮어쓰지 않기 위해 쿼리를 수동으로 삭제
-      await queryClient.cancelQueries(['getMenuTaskList', menuId]);
-
-      // 이전 쿼리 데이터를 가져옴
-      const previousTaskList: MenuTaskData[] | undefined = queryClient.getQueryData([
-        'getMenuTaskList',
-        menuId,
-      ]);
-
-      // 새로운 task를 추가한 데이터를 쿼리에 추가
-      queryClient.setQueryData(['getMenuTaskList', menuId], newData);
-
-      return () => queryClient.setQueryData(['getMenuTaskList', menuId], previousTaskList);
-    },
+    // onMutate: async (newData: TaskBody) => {
+    //   // optimistic update를 덮어쓰지 않기 위해 쿼리를 수동으로 삭제
+    //   await queryClient.cancelQueries(['getMenuTaskList', menuId]);
+    //
+    //   // 이전 쿼리 데이터를 가져옴
+    //   const previousTaskList: MenuTaskData[] | undefined = queryClient.getQueryData([
+    //     'getMenuTaskList',
+    //     menuId,
+    //   ]);
+    //
+    //   // 새로운 task를 추가한 데이터를 쿼리에 추가
+    //   queryClient.setQueryData(['getMenuTaskList', menuId], newData);
+    //
+    //   return () => queryClient.setQueryData(['getMenuTaskList', menuId], previousTaskList);
+    // },
     onSuccess: (data) => {
       if (typeof data === 'object' && 'message' in data)
         setMessageInfo({ type: 'error', content: data.message });
@@ -110,15 +110,15 @@ export default function CreateTask({ isOpen, onClose, menuId }: Props) {
       } else if (data === 'create task fail')
         setMessageInfo({ type: 'error', content: 'Task 생성에 실패했습니다.' });
     },
-    onError: (error, value, rollback) => {
-      // rollback은 onMutate의 return값
-      if (rollback) {
-        rollback();
-        setMessageInfo({ type: 'error', content: 'Task 생성에 실패했습니다.' });
-      } else {
-        setMessageInfo({ type: 'error', content: 'Task 생성에 실패했습니다.' });
-      }
-    },
+    // onError: (error, value, rollback) => {
+    //   // rollback은 onMutate의 return값
+    //   if (rollback) {
+    //     rollback();
+    //     setMessageInfo({ type: 'error', content: 'Task 생성에 실패했습니다.' });
+    //   } else {
+    //     setMessageInfo({ type: 'error', content: 'Task 생성에 실패했습니다.' });
+    //   }
+    // },
     onSettled: () => {
       // success or error, invalidate해서 새로 받아옴
       return queryClient.invalidateQueries(['getMenuTaskList', menuId]);
@@ -187,33 +187,33 @@ export default function CreateTask({ isOpen, onClose, menuId }: Props) {
 
   // TODO : TeamId 값 group id 값으로 바꾸기
   // 상위그룹 select 선택 값
-  const handleParentGroupChange = (value: string) => {
-    // 선택한 상위그룹내용으로 하위 그룹 option으로 변경
-    setParentGroup(cGroup[value]);
-    setChildGroup(cGroup[value][0]);
-
-    setIsGroup(true);
-
-    const updatedTask = {
-      ...newTask,
-      teamId: +value,
-    };
-
-    setNewTask(updatedTask);
-  };
+  // const handleParentGroupChange = (value: string) => {
+  //   // 선택한 상위그룹내용으로 하위 그룹 option으로 변경
+  //   setParentGroup(cGroup[value]);
+  //   setChildGroup(cGroup[value][0]);
+  //
+  //   setIsGroup(true);
+  //
+  //   const updatedTask = {
+  //     ...newTask,
+  //     teamId: +value,
+  //   };
+  //
+  //   setNewTask(updatedTask);
+  // };
 
   // 하위그룹 select 선택 값
-  const onChildGroupChange = (value: string) => {
-    setChildGroup(value);
-    setIsGroup(true);
-
-    const updatedTask = {
-      ...newTask,
-      teamId: +value,
-    };
-
-    setNewTask(updatedTask);
-  };
+  // const onChildGroupChange = (value: string) => {
+  //   setChildGroup(value);
+  //   setIsGroup(true);
+  //
+  //   const updatedTask = {
+  //     ...newTask,
+  //     teamId: +value,
+  //   };
+  //
+  //   setNewTask(updatedTask);
+  // };
 
   // 시작 날짜 입력 값
   const onChangeStartTime: DatePickerProps['onChange'] = (date, dateString) => {

@@ -54,10 +54,6 @@ export interface UpdateTaskBody {
   updateEndTime: string | null;
 }
 
-export interface MenuTasks {
-  tasks: MenuTaskData[];
-}
-
 export interface DragTaskIndexBody {
   beforeTaskStatus: TaskStatus | null;
   movedTaskId: number | null;
@@ -71,5 +67,6 @@ export interface PagingData {
 
 export interface TaskPaging {
   nextPage: boolean;
-  pagingTaskData: PagingData[];
+  currentPage: number;
+  pagingTaskData: PagingData[] | string;
 }

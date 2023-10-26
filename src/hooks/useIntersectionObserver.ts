@@ -1,14 +1,15 @@
-import { InfiniteQueryObserverResult } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
+import { TaskPaging } from '@/typings/task.ts';
+import { InfiniteQueryObserverResult } from 'react-query';
 
 interface ObserverProps {
   threshold?: number;
   hasNextPage: boolean | undefined;
-  fetchNextPage: () => Promise<InfiniteQueryObserverResult>;
+  fetchNextPage: () => Promise<InfiniteQueryObserverResult<TaskPaging | 'get task pages fail'>>;
 }
 
 export const useIntersectionObserver = ({
-  threshold = 0.5,
+  threshold = 0,
   hasNextPage,
   fetchNextPage,
 }: ObserverProps) => {
@@ -19,6 +20,7 @@ export const useIntersectionObserver = ({
     entries.forEach((entry) => {
       // target이 화면에 관찰되고, 다음페이지가 있다면 다음페이지를 호출함
       if (entry.isIntersecting && hasNextPage) {
+        console.log('호출');
         fetchNextPage();
       }
     });

@@ -11,13 +11,13 @@ import { useInfiniteQuery, useQuery } from 'react-query';
 import { menuTaskList, taskPagination } from '@/api/Project/Task.ts';
 import { useEffect, useState } from 'react';
 import { menuListData } from '@/recoil/Project/Menu.ts';
-import { MenuTaskData, TaskData } from '@/typings/task.ts';
+import { MenuTaskData } from '@/typings/task.ts';
 import { getProductMemberList } from '@/api/Product/Product.ts';
 import { ProductInfo } from '@/typings/product.ts';
 import { allMemberList, productMemberList } from '@/recoil/Product/atom.ts';
 import { SaveProjectInfo } from '@/typings/project.ts';
 import { FaUserCircle } from 'react-icons/fa';
-import { getPreviousPageParam } from 'react-query/types/core/infiniteQueryBehavior';
+import { useIntersectionObserver } from '@/hooks/useIntersectionObserver.ts';
 
 export default function TaskMain() {
   const { product, project, menutitle } = useParams();
@@ -49,20 +49,15 @@ export default function TaskMain() {
     { value: 'all', label: '전체' },
   ];
 
-  // 메뉴별 task 데이터 가져오기
-  const getMenuTaskList = useQuery(['getMenuTaskList', menuId], () => menuTaskList(menuId!), {
-    onSuccess: (data) => {
-      if (typeof data !== 'string') {
-        console.log('이곳', data);
-        setTaskList(data);
-        setFirstTaskList(data);
-      }
-    },
-
-    staleTime: 0, // 10분
-    cacheTime: 80000, // 12분
-    refetchOnWindowFocus: false, // 브라우저를 포커싱했을때 데이터를 가져오지 않음
-  });
+  // // 메뉴별 task 데이터 가져오기
+  // const getMenuTaskList = useQuery(['getMenuTaskList', menuId], () => menuTaskList(menuId!), {
+  //   onSuccess: (data) => {
+  //     if (typeof data !== 'string') {
+  //       // setTaskList(data);
+  //       // setFirstTaskList(data);
+  //     }
+  //   },
+  // });
 
   // task pagination
   const {
@@ -73,14 +68,33 @@ export default function TaskMain() {
     ['taskPages', menuId],
     ({ pageParam = 0 }) => taskPagination(menuId!, pageParam, 20),
     {
-      // TODO :  return true 값 숫자 형태로 변경하기
       getNextPageParam: (lastPage) => {
         if (typeof lastPage !== 'string') {
-          return lastPage.nextPage ? lastPage.nextPage : undefined;
+          return lastPage.nextPage ? lastPage.currentPage + 1 : undefined;
         }
       },
+      onSuccess: (data) => {
+        if (typeof data !== 'string' && data.pages.length > 0) {
+          // task 데이터만 따로 저장
+          const taskData: MenuTaskData[] = data.pages.flatMap(
+            (page) => page.pagingTaskData[0].tasks
+          );
+          setTaskList(taskData);
+          setFirstTaskList(taskData);
+        }
+      },
+
+      staleTime: 0, // 10분
+      cacheTime: 80000, // 12분
+      refetchOnWindowFocus: false, // 브라우저를 포커싱했을때 데이터를 가져오지 않음
     }
   );
+
+  // custom hook에서 받는 setTarget 값
+  const { setTarget } = useIntersectionObserver({
+    hasNextPage,
+    fetchNextPage,
+  });
 
   // 멤버 리스트 조회
   const { data } = useQuery(
@@ -162,21 +176,21 @@ export default function TaskMain() {
               'flex-row-center text-[0.9rem] text-gray-dark task-status-ring border-status-before'
             }
           >
-            {/*{firstTaskList.filter((task) => task.taskStatus === 'PROGRESS_BEFORE').length}*/}
+            {firstTaskList.filter((task) => task.taskStatus === 'PROGRESS_BEFORE').length}
           </div>
           <div
             className={
               'flex-row-center text-[0.9rem] text-gray-dark task-status-ring border-status-going'
             }
           >
-            {/*{firstTaskList.filter((task) => task.taskStatus === 'PROGRESS_IN').length}*/}
+            {firstTaskList.filter((task) => task.taskStatus === 'PROGRESS_IN').length}
           </div>
           <div
             className={
               'flex-row-center text-[0.9rem] text-gray-dark task-status-ring border-status-done'
             }
           >
-            {/*{firstTaskList.filter((task) => task.taskStatus === 'PROGRESS_COMPLETE').length}*/}
+            {firstTaskList.filter((task) => task.taskStatus === 'PROGRESS_COMPLETE').length}
           </div>
         </div>
         <div className={'flex-row-center justify-between w-[18rem] px-4 z-10'}>
@@ -217,7 +231,7 @@ export default function TaskMain() {
           }
         >
           {/*task 정보*/}
-          {firstTaskList?.map((task) => (
+          {taskList.map((task) => (
             <section
               key={task.id}
               className={
@@ -273,7 +287,7 @@ export default function TaskMain() {
               </div>
             </section>
           ))}
-          {nowProject?.projectStatus !== 'PROGRESS_COMPLETE' && (
+          {nowProject.projectStatus !== 'PROGRESS_COMPLETE' && (
             <section
               className={
                 'flex-row-center justify-start w-full min-h-[3.5rem] px-4 bg-post-bg text-gray-dark cursor-pointer'
@@ -286,6 +300,7 @@ export default function TaskMain() {
           )}
         </div>
       </section>
+      <div ref={setTarget} className={'flex h-[1rem]'} />
       <CreateTask isOpen={isOpen} onClose={onClose} menuId={menuId!} />
     </div>
   );
