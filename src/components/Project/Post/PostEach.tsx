@@ -243,7 +243,7 @@ export default function PostEach({ post, menuId, likeList, noticeId }: Props) {
             <section
               className={`absolute top-[2.2rem] flex-col-center w-[5rem] ${
                 userInfo.id === post.authorInfoDTO.id ? 'h-[6rem]' : 'h-[2rem]'
-              } bottom-5 task-detail-border cursor-pointer text-[0.5rem] text-gray-dark`}
+              } bottom-5 task-detail-border cursor-pointer text-[0.75rem] text-gray-dark`}
             >
               {userInfo.id === post.authorInfoDTO.id && (
                 <button
