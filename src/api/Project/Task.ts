@@ -2,10 +2,11 @@
 import {
   DragTaskIndexBody,
   FailTask,
-  MenuTasks,
+  MenuTaskData,
   StatusTaskData,
   TaskBody,
   TaskData,
+  TaskPaging,
   TaskStatus,
   UpdateTaskBody,
 } from '@/typings/task.ts';
@@ -14,7 +15,7 @@ import { instance } from '@/api';
 import { commonResponse } from '@/typings';
 
 // task 생성
-export const createTask = async (data: TaskBody) => {
+export const createTask = async (data: MenuTaskData) => {
   try {
     const res: AxiosResponse<commonResponse | FailTask> = await instance.post('/tasks', data);
 
@@ -91,7 +92,7 @@ export const allTaskList = async (projectId: number) => {
 // 메뉴별로 task 전체 조회
 export const menuTaskList = async (menuId: number) => {
   try {
-    const res: AxiosResponse<MenuTasks> = await instance.get(`/menus/${menuId}/tasks`);
+    const res: AxiosResponse<MenuTaskData[]> = await instance.get(`/menus/${menuId}/tasks`);
 
     return res.data;
   } catch (error) {
@@ -122,5 +123,21 @@ export const updateTaskIndex = async (data: DragTaskIndexBody, taskStatus: TaskS
   } catch (error) {
     console.log(error);
     return 'update task index fail';
+  }
+};
+
+//task pagination
+export const taskPagination = async (menuId: number, page: number, size: number) => {
+  try {
+    const res: AxiosResponse<TaskPaging> = await instance.get(`/menus/${menuId}/tasks/pages`, {
+      params: {
+        page,
+        size,
+      },
+    });
+
+    return res.data;
+  } catch (error) {
+    return 'get task pages fail';
   }
 };
