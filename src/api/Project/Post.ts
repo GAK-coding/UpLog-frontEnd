@@ -49,7 +49,7 @@ export const menuPostList = async (menuId: number) => {
 };
 
 // post 메뉴별 pagination
-export const menuPagination = async (menuId: number, page: number, size: number) => {
+export const postPagination = async (menuId: number, page: number, size: number) => {
   try {
     const res: AxiosResponse<PostPaging> = await instance.get(`/menus/${menuId}/posts/pages`, {
       params: {

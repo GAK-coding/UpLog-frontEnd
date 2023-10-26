@@ -1,13 +1,14 @@
 import { BsExclamationCircle, BsFillMegaphoneFill } from 'react-icons/bs';
-import { Post, PostLikeList, Posts } from '@/typings/post.ts';
+import { Post, PostLikeList, PostPaging, Posts } from '@/typings/post.ts';
 import PostEach from '@/components/Project/Post/PostEach.tsx';
-import { useQuery } from 'react-query';
+import { useInfiniteQuery, useQuery } from 'react-query';
 import { menuListData } from '@/recoil/Project/Menu.ts';
 import { useParams } from 'react-router-dom';
-import { menuPostList, postLikeList } from '@/api/Project/Post.ts';
+import { menuPostList, postLikeList, postPagination } from '@/api/Project/Post.ts';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { Scrollbars } from 'rc-scrollbars';
+import { useIntersectionObserver } from '@/hooks/useIntersectionObserver.ts';
 
 export default function PostMain() {
   const { product, project, menutitle } = useParams();
@@ -22,29 +23,80 @@ export default function PostMain() {
   const menuId = menuList.find((menu) => menu.menuName === menutitle)?.id;
 
   // menu별로 post 조회
-  const { refetch } = useQuery(['menuPostData', menuId], () => menuPostList(menuId!), {
-    onSuccess: (data) => {
-      if (typeof data !== 'string') {
-        if (data.noticePost !== null) {
-          if (data.noticePost!.id === data.posts[0].id) {
-            setPosts({
-              posts: data.posts.slice(1),
-              noticePost: data.noticePost,
-            });
+  // const { refetch } = useQuery(['menuPostData', menuId], () => menuPostList(menuId!), {
+  //   onSuccess: (data) => {
+  //     if (typeof data !== 'string') {
+  //       if (data.noticePost !== null) {
+  //         if (data.noticePost!.id === data.posts[0].id) {
+  //           setPosts({
+  //             posts: data.posts.slice(1),
+  //             noticePost: data.noticePost,
+  //           });
+  //         } else {
+  //           setPosts({
+  //             posts: data.posts,
+  //             noticePost: data.noticePost,
+  //           });
+  //         }
+  //       } else {
+  //         setPosts({
+  //           posts: data.posts,
+  //         });
+  //       }
+  //     }
+  //   },
+  //   enabled: false,
+  // });
+
+  // post pagination
+  const {
+    data: postData,
+    fetchNextPage,
+    hasNextPage,
+    refetch,
+  } = useInfiniteQuery(
+    ['postPages', menuId],
+    ({ pageParam = 0 }) => postPagination(menuId!, pageParam, 10),
+    {
+      getNextPageParam: (lastPage) => {
+        if (typeof lastPage !== 'string') {
+          return lastPage.nextPage ? lastPage.currentPage + 1 : undefined;
+        }
+      },
+      onSuccess: (data) => {
+        if (typeof data.pages !== 'string') {
+          console.log(data.pages);
+          const postData: Post[] = (data.pages as PostPaging[]).flatMap((page) => page.posts);
+          const notice = (data.pages[0] as PostPaging).noticePost;
+
+          // noticePost 가 존재할 때
+          if (notice !== undefined) {
+            if (notice.id === postData[0].id) {
+              setPosts({
+                posts: postData.slice(1),
+                noticePost: notice,
+              });
+            } else {
+              setPosts({
+                posts: postData,
+                noticePost: notice,
+              });
+            }
           } else {
             setPosts({
-              posts: data.posts,
-              noticePost: data.noticePost,
+              posts: postData,
             });
           }
-        } else {
-          setPosts({
-            posts: data.posts,
-          });
         }
-      }
-    },
-    enabled: false,
+      },
+      enabled: false,
+    }
+  );
+
+  // custom hook 에서 받는 setTarget 값
+  const { setTarget } = useIntersectionObserver({
+    hasNextPage,
+    fetchNextPage,
   });
 
   // 좋아요 post list
@@ -111,6 +163,7 @@ export default function PostMain() {
             </span>
           </div>
         )}
+        <div ref={setTarget} className={'flex h-[1rem]'} />
       </Scrollbars>
     </section>
   );
