@@ -68,5 +68,8 @@ export interface PagingData {
 export interface TaskPaging {
   nextPage: boolean;
   currentPage: number;
+  progress_before: number;
+  progress_in: number;
+  progress_complete: number;
   pagingTaskData: PagingData[];
 }

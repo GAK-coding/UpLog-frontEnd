@@ -8,7 +8,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useDisclosure } from '@chakra-ui/react';
 import CreateTask from '@/components/Project/Task/CreateTask.tsx';
 import { useInfiniteQuery, useQuery } from 'react-query';
-import { menuTaskList, taskPagination } from '@/api/Project/Task.ts';
+import { taskPagination } from '@/api/Project/Task.ts';
 import { useEffect, useState } from 'react';
 import { menuListData } from '@/recoil/Project/Menu.ts';
 import { MenuTaskData, TaskPaging } from '@/typings/task.ts';
@@ -33,6 +33,11 @@ export default function TaskMain() {
   const [firstTaskList, setFirstTaskList] = useState<MenuTaskData[]>([]);
   const [memberList, setMemberList] = useRecoilState(productMemberList);
   const [memberListData, setMemberListData] = useRecoilState(allMemberList);
+  const [taskStatus, setTaskStatus] = useState({
+    PROGRESS_BEFORE: 0,
+    PROGRESS_IN: 0,
+    PROGRESS_COMPLETE: 0,
+  });
 
   // 날짜, 상태 필터링 데이터
   const dateData: SelectMenu[] = [
@@ -75,6 +80,16 @@ export default function TaskMain() {
       },
       onSuccess: (data) => {
         if (typeof data.pages !== 'string') {
+          const firstData = data.pages[0] as TaskPaging;
+
+          if (firstData.currentPage === 0) {
+            setTaskStatus({
+              PROGRESS_BEFORE: firstData.progress_before,
+              PROGRESS_IN: firstData.progress_in,
+              PROGRESS_COMPLETE: firstData.progress_complete,
+            });
+          }
+
           // task 데이터만 따로 저장
           const taskData: MenuTaskData[] = (data.pages as TaskPaging[]).flatMap(
             (page) => page.pagingTaskData[0].tasks
@@ -176,21 +191,21 @@ export default function TaskMain() {
               'flex-row-center text-[0.9rem] text-gray-dark task-status-ring border-status-before'
             }
           >
-            {firstTaskList.filter((task) => task.taskStatus === 'PROGRESS_BEFORE').length}
+            {taskStatus.PROGRESS_BEFORE}
           </div>
           <div
             className={
               'flex-row-center text-[0.9rem] text-gray-dark task-status-ring border-status-going'
             }
           >
-            {firstTaskList.filter((task) => task.taskStatus === 'PROGRESS_IN').length}
+            {taskStatus.PROGRESS_IN}
           </div>
           <div
             className={
               'flex-row-center text-[0.9rem] text-gray-dark task-status-ring border-status-done'
             }
           >
-            {firstTaskList.filter((task) => task.taskStatus === 'PROGRESS_COMPLETE').length}
+            {taskStatus.PROGRESS_COMPLETE}
           </div>
         </div>
         <div className={'flex-row-center justify-between w-[18rem] px-4 z-10'}>
