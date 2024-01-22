@@ -1,4 +1,4 @@
-import { BsFillMegaphoneFill } from 'react-icons/bs';
+import { BsExclamationCircle, BsFillMegaphoneFill } from 'react-icons/bs';
 import { Post, PostLikeList, Posts } from '@/typings/post.ts';
 import PostEach from '@/components/Project/Post/PostEach.tsx';
 import { useQuery } from 'react-query';
@@ -102,6 +102,15 @@ export default function PostMain() {
               <PostEach key={post.id} post={post} menuId={menuId!} likeList={likeList!} />
             ))}
         </article>
+        {/*posts가 없을 때*/}
+        {posts && posts.posts.length === 0 && (
+          <div className={'flex-col-center'}>
+            <BsExclamationCircle className={'flex mt-[10rem] text-[4.5rem] fill-[#E06469]'} />
+            <span className={'flex mt-[2rem] text-[1.3rem] text-gray-dark'}>
+              작성된 Post가 없습니다.
+            </span>
+          </div>
+        )}
       </Scrollbars>
     </section>
   );

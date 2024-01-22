@@ -7,16 +7,17 @@ import { AiOutlinePlus } from 'react-icons/ai';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDisclosure } from '@chakra-ui/react';
 import CreateTask from '@/components/Project/Task/CreateTask.tsx';
-import { useQuery } from 'react-query';
-import { menuTaskList } from '@/api/Project/Task.ts';
+import { useInfiniteQuery, useQuery } from 'react-query';
+import { menuTaskList, taskPagination } from '@/api/Project/Task.ts';
 import { useEffect, useState } from 'react';
 import { menuListData } from '@/recoil/Project/Menu.ts';
-import { MenuTaskData, TaskData } from '@/typings/task.ts';
+import { MenuTaskData, TaskPaging } from '@/typings/task.ts';
 import { getProductMemberList } from '@/api/Product/Product.ts';
 import { ProductInfo } from '@/typings/product.ts';
 import { allMemberList, productMemberList } from '@/recoil/Product/atom.ts';
 import { SaveProjectInfo } from '@/typings/project.ts';
 import { FaUserCircle } from 'react-icons/fa';
+import { useIntersectionObserver } from '@/hooks/useIntersectionObserver.ts';
 
 export default function TaskMain() {
   const { product, project, menutitle } = useParams();
@@ -48,17 +49,51 @@ export default function TaskMain() {
     { value: 'all', label: '전체' },
   ];
 
-  // 메뉴별 task 데이터 가져오기
-  const getMenuTaskList = useQuery(['getMenuTaskList', menuId], () => menuTaskList(menuId!), {
-    onSuccess: (data) => {
-      if (typeof data === 'object' && 'tasks' in data) {
-        setTaskList(data.tasks);
-        setFirstTaskList(data.tasks);
-      }
-    },
-    staleTime: 0, // 10분
-    cacheTime: 80000, // 12분
-    refetchOnWindowFocus: false, // 브라우저를 포커싱했을때 데이터를 가져오지 않음
+  // // 메뉴별 task 데이터 가져오기
+  // const getMenuTaskList = useQuery(['getMenuTaskList', menuId], () => menuTaskList(menuId!), {
+  //   onSuccess: (data) => {
+  //     if (typeof data !== 'string') {
+  //       // setTaskList(data);
+  //       // setFirstTaskList(data);
+  //     }
+  //   },
+  // });
+
+  // task pagination
+  const {
+    data: taskData,
+    fetchNextPage,
+    hasNextPage,
+  } = useInfiniteQuery(
+    ['taskPages', menuId],
+    ({ pageParam = 0 }) => taskPagination(menuId!, pageParam, 20),
+    {
+      getNextPageParam: (lastPage) => {
+        if (typeof lastPage !== 'string') {
+          return lastPage.nextPage ? lastPage.currentPage + 1 : undefined;
+        }
+      },
+      onSuccess: (data) => {
+        if (typeof data.pages !== 'string') {
+          // task 데이터만 따로 저장
+          const taskData: MenuTaskData[] = (data.pages as TaskPaging[]).flatMap(
+            (page) => page.pagingTaskData[0].tasks
+          );
+          setTaskList(taskData);
+          setFirstTaskList(taskData);
+        }
+      },
+
+      staleTime: 0, // 10분
+      cacheTime: 80000, // 12분
+      refetchOnWindowFocus: false, // 브라우저를 포커싱했을때 데이터를 가져오지 않음
+    }
+  );
+
+  // custom hook에서 받는 setTarget 값
+  const { setTarget } = useIntersectionObserver({
+    hasNextPage,
+    fetchNextPage,
   });
 
   // 멤버 리스트 조회
@@ -141,21 +176,21 @@ export default function TaskMain() {
               'flex-row-center text-[0.9rem] text-gray-dark task-status-ring border-status-before'
             }
           >
-            {taskList.filter((task) => task.taskStatus === 'PROGRESS_BEFORE').length}
+            {firstTaskList.filter((task) => task.taskStatus === 'PROGRESS_BEFORE').length}
           </div>
           <div
             className={
               'flex-row-center text-[0.9rem] text-gray-dark task-status-ring border-status-going'
             }
           >
-            {taskList.filter((task) => task.taskStatus === 'PROGRESS_IN').length}
+            {firstTaskList.filter((task) => task.taskStatus === 'PROGRESS_IN').length}
           </div>
           <div
             className={
               'flex-row-center text-[0.9rem] text-gray-dark task-status-ring border-status-done'
             }
           >
-            {taskList.filter((task) => task.taskStatus === 'PROGRESS_COMPLETE').length}
+            {firstTaskList.filter((task) => task.taskStatus === 'PROGRESS_COMPLETE').length}
           </div>
         </div>
         <div className={'flex-row-center justify-between w-[18rem] px-4 z-10'}>
@@ -265,6 +300,7 @@ export default function TaskMain() {
           )}
         </div>
       </section>
+      <div ref={setTarget} className={'flex h-[1rem]'} />
       <CreateTask isOpen={isOpen} onClose={onClose} menuId={menuId!} />
     </div>
   );
