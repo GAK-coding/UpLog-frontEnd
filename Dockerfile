@@ -15,8 +15,6 @@ COPY . ./
 # Build the application
 RUN yarn build
 
-CMD ["yarn", "dev"]
-
 # Stage 2: Create the production image with Nginx
 FROM nginx:latest
 
