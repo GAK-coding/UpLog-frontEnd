@@ -77,7 +77,7 @@ function App() {
                   <Route path={'/workspace'} element={<Workspace />}>
                     <Route path={':product'} element={<ReleaseNote />} />
                     <Route path={':product/members'} element={<Members />} />
-                    {/*<Route path={':product/chats'} element={<Chats />} />*/}
+                    <Route path={':product/chats'} element={<Chats />} />
                     {/*<Route path={':product/calendar'} element={<Calendar />} />*/}
                     <Route path={':product/chats'} element={<InComplete />} />
                     <Route path={':product/calendar'} element={<InComplete />} />
@@ -105,7 +105,7 @@ function App() {
               </section>
             </BrowserRouter>
           </Scrollbars>
-          {showDevtools && <ReactQueryDevtools />}
+          {/*{showDevtools && <ReactQueryDevtools />}*/}
         </GoogleOAuthProvider>
       </ChakraProvider>
     </QueryClientProvider>

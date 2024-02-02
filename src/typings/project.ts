@@ -81,3 +81,20 @@ export interface ChildGroupMember {
   name: string;
   nickname: string;
 }
+
+//채팅
+export interface ChatMessage {
+  image: string | null;
+  name: string;
+  nickname: string;
+  time: string;
+  message: string;
+}
+
+export interface ChatList {
+  name: string;
+  chats: {
+    date: string;
+    messages: ChatMessage[];
+  }[];
+}

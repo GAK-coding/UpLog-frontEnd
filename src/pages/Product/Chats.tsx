@@ -1,5 +1,10 @@
 import React from 'react';
+import ChatList from '@/components/Project/Chat/ChatList.tsx';
 
 export default function Chats() {
-  return <div>채팅방</div>;
+  return (
+    <div className={'w-h-full'}>
+      <ChatList />
+    </div>
+  );
 }
