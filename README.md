@@ -38,11 +38,11 @@ Jest
 <br/>
 
 ## 📝 Architecture 설계도
--Kakao I Cloud 이용
+-Kakao I Cloud 이용<br>
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/f045d522-e19e-4019-8bdf-e864d35b99c7)
 
 
--AWS 이용
+-AWS 이용<br>
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/1e2d8fed-3617-46b0-ad10-89a690f2cb62)
 
 ## 💻 프로젝트 실행 방법
