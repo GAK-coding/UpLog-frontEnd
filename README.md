@@ -80,16 +80,26 @@ https://www.youtube.com/watch?v=Jk-_V03pTn0
    - [비밀번호 변경](#비밀번호-변 )
 5. [제품](#제품)
    - [제품 생성](#제품-생성)
-   - [제품 관리](#제품-관리)
-   - [프로젝트 버전과 변경이력 관리](#프로젝트-버전과-변경이력-관리)
+   - [제품에서 프로젝트 생성](#제품에서-프로젝트-생성)
    - [제품 멤버 관리](#제품-멤버-관리)
-6. [프로젝트](#프로젝트)
-   - [그룹 관리](#그룹-관리)
-   - [Post](#Post)
-   - [Task](#Task)
-   - [칸반보드](#칸반보드)
-     <br/>
-     <br/>
+6. [프로젝트 버전과 변경이력 관리](#프로젝트-버전과-변경이력-관리)
+   - [변경이력 추가](#변경이력-추가)
+   - [변경이력 작성 과정](#변경이력-작성-과정)
+   - [변경이력 작성 완료](#변경이력-작성-완료)
+   - [프로젝트 완료](#프로젝트-완료)
+7. [프로젝트 상위 그룹 관리](#프로젝트-상위-그룹-관리)
+   - [상위 그룹 추가](#상위-그룹-추가)
+8. [프로젝트 하위 그룹 관리](#프로젝트-하위-그룹-관리)
+   - [프로젝트 상위 그룹 관리 페이지](#프로젝트-상위-그룹-관리-페이지)
+   - [하위 그룹 생성 모달](#하위-그룹-생성-모달)
+   - [제품 멤버를 프로젝트 및 프로젝트 그룹에 초대하기](#제품-멤버를-프로젝트-및-프로젝트-그룹에-초대하기)
+   - [하위 그룹 생성 완료 및 수정 후](#하위-그룹-생성-완료-및-수정-후)
+9. [프로젝트 상세 관리](#프로젝트-상세-관리)
+  - [Post](#Post)
+  - [Task](#Task)
+  - [칸반보드](#칸반보드)
+    <br/>
+    <br/>
 
 ## 메인페이지
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/e02cf24a-a70b-4b72-a7a5-8911eaab2cac)
@@ -173,31 +183,28 @@ https://www.youtube.com/watch?v=Jk-_V03pTn0
 - 리더 권한을 일반 멤버에게 부여할 수 있습니다.
 - 멤버의 방출도 가능합니다.
 
-
-## 프로젝트
-
-### 프로젝트 버전과 변경이력 관리
--변경이력 추가
+## 프로젝트 버전과 변경이력 관리
+### 변경이력 추가
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/df4a5b23-503a-4959-a2b6-5b43ec628c21)
 - "변경이력 추가" 버튼을 누르면 변경 이력을 추가하여 제품 멤버들과 공유가 가능합니다.
 
--변경이력 작성 과정
+### 변경이력 작성 과정
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/982aa589-9304-431f-8be6-7db434c69a20)
 - 변경에 대한 Type과 변경 내용을 작성할 수 있습니다.
 
--변경이력 작성 완료
+### 변경이력 작성 완료
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/341ccd57-7c43-469a-bd39-1f9ba73912a5)
 
--프로젝트 완료
+### 프로젝트 완료
 <img width="1438" alt="image" src="https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/649b0933-6096-405e-ad86-d2a95fef6cd3">
 - "1.0.0" 프로젝트를 완료한 모습이며 완료된 프로젝트는 "날짜" 부분에 완료한 날짜가 기록됩니다.
 - 진행중인 프로젝트가 있다면 프로젝트를 추가할 수 없습니다.
 - 완료된 프로젝트는 더 이상 수정이 불가능합니다.
 
-### 프로젝트 그룹 관리
+## 프로젝트 상위 그룹 관리
 프로젝트 그룹에는 상위 그룹과 하위 그룹이 존재합니다.
 
--상위 그룹 추가
+### 상위 그룹 추가
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/dc455bbb-e07e-46f6-a42f-1b52a4381985)
 - 왼쪽 사이드 바 하단의 "+" 버튼을 누르면 상위 그룹 추가 모달이 뜹니다.
 - 상위 그룹 이름과 초대 멤버를 지정할 수 있습니다.
@@ -205,11 +212,12 @@ https://www.youtube.com/watch?v=Jk-_V03pTn0
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/69100a05-c0c8-4bcb-ba54-2c52ca606e9d)
 - 상위 그룹이 추가되고 난 후의 모습입니다.
 
--프로젝트 상위 그룹 관리 페이지<br>
+## 프로젝트 하위 그룹 관리
+### 프로젝트 상위 그룹 관리 페이지<br>
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/efd5b6ff-6fa7-4107-8866-50364d82596b)
 - 프로젝트 상위 그룹 관리 페이지 초기 화면입니다.
 
--하위 그룹 생성 모달<br>
+### 하위 그룹 생성 모달<br>
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/424194a2-b926-4b43-95bb-b8aacf9722aa)
 - "그룹 추가" 버튼을 누르면 하위 그룹 생성이 가능합니다.
 
@@ -218,11 +226,11 @@ https://www.youtube.com/watch?v=Jk-_V03pTn0
 - 한 멤버는 여러 그룹에 들어갈 수 있습니다.
 - "나가기" 버튼은 자신이 속한 그룹 이름 오른쪽에 있으며, 자기 자신만 "나가기 버튼"이 보입니다.
 
--제품 멤버를 프로젝트 및 프로젝트 그룹에 초대하기<br>
+### 제품 멤버를 프로젝트 및 프로젝트 그룹에 초대하기<br>
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/4e8074fe-ffc3-4301-80f0-ffd524bd3309)
 - 제품에 있는 다른 멤버를 프로젝트에 추가할 수 있습니다.
 
--생성 완료 후<br>
+### 하위 그룹 생성 완료 및 수정 후<br>
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/ee7b15cf-fa54-4de8-aa13-04c5e6bbd3a3)
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/77d10660-519d-4c0b-916e-1c6e49705fcd)
 
