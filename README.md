@@ -105,13 +105,14 @@ https://www.youtube.com/watch?v=Jk-_V03pTn0
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/e02cf24a-a70b-4b72-a7a5-8911eaab2cac)
 
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/196cd56a-fa1b-40ef-87ba-2591700f68ba)
-
+___
 
 ## 회원가입
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/64392fe6-9282-45f2-8a1a-639095ef36e4)
 
 - 개인 회원과 기업 회원 중 선택하여 회원가입이 가능합니다.
 - 이메일 인증을 하고 회원가입을 완료할 수 있습니다.
+___
 
 ## 로그인
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/9c20638f-044f-4baa-93be-5a8be238f0a4)
@@ -123,6 +124,7 @@ https://www.youtube.com/watch?v=Jk-_V03pTn0
 <img width="1436" alt="image" src="https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/a348e277-98ed-40b1-bc58-ade5211c819e">
 
 - 비밀번호를 까먹으면 이메일을 통해서 비밀번호 찾기가 가능합니다.
+___
 
 ## 마이페이지
 
@@ -138,6 +140,7 @@ https://www.youtube.com/watch?v=Jk-_V03pTn0
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/e778d9df-b9ec-46d6-9237-110d75594ef8)
 
 - 현재 비밀번호, 새로운 비밀번호를 입력하고 변경이 가능합니다.
+___
 
 ## 제품
 
@@ -158,7 +161,6 @@ https://www.youtube.com/watch?v=Jk-_V03pTn0
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/55f9bae6-2f34-41ba-ba77-e700d2f73740)
 - 프로젝트 추가를 후 모습입니다.
 - 프로젝트에 대한 더 자세한 설명은 아래에 "프로젝트"에 있습니다.
-
 
 ### 제품 멤버 관리
 
@@ -182,6 +184,7 @@ https://www.youtube.com/watch?v=Jk-_V03pTn0
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/fa3c7e49-08bf-4a2a-8584-410352422935)
 - 리더 권한을 일반 멤버에게 부여할 수 있습니다.
 - 멤버의 방출도 가능합니다.
+___
 
 ## 프로젝트 버전과 변경이력 관리
 ### 변경이력 추가
@@ -200,6 +203,7 @@ https://www.youtube.com/watch?v=Jk-_V03pTn0
 - "1.0.0" 프로젝트를 완료한 모습이며 완료된 프로젝트는 "날짜" 부분에 완료한 날짜가 기록됩니다.
 - 진행중인 프로젝트가 있다면 프로젝트를 추가할 수 없습니다.
 - 완료된 프로젝트는 더 이상 수정이 불가능합니다.
+___
 
 ## 프로젝트 상위 그룹 관리
 프로젝트 그룹에는 상위 그룹과 하위 그룹이 존재합니다.
@@ -211,6 +215,7 @@ https://www.youtube.com/watch?v=Jk-_V03pTn0
 
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/69100a05-c0c8-4bcb-ba54-2c52ca606e9d)
 - 상위 그룹이 추가되고 난 후의 모습입니다.
+___
 
 ## 프로젝트 하위 그룹 관리
 ### 프로젝트 상위 그룹 관리 페이지<br>
@@ -236,6 +241,7 @@ https://www.youtube.com/watch?v=Jk-_V03pTn0
 
 - 그룹과 멤버 수정을 한 모습입니다.
 - 왼쪽 사이드 바에도 그룹 관리에서 반영한 하위 그룹이 반영됩니다.
+___
 
 ## 프로젝트 상세 관리
 <img width="1438" alt="image" src="https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/649b0933-6096-405e-ad86-d2a95fef6cd3">
@@ -258,7 +264,6 @@ https://www.youtube.com/watch?v=Jk-_V03pTn0
 
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/5b147cd3-94bb-4d90-894d-eab018971798)
 - 글 작성과 태그 기능을 활용할 수 있습니다.
-
 
 -Post 생성 완료<br>
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/a733663f-495a-40b1-a3c0-d63775cc4f13)
