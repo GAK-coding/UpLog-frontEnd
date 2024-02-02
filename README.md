@@ -85,14 +85,17 @@ https://www.youtube.com/watch?v=Jk-_V03pTn0
     - [제품 멤버 관리](#제품-멤버-관리)
 6. [프로젝트](#프로젝트)
    - [그룹 관리](#그룹-관리)
-   - [칸반보드](#칸반보드)
    - [Post](#Post)
    - [Task](#Task)
+   - [칸반보드](#칸반보드)
 <br/>
 <br/>
 
 ## 메인페이지
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/e02cf24a-a70b-4b72-a7a5-8911eaab2cac)
+
+![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/196cd56a-fa1b-40ef-87ba-2591700f68ba)
+
 
 ## 회원가입
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/64392fe6-9282-45f2-8a1a-639095ef36e4)
@@ -133,19 +136,97 @@ https://www.youtube.com/watch?v=Jk-_V03pTn0
 
 - 기업 권한으로 회원가입한 회원은 제품 생성이 가능합니다.
 
+-제품 생성 후<br>
+![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/c008537b-3e5b-4f01-9faa-bec9857beea7)
+
+
 ### 제품 관리
+![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/3d24b6ec-3123-4bef-b697-bd8594360491)
+![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/55f9bae6-2f34-41ba-ba77-e700d2f73740)
+
 
 ### 프로젝트 버전과 변경이력 관리
+![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/df4a5b23-503a-4959-a2b6-5b43ec628c21)
+![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/982aa589-9304-431f-8be6-7db434c69a20)
+![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/341ccd57-7c43-469a-bd39-1f9ba73912a5)
+![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/fa6131e1-1614-4f93-9360-2c51427dc0ae)
+
 
 ### 제품 멤버 관리
 
+-초기 상태<br>
+![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/9d97ef82-1d2d-4f69-9723-afd528c1f596)
+
+-리더로 초대하기<br>
+![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/2501230f-fa82-4d7a-a78c-607ac9e2b19a)
+![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/cb700e51-b84c-46b0-a6c3-221e408f611d)
+
+-일반 멤버로 초대하기<br>
+![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/18230549-ff0e-4e75-9bad-73a0ceb1ed3e)
+![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/17b2e83e-ec14-4736-8279-7b29f543d435)
+
+-리더 권한 위임 및 방출<br>
+![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/140480c1-e414-4e53-a7aa-03d49e8d26c0)
+![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/fa3c7e49-08bf-4a2a-8584-410352422935)
+
+
 ## 프로젝트
+-프로젝트 생성 시 첫 화면<br>
+![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/ab08f690-18e0-4aad-a5a9-598a6742f083)
+
 
 ### 그룹 관리
+-프로젝트 그룹 관리 페이지<br>
+![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/efd5b6ff-6fa7-4107-8866-50364d82596b)
 
-### 칸반보드
+-그룹 생성 모달<br>
+![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/424194a2-b926-4b43-95bb-b8aacf9722aa)
+![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/3a6071d2-6a97-400a-98cf-d9e397b282cf)
+
+-제품 멤버를 프로젝트 및 프로젝트 그룹에 초대하기<br>
+![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/4e8074fe-ffc3-4301-80f0-ffd524bd3309)
+
+-생성 완료 후<br>
+![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/ee7b15cf-fa54-4de8-aa13-04c5e6bbd3a3)
+![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/77d10660-519d-4c0b-916e-1c6e49705fcd)
 
 ### Post
+-Post가 없는 상태<br>
+![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/1a296046-56f1-45f5-8a2b-ca25ecbafc5f)
+
+-Post 생성 과정<br>
+![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/d7ce7441-a1d1-4911-a820-e26efe5d682c)
+![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/68f5f132-9949-4f61-9d3f-55800c3b82d7)
+![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/33a5e9cc-6c6f-44e8-9f41-bc91d7765978)
+![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/5b147cd3-94bb-4d90-894d-eab018971798)
+
+-Post 생성 완료<br>
+![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/a733663f-495a-40b1-a3c0-d63775cc4f13)
+![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/3892ac4e-9056-4149-8a9b-12c4dcd8cfc4)
+![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/d1f2b45a-9c97-4c44-95d9-999b7a0039c3)
+
 
 ### Task
+-Task가 없는 상태<br>
+![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/8bbe3949-7dbe-48d5-88bd-af002bfec694)
 
+-Task 생성 과정<br>
+![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/e11059af-f00b-4346-b3dc-8025671cc04a)
+![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/93287dd7-e399-4754-9825-80d61d1ecab0)
+
+-Task 생성 완료<br>
+![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/c8e0665b-f7ab-4141-939b-6766b044ad83)
+
+-Task 수정<br>
+![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/3463e693-71a5-48f9-aeb1-940e79c8756c)
+![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/4fe0969c-4bb7-4970-9544-cb903f2445c9)
+
+-Task 정렬 및 필터링<br>
+![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/a585d784-6275-42a5-a8ce-d5962ea7d186)
+![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/07f6d88f-3b2f-4ad0-ae50-22a5cbed03b2)
+
+### 칸반보드
+-Task가 없는 칸반보드<br>
+![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/ab08f690-18e0-4aad-a5a9-598a6742f083)
+
+-Task 생성 후<br>
