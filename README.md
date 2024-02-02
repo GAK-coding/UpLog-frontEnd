@@ -230,3 +230,4 @@ https://www.youtube.com/watch?v=Jk-_V03pTn0
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/ab08f690-18e0-4aad-a5a9-598a6742f083)
 
 -Task 생성 후<br>
+![GIFMaker_me](https://github.com/GAK-coding/UpLog-frontEnd/assets/86971770/92530216-5af0-4f7e-b561-4016210de6e5)
