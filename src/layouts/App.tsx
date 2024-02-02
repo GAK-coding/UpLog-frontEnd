@@ -105,7 +105,7 @@ function App() {
               </section>
             </BrowserRouter>
           </Scrollbars>
-          {showDevtools && <ReactQueryDevtools />}
+          {/*{showDevtools && <ReactQueryDevtools />}*/}
         </GoogleOAuthProvider>
       </ChakraProvider>
     </QueryClientProvider>
