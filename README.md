@@ -102,8 +102,10 @@ https://www.youtube.com/watch?v=Jk-_V03pTn0
     <br/>
 
 ## 메인페이지
+-로그인 전<br>
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/e02cf24a-a70b-4b72-a7a5-8911eaab2cac)
 
+-로그인 후<br>
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/196cd56a-fa1b-40ef-87ba-2591700f68ba)
 ___
 
