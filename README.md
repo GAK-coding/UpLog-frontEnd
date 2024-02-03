@@ -4,9 +4,9 @@
 <br/>
 
 ### 👥  참여인원
-- 가천대학교 컴퓨터공학과 권오현 [Gitgub](https://github.com/5hyun) | qhslsl@gmail.com
+- 가천대학교 컴퓨터공학과 권오현 [Github](https://github.com/5hyun) | qhslsl@gmail.com
 
-- 가천대학교 소프트웨어학과 오채영 [Gitgub](https://github.com/CHCHAENG) | oco6029@naver.com
+- 가천대학교 소프트웨어학과 오채영 [Github](https://github.com/CHCHAENG) | oco6029@naver.com
 
 <br/>
 
