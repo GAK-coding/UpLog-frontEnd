@@ -10,7 +10,7 @@
 
 <br/>
 
-## 💻 프로젝트 설명
+## ✍️ 프로젝트 설명
 
 <img width="844" alt="image" src="https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/e2579bed-63f8-4c45-8fd7-19fa9113270b">
 
