@@ -10,7 +10,7 @@
 
 <br/>
 
-## 프로젝트 설명
+## 💻 프로젝트 설명
 
 <img width="844" alt="image" src="https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/e2579bed-63f8-4c45-8fd7-19fa9113270b">
 
@@ -24,7 +24,7 @@
 - 프로젝트의 그룹 안에는 Post와 Task가 존재합니다.
 - 예시로 맨 처음 프로젝트의 이름을 Version 1.0.0으로 설정하고, 그 안에 그룹을 생성을 하면 Task, Post 작성이 가능하며 칸반보드를 이용하여 Task를 관리할 수 있습니다.
 
-## 권한과 역할 정의
+## 🔑 권한과 역할 정의
 ### 권한
 <img width="892" alt="image" src="https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/a91615b5-034c-4b6b-a504-f7133460f570">
 
