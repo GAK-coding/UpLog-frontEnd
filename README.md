@@ -315,5 +315,6 @@ ___
 - Task가 없는 칸반보드의 화면입니다.
 
 -Task 생성 후<br>
-![GIFMaker_me](https://github.com/GAK-coding/UpLog-frontEnd/assets/86971770/92530216-5af0-4f7e-b561-4016210de6e5)
+<video src="https://github.com/GAK-coding/UpLog-frontEnd/assets/86971770/177738c8-5a3b-4c7a-8ae0-86f65fc7cd95"></video>
 - Task가 작성되면 칸반보드에 Task가 생기며 Drag&Drop으로 Task의 상태 변경이 가능합니다.
+- 진행률도 Task의 상태에 따라 변경됩니다.
