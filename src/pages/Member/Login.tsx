@@ -8,9 +8,7 @@ import { GetUserInfo, LoginInfo, SaveUserInfo } from '@/typings/member.ts';
 import { useMutation } from 'react-query';
 import { useRecoilState } from 'recoil';
 import { loginStatus, user } from '@/recoil/User/atom.ts';
-import { useCookies } from 'react-cookie';
 import { loginAPI } from '@/api/Members/Login-Signup.ts';
-import { sendLog } from '@/api/Log';
 import { message } from '@/recoil/Common/atom.ts';
 
 export default function Login() {
@@ -20,7 +18,6 @@ export default function Login() {
   const [password, onChangePassword, setPassword] = useInput('');
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useRecoilState(loginStatus);
-  const [cookies, setCookie, removeCookie] = useCookies();
   const [userInfo, setUserInfo] = useRecoilState(user);
 
   const { mutate, isSuccess } = useMutation(loginAPI, {
@@ -40,8 +37,6 @@ export default function Login() {
         image,
       };
 
-      sessionStorage.setItem('accessToken', accessToken);
-      setCookie('refreshToken', refreshToken, { path: '/' });
       sessionStorage.setItem('userInfo', JSON.stringify(userInfo));
       setIsLogin(true);
       setUserInfo(userInfo);
@@ -52,11 +47,8 @@ export default function Login() {
     },
     onError: () => {
       setMessageInfo({ type: 'error', content: '아이디 또는 비밀번호를 잘못 입력하셨습니다.' });
-      sendLogMutate({ page: 'login', status: false, message: 'login fail' });
     },
   });
-
-  const { mutate: sendLogMutate } = useMutation(sendLog);
 
   const onSubmit = useCallback(
     (e: FormEvent<HTMLFormElement>) => {
@@ -64,28 +56,24 @@ export default function Login() {
 
       if (!email && !password) {
         setMessageInfo({ type: 'warning', content: '이메일과 비밀번호를 입력해주세요.' });
-        sendLogMutate({ page: 'login', status: false, message: 'all' });
 
         return;
       }
 
       if (!email) {
         setMessageInfo({ type: 'warning', content: '이메일을 입력해주세요.' });
-        sendLogMutate({ page: 'login', status: false, message: 'email' });
 
         return;
       }
 
       if (!password) {
         setMessageInfo({ type: 'warning', content: '비밀번호를 입력해주세요.' });
-        sendLogMutate({ page: 'login', status: false, message: 'password' });
 
         return;
       }
 
       const loginInfo: LoginInfo = { email, password };
       mutate(loginInfo);
-      sendLogMutate({ page: 'login', status: true, message: 'success' });
     },
     [email, password]
   );

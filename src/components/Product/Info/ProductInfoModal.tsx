@@ -22,7 +22,6 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { frontEndUrl, message } from '@/recoil/Common/atom.ts';
 import { imageUpload } from '@/api/Members/mypage.ts';
 import { useGetAllProduct } from '@/components/Product/hooks/useGetAllProduct.ts';
-import { sendLog } from '@/api/Log';
 
 interface Props {
   isOpen: boolean;

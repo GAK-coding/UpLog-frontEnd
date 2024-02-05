@@ -15,13 +15,12 @@ import { EmailInfo, SignUpInfo } from '@/typings/member.ts';
 import { useNavigate } from 'react-router-dom';
 import { loginStatus } from '@/recoil/User/atom.ts';
 import { useRecoilState } from 'recoil';
-import { sendLog } from '@/api/Log';
 import { message } from '@/recoil/Common/atom.ts';
 const time = 300;
 export default function SignUp() {
   const [name, onChangeName, setName] = useInput('');
   const [nickname, onChangeNickname, setNickname] = useInput('');
-  const [email, onChangeEmail, setEmail] = useInput('');
+  const [email, onChangeEmail, setEmail] = useInput('qweqw@sadd.com');
   const [auth, onChangeAuth, setAuth] = useInput('');
   const [password, onChangePassword, setPassword] = useInput('');
   // 인증 클릭했는지
@@ -64,8 +63,6 @@ export default function SignUp() {
     position: isEach ? 'INDIVIDUAL' : 'COMPANY',
     loginType: 'UPLOG',
   };
-
-  const { mutate: sendLogMutate } = useMutation(sendLog);
 
   /** 인증번호 전송 함수, 재전송에서도 활용하기 위해서 밖으로 뺌 */
   const sendAuth = useCallback(() => {
@@ -119,46 +116,39 @@ export default function SignUp() {
       if (!name && !nickname && !email && !isAuth && !isCheckPw) {
         setMessageInfo({ type: 'warning', content: '모든 정보를 입력해주세요.' });
 
-        sendLogMutate({ page: 'singup', status: false, message: 'all' });
         return;
       }
 
       if (!name) {
         setMessageInfo({ type: 'warning', content: '이름을 입력해주세요.' });
-        sendLogMutate({ page: 'singup', status: false, message: 'name' });
         return;
       }
 
       if (!nickname) {
         setMessageInfo({ type: 'warning', content: '닉네임을 입력해주세요.' });
-        sendLogMutate({ page: 'singup', status: false, message: 'nickname' });
 
         return;
       }
 
       if (!emailRegex.test(email)) {
         setMessageInfo({ type: 'warning', content: '이메일이 유효하지 않습니다.' });
-        sendLogMutate({ page: 'signup', status: false, message: 'email' });
 
         return;
       }
 
       if (!isAuth) {
         setMessageInfo({ type: 'warning', content: '인증번호 확인을 해주세요.' });
-        sendLogMutate({ page: 'signup', status: false, message: 'authNumber' });
 
         return;
       }
 
       if (!isCheckPw) {
         setMessageInfo({ type: 'warning', content: '비밀번호를 확인 해주세요.' });
-        sendLogMutate({ page: 'signup', status: false, message: 'password' });
 
         return;
       }
 
       mutate(signUpInfo);
-      sendLogMutate({ page: 'signup', status: true, message: 'success' });
     },
     [name, nickname, email, isAuth, isCheckPw, signUpInfo, isSuccess]
   );
@@ -194,6 +184,12 @@ export default function SignUp() {
   useEffect(() => {
     if (sessionStorage.getItem('accessToken') && sessionStorage.getItem('userInfo')) navigate('/');
   }, []);
+
+  const a: Promise<string> = fetch('/abc')
+    .then((response) => response.json())
+    .then((data) => data);
+
+  console.log(a);
 
   return (
     <form onSubmit={onSubmit} className={'h-full flex-col-center'}>

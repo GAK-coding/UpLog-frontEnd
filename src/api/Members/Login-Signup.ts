@@ -35,10 +35,6 @@ export const emailRequest = async (data: EmailInfo) => {
   }
 };
 
-interface a {
-  response: { message: string };
-}
-
 export const logout = async (data: { accessToken: string; refreshToken: string }) => {
   try {
     const { accessToken, refreshToken } = data;
