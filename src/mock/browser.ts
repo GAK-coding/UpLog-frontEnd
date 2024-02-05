@@ -1,6 +1,6 @@
 // src/mocks/browser.js
-import { setupWorker } from 'msw';
-import { auth } from '@/mock/api/member/auth.ts';
+import { setupWorker } from 'msw/browser';
+import handlers from '@/mock/handlers.ts';
 
 // This configures a Service Worker with the given request handlers.
-export const worker = setupWorker(...auth);
+export const worker = setupWorker(...handlers);
