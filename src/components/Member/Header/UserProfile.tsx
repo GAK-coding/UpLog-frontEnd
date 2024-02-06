@@ -6,35 +6,33 @@ import { loginStatus, profileOpen, user } from '@/recoil/User/atom.ts';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { useCallback, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
-import { SaveUserInfo } from '@/typings/member.ts';
 import { logout } from '@/api/Members/Login-Signup.ts';
 import { useMutation } from 'react-query';
-import { Simulate } from 'react-dom/test-utils';
 
 export default function UserProfile() {
   const [userInfo, setUserInfo] = useRecoilState(user);
+  // const [cookies, setCookie, removeCookie] = useCookies(['Access', 'Refresh']);
 
   const navigate = useNavigate();
 
   // userProfile click
   const [isProfileClick, setIsProfileClick] = useRecoilState(profileOpen);
   const setIsLogin = useSetRecoilState(loginStatus);
-  const [cookies, setCookie, removeCookie] = useCookies();
 
   const { mutate } = useMutation(logout);
 
   const onClickLogout = useCallback(() => {
     const accessToken = sessionStorage.getItem('accessToken')!;
-    const refreshToken = cookies.refreshToken;
-    mutate({ accessToken, refreshToken });
+    // const refreshToken = cookies.Refresh;
+    // mutate({ accessToken, refreshToken });
 
     sessionStorage.removeItem('userInfo');
-    sessionStorage.removeItem('accessToken');
     sessionStorage.removeItem('nowProduct');
     sessionStorage.removeItem('nowProject');
     sessionStorage.removeItem('nowTeamId');
     sessionStorage.removeItem('nowGroupId');
-    removeCookie('refreshToken', { path: '/' });
+    // setCookie('Access', null, { path: '/' });
+    // removeCookie('Refresh');
     setIsLogin(false);
     setIsProfileClick(false);
   }, [mutate]);

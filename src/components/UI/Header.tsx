@@ -17,10 +17,16 @@ import { useGetAllProduct } from '@/components/Product/hooks/useGetAllProduct.ts
 import { SaveUserInfo } from '@/typings/member.ts';
 import { useQueryClient } from 'react-query';
 import { useMessage } from '@/hooks/useMessage.ts';
+import Cookies from 'js-cookie';
+import { useCookies } from 'react-cookie';
 
 export default function Header() {
   const { showMessage, contextHolder } = useMessage();
   const [messageInfo, setMessageInfo] = useRecoilState(message);
+
+  const [cookies, setCookie, removeCookie] = useCookies(['Access']);
+
+  console.log('헤더', cookies.Access);
 
   const navigate = useNavigate();
   const [darkMode, setDarkMode] = useRecoilState(themeState);

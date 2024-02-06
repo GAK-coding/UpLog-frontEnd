@@ -1,7 +1,21 @@
-import { rest } from 'msw';
+import { http, HttpResponse } from 'msw';
 
 export const auth = [
-  rest.get('test', (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json('하이'));
+  http.post('/members/email-request', () => {
+    console.log('여기');
+
+    return new HttpResponse(null, {
+      status: 201,
+    });
+  }),
+  http.post('/members', async () => {
+    return new HttpResponse(null, {
+      status: 201,
+    });
+  }),
+  http.get('/abc', () => {
+    return new HttpResponse('hello', {
+      status: 220,
+    });
   }),
 ];
