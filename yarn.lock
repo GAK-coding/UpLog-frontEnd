@@ -3831,6 +3831,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@faker-js/faker@npm:^8.4.0":
+  version: 8.4.0
+  resolution: "@faker-js/faker@npm:8.4.0"
+  checksum: 682581f0b009b7e8b81bc0736a3f1df2fb5179706786b87ef5bed5e2e28e22dfeba10e5122942371f12d68e833be3b3726850f96940baf080500cef35a77403b
+  languageName: node
+  linkType: hard
+
 "@humanwhocodes/config-array@npm:^0.11.10":
   version: 0.11.10
   resolution: "@humanwhocodes/config-array@npm:0.11.10"
@@ -6862,6 +6869,7 @@ __metadata:
     "@emotion/babel-plugin-jsx-pragmatic": ^0.2.1
     "@emotion/react": ^11.11.1
     "@emotion/styled": ^11.11.0
+    "@faker-js/faker": ^8.4.0
     "@jest/globals": ^29.5.0
     "@loadable/component": ^5.15.3
     "@react-oauth/google": latest
