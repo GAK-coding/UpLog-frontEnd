@@ -1,21 +1,18 @@
 import { http, HttpResponse } from 'msw';
+import { SignUpInfo } from '@/typings/member.ts';
+import { faker } from '@faker-js/faker';
 
 export const auth = [
-  http.post('/members/email-request', () => {
-    console.log('여기');
+  http.post('/members', async (info) => {
+    const infos: SignUpInfo = await info.request.json();
 
-    return new HttpResponse(null, {
-      status: 201,
-    });
-  }),
-  http.post('/members', async () => {
-    return new HttpResponse(null, {
-      status: 201,
-    });
-  }),
-  http.get('/abc', () => {
-    return new HttpResponse('hello', {
-      status: 220,
-    });
+    if (infos.email === 'abc@gmail.com') {
+      return HttpResponse.json(
+        { httpStatus: 'CONFLICT', message: '이미 존재하는 회원입니다.' },
+        { status: 200 }
+      );
+    }
+
+    return HttpResponse.json({ ...infos, image: null, id: faker.number.int() }, { status: 201 });
   }),
 ];

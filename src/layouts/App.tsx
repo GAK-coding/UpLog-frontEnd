@@ -13,6 +13,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import { productOpen } from '@/recoil/Product/atom.ts';
 import milliseconds from 'mocha/lib/ms';
 import axios from 'axios';
+import { worker } from '@/mock/browser.ts';
 
 const Header = loadable(() => import('@/components/UI/Header'));
 const Home = loadable(() => import('@/pages/Home'));
@@ -48,6 +49,10 @@ function App() {
   const onCloseProduct = useCallback(() => {
     setIsProductClick(false);
   }, []);
+
+  if (import.meta.env.VITE_IS_MSW === 'true') {
+    worker.start();
+  }
 
   return (
     <QueryClientProvider client={queryClient}>

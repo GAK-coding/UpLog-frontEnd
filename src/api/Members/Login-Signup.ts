@@ -1,20 +1,15 @@
 import { EmailInfo, FailLogin, GetUserInfo, LoginInfo, SignUpInfo } from '@/typings/member.ts';
-import { instance } from '@/api';
-import { AxiosResponse } from 'axios';
+import axios, { AxiosResponse } from 'axios';
 
 export const signUp = async (data: SignUpInfo) => {
-  try {
-    const res: AxiosResponse<FailLogin | SignUpInfo> = await instance.post('/members', data);
+  const res: AxiosResponse<FailLogin | SignUpInfo> = await axios.post('/members', data);
 
-    return res.data;
-  } catch (err) {
-    return 'signup fail';
-  }
+  return res.data;
 };
 
 export const loginAPI = async (data: LoginInfo): Promise<GetUserInfo | string> => {
   try {
-    const res: AxiosResponse<GetUserInfo> = await instance.post('/members/login', data);
+    const res: AxiosResponse<GetUserInfo> = await axios.post('/members/login', data);
 
     return res.data;
   } catch (err) {
@@ -23,22 +18,18 @@ export const loginAPI = async (data: LoginInfo): Promise<GetUserInfo | string> =
 };
 
 export const emailRequest = async (data: EmailInfo) => {
-  try {
-    const res: AxiosResponse<{ message: string }> = await instance.post('/members/email-request', {
-      email: data.email,
-      type: data.type,
-    });
+  const res: AxiosResponse<{ message: string }> = await axios.post('/members/email-request', {
+    email: data.email,
+    type: data.type,
+  });
 
-    return res.data.message;
-  } catch (err) {
-    return 'email fail';
-  }
+  return res.data;
 };
 
 export const logout = async (data: { accessToken: string; refreshToken: string }) => {
   try {
     const { accessToken, refreshToken } = data;
-    await instance.post('/members/logout', { accessToken, refreshToken });
+    await axios.post('/members/logout', { accessToken, refreshToken });
   } catch (err) {
     // if (axios.isAxiosError(err) && err instanceof CustomError<a>) {
     // }

@@ -13,48 +13,69 @@ import { useMutation } from 'react-query';
 import { emailRequest, signUp } from '@/api/Members/Login-Signup.ts';
 import { EmailInfo, SignUpInfo } from '@/typings/member.ts';
 import { useNavigate } from 'react-router-dom';
-import { loginStatus } from '@/recoil/User/atom.ts';
 import { useRecoilState } from 'recoil';
 import { message } from '@/recoil/Common/atom.ts';
 const time = 300;
 export default function SignUp() {
   const [name, onChangeName, setName] = useInput('');
   const [nickname, onChangeNickname, setNickname] = useInput('');
-  const [email, onChangeEmail, setEmail] = useInput('qweqw@sadd.com');
+  const [email, onChangeEmail, setEmail] = useInput('');
   const [auth, onChangeAuth, setAuth] = useInput('');
   const [password, onChangePassword, setPassword] = useInput('');
   // 인증 클릭했는지
   const [isAuthClick, setIsAuthClick] = useState(false);
   // 인증 성공했는지
   const [isAuth, setIsAuth] = useState(false);
-  const [timer, setTimer] = useState(time);
   // 개인 기업 선택
   const [isEach, setIsEach] = useState(true);
+  const [timer, setTimer] = useState(time);
   const [isPwVisible, setIsPwVisible] = useState(false);
   const [isCheckPw, setIsCheckPw] = useState(false);
   const [messageInfo, setMessageInfo] = useRecoilState(message);
   const navigate = useNavigate();
-  const [isLogin, setIsLogin] = useRecoilState(loginStatus);
-  const [correctAuth, setCorrectAuth] = useState('');
+  const [correctAuthNum, setCorrectAuthNum] = useState('');
   const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
 
-  const { mutate: emailMutate } = useMutation(emailRequest, {
+  const { mutate: sendAuthNumMutate } = useMutation(emailRequest, {
     onSuccess: (data) => {
       // TODO: 인증번호 지워야됨
-      console.log(data.slice(14, 21));
-      setCorrectAuth(data.slice(14, 21));
+      console.log('인증번호', data.message);
+      setIsAuthClick(true);
+      setCorrectAuthNum(data.message);
+      setMessageInfo({ type: 'success', content: '인증번호가 전송되었습니다.' });
+      setTimer(time);
+    },
+    onError: () => {
+      setMessageInfo({ type: 'error', content: '잠시 후에 다시 시도해주세요.' });
+      setIsAuthClick(false);
     },
   });
 
-  const { mutate, isSuccess } = useMutation(signUp, {
+  const { mutate: signUpMutate, isSuccess } = useMutation(signUp, {
     onSuccess: (data) => {
-      if (typeof data !== 'string' && 'message' in data) {
+      if ('message' in data) {
         setMessageInfo({ type: 'warning', content: data.message });
       } else {
+        setName('');
+        setNickname('');
+        setEmail('');
+        setAuth('');
+        setPassword('');
+        setIsAuthClick(false);
+        setAuth('');
+        setCorrectAuthNum('');
+        setIsEach(true);
+        setIsPwVisible(false);
+        setIsCheckPw(false);
+
         navigate('/login');
       }
     },
+    onError: () => {
+      setMessageInfo({ type: 'error', content: '잠시 후에 다시 시도해주세요.' });
+    },
   });
+
   const signUpInfo: SignUpInfo = {
     email,
     password,
@@ -67,10 +88,7 @@ export default function SignUp() {
   /** 인증번호 전송 함수, 재전송에서도 활용하기 위해서 밖으로 뺌 */
   const sendAuth = useCallback(() => {
     const emailInfo: EmailInfo = { email, type: 0 };
-    emailMutate(emailInfo);
-
-    setMessageInfo({ type: 'success', content: '인증번호가 전송되었습니다.' });
-    setTimer(time);
+    sendAuthNumMutate(emailInfo);
   }, [email]);
 
   /** 인증번호 버튼 */
@@ -91,11 +109,10 @@ export default function SignUp() {
     if (!isAuthClick) {
       sendAuth();
 
-      setIsAuthClick(true);
       return;
     }
 
-    const check = auth === correctAuth;
+    const check = auth === correctAuthNum;
 
     if (check) {
       setIsAuth(true);
@@ -103,7 +120,7 @@ export default function SignUp() {
     } else {
       setMessageInfo({ type: 'warning', content: '인증번호가 일치하지 않습니다.' });
     }
-  }, [isAuthClick, isAuth, email, correctAuth, auth]);
+  }, [isAuthClick, isAuth, email, correctAuthNum, auth]);
 
   // 개인 기업 선택
   const onClickEach = useCallback((check: boolean) => setIsEach(check), []);
@@ -148,7 +165,7 @@ export default function SignUp() {
         return;
       }
 
-      mutate(signUpInfo);
+      signUpMutate(signUpInfo);
     },
     [name, nickname, email, isAuth, isCheckPw, signUpInfo, isSuccess]
   );
@@ -161,7 +178,7 @@ export default function SignUp() {
           if (prevTimer === 0) {
             clearInterval(interval);
             setIsAuthClick(false);
-            setCorrectAuth('');
+            setCorrectAuthNum('');
 
             return 0;
           }
@@ -184,12 +201,6 @@ export default function SignUp() {
   useEffect(() => {
     if (sessionStorage.getItem('accessToken') && sessionStorage.getItem('userInfo')) navigate('/');
   }, []);
-
-  const a: Promise<string> = fetch('/abc')
-    .then((response) => response.json())
-    .then((data) => data);
-
-  console.log(a);
 
   return (
     <form onSubmit={onSubmit} className={'h-full flex-col-center'}>
@@ -366,9 +377,7 @@ export default function SignUp() {
                       onChange={onChangePassword}
                       placeholder={'비밀번호'}
                       maxLength={15}
-                      className={`w-9/12 h-full text-lg 
-                  
-                      `}
+                      className={`w-9/12 h-full text-lg`}
                     />
                     <button
                       type={'button'}

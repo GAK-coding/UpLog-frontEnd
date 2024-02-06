@@ -26,12 +26,11 @@ export default function Header() {
 
   const [cookies, setCookie, removeCookie] = useCookies(['Access']);
 
-  console.log('헤더', cookies.Access);
-
   const navigate = useNavigate();
   const [darkMode, setDarkMode] = useRecoilState(themeState);
   const nowProduct: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
-  const [productList, refetch] = useGetAllProduct()!;
+  // const [productList, refetch] = useGetAllProduct()!;
+  const [productList, refetch] = [];
   const [userInfo, setUserInfo] = useRecoilState(user);
   const queryClient = useQueryClient();
   const isProductList = queryClient.getQueryData('myProductList');
