@@ -1,11 +1,7 @@
 // vite.config.ts
-// import { defineConfig } from 'vitest/config'
-import { ViteImageOptimizer } from 'vite-plugin-image-optimizer';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import { createRequire } from 'node:module';
-// import ViteFaviconsPlugin from 'vite-plugin-favicon';
-// const require = createRequire(import.meta.url);
+import EnvironmentPlugin from 'vite-plugin-environment';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -16,16 +12,12 @@ export default defineConfig({
     },
   },
   esbuild: {
-    // https://github.com/vitejs/vite/issues/8644#issuecomment-1159308803
     logOverride: { 'this-is-undefined-in-esm': 'silent' },
   },
   plugins: [
     react({
       babel: {
         plugins: [
-          // ViteImageOptimizer({
-          //   /* pass your config */
-          // }),
           'babel-plugin-macros',
           [
             '@emotion/babel-plugin-jsx-pragmatic',
@@ -39,6 +31,7 @@ export default defineConfig({
         ],
       },
     }),
+    EnvironmentPlugin('all'),
     // ViteFaviconsPlugin({
     //   logo: 'public/logo.svg',
     // }),

@@ -1,5 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`ProjectModal isAdd modal correctly 1`] = `<span />`;
-
-exports[`ProjectModal isComplete modal correctly 1`] = `<span />`;
