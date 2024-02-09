@@ -266,6 +266,7 @@ export default function SignUp() {
                   </span>
                   <input
                     type="text"
+                    data-cy={'nameInput'}
                     value={name}
                     onChange={onChangeName}
                     placeholder={'이름'}
@@ -282,6 +283,7 @@ export default function SignUp() {
                   </span>
                   <input
                     type="text"
+                    data-cy={'nicknameInput'}
                     value={nickname}
                     onChange={onChangeNickname}
                     placeholder={'닉네임'}
@@ -311,6 +313,7 @@ export default function SignUp() {
                   </span>
                   <input
                     type="text"
+                    data-cy={'emailInput'}
                     value={email}
                     onChange={onChangeEmail}
                     placeholder={'이메일'}
@@ -332,6 +335,7 @@ export default function SignUp() {
                   <span className={'w-5/6 h-full flex'}>
                     <input
                       type="text"
+                      data-cy={'authInput'}
                       value={auth}
                       onChange={onChangeAuth}
                       placeholder={'인증번호'}
@@ -342,6 +346,7 @@ export default function SignUp() {
                     <span className={'w-3/12 h-full flex-col-center justify-evenly'}>
                       <button
                         type={'button'}
+                        data-cy={'authButton'}
                         className={'w-16 h-9 rounded text-sm font-bold'}
                         onClick={onClickIsAuth}
                       >
@@ -373,6 +378,7 @@ export default function SignUp() {
                   <span className={'w-5/6 h-full flex relative'}>
                     <input
                       type={`${isPwVisible ? 'text' : 'password'}`}
+                      data-cy={'passwordInput'}
                       value={password}
                       onChange={onChangePassword}
                       placeholder={'비밀번호'}
@@ -392,9 +398,14 @@ export default function SignUp() {
                         <AiOutlineEye className={'fill-gray-light'} />
                       )}
                     </button>
-                    <span className={'absolute text-[#E06469] text-xs bottom-[2px] left-0'}>
-                      {!isCheckPw && password && '영어/숫자/특수문자 포함, 8~15자로 입력해주세요.'}
-                    </span>
+                    {!isCheckPw && password && (
+                      <span
+                        className={'absolute text-[#E06469] text-xs bottom-[2px] left-0'}
+                        data-message={'error-password'}
+                      >
+                        영어/숫자/특수문자 포함, 8~15자로 입력해주세요.
+                      </span>
+                    )}
                   </span>
                 </label>
               </span>
@@ -408,6 +419,7 @@ export default function SignUp() {
         className={
           'flex-row-center rounded-md w-[37rem] h-12 mt-10 py-7 font-bold text-xl bg-orange text-white'
         }
+        data-cy={'singUpButton'}
       >
         회원가입
       </button>

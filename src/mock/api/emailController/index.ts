@@ -5,7 +5,7 @@ export const emailController = [
   http.post('/members/email-request', () => {
     return HttpResponse.json(
       {
-        message: faker.string.alpha(6),
+        message: 'abcdef',
       },
       { status: 201 }
     );

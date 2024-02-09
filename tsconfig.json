@@ -7,13 +7,7 @@
     "lib": ["es6", "DOM", "DOM.Iterable"],
     "skipLibCheck": true,
     //    "jsxImportSource": "@emotion/react",
-    "types": [
-      "cypress",
-      "node",
-      "@testing-library/cypress",
-      "jest",
-      "@testing-library/jest-dom"
-    ],
+    "types": ["cypress", "node", "@testing-library/cypress", "jest", "@testing-library/jest-dom"],
 
     /* Bundler mode */
     "allowImportingTsExtensions": true,
@@ -45,6 +39,7 @@
       "@/mock/*": ["src/mock/*"]
     }
   },
-  "include": ["./src/**/*.ts", "./src/**/*.js"]  "references": [{ "path": "./tsconfig.node.json" }],
+  "include": ["./src/**/*.ts", "./src/**/*.js"],
+  "references": [{ "path": "./tsconfig.node.json" }],
   "exclude": ["*/**/*.test.tsx"]
 }
