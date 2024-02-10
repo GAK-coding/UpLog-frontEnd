@@ -3,13 +3,13 @@ import { MdOutlineMailOutline } from 'react-icons/md';
 import useInput from '@/hooks/useInput.ts';
 import { AiOutlineLock } from 'react-icons/ai';
 import { Link, useNavigate } from 'react-router-dom';
-import { useGoogleLogin } from '@react-oauth/google';
-import { GetUserInfo, LoginInfo, SaveUserInfo } from '@/typings/member.ts';
+import { FailResponse, GetUserInfo, LoginInfo, SaveUserInfo } from '@/typings/member.ts';
 import { useMutation } from 'react-query';
 import { useRecoilState } from 'recoil';
 import { loginStatus, user } from '@/recoil/User/atom.ts';
 import { loginAPI } from '@/api/Members/Login-Signup.ts';
 import { message } from '@/recoil/Common/atom.ts';
+import { useGetAllProduct } from '@/components/Product/hooks/useGetAllProduct';
 
 export default function Login() {
   const [messageInfo, setMessageInfo] = useRecoilState(message);
@@ -21,13 +21,13 @@ export default function Login() {
   const [userInfo, setUserInfo] = useRecoilState(user);
 
   const { mutate, isSuccess } = useMutation(loginAPI, {
-    onSuccess: (data: GetUserInfo | string) => {
-      if (typeof data === 'string') {
+    onSuccess: (data: GetUserInfo | FailResponse) => {
+      if ('message' in data) {
         setMessageInfo({ type: 'error', content: '아이디 또는 비밀번호를 잘못 입력하셨습니다.' });
         return;
       }
 
-      const { id, email, nickname, name, position, accessToken, refreshToken, image } = data;
+      const { id, email, nickname, name, position, accessToken, image } = data;
       const userInfo: SaveUserInfo = {
         id,
         nickname,
@@ -38,15 +38,14 @@ export default function Login() {
       };
 
       sessionStorage.setItem('userInfo', JSON.stringify(userInfo));
+      sessionStorage.setItem('accessToken', accessToken);
       setIsLogin(true);
       setUserInfo(userInfo);
 
-      // const productList = useGetAllProduct();
-      // console.log(productList);
-      navigate('/workspace/1', { state: { isLogin: true } });
+      navigate('/workspace/-1');
     },
     onError: () => {
-      setMessageInfo({ type: 'error', content: '아이디 또는 비밀번호를 잘못 입력하셨습니다.' });
+      setMessageInfo({ type: 'error', content: '잠시후에 다시 시도해주세요.' });
     },
   });
 
@@ -56,19 +55,16 @@ export default function Login() {
 
       if (!email && !password) {
         setMessageInfo({ type: 'warning', content: '이메일과 비밀번호를 입력해주세요.' });
-
         return;
       }
 
       if (!email) {
         setMessageInfo({ type: 'warning', content: '이메일을 입력해주세요.' });
-
         return;
       }
 
       if (!password) {
         setMessageInfo({ type: 'warning', content: '비밀번호를 입력해주세요.' });
-
         return;
       }
 
@@ -78,14 +74,10 @@ export default function Login() {
     [email, password]
   );
 
-  // TODO : 구글 로그인
-  const login = useGoogleLogin({
-    onSuccess: (codeResponse) => console.log(codeResponse),
-    flow: 'auth-code',
-  });
-
   useEffect(() => {
-    if (sessionStorage.getItem('accessToken') && sessionStorage.getItem('userInfo')) navigate('/');
+    if (sessionStorage.getItem('accessToken') && sessionStorage.getItem('userInfo')) {
+      navigate('/');
+    }
   }, []);
 
   return (
@@ -120,6 +112,7 @@ export default function Login() {
                   </span>
                   <input
                     type="text"
+                    data-cy="emailInput"
                     value={email}
                     onChange={onChangeEmail}
                     placeholder={'이메일'}
@@ -138,6 +131,7 @@ export default function Login() {
                   <span className={'w-5/6 h-full flex'}>
                     <input
                       type={'password'}
+                      data-cy="passwordInput"
                       value={password}
                       onChange={onChangePassword}
                       placeholder={'비밀번호'}
@@ -153,6 +147,7 @@ export default function Login() {
               className={
                 'flex-row-center rounded-md w-[28rem] h-12 mt-10 py-7 font-bold text-xl bg-orange text-white'
               }
+              data-cy="LoginButton"
             >
               로그인
             </button>
@@ -160,10 +155,7 @@ export default function Login() {
         </article>
 
         <article className={'w-[37rem] flex-col-center text-lg font-bold'}>
-          <nav
-            // className={'flex-row-center w-full border-solid border-b border-gray-spring pb-7 mb-5'}
-            className={'flex-row-center w-full pb-7 mb-5'}
-          >
+          <nav className={'flex-row-center w-full pb-7 mb-5'}>
             <Link to={'/pwinquiry'} className={'w-[46%] text-right'}>
               <button>비밀번호 찾기</button>
             </Link>
@@ -174,17 +166,6 @@ export default function Login() {
               <button>회원가입</button>
             </Link>
           </nav>
-          <div className={'flex-col-center w-full'}>
-            <span className={'mb-7 text-lg font-bold'}>간편 로그인</span>
-            <div className={'w-3/5 flex-row-center justify-evenly'}>
-              <button onClick={() => login()}>
-                <img className={'w-12'} src={'google.svg'} alt={'google'} />
-              </button>
-              <button>
-                <img className={'w-12'} src={'kakao.svg'} alt={'kakao'} />
-              </button>
-            </div>
-          </div>
         </article>
       </div>
     </section>
