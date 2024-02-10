@@ -52,7 +52,7 @@ export default defineConfig({
       { find: '@/types', replacement: '/src/types' },
       { find: '@/utils', replacement: '/src/utils' },
       { find: '@/typings', replacement: '/src/typings' },
-      { find: '@/mock', replacement: '/src/mock' },
+      { find: '@/mocks', replacement: '/src/mocks' },
       { find: '@/', replacement: '/src' },
     ],
   },
