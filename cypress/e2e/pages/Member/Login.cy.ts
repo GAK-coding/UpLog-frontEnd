@@ -13,7 +13,7 @@ describe('로그인 테스트', () => {
     cy.get('@passwordInput').type('q1w2e3r$');
     cy.get('[data-cy=LoginButton]').click();
 
-    // then - 회원가입에 성공하고 로그인 페이지로 이동한다
+    // then - 로그인에 성공하고 제품 페이지로 이동한다
     cy.url().should('include', 'http://localhost:3070/workspace');
   });
 
