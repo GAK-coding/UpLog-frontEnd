@@ -8,10 +8,11 @@ import { useCallback, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import { logout } from '@/api/Members/Login-Signup.ts';
 import { useMutation } from 'react-query';
+import { message } from '../../../recoil/Common/atom';
 
 export default function UserProfile() {
   const [userInfo, setUserInfo] = useRecoilState(user);
-  // const [cookies, setCookie, removeCookie] = useCookies(['Access', 'Refresh']);
+  const [messageInfo, setMessageInfo] = useRecoilState(message);
 
   const navigate = useNavigate();
 
@@ -19,22 +20,27 @@ export default function UserProfile() {
   const [isProfileClick, setIsProfileClick] = useRecoilState(profileOpen);
   const setIsLogin = useSetRecoilState(loginStatus);
 
-  const { mutate } = useMutation(logout);
+  const { mutate } = useMutation(logout, {
+    onSuccess: () => {
+      sessionStorage.removeItem('userInfo');
+      sessionStorage.removeItem('accessToken');
+      sessionStorage.removeItem('nowProduct');
+      sessionStorage.removeItem('nowProject');
+      sessionStorage.removeItem('nowTeamId');
+      sessionStorage.removeItem('nowGroupId');
+      setIsLogin(false);
+      setIsProfileClick(false);
+
+      setMessageInfo({ type: 'success', content: '로그아웃 되었습니다.' });
+    },
+    onError: () => {
+      setMessageInfo({ type: 'error', content: '잠시후에 다시 시도해주세요.' });
+    },
+  });
 
   const onClickLogout = useCallback(() => {
     const accessToken = sessionStorage.getItem('accessToken')!;
-    // const refreshToken = cookies.Refresh;
-    // mutate({ accessToken, refreshToken });
-
-    sessionStorage.removeItem('userInfo');
-    sessionStorage.removeItem('nowProduct');
-    sessionStorage.removeItem('nowProject');
-    sessionStorage.removeItem('nowTeamId');
-    sessionStorage.removeItem('nowGroupId');
-    // setCookie('Access', null, { path: '/' });
-    // removeCookie('Refresh');
-    setIsLogin(false);
-    setIsProfileClick(false);
+    mutate({ accessToken });
   }, [mutate]);
 
   return (

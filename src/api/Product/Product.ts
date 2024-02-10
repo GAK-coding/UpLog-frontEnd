@@ -7,7 +7,7 @@ import {
   ProductMember,
   ProductsData,
 } from '@/typings/product.ts';
-import { AxiosResponse } from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { instance } from '@/api';
 import { commonResponse } from '@/typings';
 
@@ -62,13 +62,9 @@ export const eachProduct = async (productId: number) => {
 };
 
 export const getMyProducts = async () => {
-  try {
-    const res: AxiosResponse<GetProductList[]> = await instance.get('/products');
+  const res: AxiosResponse<GetProductList[]> = await axios.get('/products');
 
-    return res.data;
-  } catch (err) {
-    return 'fail get my products';
-  }
+  return res.data;
 };
 
 export const changeProductsSequence = async (updateIndexList: number[]) => {

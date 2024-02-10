@@ -1,5 +1,5 @@
 import React from 'react';
-import { Chats } from '@/mock/api/data/project/chat.ts';
+import { Chats } from '../../../mocks/api/data/project/chat.ts';
 import { SaveProjectInfo } from '@/typings/project.ts';
 import { Scrollbars } from 'react-custom-scrollbars';
 

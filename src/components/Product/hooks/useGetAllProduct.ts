@@ -2,8 +2,8 @@ import { getMyProducts } from '@/api/Product/Product.ts';
 import { GetProductList, ProductInfo } from '@/typings/product.ts';
 import { useQuery } from 'react-query';
 
-export function useGetAllProduct(isEnabled = true): [ProductInfo[] | [], () => void] {
-  const { refetch, data } = useQuery('myProductList', getMyProducts, {
+export function useGetAllProduct(isEnabled = true): [ProductInfo[] | [], () => void, boolean] {
+  const { refetch, data, isError, isFetching } = useQuery('myProductList', getMyProducts, {
     select: (data) => {
       if (typeof data !== 'string') {
         const list: ProductInfo[] = data.map((item: GetProductList) => {
@@ -14,7 +14,7 @@ export function useGetAllProduct(isEnabled = true): [ProductInfo[] | [], () => v
             indexNum: item.indexNum,
             draggableId: item.productId.toString(),
             // TODO: 이미지 수정 필요
-            // image: !item.productImage ? '/images/test_userprofile.png' : item.productImage,
+            image: !item.productImage ? '/images/test_userprofile.png' : item.productImage,
             productImage: !item.productImage ? null : item.productImage,
           };
         });
@@ -30,6 +30,8 @@ export function useGetAllProduct(isEnabled = true): [ProductInfo[] | [], () => v
     refetchOnReconnect: false, // 네트워크가 다시 연결되었을때 다시 가져오지 않음
   });
 
-  if (data) return [data, refetch];
-  else return [[], refetch];
+  if (isError) return [[], refetch, isFetching];
+
+  if (data) return [data, refetch, isFetching];
+  else return [[], refetch, isFetching];
 }

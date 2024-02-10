@@ -28,7 +28,7 @@ export default function Header() {
 
   const navigate = useNavigate();
   const [darkMode, setDarkMode] = useRecoilState(themeState);
-  const nowProduct: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
+  const nowProduct: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct'));
   // const [productList, refetch] = useGetAllProduct()!;
   const [productList, refetch] = [];
   const [userInfo, setUserInfo] = useRecoilState(user);
