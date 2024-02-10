@@ -7,19 +7,18 @@ export interface SignUpInfo extends LoginInfo {
   nickname: string;
   name: string;
   position: 'INDIVIDUAL' | 'COMPANY';
-  loginType: 'UPLOG' | 'GOOGLE';
+  loginType: 'UPLOG';
 }
 
 export interface GetUserInfo extends Omit<SignUpInfo, 'loginType' | 'password'> {
   id: number;
-  image: string;
+  image: string | null;
   accessToken: string;
-  refreshToken: string;
 }
 
-export interface FailLogin {
+export interface FailResponse {
   httpStatus: 'CONFLICT';
-  message: '이미 존재하는 회원입니다.';
+  message: string;
 }
 
 export interface SaveUserInfo extends Omit<GetUserInfo, 'accessToken' | 'refreshToken'> {}

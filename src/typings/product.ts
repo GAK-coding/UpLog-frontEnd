@@ -6,13 +6,16 @@ export interface Product {
   company: string;
 }
 
+export type powerTypeList = 'MASTER' | 'LEADER' | 'DEFAULT' | 'CLIENT';
 export interface GetProductList {
   productId: number;
   productName: string;
   memberName: string;
-  powerType: 'MASTER' | 'LEADER' | 'DEFAULT' | 'CLIENT';
+  memberNickname: string;
+  powerType: powerTypeList;
   indexNum: number;
   productImage: null | string;
+  delStatus: boolean;
 }
 
 export interface ProductInfo extends Omit<GetProductList, 'memberName'> {
