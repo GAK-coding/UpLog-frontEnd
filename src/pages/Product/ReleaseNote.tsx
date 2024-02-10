@@ -1,88 +1,21 @@
 import React, { useCallback, useEffect, useLayoutEffect, useState } from 'react';
-import { ChangeLogBody, ChangeLogData, issueStatus, ProductInfo } from '@/typings/product.ts';
+import { ProductInfo } from '@/typings/product.ts';
 import { Table, TableContainer, Th, Thead, Tr, useDisclosure } from '@chakra-ui/react';
 import { AiOutlinePlus } from 'react-icons/ai';
 import Tables from '@/components/Product/ReleaseNote/Tables.tsx';
 import ProjectModal from '@/components/Product/ReleaseNote/ProjectModal.tsx';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useGetAllProduct } from '@/components/Product/hooks/useGetAllProduct.ts';
 import { useQueries, useQuery } from 'react-query';
 import { getAllProductProjects, getChangeLogEachProject } from '@/api/Project/Version.ts';
 import { useRecoilState } from 'recoil';
 import { eachProductProjects } from '@/recoil/Project/atom.ts';
-import { BiPencil } from 'react-icons/bi';
 import { FaUserCircle } from 'react-icons/fa';
 import { message } from '@/recoil/Common/atom.ts';
 export default function ReleaseNote() {
-  // const dummy: Release[] = [
-  //   {
-  //     projectStatus: 'going',
-  //     version: 'v.1.1.4(임시)',
-  //     date: '진행중',
-  //     contents: [],
-  //   },
-  //   {
-  //     projectStatus: 'done',
-  //     version: 'v.1.1.3',
-  //     date: '2023.06.15',
-  //     contents: [
-  //       { type: 'Feature', content: '채널 통신 응답 중 발생할 수 있는 오류 코드 추가' },
-  //       {
-  //         type: 'Changed',
-  //         content: '공통 Request Protocol',
-  //       },
-  //       {
-  //         type: 'Fixed',
-  //         content: '고침',
-  //       },
-  //       {
-  //         type: 'New',
-  //         content: '새거',
-  //       },
-  //       {
-  //         type: 'Deprecated',
-  //         content: '이제 못 씀',
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     projectStatus: 'done',
-  //     version: 'v.1.1.2',
-  //     date: '2023.06.12',
-  //     contents: [
-  //       { type: 'Feature', content: '채널 통신 응답 중 발생할 수 있는 오류 코드 추가' },
-  //       {
-  //         type: 'Changed',
-  //         content: '공통 Request Protocol 추가',
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     projectStatus: 'done',
-  //     version: 'v.1.1.1',
-  //     date: '2023.05.12',
-  //     contents: [{ type: 'Deprecated', content: '미사용 필드 삭제' }],
-  //   },
-  //   {
-  //     projectStatus: 'done',
-  //     version: 'v.1.1.0',
-  //     date: '2023.03.25',
-  //     contents: [{ type: 'Feature', content: 'Service Argent 채널 연결과 통신 관련 설명' }],
-  //   },
-  //   {
-  //     projectStatus: 'done',
-  //     version: 'v.1.0.0',
-  //     date: '2023.02.18',
-  //     contents: [
-  //       { type: 'New', content: 'AI Service 기술 상세 설명' },
-  //       { type: 'Fixed', content: '채널 통신 응답 기능 수정' },
-  //     ],
-  //   },
-  // ];
-
   const [projects, setProjects] = useRecoilState(eachProductProjects);
   const nowProduct: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
-  const [eachProejctChangeLog, setEachProjectChangeLog] = useState<ChangeLogData[]>();
+  const { product } = useParams();
 
   const queryResults = useQueries([
     {
@@ -105,14 +38,9 @@ export default function ReleaseNote() {
     }))
   );
 
-  // console.log(eachProjectQueryResults);
-
   const navigate = useNavigate();
-  const { state } = useLocation();
-  const [isLogin, setIsLogin] = useState(state?.isLogin);
-  const [productList, refetch] = useGetAllProduct(false)!;
+  const [productList, refetch, isFetching] = useGetAllProduct()!;
   const [messageInfo, setMessageInfo] = useRecoilState(message);
-  const { pathname } = useLocation();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   // 모달 프로젝트 추가로 띄울건지, 프로젝트 완료로 띄울건지
@@ -141,59 +69,23 @@ export default function ReleaseNote() {
 
   useEffect(() => {
     const projectList = queryResults[0].data;
-    // console.log(projectList);
     if (projectList && typeof projectList !== 'string') {
       const temp = JSON.parse(JSON.stringify(projectList));
       setProjects([...temp]);
     }
   }, [queryResults[0].data]);
 
-  useEffect(() => {
-    const changeLogListData = eachProjectQueryResults.map((queryResult) => queryResult.data);
-    // console.log(changeLogListData[0]);
-    // console.log(changeLogListData.length);
-    // if (changeLogListData && changeLogListData.length > 0) {
-    //   if (
-    //     typeof changeLogListData.id === 'number' &&
-    //     typeof changeLogListData.content === 'string' &&
-    //     typeof changeLogListData.issueStatus === 'string' &&
-    //     typeof changeLogListData.createdTime === 'string' &&
-    //     (typeof changeLogListData.modifiedTime === 'string' ||
-    //       changeLogListData.modifiedTime === null)
-    //   )
-    //     setEachProjectChangeLog(Array.from(changeLogListData));
-    // }
-  }, [eachProjectQueryResults]);
-
-  const [chk, setChk] = useState(false);
-
-  const get = async () => {
-    await refetch();
-    setChk(true);
-  };
-
-  useEffect(() => {
-    if (state?.isLogin) {
-      get();
-    }
-  }, [state]);
-
-  useEffect(() => {
-    if (chk) {
-      if (productList?.length > 0) {
-        sessionStorage.setItem('nowProduct', JSON.stringify(productList[0]));
-        navigate(`/workspace/${productList[0].productId}`);
-      } else {
-        navigate('/');
-      }
-    }
-  }, [isLogin, productList, chk]);
-
+  // 로그인 페이지에서 넘어왔을 경우
   useLayoutEffect(() => {
-    if (pathname === '/workspace/undefined') {
+    if (isFetching) return;
+
+    if (product === '-1' && productList?.length > 0) {
+      sessionStorage.setItem('nowProduct', JSON.stringify(productList[0]));
+      navigate(`/workspace/${productList[0].productId}`);
+    } else if (product === '-1' && productList.length === 0) {
       navigate('/');
     }
-  }, []);
+  }, [product, productList, isFetching]);
 
   return (
     <section className={'w-full min-w-[50em] py-32 px-14 xl:px-56'} onClick={onCloseKebab}>
