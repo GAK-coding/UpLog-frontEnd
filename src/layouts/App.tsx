@@ -11,9 +11,7 @@ import { Scrollbars } from 'rc-scrollbars';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { productOpen } from '@/recoil/Product/atom.ts';
-import milliseconds from 'mocha/lib/ms';
-import axios from 'axios';
-import { worker } from '@/mock/browser.ts';
+import { worker } from '../mocks/browser.ts';
 
 const Header = loadable(() => import('@/components/UI/Header'));
 const Home = loadable(() => import('@/pages/Home'));
@@ -110,7 +108,7 @@ function App() {
               </section>
             </BrowserRouter>
           </Scrollbars>
-          {/*{showDevtools && <ReactQueryDevtools />}*/}
+          {showDevtools && <ReactQueryDevtools />}
         </GoogleOAuthProvider>
       </ChakraProvider>
     </QueryClientProvider>
