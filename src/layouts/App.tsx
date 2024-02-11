@@ -49,7 +49,11 @@ function App() {
   }, []);
 
   if (import.meta.env.VITE_IS_MSW === 'true') {
-    worker.start();
+    worker.start({
+      onUnhandledRequest: () => {
+        return false;
+      },
+    });
   }
 
   return (
