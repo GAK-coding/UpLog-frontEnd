@@ -3,13 +3,14 @@ import { MdOutlineMailOutline } from 'react-icons/md';
 import useInput from '@/hooks/useInput.ts';
 import { AiOutlineLock } from 'react-icons/ai';
 import { Link, useNavigate } from 'react-router-dom';
-import { FailResponse, GetUserInfo, LoginInfo, SaveUserInfo } from '@/typings/member.ts';
+import { FailResponse, GetUserInfo, LoginInfo, UserInfo } from '@/typings/member.ts';
 import { useMutation } from 'react-query';
 import { useRecoilState } from 'recoil';
 import { loginStatus, user } from '@/recoil/User/atom.ts';
-import { loginAPI } from '@/api/Members/Login-Signup.ts';
+import { loginAPI, logout } from '@/api/Members/Login-Signup.ts';
 import { message } from '@/recoil/Common/atom.ts';
 import { useGetAllProduct } from '@/components/Product/hooks/useGetAllProduct';
+import { decrypt, encrypt } from '../../utils/crypto';
 
 export default function Login() {
   const [messageInfo, setMessageInfo] = useRecoilState(message);
@@ -20,7 +21,7 @@ export default function Login() {
   const [isLogin, setIsLogin] = useRecoilState(loginStatus);
   const [userInfo, setUserInfo] = useRecoilState(user);
 
-  const { mutate, isSuccess } = useMutation(loginAPI, {
+  const { mutate } = useMutation(loginAPI, {
     onSuccess: (data: GetUserInfo | FailResponse) => {
       if ('message' in data) {
         setMessageInfo({ type: 'error', content: '아이디 또는 비밀번호를 잘못 입력하셨습니다.' });
@@ -28,13 +29,14 @@ export default function Login() {
       }
 
       const { id, email, nickname, name, position, accessToken, image } = data;
-      const userInfo: SaveUserInfo = {
+      const userInfo: UserInfo = {
         id,
         nickname,
         name,
         position,
         email,
         image,
+        auth: encrypt(import.meta.env.VITE_USERINFO_AUTH),
       };
 
       sessionStorage.setItem('userInfo', JSON.stringify(userInfo));
@@ -74,11 +76,13 @@ export default function Login() {
     [email, password]
   );
 
+  // 세션 스토리지의 userInfo가 조작되면 로그아웃
   useEffect(() => {
-    if (sessionStorage.getItem('accessToken') && sessionStorage.getItem('userInfo')) {
+    if (isLogin && !(decrypt(userInfo.auth) === import.meta.env.VITE_USERINFO_AUTH)) {
+      setIsLogin(false);
       navigate('/');
     }
-  }, []);
+  }, [isLogin, userInfo]);
 
   return (
     <section className={'h-full'}>
