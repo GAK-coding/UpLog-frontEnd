@@ -23,7 +23,6 @@ export default function UserProfile() {
   const { mutate } = useMutation(logout, {
     onSuccess: () => {
       sessionStorage.removeItem('userInfo');
-      sessionStorage.removeItem('accessToken');
       sessionStorage.removeItem('nowProduct');
       sessionStorage.removeItem('nowProject');
       sessionStorage.removeItem('nowTeamId');
@@ -39,8 +38,7 @@ export default function UserProfile() {
   });
 
   const onClickLogout = useCallback(() => {
-    const accessToken = sessionStorage.getItem('accessToken')!;
-    mutate({ accessToken });
+    mutate();
   }, [mutate]);
 
   return (
