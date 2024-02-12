@@ -2,9 +2,22 @@ import { delay, http, HttpResponse } from 'msw';
 import { GetUserInfo, LoginInfo, SignUpInfo } from '@/typings/member.ts';
 import { faker } from '@faker-js/faker';
 
+let count = 0;
+
 export const auth = [
-  http.post('/members/login', async (info) => {
-    const infos: LoginInfo = await info.request.json();
+  http.post('/members/refresh', () => {
+    return HttpResponse.json(
+      { accessToken: count !== 0 ? 'MSW-new-accessToken' : 'MSW-accessToken' && count++ },
+      {
+        headers: {
+          'Set-Cookie': 'refreshToken=MSW-new-refreshToken;Max-Age=999999999999;',
+        },
+        status: 200,
+      }
+    );
+  }),
+  http.post('/members/login', (info) => {
+    const infos: LoginInfo = info.request.json();
 
     if (infos.password === '1234') {
       return HttpResponse.json({ httpStatus: 'CONFLICT', message: '비밀번호가 틀립니다.' });
@@ -23,7 +36,7 @@ export const auth = [
 
     return HttpResponse.json(data, {
       headers: {
-        'Set-Cookie': 'refreshToken=MSW-refreshToken;Max-Age=9999999999;',
+        'Set-Cookie': 'refreshToken=MSW-refreshToken;Max-Age=999999999999;',
       },
     });
   }),
