@@ -20,7 +20,6 @@ export const emailRequest = async (data: EmailInfo) => {
   return res.data;
 };
 
-export const logout = async (data: { accessToken: string }) => {
-  const { accessToken } = data;
-  await axios.post('/members/logout', { accessToken });
+export const logout = async () => {
+  await axios.post('/members/logout');
 };
