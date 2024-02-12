@@ -4,8 +4,7 @@ import { BsBellFill, BsMoonFill, BsQuestionCircle, BsSearch, BsSunFill } from 'r
 import { FaUserCircle } from 'react-icons/fa';
 import useInput from '@/hooks/useInput.ts';
 import { useRecoilState } from 'recoil';
-import { loginStatus, profileOpen, user } from '@/recoil/User/atom.ts';
-import { PiCaretUpDownLight } from 'react-icons/pi';
+import { loginStatus, profileOpen } from '@/recoil/User/atom.ts';
 import { productOpen } from '@/recoil/Product/atom.ts';
 import { useOutsideAlerter } from '@/hooks/useOutsideAlerter.ts';
 import ProductList from '@/components/Product/Info/ProductList.tsx';
@@ -13,16 +12,16 @@ import UserProfile from '@/components/Member/Header/UserProfile.tsx';
 import { message, themeState } from '@/recoil/Common/atom.ts';
 import { ProductInfo } from '@/typings/product.ts';
 import { BiChevronDown } from 'react-icons/bi';
-import { useGetAllProduct } from '@/components/Product/hooks/useGetAllProduct.ts';
-import { SaveUserInfo } from '@/typings/member.ts';
+import { UserInfo } from '@/typings/member.ts';
 import { useQueryClient } from 'react-query';
 import { useMessage } from '@/hooks/useMessage.ts';
-import Cookies from 'js-cookie';
 import { useCookies } from 'react-cookie';
+import { decrypt } from '../../utils/crypto';
 
 export default function Header() {
   const { showMessage, contextHolder } = useMessage();
   const [messageInfo, setMessageInfo] = useRecoilState(message);
+  const userInfo: UserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
 
   const [cookies, setCookie, removeCookie] = useCookies(['Access']);
 
@@ -31,7 +30,7 @@ export default function Header() {
   const nowProduct: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct'));
   // const [productList, refetch] = useGetAllProduct()!;
   const [productList, refetch] = [];
-  const [userInfo, setUserInfo] = useRecoilState(user);
+  // const [userInfo, setUserInfo] = useRecoilState(user);
   const queryClient = useQueryClient();
   const isProductList = queryClient.getQueryData('myProductList');
 
@@ -98,20 +97,22 @@ export default function Header() {
     setIsNoneHeader(pathname === '/login' || pathname === '/signup' || pathname === '/pwinquiry');
   }, [pathname]);
 
+  // 로그인 여부 확인
   useEffect(() => {
-    const nowLogin = !!sessionStorage.getItem('userInfo');
-    setIsLogin(nowLogin);
+    if (userInfo) {
+      const auth = decrypt(userInfo.auth);
 
-    if (pathname === '/login' || pathname === '/signup') return;
+      const isLoginAuth = auth === import.meta.env.VITE_USERINFO_AUTH;
+      setIsLogin(isLoginAuth);
+    }
+  }, [userInfo]);
 
-    if (!nowLogin) {
+  useEffect(() => {
+    if (!isLogin) {
       navigate('/', { replace: true });
+      setIsLogin(false);
     }
   }, [isLogin]);
-
-  useEffect(() => {
-    setUserInfo({ ...JSON.parse(sessionStorage.getItem('userInfo')!) });
-  }, []);
 
   useEffect(() => {
     if (messageInfo !== null) showMessage(messageInfo.type, messageInfo.content);
