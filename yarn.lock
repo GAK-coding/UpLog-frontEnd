@@ -5804,6 +5804,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/crypto-js@npm:^4.2.2":
+  version: 4.2.2
+  resolution: "@types/crypto-js@npm:4.2.2"
+  checksum: 727daa0d2db35f0abefbab865c23213b6ee6a270e27e177939bbe4b70d1e84c2202d9fac4ea84859c4b4d49a4ee50f948f601327a39b69ec013288018ba07ca5
+  languageName: node
+  linkType: hard
+
 "@types/eslint-scope@npm:^3.7.3":
   version: 3.7.4
   resolution: "@types/eslint-scope@npm:3.7.4"
@@ -6951,6 +6958,7 @@ __metadata:
     "@types/babel__core": ^7.20.1
     "@types/babel__helper-module-imports": ^7.18.0
     "@types/babel__helper-plugin-utils": ^7.10.0
+    "@types/crypto-js": ^4.2.2
     "@types/jest": ^29.5.3
     "@types/js-cookie": ^3.0.3
     "@types/loadable__component": ^5.13.4
@@ -6977,6 +6985,7 @@ __metadata:
     babel-plugin-macros: ^3.1.0
     babel-plugin-transform-import-meta: ^2.2.1
     cosmiconfig: ^8.2.0
+    crypto-js: ^4.2.0
     cypress: ^12.17.0
     cypress-vite: ^1.4.1
     dayjs: ^1.11.9
@@ -9098,6 +9107,13 @@ __metadata:
     shebang-command: ^2.0.0
     which: ^2.0.1
   checksum: 671cc7c7288c3a8406f3c69a3ae2fc85555c04169e9d611def9a675635472614f1c0ed0ef80955d5b6d4e724f6ced67f0ad1bb006c2ea643488fcfef994d7f52
+  languageName: node
+  linkType: hard
+
+"crypto-js@npm:^4.2.0":
+  version: 4.2.0
+  resolution: "crypto-js@npm:4.2.0"
+  checksum: f051666dbc077c8324777f44fbd3aaea2986f198fe85092535130d17026c7c2ccf2d23ee5b29b36f7a4a07312db2fae23c9094b644cc35f7858b1b4fcaf27774
   languageName: node
   linkType: hard
 
