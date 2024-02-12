@@ -9,7 +9,7 @@ import { useDisclosure } from '@chakra-ui/react';
 import ProductInfoModal from '@/components/Product/Info/ProductInfoModal.tsx';
 import { Scrollbars } from 'rc-scrollbars';
 import { useNavigate } from 'react-router-dom';
-import { SaveUserInfo } from '@/typings/member.ts';
+import { UserInfo } from '@/typings/member.ts';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { changeProductsSequence, getMyProducts } from '@/api/Product/Product.ts';
 import { useGetAllProduct } from '@/components/Product/hooks/useGetAllProduct.ts';
@@ -17,7 +17,7 @@ import { FaUserCircle } from 'react-icons/fa';
 
 export default function ProductList() {
   const navigate = useNavigate();
-  const userInfo: SaveUserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
+  const userInfo: UserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
 
   // 수정할 product id
   const [productId, setProductId] = useState(1);

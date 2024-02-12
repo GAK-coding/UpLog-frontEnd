@@ -17,7 +17,7 @@ import {
   // getProductMemberList,
   productEdit,
 } from '@/api/Product/Product.ts';
-import { SaveUserInfo } from '@/typings/member.ts';
+import { UserInfo } from '@/typings/member.ts';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { productMemberList } from '@/recoil/Product/atom.ts';
 import { frontEndUrl, message } from '@/recoil/Common/atom.ts';
@@ -27,7 +27,7 @@ import { useGetProductMembers } from '@/pages/Product/hooks/useGetProductMembers
 
 export default function Members() {
   const queryClient = useQueryClient();
-  const userInfo: SaveUserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
+  const userInfo: UserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
   const { productId, powerType }: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
   const nowProduct: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
 

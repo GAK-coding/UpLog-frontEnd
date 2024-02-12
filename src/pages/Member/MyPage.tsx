@@ -6,7 +6,7 @@ import { FaUserCircle } from 'react-icons/fa';
 import { BsFillCameraFill } from 'react-icons/bs';
 import { RcFile } from 'antd/es/upload';
 import UserManageModal from '@/components/Member/MyPage/UserManageModal.tsx';
-import { SaveUserInfo } from '@/typings/member.ts';
+import { UserInfo } from '@/typings/member.ts';
 import useInput from '@/hooks/useInput.ts';
 import { useMutation } from 'react-query';
 import { changeName, changeNickname, imageUpload, updateMyInfo } from '@/api/Members/mypage.ts';

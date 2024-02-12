@@ -12,7 +12,7 @@ import { useGetProductMembers } from '@/pages/Product/hooks/useGetProductMembers
 import { ProductInfo, ProductMember } from '@/typings/product.ts';
 import AddChildGroupMemberModal from '@/components/Project/ManageGroup/AddChildGroupMemberModal.tsx';
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md';
-import { SaveUserInfo } from '@/typings/member.ts';
+import { UserInfo } from '@/typings/member.ts';
 import { v4 as uuidv4 } from 'uuid';
 import { message } from '@/recoil/Common/atom.ts';
 import { useRecoilState } from 'recoil';
@@ -27,7 +27,7 @@ export default function ManageGroup() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isSeeMores, setIsSeeMores] = useState<boolean[]>([]);
   const [isInclude, setIsInclude] = useState(false);
-  const userInfo: SaveUserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
+  const userInfo: UserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
   const [messageInfo, setMessageInfo] = useRecoilState(message);
 
   // 제품 전체 멤버

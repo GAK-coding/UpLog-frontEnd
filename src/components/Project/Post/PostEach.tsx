@@ -12,7 +12,7 @@ import { useDisclosure } from '@chakra-ui/react';
 import { Viewer } from '@toast-ui/react-editor';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { noticePost, postLike, postLikeCount, unNoticePost } from '@/api/Project/Post.ts';
-import { SaveUserInfo } from '@/typings/member.ts';
+import { UserInfo } from '@/typings/member.ts';
 import { ProductInfo } from '@/typings/product.ts';
 import { SaveProjectInfo } from '@/typings/project.ts';
 import { message } from '@/recoil/Common/atom.ts';
@@ -36,7 +36,7 @@ export default function PostEach({ post, menuId, likeList, noticeId }: Props) {
   // const [isScrapClick, setIsScrapClick] = useState<{ [key: number]: boolean }>({});
   const [isClickKebab, setIsClickKebab] = useState<{ [key: number]: boolean }>({});
 
-  const userInfo: SaveUserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
+  const userInfo: UserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
 
   const queryClient = useQueryClient();
 

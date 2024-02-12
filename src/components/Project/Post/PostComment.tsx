@@ -10,7 +10,7 @@ import {
   updateComment,
 } from '@/api/Project/Post.ts';
 import { CommentBody, CommentInfo } from '@/typings/post.ts';
-import { SaveUserInfo } from '@/typings/member.ts';
+import { UserInfo } from '@/typings/member.ts';
 import { SaveProjectInfo } from '@/typings/project.ts';
 import { message } from '@/recoil/Common/atom.ts';
 import { useRecoilState } from 'recoil';
@@ -22,7 +22,7 @@ interface Props {
 
 export default function PostComment({ postId, menuId }: Props) {
   const [messageInfo, setMessageInfo] = useRecoilState(message);
-  const userInfo: SaveUserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
+  const userInfo: UserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
   const nowProject: SaveProjectInfo = JSON.parse(sessionStorage.getItem('nowProject')!);
 
   // 댓글 value

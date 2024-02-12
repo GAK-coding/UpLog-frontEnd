@@ -5,7 +5,7 @@ import { AiFillCaretDown } from 'react-icons/ai';
 import { Select } from '@chakra-ui/react';
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md';
 import { useParams } from 'react-router-dom';
-import { SaveUserInfo } from '@/typings/member.ts';
+import { UserInfo } from '@/typings/member.ts';
 import { useMutation, useQueryClient } from 'react-query';
 import { addGroupMembers } from '@/api/Project/Version.ts';
 import { message } from '@/recoil/Common/atom.ts';
@@ -28,7 +28,7 @@ export default function GroupMembers({
   >(new Map());
   const [isSeeMore, setIsSeeMore] = useState(false);
   const { parentgroup } = useParams();
-  const userInfo: SaveUserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
+  const userInfo: UserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
   const [messageInfo, setMessageInfo] = useRecoilState(message);
 
   const onClickSeeMore = useCallback(() => {

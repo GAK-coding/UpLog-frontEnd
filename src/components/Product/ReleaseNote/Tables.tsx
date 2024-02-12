@@ -9,7 +9,7 @@ import { eachProductProjects } from '@/recoil/Project/atom.ts';
 import { editorChangeLog } from '@/recoil/Common/atom.ts';
 import { UseQueryResult } from 'react-query';
 import { ChangeLogData, Product, ProductInfo } from '@/typings/product.ts';
-import { SaveUserInfo } from '@/typings/member.ts';
+import { UserInfo } from '@/typings/member.ts';
 
 interface Props {
   isClickKebab: boolean;

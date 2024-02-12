@@ -15,7 +15,7 @@ import useInput from '@/hooks/useInput.ts';
 type MessageType = 'success' | 'error' | 'warning';
 import { useMutation } from 'react-query';
 import { changePassword, deleteAccount } from '@/api/Members/mypage.ts';
-import { SaveUserInfo } from '@/typings/member.ts';
+import { UserInfo } from '@/typings/member.ts';
 import { loginStatus } from '@/recoil/User/atom.ts';
 import { SetterOrUpdater, useSetRecoilState } from 'recoil';
 import { useCookies } from 'react-cookie';
@@ -32,7 +32,7 @@ export default function UserManageModal({
   isClickPwChange,
   setMessageInfo,
 }: Props) {
-  const userInfo: SaveUserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
+  const userInfo: UserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
   const [password, onChangePassword, setPassword] = useInput('');
   const [newPassword, onChangeNewPassword, setNewPassword] = useInput('');
   const [isCheckPw, setIsCheckPw] = useState(false);

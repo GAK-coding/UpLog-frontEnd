@@ -7,7 +7,7 @@ import useInput from '@/hooks/useInput.ts';
 import { AiFillCaretDown } from 'react-icons/ai';
 import { formatDate } from '@/utils/formatDate.ts';
 import PostEditor from '@/components/Common/PostEditor.tsx';
-import { SaveUserInfo } from '@/typings/member.ts';
+import { UserInfo } from '@/typings/member.ts';
 import { Project } from '@/typings/project.ts';
 import { editorChangeLog, message } from '@/recoil/Common/atom.ts';
 import { useRecoilState } from 'recoil';

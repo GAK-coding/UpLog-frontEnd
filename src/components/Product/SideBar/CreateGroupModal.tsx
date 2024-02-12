@@ -18,7 +18,7 @@ import { AiOutlinePlus } from 'react-icons/ai';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { convertNumberArrayToStringArray } from '@/utils/convertNumberArrayToStringArray.ts';
 import { SetterOrUpdater } from 'recoil';
-import { SaveUserInfo } from '@/typings/member.ts';
+import { UserInfo } from '@/typings/member.ts';
 type MessageType = 'success' | 'error' | 'warning';
 
 interface Props {
@@ -34,7 +34,7 @@ export default function CreateGroupModal({ isOpen, onClose, setMessageInfo, pare
   const [isClickMemberList, setIsClickMemberList] = useState(false);
   const nowProject: Project = JSON.parse(sessionStorage.getItem('nowProject')!);
   const nowProduct: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
-  const userInfo: SaveUserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
+  const userInfo: UserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
 
   // 프로젝트 멤버 가져오는 훅
   const [data, isSuccess, refetch] = useGetProductMembers(nowProduct.productId);

@@ -1,6 +1,6 @@
 import { GetProductList, powerTypeList } from '@/typings/product.ts';
 import { faker } from '@faker-js/faker';
-import { SaveUserInfo } from '@/typings/member.ts';
+import { UserInfo } from '@/typings/member.ts';
 
 const powerTypes = ['MASTER', 'LEADER', 'DEFAULT', 'CLIENT'];
 const name = faker.person.firstName();
