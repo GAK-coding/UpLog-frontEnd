@@ -31,7 +31,7 @@ instance.interceptors.response.use(
     } = error;
 
     //토큰이 만료되을 때
-    if (status === 409 || status === 410) {
+    if (status === 409) {
       const originRequest = config;
       const response = await reissuanceJwt();
 
@@ -44,9 +44,10 @@ instance.interceptors.response.use(
         originRequest.headers.Authorization = `Access=${newAccessToken}`;
         return axios(originRequest);
         //리프레시 토큰 요청이 실패할때(리프레시 토큰도 만료되었을때 = 재로그인 안내)
-      } else {
-        window.location.replace('/login');
       }
+    } else if (status === 410) {
+      sessionStorage.removeItem('userInfo');
+      window.location.replace('/login');
     }
     return Promise.reject(error);
   }

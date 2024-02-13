@@ -10,7 +10,7 @@ export const auth = [
       { accessToken: count !== 0 ? 'MSW-new-accessToken' : 'MSW-accessToken' && count++ },
       {
         headers: {
-          'Set-Cookie': 'refreshToken=MSW-new-refreshToken;Max-Age=999999999999;',
+          'Set-Cookie': 'refreshToken=MSW-refreshToken;Max-Age=999999999999;',
         },
         status: 200,
       }

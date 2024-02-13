@@ -6,7 +6,7 @@ export const product = [
   http.get('/products', async ({ cookies, request }) => {
     const { refreshToken } = cookies;
 
-    if (refreshToken !== 'MSW-new-refreshToken') {
+    if (refreshToken !== 'MSW-refreshToken') {
       return new HttpResponse(null, {
         status: 410,
       });

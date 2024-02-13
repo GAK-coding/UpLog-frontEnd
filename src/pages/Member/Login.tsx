@@ -40,7 +40,6 @@ export default function Login() {
       };
 
       sessionStorage.setItem('userInfo', JSON.stringify(userInfo));
-      sessionStorage.setItem('accessToken', accessToken);
       setIsLogin(true);
       setUserInfo(userInfo);
 
