@@ -14,10 +14,11 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { changeProductsSequence, getMyProducts } from '@/api/Product/Product.ts';
 import { useGetAllProduct } from '@/components/Product/hooks/useGetAllProduct.ts';
 import { FaUserCircle } from 'react-icons/fa';
+import { user } from '@/recoil/User/atom';
 
 export default function ProductList() {
   const navigate = useNavigate();
-  const userInfo: UserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
+  const userInfo = useRecoilState(user);
 
   // 수정할 product id
   const [productId, setProductId] = useState(1);

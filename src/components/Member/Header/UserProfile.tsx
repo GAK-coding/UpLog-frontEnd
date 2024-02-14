@@ -2,10 +2,9 @@ import { FaUserCircle } from 'react-icons/fa';
 import { AiFillStar, AiOutlinePoweroff } from 'react-icons/ai';
 import { BiPencil } from 'react-icons/bi';
 import { useNavigate } from 'react-router-dom';
-import { loginStatus, profileOpen, user } from '@/recoil/User/atom.ts';
+import { profileOpen, user } from '@/recoil/User/atom.ts';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { useCallback, useEffect } from 'react';
-import { useCookies } from 'react-cookie';
 import { logout } from '@/api/Members/Login-Signup.ts';
 import { useMutation } from 'react-query';
 import { message } from '../../../recoil/Common/atom';
@@ -18,7 +17,6 @@ export default function UserProfile() {
 
   // userProfile click
   const [isProfileClick, setIsProfileClick] = useRecoilState(profileOpen);
-  const setIsLogin = useSetRecoilState(loginStatus);
 
   const { mutate } = useMutation(logout, {
     onSuccess: () => {
@@ -27,10 +25,11 @@ export default function UserProfile() {
       sessionStorage.removeItem('nowProject');
       sessionStorage.removeItem('nowTeamId');
       sessionStorage.removeItem('nowGroupId');
-      setIsLogin(false);
       setIsProfileClick(false);
+      setUserInfo(null);
 
       setMessageInfo({ type: 'success', content: '로그아웃 되었습니다.' });
+      navigate('/');
     },
     onError: () => {
       setMessageInfo({ type: 'error', content: '잠시후에 다시 시도해주세요.' });
@@ -40,6 +39,11 @@ export default function UserProfile() {
   const onClickLogout = useCallback(() => {
     mutate();
   }, [mutate]);
+
+  if (!userInfo) {
+    navigate('/');
+    return;
+  }
 
   return (
     <section

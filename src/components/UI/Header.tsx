@@ -4,7 +4,7 @@ import { BsBellFill, BsMoonFill, BsQuestionCircle, BsSearch, BsSunFill } from 'r
 import { FaUserCircle } from 'react-icons/fa';
 import useInput from '@/hooks/useInput.ts';
 import { useRecoilState } from 'recoil';
-import { loginStatus, profileOpen } from '@/recoil/User/atom.ts';
+import { profileOpen, user } from '@/recoil/User/atom.ts';
 import { productOpen } from '@/recoil/Product/atom.ts';
 import { useOutsideAlerter } from '@/hooks/useOutsideAlerter.ts';
 import ProductList from '@/components/Product/Info/ProductList.tsx';
@@ -12,25 +12,19 @@ import UserProfile from '@/components/Member/Header/UserProfile.tsx';
 import { message, themeState } from '@/recoil/Common/atom.ts';
 import { ProductInfo } from '@/typings/product.ts';
 import { BiChevronDown } from 'react-icons/bi';
-import { UserInfo } from '@/typings/member.ts';
-import { useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import { useMessage } from '@/hooks/useMessage.ts';
-import { useCookies } from 'react-cookie';
-import { decrypt } from '../../utils/crypto';
+import { logout } from '../../api/Members/Login-Signup';
 
 export default function Header() {
   const { showMessage, contextHolder } = useMessage();
   const [messageInfo, setMessageInfo] = useRecoilState(message);
-  const userInfo: UserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
-
-  const [cookies, setCookie, removeCookie] = useCookies(['Access']);
+  const [userInfo, setUserInfo] = useRecoilState(user);
 
   const navigate = useNavigate();
   const [darkMode, setDarkMode] = useRecoilState(themeState);
   const nowProduct: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct'));
-  // const [productList, refetch] = useGetAllProduct()!;
   const [productList, refetch] = [];
-  // const [userInfo, setUserInfo] = useRecoilState(user);
   const queryClient = useQueryClient();
   const isProductList = queryClient.getQueryData('myProductList');
 
@@ -45,14 +39,9 @@ export default function Header() {
   const [isNoneHeader, setIsNoneHeader] = useState(
     pathname === '/login' || pathname === '/signup' || pathname === '/pwinquiry'
   );
-
   // 현재 url에서 제품 이름 가져오기
   const parts = pathname.split('/');
   const product = parts[2];
-
-  // 로그인 여부
-  const [isLogin, setIsLogin] = useRecoilState(loginStatus);
-
   // userProfile click
   const [isProfileClick, setIsProfileClick] = useRecoilState(profileOpen);
   // 제품 List click
@@ -99,20 +88,10 @@ export default function Header() {
 
   // 로그인 여부 확인
   useEffect(() => {
-    if (userInfo) {
-      const auth = decrypt(userInfo.auth);
-
-      const isLoginAuth = auth === import.meta.env.VITE_USERINFO_AUTH;
-      setIsLogin(isLoginAuth);
+    if (!userInfo) {
+      navigate('/');
     }
   }, [userInfo]);
-
-  useEffect(() => {
-    if (!isLogin) {
-      navigate('/', { replace: true });
-      setIsLogin(false);
-    }
-  }, [isLogin]);
 
   useEffect(() => {
     if (messageInfo !== null) showMessage(messageInfo.type, messageInfo.content);
@@ -135,8 +114,7 @@ export default function Header() {
         <nav
           className={'flex-row-center cursor-pointer'}
           onClick={() => {
-            if (isLogin)
-              isLogin ? navigate(`/workspace/${productList?.[0]?.productId}`) : navigate('/');
+            userInfo ? navigate(`/workspace/${productList?.[0]?.productId}`) : navigate('/');
           }}
         >
           <img className={'flex mr-4 h-12'} src={'/images/mainLogo.png'} alt={'main-logo'} />
@@ -145,8 +123,7 @@ export default function Header() {
           </span>
         </nav>
 
-        {/*{productList.length > 0 && pathname !== '/mypage' && isLogin && product !== '' && (*/}
-        {pathname !== '/mypage' && isLogin && product !== '' && (
+        {pathname !== '/mypage' && userInfo && product !== '' && (
           <div className={'flex-row-center ml-4 h-full'} onClick={onClickProductList}>
             <div className={'flex-row-center h-9 border-solid border-r border-gray-light'} />
             <div
@@ -185,7 +162,7 @@ export default function Header() {
 
       {/*TODO : 스토리지 값 체크후에 변경하기 (조건으로 렌더링 여부 바꿔야함)*/}
       {/*로그인 상태*/}
-      {isLogin && (
+      {userInfo && (
         <div
           className={
             'flex-row-center justify-end gap-6 w-[40%] h-full mr-4 md:mr-12 font-bold items-center '
@@ -249,7 +226,7 @@ export default function Header() {
       )}
 
       {/*로그인 X */}
-      {!isLogin && !isNoneHeader && (
+      {!userInfo && !isNoneHeader && (
         <div className={'flex mr-12 font-bold'}>
           <div className={'text-[1.8rem] mr-6'} onClick={themeModeHandler}>
             {isChecked ? (

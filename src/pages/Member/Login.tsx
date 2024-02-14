@@ -6,7 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FailResponse, GetUserInfo, LoginInfo, UserInfo } from '@/typings/member.ts';
 import { useMutation } from 'react-query';
 import { useRecoilState } from 'recoil';
-import { loginStatus, user } from '@/recoil/User/atom.ts';
+import { user } from '@/recoil/User/atom.ts';
 import { loginAPI, logout } from '@/api/Members/Login-Signup.ts';
 import { message } from '@/recoil/Common/atom.ts';
 import { useGetAllProduct } from '@/components/Product/hooks/useGetAllProduct';
@@ -18,7 +18,6 @@ export default function Login() {
   const [email, onChangeEmail, setEmail] = useInput('');
   const [password, onChangePassword, setPassword] = useInput('');
   const navigate = useNavigate();
-  const [isLogin, setIsLogin] = useRecoilState(loginStatus);
   const [userInfo, setUserInfo] = useRecoilState(user);
 
   const { mutate } = useMutation(loginAPI, {
@@ -28,7 +27,7 @@ export default function Login() {
         return;
       }
 
-      const { id, email, nickname, name, position, accessToken, image } = data;
+      const { id, email, nickname, name, position, image } = data;
       const userInfo: UserInfo = {
         id,
         nickname,
@@ -36,11 +35,9 @@ export default function Login() {
         position,
         email,
         image,
-        auth: encrypt(import.meta.env.VITE_USERINFO_AUTH),
       };
 
-      sessionStorage.setItem('userInfo', JSON.stringify(userInfo));
-      setIsLogin(true);
+      sessionStorage.setItem('userInfo', encrypt(JSON.stringify(userInfo)));
       setUserInfo(userInfo);
 
       navigate('/workspace/-1');
@@ -76,12 +73,12 @@ export default function Login() {
   );
 
   // 세션 스토리지의 userInfo가 조작되면 로그아웃
-  useEffect(() => {
-    if (isLogin && !(decrypt(userInfo.auth) === import.meta.env.VITE_USERINFO_AUTH)) {
-      setIsLogin(false);
-      navigate('/');
-    }
-  }, [isLogin, userInfo]);
+  // useEffect(() => {
+  //   if (isLogin && !userInfo) {
+  //     setIsLogin(false);
+  //     navigate('/');
+  //   }
+  // }, [isLogin, userInfo]);
 
   return (
     <section className={'h-full'}>

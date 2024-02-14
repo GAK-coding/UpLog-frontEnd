@@ -6,27 +6,20 @@ import { FaUserCircle } from 'react-icons/fa';
 import { BsFillCameraFill } from 'react-icons/bs';
 import { RcFile } from 'antd/es/upload';
 import UserManageModal from '@/components/Member/MyPage/UserManageModal.tsx';
-import { UserInfo } from '@/typings/member.ts';
 import useInput from '@/hooks/useInput.ts';
 import { useMutation } from 'react-query';
-import { changeName, changeNickname, imageUpload, updateMyInfo } from '@/api/Members/mypage.ts';
+import { imageUpload, updateMyInfo } from '@/api/Members/mypage.ts';
 import { useRecoilState } from 'recoil';
 import { user } from '@/recoil/User/atom.ts';
 import { message } from '@/recoil/Common/atom.ts';
+import { useNavigate } from 'react-router-dom';
 
 export default function MyPage() {
-  // const userInfo: SaveUserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
   const [userInfo, setUserInfo] = useRecoilState(user);
   const [newName, onChangeNewName, setNewName] = useInput('');
   const [newNickname, onChangeNewNickname, setNewNickname] = useInput('');
   const [messageInfo, setMessageInfo] = useRecoilState(message);
-
-  // const { mutate: nameChangeMutate } = useMutation(changeName, {
-  //   onError: () => {
-  // setMessageInfo({ type: 'error', content: '이름 변경 실패!' });
-  //   },
-  // });
-  // const { mutate: nicknameChangeMutate } = useMutation(changeNickname);
+  const navigate = useNavigate();
 
   // 이미지
   const [fileList, setFileList] = useState<UploadFile[]>([]);
@@ -56,6 +49,8 @@ export default function MyPage() {
   });
 
   const onChangeProfile = useCallback(async () => {
+    if (!userInfo) return;
+
     const imgChk = fileList?.[0]?.url === userInfo.image || fileList.length === 0;
 
     if (!newName && !newNickname && imgChk) {
@@ -84,6 +79,7 @@ export default function MyPage() {
       name: !newName ? userInfo.name : newName,
       image: imageUrl ? imageUrl : userInfo.image,
     });
+
     sessionStorage.setItem(
       'userInfo',
       JSON.stringify({
@@ -108,7 +104,7 @@ export default function MyPage() {
   }, []);
 
   useEffect(() => {
-    if (userInfo.image) {
+    if (userInfo && userInfo.image) {
       const imageFile: UploadFile = {
         uid: '-1',
         name: 'image.png', // You can set a desired name here
@@ -136,7 +132,7 @@ export default function MyPage() {
               <span className={'text-[1.4rem] font-bold'}>
                 {userInfo?.nickname}({userInfo?.name}) 프로필 관리
               </span>
-              <span className={'text-[1.1rem] text-gray-dark'}>{userInfo.email}</span>
+              <span className={'text-[1.1rem] text-gray-dark'}>{userInfo?.email}</span>
             </div>
             <div className={'h-full flex-col-center justify-end'}>
               <button

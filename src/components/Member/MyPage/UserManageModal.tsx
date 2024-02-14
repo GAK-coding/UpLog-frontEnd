@@ -15,9 +15,8 @@ import useInput from '@/hooks/useInput.ts';
 type MessageType = 'success' | 'error' | 'warning';
 import { useMutation } from 'react-query';
 import { changePassword, deleteAccount } from '@/api/Members/mypage.ts';
-import { UserInfo } from '@/typings/member.ts';
-import { loginStatus } from '@/recoil/User/atom.ts';
-import { SetterOrUpdater, useSetRecoilState } from 'recoil';
+import { user } from '@/recoil/User/atom.ts';
+import { SetterOrUpdater, useRecoilState, useSetRecoilState } from 'recoil';
 import { useCookies } from 'react-cookie';
 
 interface Props {
@@ -32,12 +31,11 @@ export default function UserManageModal({
   isClickPwChange,
   setMessageInfo,
 }: Props) {
-  const userInfo: UserInfo = JSON.parse(sessionStorage.getItem('userInfo')!);
+  const userInfo = useRecoilState(user);
   const [password, onChangePassword, setPassword] = useInput('');
   const [newPassword, onChangeNewPassword, setNewPassword] = useInput('');
   const [isCheckPw, setIsCheckPw] = useState(false);
   const [isPwVisible, setIsPwVisible] = useState(false);
-  const setIsLogin = useSetRecoilState(loginStatus);
   const [cookies, setCookie, removeCookie] = useCookies();
   const navigator = useNavigate();
 
@@ -74,7 +72,6 @@ export default function UserManageModal({
       sessionStorage.removeItem('nowProduct');
       sessionStorage.removeItem('nowProject');
       removeCookie('refreshToken', { path: '/' });
-      setIsLogin(false);
       navigator('/');
     },
     onError: () => {
