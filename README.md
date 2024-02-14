@@ -457,13 +457,13 @@ https://www.youtube.com/watch?v=Jk-_V03pTn0
 
 - Post를 공지로 설정하면, 이전에 설정 되어있던 Post는 공지설정이 해제되고, 공지로 설정된 Post가 새롭게 등록됩니다.
 
-<img width="85%" alt="image" src="https://github.com/GAK-coding/AllFormU-frontEnd/assets/96913056/d76b4043-83b7-482d-8b8b-311c91e2ae9b"/>
+<img width="85%" alt="image" src="https://github.com/GAK-coding/AllFormU-frontEnd/assets/96913056/80225816-a459-4d60-b59a-a307630faa5c"/>
 
 <br/>
 
 - '공지해제'를 통해 기존에 공지로 설정 되어있는 Post 공지를 해제할 수 있습니다.
 
-<img width="85%" alt="image" src="https://github.com/GAK-coding/AllFormU-frontEnd/assets/96913056/5adfe9e3-ba13-4c3a-af38-a56b2c314eb6"/>
+<img width="85%" alt="image" src="https://github.com/GAK-coding/AllFormU-frontEnd/assets/96913056/c9db7c30-4fe5-42df-9e17-a97141eb79c0"/>
 
 <br/>
 
@@ -500,12 +500,12 @@ https://www.youtube.com/watch?v=Jk-_V03pTn0
 
 - 시작 날짜와 종료 날짜를 사용자가 직접 지정 할 수 있습니다.
 
-<img width="85%" alt="image" src="https://github.com/GAK-coding/AllFormU-frontEnd/assets/96913056/32e5e894-0bae-428b-922d-ddb12f12d810"/>
+<img width="60%" alt="image" src="https://github.com/GAK-coding/AllFormU-frontEnd/assets/96913056/69c72464-10ad-4370-a528-8c8de09c11cb"/>
 <br/>
 
 - Task를 등록할 Menu와 Task 할당자를 선택할 수 있습니다.
 
-<img width="85%" alt="image" src="https://github.com/GAK-coding/AllFormU-frontEnd/assets/96913056/cb4d3055-afb0-4b24-96bc-413995199b23"/>
+<img width="60%" alt="image" src="https://github.com/GAK-coding/AllFormU-frontEnd/assets/96913056/e0106d51-af0f-4990-a0fe-455243d4ef17"/>
 
 <br/>
 
