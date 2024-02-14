@@ -1,23 +1,16 @@
-import { delay, http, HttpResponse } from 'msw';
+import { http, HttpResponse } from 'msw';
 import { faker } from '@faker-js/faker';
 import { createProduct } from '@/mocks/api/data/product';
+import { checkAuthorization } from '@/mocks/api/common.ts';
 
 export const product = [
   http.get('/products', async ({ cookies, request }) => {
-    const { refreshToken } = cookies;
+    // 함수 호출
+    const authCheckResult = checkAuthorization({ cookies, request });
 
-    if (refreshToken !== 'MSW-refreshToken') {
-      return new HttpResponse(null, {
-        status: 410,
-      });
-    }
-
-    const accessToken = request.headers.get('authorization')?.slice(7) ?? '';
-
-    if (accessToken !== 'MSW-new-accessToken') {
-      return new HttpResponse(null, {
-        status: 409,
-      });
+    // 만약 인증에 실패한 경우
+    if (authCheckResult !== null) {
+      return authCheckResult;
     }
 
     const products = faker.helpers.multiple(createProduct, {
