@@ -21,9 +21,7 @@ export interface FailResponse {
   message: string;
 }
 
-export interface UserInfo extends Omit<GetUserInfo, 'accessToken' | 'refreshToken'> {
-  auth: string;
-}
+export interface UserInfo extends Omit<GetUserInfo, 'accessToken' | 'refreshToken'> {}
 
 export interface targetMemberInfo {
   id: number;
