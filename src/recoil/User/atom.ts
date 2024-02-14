@@ -1,10 +1,11 @@
 import { atom } from 'recoil';
 import { UserInfo } from '@/typings/member.ts';
+import { decrypt } from '@/utils/crypto.ts';
 
-export const loginStatus = atom({ key: 'loginStatus', default: false });
 export const profileOpen = atom({ key: 'profileOpen', default: false });
 
-export const user = atom<UserInfo>({
-  key: 'key',
-  default: JSON.parse(sessionStorage.getItem('userInfo')!) ?? {},
+const userInfo = decrypt(sessionStorage.getItem('userInfo'));
+export const user = atom<UserInfo | null>({
+  key: 'user',
+  default: userInfo ? JSON.parse(userInfo) : null,
 });
