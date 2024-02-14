@@ -104,48 +104,56 @@ https://www.youtube.com/watch?v=Jk-_V03pTn0
      <br/>
 
 ## 메인페이지
-##### 로그인 전 
+#### 로그인 전 
 
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/e02cf24a-a70b-4b72-a7a5-8911eaab2cac)
 
-##### 로그인 후
+#### 로그인 후
 
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/196cd56a-fa1b-40ef-87ba-2591700f68ba)
 ___
 
 ## 회원가입
-![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/64392fe6-9282-45f2-8a1a-639095ef36e4)
-
 - 개인 회원과 기업 회원 중 선택하여 회원가입이 가능합니다.
 - 이메일 인증을 하고 회원가입을 완료할 수 있습니다.
+
+![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/64392fe6-9282-45f2-8a1a-639095ef36e4)
+
+
 ___
 
 ## 로그인
-![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/9c20638f-044f-4baa-93be-5a8be238f0a4)
-
 - 회원가입 후 로그인이 가능합니다.
 
+![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/9c20638f-044f-4baa-93be-5a8be238f0a4)
+
+
 ### 비밀번호 찾기
+- 비밀번호를 잃어버렸을 경우, 이메일을 통해서 비밀번호 찾기가 가능합니다.
+
 <img width="1440" alt="image" src="https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/4ed6ddce-87ff-4877-9391-498221de8122">
 <img width="1436" alt="image" src="https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/a348e277-98ed-40b1-bc58-ade5211c819e">
 
-- 비밀번호를 잃어버렸을 경우, 이메일을 통해서 비밀번호 찾기가 가능합니다.
 ___
 
 ## 마이페이지
 
 ### 회원정보 수정
-![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/72f43cf5-f002-47ba-943d-bedf75a48bca)
-![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/636382dd-480f-4432-a388-159660e105fc)
 
 - 이름, 닉네임, 프로필 사진 수정이 가능합니다.
 - 비밀번호 변경을 클릭하면 모달창이 뜹니다.
 - 계정 삭제 기능을 제공합니다.
 
+![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/72f43cf5-f002-47ba-943d-bedf75a48bca)
+![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/636382dd-480f-4432-a388-159660e105fc)
+
+
+
 ### 비밀번호 변경
+- 현재 비밀번호, 새로운 비밀번호를 입력하고 변경이 가능합니다.
+
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/e778d9df-b9ec-46d6-9237-110d75594ef8)
 
-- 현재 비밀번호, 새로운 비밀번호를 입력하고 변경이 가능합니다.
 ___
 
 ## 제품
@@ -156,7 +164,7 @@ ___
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/5fd5746c-a45c-4ce3-b8c5-9976b64319c1)
 
 
-##### 제품 생성 후 
+#### 제품 생성 후 
 - 제품 생성을 완료하고 초기 모습입니다.
 
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/c008537b-3e5b-4f01-9faa-bec9857beea7)
@@ -174,26 +182,26 @@ ___
 
 ### 제품 멤버 관리
 
-##### 초기 상태
+#### 초기 상태
 - 처음엔 제품을 생성한 기업 회원과 마스터로 초대된 회원 2명이 존재합니다.
 
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/9d97ef82-1d2d-4f69-9723-afd528c1f596)
 
-##### 리더로 초대하기
+#### 리더로 초대하기
 - '리더로 초대하기' 체크 박스 체크 후, 멤버를 초대하면 리더권한의 멤버를 초대할 수 있습니다.
 
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/2501230f-fa82-4d7a-a78c-607ac9e2b19a)
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/cb700e51-b84c-46b0-a6c3-221e408f611d)
 
 
-##### 일반 멤버로 초대하기
+#### 일반 멤버로 초대하기
 - '리더로 초대하기' 체크 박스를 체크하지 않으면 일반 멤버로 초대가 가능합니다.
 - ","를 구분으로 한 번에 여러 명 멤버를 초대할 수 있습니다.
 
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/18230549-ff0e-4e75-9bad-73a0ceb1ed3e)
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/17b2e83e-ec14-4736-8279-7b29f543d435)
 
-##### 리더 권한 위임 및 방출
+#### 리더 권한 위임 및 방출
 - 권한 위임을 통해 일반 멤버에게 리더 권한을 부여할 수 있습니다.
 - 멤버 방출의 기능을 제공합니다. 
 
@@ -285,31 +293,31 @@ ___
 - 메뉴별로 Post, Task 관리가 가능합니다.
 - `'결과물', '요구사항', '개발', '배포'` 메뉴는 기본으로 제공되는 메뉴이며, 4가지 메뉴 외로, 메뉴를 생성, 수정, 삭제할 수 있습니다.
 
-##### Menu 생성
+#### Menu 생성
 - 메뉴는 최대 15개까지 생성이 가능합니다.
 - 중복된 메뉴 이름은 생성할 수 없습니다.
 
-##### Menu 수정
+#### Menu 수정
 - 빈 값으로 메뉴 이름을 설정할 수 없습니다.
 
-##### Menu 삭제
+#### Menu 삭제
 - 기본 `'결과물', '요구사항', '개발', '배포'` 를 제외한 메뉴를 삭제할 수 있습니다.
 
-##### Menu 이동
+#### Menu 이동
 - 5개 단위로 메뉴 리스트를 제공하며, 슬라이드 기능을 통해 손쉽게 이동할 수 있습니다.
 
-##### 결과물 Menu
+#### 결과물 Menu
 - `결과물` 메뉴는 의뢰인에게만 보여지는 메뉴로, Post 작성 기능만 제공되며, Task 작성은 불가능합니다.
 
 
 ### Post
 
-##### Post가 없는 상태
+#### Post가 없는 상태
 - Post가 작성되어 있지 않은 상태입니다.
 
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/1a296046-56f1-45f5-8a2b-ca25ecbafc5f)
 
-##### Post 생성 과정
+#### Post 생성 과정
 - "글쓰기"를 누르면 Post 작성 모달이 뜹니다.
 
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/d7ce7441-a1d1-4911-a820-e26efe5d682c)
@@ -327,40 +335,40 @@ ___
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/5b147cd3-94bb-4d90-894d-eab018971798)
 
 
-##### Post 생성 완료
+#### Post 생성 완료
 -  Post 작성이 완료된 모습입니다.
 
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/a733663f-495a-40b1-a3c0-d63775cc4f13)
 
-##### Post 세부기능
+#### Post 세부기능
 - Post "수정", "공지", "삭제" 기능을 제공합니다.
 
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/3892ac4e-9056-4149-8a9b-12c4dcd8cfc4)
 
-##### Post 공지
+#### Post 공지
 - Menu별로 Post를 공지할 수 있습니다.
 - "공지"로 설정된 Post는 해당 Menu 제일 상단에 배치됩니다.
 
-##### Post 공지설정
+#### Post 공지설정
 - Post를 공지로 설정하면, 이전에 설정 되어있던 Post는 공지설정이 해제되고, 공지로 설정된 Post가 새롭게 등록됩니다.
 
 
 - '공지해제'를 통해 기존에 공지로 설정 되어있는 Post 공지를 해제할 수 있습니다.
 
-##### Post 좋아요, 댓글
+#### Post 좋아요, 댓글
 - Post별로 좋아요와 댓글 기능을 제공합니다.
 
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/d1f2b45a-9c97-4c44-95d9-999b7a0039c3)
 
 
 ### Task
-##### Task가 없는 상태
+#### Task가 없는 상태
 - Task가 없는 상태의 화면입니다.
 
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/8bbe3949-7dbe-48d5-88bd-af002bfec694)
 
 
-##### Task 생성 과정
+#### Task 생성 과정
 - "Task 생성하기"를 눌러 Task 생성 모달을 통해 생성할 수 있습니다.
 
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/e11059af-f00b-4346-b3dc-8025671cc04a)
@@ -377,36 +385,36 @@ ___
 
 
 
-##### Task 생성 완료>
+#### Task 생성 완료
 - Task가 생성되고 난 후의 모습입니다.
 - Task가 해당되는 Menu, Task의 상태, 할당자의 프로필 사진을 확인할 수 있습니다.
 
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/c8e0665b-f7ab-4141-939b-6766b044ad83)
 
-##### Task 수정
+#### Task 수정
 - 수정기능을 통해, Task의 모든 내용을 수정할 수 있습니다.
 
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/3463e693-71a5-48f9-aeb1-940e79c8756c)
 
-##### Task 상태
+#### Task 상태
 - 왼쪽 상단에 원형을 통해 Task의 상태를 손쉽게 확인할 수 있습니다.
 - 분홍색 원형은 `진행 전`, 파랑색 원형은 `진행 중`, 초록색 원형은 `진행 후`의 개수를 나타냅니다.
 
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/4fe0969c-4bb7-4970-9544-cb903f2445c9)
 
 
-##### Task 정렬 및 필터링
+#### Task 정렬 및 필터링
 - 마감기한이 빠른 날짜순으로 Task 정렬이 가능합니다.
 
 - Task의 상태를 기준으로 필터링이 가능합니다.
 
 ### 칸반보드
-##### Task가 없는 칸반보드
+#### Task가 없는 칸반보드
 - Task가 없는 칸반보드의 화면입니다.
 
 ![image](https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/ab08f690-18e0-4aad-a5a9-598a6742f083)
 
-##### Task 생성 후<br>
+#### Task 생성 후<br>
 - Task가 작성되면 칸반보드에 Task가 생기며 Drag&Drop으로 Task의 상태 변경이 가능합니다.
 - Task의 상태에 따라 진행률이 실시간으로 변경됩니다.
 
