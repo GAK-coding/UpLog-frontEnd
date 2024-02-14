@@ -1,4 +1,4 @@
-import React, { FormEvent, useCallback, useEffect } from 'react';
+import React, { FormEvent, useCallback } from 'react';
 import { MdOutlineMailOutline } from 'react-icons/md';
 import useInput from '@/hooks/useInput.ts';
 import { AiOutlineLock } from 'react-icons/ai';
@@ -7,10 +7,9 @@ import { FailResponse, GetUserInfo, LoginInfo, UserInfo } from '@/typings/member
 import { useMutation } from 'react-query';
 import { useRecoilState } from 'recoil';
 import { user } from '@/recoil/User/atom.ts';
-import { loginAPI, logout } from '@/api/Members/Login-Signup.ts';
+import { loginAPI } from '@/api/Members/Login-Signup.ts';
 import { message } from '@/recoil/Common/atom.ts';
-import { useGetAllProduct } from '@/components/Product/hooks/useGetAllProduct';
-import { decrypt, encrypt } from '../../utils/crypto';
+import { encrypt } from '../../utils/crypto';
 
 export default function Login() {
   const [messageInfo, setMessageInfo] = useRecoilState(message);
@@ -71,14 +70,6 @@ export default function Login() {
     },
     [email, password]
   );
-
-  // 세션 스토리지의 userInfo가 조작되면 로그아웃
-  // useEffect(() => {
-  //   if (isLogin && !userInfo) {
-  //     setIsLogin(false);
-  //     navigate('/');
-  //   }
-  // }, [isLogin, userInfo]);
 
   return (
     <section className={'h-full'}>

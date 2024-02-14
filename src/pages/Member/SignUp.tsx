@@ -15,7 +15,6 @@ import { EmailInfo, SignUpInfo } from '@/typings/member.ts';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { message } from '@/recoil/Common/atom.ts';
-import { loginStatus } from '../../recoil/User/atom';
 const time = 300;
 export default function SignUp() {
   const [name, onChangeName, setName] = useInput('');
