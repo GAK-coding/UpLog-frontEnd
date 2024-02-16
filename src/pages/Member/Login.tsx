@@ -1,4 +1,4 @@
-import React, { FormEvent, useCallback } from 'react';
+import React, { FormEvent, useCallback, useEffect } from 'react';
 import { MdOutlineMailOutline } from 'react-icons/md';
 import useInput from '@/hooks/useInput.ts';
 import { AiOutlineLock } from 'react-icons/ai';
@@ -70,6 +70,12 @@ export default function Login() {
     },
     [email, password]
   );
+
+  useEffect(() => {
+    if (userInfo) {
+      navigate('/');
+    }
+  }, [userInfo]);
 
   return (
     <section className={'h-full'}>

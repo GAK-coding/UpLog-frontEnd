@@ -200,10 +200,10 @@ export default function SignUp() {
   }, [password, isCheckPw]);
 
   useEffect(() => {
-    if (isLogin) {
+    if (userInfo) {
       navigate('/');
     }
-  }, [isLogin]);
+  }, [userInfo]);
 
   return (
     <form onSubmit={onSubmit} className={'h-full flex-col-center'}>

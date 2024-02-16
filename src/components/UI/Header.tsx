@@ -20,7 +20,6 @@ export default function Header() {
   const { showMessage, contextHolder } = useMessage();
   const [messageInfo, setMessageInfo] = useRecoilState(message);
   const [userInfo, setUserInfo] = useRecoilState(user);
-
   const navigate = useNavigate();
   const [darkMode, setDarkMode] = useRecoilState(themeState);
   const nowProduct: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct'));
@@ -88,6 +87,10 @@ export default function Header() {
 
   // 로그인 여부 확인
   useEffect(() => {
+    if (pathname === '/login' || pathname === '/signup' || pathname === '/pwinquiry') {
+      return;
+    }
+
     if (!userInfo) {
       navigate('/');
     }
