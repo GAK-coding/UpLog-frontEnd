@@ -94,7 +94,7 @@ export default function Header() {
     if (!userInfo) {
       navigate('/');
     }
-  }, [userInfo]);
+  }, [userInfo, pathname]);
 
   useEffect(() => {
     if (messageInfo !== null) showMessage(messageInfo.type, messageInfo.content);
