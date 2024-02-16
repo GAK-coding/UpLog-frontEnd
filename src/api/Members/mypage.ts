@@ -11,26 +11,16 @@ export const changePassword: (
   return res.data;
 };
 
-export const deleteAccount = async (data: {
-  id: number;
-  accessToken: string;
-  refreshToken: string;
+export const deleteAccount: (data: {
   password: string;
-}) => {
-  try {
-    const { id, accessToken, refreshToken, password } = data;
+}) => Promise<{ message: string } | FailResponse> = async (data: { password: string }) => {
+  const { password } = data;
 
-    const res: AxiosResponse<string | { message: string }> = await instance.delete(
-      `/members/${id}`,
-      {
-        data: { password, accessToken, refreshToken },
-      }
-    );
+  const res: AxiosResponse<{ message: string }> = await instance.delete(`/members`, {
+    data: { password },
+  });
 
-    return res.data;
-  } catch (err) {
-    return 'delete account fail';
-  }
+  return res.data;
 };
 
 export const imageUpload = async (data: FormData) => {

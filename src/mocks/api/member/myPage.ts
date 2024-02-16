@@ -61,4 +61,26 @@ export const myPage = [
       nickname: userInfo.nickname,
     });
   }),
+  http.delete('/members', async ({ cookies, request }) => {
+    // 함수 호출
+    const authCheckResult = checkAuthorization({ cookies, request });
+
+    // 만약 인증에 실패한 경우
+    if (authCheckResult !== null) {
+      return authCheckResult;
+    }
+
+    const info = (await request.json()) as unknown as { password: string };
+
+    if (info.password === '1234') {
+      return HttpResponse.json({
+        httpStatus: 'CONFLICT',
+        message: '비밀번호가 일치하지 않습니다.',
+      });
+    }
+
+    return HttpResponse.json({
+      message: '계정이 삭제되었습니다.',
+    });
+  }),
 ];

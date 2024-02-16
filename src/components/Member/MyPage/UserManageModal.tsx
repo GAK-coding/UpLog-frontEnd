@@ -17,7 +17,6 @@ import { useMutation } from 'react-query';
 import { changePassword, deleteAccount } from '@/api/Members/mypage.ts';
 import { user } from '@/recoil/User/atom.ts';
 import { SetterOrUpdater, useRecoilState } from 'recoil';
-import { useCookies } from 'react-cookie';
 
 interface Props {
   isOpen: boolean;
@@ -31,12 +30,11 @@ export default function UserManageModal({
   isClickPwChange,
   setMessageInfo,
 }: Props) {
-  const userInfo = useRecoilState(user);
+  const [userInfo, setUserInfo] = useRecoilState(user);
   const [password, onChangePassword, setPassword] = useInput('');
   const [newPassword, onChangeNewPassword, setNewPassword] = useInput('');
   const [isCheckPw, setIsCheckPw] = useState(false);
   const [isPwVisible, setIsPwVisible] = useState(false);
-  const [cookies, setCookie, removeCookie] = useCookies();
   const navigator = useNavigate();
 
   const resetPw = useCallback(() => {
@@ -62,16 +60,19 @@ export default function UserManageModal({
 
   const { mutate: deleteAccountMutate } = useMutation(deleteAccount, {
     onSuccess: (data) => {
-      if (typeof data !== 'string') {
+      if ('httpStatus' in data) {
         setMessageInfo({ type: 'warning', content: data.message });
         return;
       }
 
       sessionStorage.removeItem('userInfo');
-      sessionStorage.removeItem('accessToken');
       sessionStorage.removeItem('nowProduct');
       sessionStorage.removeItem('nowProject');
-      removeCookie('refreshToken', { path: '/' });
+      sessionStorage.removeItem('nowTeamId');
+      sessionStorage.removeItem('nowGroupId');
+      setUserInfo(null);
+
+      setMessageInfo({ type: 'success', content: '로그아웃 되었습니다.' });
       navigator('/');
     },
     onError: () => {
@@ -90,7 +91,7 @@ export default function UserManageModal({
       return;
     }
 
-    changePasswordMutate({ id: userInfo.id, newPassword, password });
+    changePasswordMutate({ newPassword, password });
   }, [password, newPassword, userInfo, isCheckPw]);
 
   const onClickDeleteAccount = useCallback(() => {
@@ -99,10 +100,7 @@ export default function UserManageModal({
       return;
     }
 
-    const accessToken = sessionStorage.getItem('accessToken')!;
-    const refreshToken = cookies.refreshToken;
-
-    deleteAccountMutate({ id: userInfo.id, password, accessToken, refreshToken });
+    deleteAccountMutate({ password });
   }, [password, userInfo]);
 
   const onClickPwVisible = useCallback(() => setIsPwVisible((prev) => !prev), []);

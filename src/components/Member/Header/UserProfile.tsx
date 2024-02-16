@@ -25,8 +25,8 @@ export default function UserProfile() {
       sessionStorage.removeItem('nowProject');
       sessionStorage.removeItem('nowTeamId');
       sessionStorage.removeItem('nowGroupId');
-      setIsProfileClick(false);
       setUserInfo(null);
+      setIsProfileClick(false);
 
       setMessageInfo({ type: 'success', content: '로그아웃 되었습니다.' });
       navigate('/');
