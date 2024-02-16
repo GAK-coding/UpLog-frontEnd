@@ -13,10 +13,12 @@ import { useMutation } from 'react-query';
 import { emailRequest, signUp } from '@/api/Members/Login-Signup.ts';
 import { EmailInfo, SignUpInfo } from '@/typings/member.ts';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { message } from '@/recoil/Common/atom.ts';
+import { user } from '../../recoil/User/atom';
 const time = 300;
 export default function SignUp() {
+  const [userInfo, setUserInfo] = useRecoilState(user);
   const [name, onChangeName, setName] = useInput('');
   const [nickname, onChangeNickname, setNickname] = useInput('');
   const [email, onChangeEmail, setEmail] = useInput('');
@@ -35,7 +37,6 @@ export default function SignUp() {
   const navigate = useNavigate();
   const [correctAuthNum, setCorrectAuthNum] = useState('');
   const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
-  const isLogin = useRecoilValue(loginStatus);
 
   const { mutate: sendAuthNumMutate } = useMutation(emailRequest, {
     onSuccess: (data) => {
@@ -203,7 +204,7 @@ export default function SignUp() {
     if (userInfo) {
       navigate('/');
     }
-  }, [userInfo]);
+  }, []);
 
   return (
     <form onSubmit={onSubmit} className={'h-full flex-col-center'}>
