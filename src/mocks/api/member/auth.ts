@@ -1,4 +1,4 @@
-import { delay, http, HttpResponse } from 'msw';
+import { http, HttpResponse } from 'msw';
 import { GetUserInfo, LoginInfo, SignUpInfo } from '@/typings/member.ts';
 import { faker } from '@faker-js/faker';
 
