@@ -56,7 +56,7 @@ describe('로그인 테스트', () => {
     cy.get('[data-cy=emailInput]').as('email');
     cy.get('[data-cy=passwordInput]').as('passwordInput');
 
-    // when - 잘못 입력했을
+    // when - 비밀번호 잘못 입력했을때
     cy.get('@email').type('uplog@gmail.com');
     cy.get('@passwordInput').type('1234');
     cy.get('[data-cy=LoginButton]').click();
