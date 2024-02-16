@@ -13,6 +13,8 @@ import { useRecoilState } from 'recoil';
 import { user } from '@/recoil/User/atom.ts';
 import { message } from '@/recoil/Common/atom.ts';
 import { useNavigate } from 'react-router-dom';
+import { UserInfo } from '../../typings/member';
+import { decrypt, encrypt } from '../../utils/crypto';
 
 export default function MyPage() {
   const [userInfo, setUserInfo] = useRecoilState(user);
@@ -44,17 +46,48 @@ export default function MyPage() {
   const nowImage = useRef<string>();
   const { mutate } = useMutation(updateMyInfo, {
     onSuccess: (data) => {
-      if (data) nowImage.current = data;
+      if (userInfo) {
+        nowImage.current = data.image ?? '';
+
+        const newUserInfo: UserInfo = {
+          ...JSON.parse(JSON.stringify(userInfo)),
+          nickname: !newNickname ? userInfo.nickname : newNickname,
+          name: !newName ? userInfo.name : newName,
+          image: data.image,
+        };
+
+        setUserInfo({ ...newUserInfo });
+
+        sessionStorage.setItem(
+          'userInfo',
+          encrypt(
+            JSON.stringify({
+              ...newUserInfo,
+            })
+          )
+        );
+
+        setNewNickname('');
+        setNewName('');
+        setMessageInfo({ type: 'success', content: '프로필 변경 완료!' });
+      } else {
+        setMessageInfo({ type: 'error', content: '잠시 후에 다시 시도해주세요.' });
+      }
+    },
+    onError: () => {
+      setMessageInfo({ type: 'error', content: '잠시 후에 다시 시도해주세요.' });
     },
   });
 
   const onChangeProfile = useCallback(async () => {
     if (!userInfo) return;
 
-    const imgChk = fileList?.[0]?.url === userInfo.image || fileList.length === 0;
+    // 바뀐 사진이 있거나 || 설정해 둔 이미지가 있는데 제거하는 경우, isImageChange는 true
+    const isImageChange =
+      fileList?.[0]?.url !== userInfo.image || (userInfo.image && !fileList?.[0]);
 
-    if (!newName && !newNickname && imgChk) {
-      setMessageInfo({ type: 'warning', content: '프로필 변경을 해주세요.' });
+    if (!newName && !newNickname && !isImageChange) {
+      setMessageInfo({ type: 'warning', content: '프로필 수정을 해주세요.' });
       return;
     }
 
@@ -68,31 +101,8 @@ export default function MyPage() {
     mutate({
       newNickname: !newNickname ? null : newNickname,
       newName: !newName ? null : newName,
-      image: imageUrl,
+      image: (userInfo.image && fileList.length) === 0 ? 'delete' : imageUrl,
     });
-
-    const temp = JSON.parse(JSON.stringify(userInfo));
-
-    setUserInfo({
-      ...temp,
-      nickname: !newNickname ? userInfo.nickname : newNickname,
-      name: !newName ? userInfo.name : newName,
-      image: imageUrl ? imageUrl : userInfo.image,
-    });
-
-    sessionStorage.setItem(
-      'userInfo',
-      JSON.stringify({
-        ...temp,
-        nickname: !newNickname ? userInfo.nickname : newNickname,
-        name: !newName ? userInfo.name : newName,
-        image: imageUrl ? imageUrl : userInfo.image,
-      })
-    );
-
-    setNewNickname('');
-    setNewName('');
-    setMessageInfo({ type: 'success', content: '프로필 변경 완료!' });
   }, [newName, newNickname, fileList, userInfo]);
 
   // 비밀번호 변경 모달
@@ -113,9 +123,14 @@ export default function MyPage() {
       };
       setFileList([imageFile]);
     }
-  }, []);
+  }, [userInfo]);
 
-  // console.log(fileList?.[0]?.url);
+  useEffect(() => {
+    const getUserInfo = decrypt(sessionStorage.getItem('userInfo'));
+    const userInfo: UserInfo = getUserInfo ? JSON.parse(getUserInfo) : {};
+
+    setUserInfo(userInfo);
+  }, []);
 
   return (
     <section className={'mypage flex flex-col items-center w-full h-[68rem]'}>

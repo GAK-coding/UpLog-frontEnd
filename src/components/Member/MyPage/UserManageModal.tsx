@@ -16,7 +16,7 @@ type MessageType = 'success' | 'error' | 'warning';
 import { useMutation } from 'react-query';
 import { changePassword, deleteAccount } from '@/api/Members/mypage.ts';
 import { user } from '@/recoil/User/atom.ts';
-import { SetterOrUpdater, useRecoilState, useSetRecoilState } from 'recoil';
+import { SetterOrUpdater, useRecoilState } from 'recoil';
 import { useCookies } from 'react-cookie';
 
 interface Props {
@@ -47,8 +47,8 @@ export default function UserManageModal({
 
   const { mutate: changePasswordMutate } = useMutation(changePassword, {
     onSuccess: (data) => {
-      if (data && 'message' in data) {
-        setMessageInfo({ type: 'warning', content: '현재 비밀번호가 일치하지 않습니다.' });
+      if ('message' in data) {
+        setMessageInfo({ type: 'warning', content: data.message });
         return;
       }
 

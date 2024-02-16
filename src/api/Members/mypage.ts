@@ -1,44 +1,14 @@
 import { instance } from '@/api';
-import { GetUserInfo } from '@/typings/member.ts';
+import { EditPassword, FailResponse, NewUserInfo, targetMemberInfo } from '@/typings/member.ts';
 import { AxiosResponse } from 'axios';
-import message from 'antd/lib/message';
 
-export const changeName = async (data: { id: number; newName: string }) => {
-  try {
-    const { newName, id } = data;
+export const changePassword: (
+  data: EditPassword
+) => Promise<targetMemberInfo | FailResponse> = async (data: EditPassword) => {
+  const { password, newPassword } = data;
 
-    await instance.patch(`/members/${id}/name`, { newName });
-  } catch (err) {
-    return 'change name fail';
-  }
-};
-
-export const changeNickname = async (data: { id: number; newNickname: string }) => {
-  try {
-    const { newNickname, id } = data;
-
-    await instance.patch(`/members/${id}/nickname`, { newNickname });
-  } catch (err) {
-    return 'change nickname fail';
-  }
-};
-
-export const changePassword = async (data: {
-  id: number;
-  newPassword: string;
-  password: string;
-}) => {
-  try {
-    const { password, newPassword, id } = data;
-
-    const res = await instance.patch(`/members/password`, { password, newPassword });
-
-    if ('message' in res.data) {
-      return res.data;
-    }
-  } catch (err) {
-    return 'change password fail';
-  }
+  const res = await instance.patch(`/members/password`, { password, newPassword });
+  return res.data;
 };
 
 export const deleteAccount = async (data: {
@@ -64,31 +34,23 @@ export const deleteAccount = async (data: {
 };
 
 export const imageUpload = async (data: FormData) => {
-  try {
-    const res: AxiosResponse<{ url: string }> = await instance.post('/storages/upload', data, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    });
+  const res: AxiosResponse<{ url: string }> = await instance.post('/storages/upload', data, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
 
-    return res.data.url;
-  } catch (err) {
-    return null;
-  }
+  return res.data.url;
 };
 
-export const updateMyInfo = async (data: {
-  newName: string | null;
-  newNickname: string | null;
-  image: string | null;
-}) => {
-  try {
-    const { newName, newNickname, image } = data;
+export const updateMyInfo: (data: NewUserInfo) => Promise<targetMemberInfo> = async (
+  data: NewUserInfo
+) => {
+  const { newName, newNickname, image } = data;
 
-    await instance.patch('/members/information', {
-      newName,
-      newNickname,
-      image,
-    });
-  } catch (err) {
-    return 'fail updateMyInfo';
-  }
+  const res = await instance.patch('/members/information', {
+    newName,
+    newNickname,
+    image,
+  });
+
+  return res.data;
 };

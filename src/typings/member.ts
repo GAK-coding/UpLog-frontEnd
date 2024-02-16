@@ -17,7 +17,7 @@ export interface GetUserInfo extends Omit<SignUpInfo, 'loginType' | 'password'> 
 }
 
 export interface FailResponse {
-  httpStatus: 'CONFLICT';
+  httpStatus: string;
   message: string;
 }
 
@@ -35,4 +35,17 @@ export interface EmailInfo {
   type: number;
   link?: string;
   powerType?: string;
+}
+
+// mypage에서 정보 수정
+export interface NewUserInfo {
+  newName: string | null;
+  newNickname: string | null;
+  image: string | null;
+}
+
+// mypage에서 비밀번호 변경
+export interface EditPassword {
+  newPassword: string;
+  password: string;
 }
