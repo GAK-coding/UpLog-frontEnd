@@ -13,7 +13,6 @@ import { encrypt } from '../../utils/crypto';
 
 export default function Login() {
   const [messageInfo, setMessageInfo] = useRecoilState(message);
-
   const [email, onChangeEmail, setEmail] = useInput('');
   const [password, onChangePassword, setPassword] = useInput('');
   const navigate = useNavigate();
@@ -45,6 +44,7 @@ export default function Login() {
     },
   });
 
+  // 로그인
   const onSubmit = useCallback(
     (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
@@ -70,6 +70,7 @@ export default function Login() {
     [email, password]
   );
 
+  // 로그인 되어있으면 메인 페이지로 이동
   useEffect(() => {
     if (userInfo) {
       navigate('/');

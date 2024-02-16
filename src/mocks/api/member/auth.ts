@@ -16,8 +16,8 @@ export const auth = [
       }
     );
   }),
-  http.post('/members/login', (info) => {
-    const infos: LoginInfo = info.request.json();
+  http.post('/members/login', async ({ request }) => {
+    const infos = (await request.json()) as unknown as LoginInfo;
 
     if (infos.password === '1234') {
       return HttpResponse.json({ httpStatus: 'CONFLICT', message: '비밀번호가 틀립니다.' });
