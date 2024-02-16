@@ -38,7 +38,6 @@ export default function Login() {
 
       sessionStorage.setItem('userInfo', encrypt(JSON.stringify(userInfo)));
       setUserInfo(userInfo);
-
       navigate('/workspace/-1');
     },
     onError: () => {
@@ -75,7 +74,7 @@ export default function Login() {
     if (userInfo) {
       navigate('/');
     }
-  }, [userInfo]);
+  }, []);
 
   return (
     <section className={'h-full'}>
