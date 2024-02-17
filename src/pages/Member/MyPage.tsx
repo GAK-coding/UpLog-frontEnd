@@ -12,7 +12,6 @@ import { imageUpload, updateMyInfo } from '@/api/Members/mypage.ts';
 import { useRecoilState } from 'recoil';
 import { user } from '@/recoil/User/atom.ts';
 import { message } from '@/recoil/Common/atom.ts';
-import { useNavigate } from 'react-router-dom';
 import { UserInfo } from '../../typings/member';
 import { decrypt, encrypt } from '../../utils/crypto';
 
@@ -21,7 +20,6 @@ export default function MyPage() {
   const [newName, onChangeNewName, setNewName] = useInput('');
   const [newNickname, onChangeNewNickname, setNewNickname] = useInput('');
   const [messageInfo, setMessageInfo] = useRecoilState(message);
-  const navigate = useNavigate();
 
   // 이미지
   const [fileList, setFileList] = useState<UploadFile[]>([]);
@@ -84,7 +82,8 @@ export default function MyPage() {
 
     // 바뀐 사진이 있거나 || 설정해 둔 이미지가 있는데 제거하는 경우, isImageChange는 true
     const isImageChange =
-      fileList?.[0]?.url !== userInfo.image || (userInfo.image && !fileList?.[0]);
+      (fileList.length > 0 && fileList?.[0]?.url !== userInfo.image) ||
+      (userInfo.image && fileList.length === 0);
 
     if (!newName && !newNickname && !isImageChange) {
       setMessageInfo({ type: 'warning', content: '프로필 수정을 해주세요.' });
@@ -192,6 +191,7 @@ export default function MyPage() {
                   'border-base border-gray-border w-full h-11 rounded-[0.625rem] text-[0.93rem] font-semibold p-2'
                 }
                 type="text"
+                data-cy={'newNameInput'}
                 value={newName}
                 onChange={onChangeNewName}
                 maxLength={10}
@@ -206,6 +206,7 @@ export default function MyPage() {
                   'border-base border-gray-border w-full h-11 rounded-[0.625rem] text-[0.93rem] font-semibold p-2'
                 }
                 type="text"
+                data-cy={'newNicknameInput'}
                 value={newNickname}
                 onChange={onChangeNewNickname}
                 maxLength={10}
@@ -219,6 +220,7 @@ export default function MyPage() {
               className={
                 'w-[4.5rem] h-10 rounded-[0.3rem] bg-orange text-white text-xs font-bold ml-4'
               }
+              data-cy={'saveButton'}
               onClick={onChangeProfile}
             >
               저장
