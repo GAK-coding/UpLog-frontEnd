@@ -4,14 +4,15 @@ import { Table, TableContainer, Th, Thead, Tr, useDisclosure } from '@chakra-ui/
 import { AiOutlinePlus } from 'react-icons/ai';
 import Tables from '@/components/Product/ReleaseNote/Tables.tsx';
 import ProjectModal from '@/components/Product/ReleaseNote/ProjectModal.tsx';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useGetAllProduct } from '@/components/Product/hooks/useGetAllProduct.ts';
-import { useQueries, useQuery } from 'react-query';
+import { useQueries } from 'react-query';
 import { getAllProductProjects, getChangeLogEachProject } from '@/api/Project/Version.ts';
 import { useRecoilState } from 'recoil';
 import { eachProductProjects } from '@/recoil/Project/atom.ts';
 import { FaUserCircle } from 'react-icons/fa';
 import { message } from '@/recoil/Common/atom.ts';
+import Loading from '../../components/UI/Loading';
 export default function ReleaseNote() {
   const [projects, setProjects] = useRecoilState(eachProductProjects);
   const nowProduct: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
@@ -88,104 +89,119 @@ export default function ReleaseNote() {
   }, [product, productList, isFetching]);
 
   return (
-    <section className={'w-full min-w-[50em] py-32 px-14 xl:px-56'} onClick={onCloseKebab}>
-      <div className={'min-w-[30em] flex justify-between mb-4'}>
-        <span className={'flex items-center'}>
-          {nowProduct?.productImage ? (
-            <img src={nowProduct?.productImage} alt={'제품 사진'} className={'w-12 h-12 mr-4'} />
-          ) : (
-            <FaUserCircle className={'w-12 h-12 mr-4 ml-2 text-3xl'} />
-          )}
-          <span className={'text-[2.4rem] font-bold'}>{nowProduct?.productName}</span>
-        </span>
-        <button
-          className={'mr-2 text-gray-dark font-bold underline self-end'}
-          onClick={() => {
-            if (projects?.[0].projectStatus === 'PROGRESS_IN') {
-              setMessageInfo({ type: 'warning', content: '현재 진행 중인 프로젝트가 있습니다.' });
-              return;
-            }
+    <div>
+      {product === '-1' && <Loading isSetLoading={true} />}
 
-            setTempVersion('');
-            onClickProjectModal('add');
-          }}
-        >
-          프로젝트 추가하기
-        </button>
-      </div>
+      {product !== '-1' && (
+        <section className={'w-full min-w-[50em] py-32 px-14 xl:px-56'} onClick={onCloseKebab}>
+          <div className={'min-w-[30em] flex justify-between mb-4'}>
+            <span className={'flex items-center'}>
+              {nowProduct?.productImage ? (
+                <img
+                  src={nowProduct?.productImage}
+                  alt={'제품 사진'}
+                  className={'w-12 h-12 mr-4'}
+                />
+              ) : (
+                <FaUserCircle className={'w-12 h-12 mr-4 ml-2 text-3xl'} />
+              )}
+              <span className={'text-[2.4rem] font-bold'}>{nowProduct?.productName}</span>
+            </span>
+            <button
+              className={'mr-2 text-gray-dark font-bold underline self-end'}
+              onClick={() => {
+                if (projects?.[0].projectStatus === 'PROGRESS_IN') {
+                  setMessageInfo({
+                    type: 'warning',
+                    content: '현재 진행 중인 프로젝트가 있습니다.',
+                  });
+                  return;
+                }
 
-      <div>
-        <TableContainer overflow={'hidden'} minHeight={'12rem'}>
-          <Table fontSize={'1.2rem'} fontWeight={700}>
-            <Thead>
-              <Tr>
-                <Th
-                  borderTop={'1px solid var(--gray-table)'}
-                  borderBottom={'1px solid var(--gray-table)'}
-                  fontSize={'1.2rem'}
-                  padding={'1.6rem 0'}
-                  textAlign={'center'}
-                  width={'20%'}
-                  color={'var(--black)'}
-                >
-                  버전
-                </Th>
-                <Th
-                  borderTop={'1px solid var(--gray-table)'}
-                  borderBottom={'1px solid var(--gray-table)'}
-                  fontSize={'1.2rem'}
-                  padding={'1.6rem 0'}
-                  textAlign={'center'}
-                  width={'20%'}
-                  color={'var(--black)'}
-                >
-                  날짜
-                </Th>
-                <Th
-                  borderTop={'1px solid var(--gray-table)'}
-                  borderBottom={'1px solid var(--gray-table)'}
-                  fontSize={'1.2rem'}
-                  padding={'1.6rem 0'}
-                  textAlign={'center'}
-                  width={'60%'}
-                  color={'var(--black)'}
-                >
-                  변경이력
-                </Th>
-              </Tr>
-            </Thead>
-            {projects?.length > 0 && (
-              <Tables
-                isClickKebab={isClickKebab}
-                setIsClickKebab={setIsClickKebab}
-                onClickKebab={onClickKebab}
-                onClickComplete={onClickProjectModal}
-                setTempVersion={setTempVersion}
-                setNowProjectId={setNowProjectId}
-                eachProjectQueryResults={eachProjectQueryResults.reverse()}
-              />
-            )}
-          </Table>
-          {projects?.length === 0 && (
-            <div
-              className={'flex-row-center mt-6 text-gray-light text-2xl font-bold cursor-pointer'}
-              onClick={onOpen}
+                setTempVersion('');
+                onClickProjectModal('add');
+              }}
             >
-              <AiOutlinePlus className={'mr-4 text-3xl'} /> 프로젝트 시작하기
-            </div>
-          )}
-        </TableContainer>
-      </div>
+              프로젝트 추가하기
+            </button>
+          </div>
 
-      {/* 프로젝트 추가 완료 모달 */}
-      <ProjectModal
-        isOpen={isOpen}
-        onClose={onClose}
-        isAdd={isAdd}
-        versionName={tempVersion}
-        setMessageInfo={setMessageInfo}
-        nowProjectId={nowProjectId}
-      />
-    </section>
+          <div>
+            <TableContainer overflow={'hidden'} minHeight={'12rem'}>
+              <Table fontSize={'1.2rem'} fontWeight={700}>
+                <Thead>
+                  <Tr>
+                    <Th
+                      borderTop={'1px solid var(--gray-table)'}
+                      borderBottom={'1px solid var(--gray-table)'}
+                      fontSize={'1.2rem'}
+                      padding={'1.6rem 0'}
+                      textAlign={'center'}
+                      width={'20%'}
+                      color={'var(--black)'}
+                    >
+                      버전
+                    </Th>
+                    <Th
+                      borderTop={'1px solid var(--gray-table)'}
+                      borderBottom={'1px solid var(--gray-table)'}
+                      fontSize={'1.2rem'}
+                      padding={'1.6rem 0'}
+                      textAlign={'center'}
+                      width={'20%'}
+                      color={'var(--black)'}
+                    >
+                      날짜
+                    </Th>
+                    <Th
+                      borderTop={'1px solid var(--gray-table)'}
+                      borderBottom={'1px solid var(--gray-table)'}
+                      fontSize={'1.2rem'}
+                      padding={'1.6rem 0'}
+                      textAlign={'center'}
+                      width={'60%'}
+                      color={'var(--black)'}
+                    >
+                      변경이력
+                    </Th>
+                  </Tr>
+                </Thead>
+                {projects?.length > 0 && (
+                  <Tables
+                    isClickKebab={isClickKebab}
+                    setIsClickKebab={setIsClickKebab}
+                    onClickKebab={onClickKebab}
+                    onClickComplete={onClickProjectModal}
+                    setTempVersion={setTempVersion}
+                    setNowProjectId={setNowProjectId}
+                    eachProjectQueryResults={eachProjectQueryResults.reverse()}
+                  />
+                )}
+              </Table>
+              {projects?.length === 0 && (
+                <div
+                  className={
+                    'flex-row-center mt-6 text-gray-light text-2xl font-bold cursor-pointer'
+                  }
+                  onClick={onOpen}
+                >
+                  <AiOutlinePlus className={'mr-4 text-3xl'} /> 프로젝트 시작하기
+                </div>
+              )}
+            </TableContainer>
+          </div>
+
+          {/* 프로젝트 추가 완료 모달 */}
+          <ProjectModal
+            isOpen={isOpen}
+            onClose={onClose}
+            isAdd={isAdd}
+            versionName={tempVersion}
+            setMessageInfo={setMessageInfo}
+            nowProjectId={nowProjectId}
+          />
+        </section>
+      )}
+    </div>
   );
 }

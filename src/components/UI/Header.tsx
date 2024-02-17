@@ -12,9 +12,8 @@ import UserProfile from '@/components/Member/Header/UserProfile.tsx';
 import { message, themeState } from '@/recoil/Common/atom.ts';
 import { ProductInfo } from '@/typings/product.ts';
 import { BiChevronDown } from 'react-icons/bi';
-import { useMutation, useQueryClient } from 'react-query';
+import { useQueryClient } from 'react-query';
 import { useMessage } from '@/hooks/useMessage.ts';
-import { logout } from '../../api/Members/Login-Signup';
 
 export default function Header() {
   const { showMessage, contextHolder } = useMessage();
@@ -45,6 +44,8 @@ export default function Header() {
   const [isProfileClick, setIsProfileClick] = useRecoilState(profileOpen);
   // 제품 List click
   const [isProductClick, setIsProductClick] = useRecoilState(productOpen);
+
+  console.log(product);
 
   // 검색창에서 엔터를 눌렀을 때, 검색 페이지로 이동
   const activeEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -126,7 +127,7 @@ export default function Header() {
           </span>
         </nav>
 
-        {pathname !== '/mypage' && userInfo && product !== '' && (
+        {pathname !== '/mypage' && userInfo && product !== '-1' && product !== undefined && (
           <div className={'flex-row-center ml-4 h-full'} onClick={onClickProductList}>
             <div className={'flex-row-center h-9 border-solid border-r border-gray-light'} />
             <div
