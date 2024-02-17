@@ -10,7 +10,7 @@ import { useOutsideAlerter } from '@/hooks/useOutsideAlerter.ts';
 import ProductList from '@/components/Product/Info/ProductList.tsx';
 import UserProfile from '@/components/Member/Header/UserProfile.tsx';
 import { message, themeState } from '@/recoil/Common/atom.ts';
-import { ProductInfo } from '@/typings/product.ts';
+import { GetProductList, ProductInfo } from '@/typings/product.ts';
 import { BiChevronDown } from 'react-icons/bi';
 import { useQueryClient } from 'react-query';
 import { useMessage } from '@/hooks/useMessage.ts';
@@ -22,9 +22,9 @@ export default function Header() {
   const navigate = useNavigate();
   const [darkMode, setDarkMode] = useRecoilState(themeState);
   const nowProduct: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct'));
-  const [productList, refetch] = [];
+  // const [productList, refetch] = [];
   const queryClient = useQueryClient();
-  const isProductList = queryClient.getQueryData('myProductList');
+  const productList: GetProductList[] | undefined = queryClient.getQueryData('myProductList');
 
   const userprofile = userInfo?.image;
   // 검색
@@ -44,8 +44,6 @@ export default function Header() {
   const [isProfileClick, setIsProfileClick] = useRecoilState(profileOpen);
   // 제품 List click
   const [isProductClick, setIsProductClick] = useRecoilState(productOpen);
-
-  console.log(product);
 
   // 검색창에서 엔터를 눌렀을 때, 검색 페이지로 이동
   const activeEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -126,8 +124,7 @@ export default function Header() {
             upLog
           </span>
         </nav>
-
-        {pathname !== '/mypage' && userInfo && product !== '-1' && product !== undefined && (
+        {pathname !== '/mypage' && userInfo && product !== '-1' && product !== 'undefined' && (
           <div className={'flex-row-center ml-4 h-full'} onClick={onClickProductList}>
             <div className={'flex-row-center h-9 border-solid border-r border-gray-light'} />
             <div
@@ -153,7 +150,7 @@ export default function Header() {
                   </span>
                 </span>
               )}
-              {isProductList && pathname === '/' ? (
+              {productList?.length === 0 && pathname === '/' ? (
                 <span className={'flex-row-center text-xl text-gray-light ml-2'}>제품 추가</span>
               ) : (
                 <BiChevronDown className={'flex-row-center text-[2rem] fill-gray-light ml-2'} />
@@ -164,7 +161,6 @@ export default function Header() {
         )}
       </div>
 
-      {/*TODO : 스토리지 값 체크후에 변경하기 (조건으로 렌더링 여부 바꿔야함)*/}
       {/*로그인 상태*/}
       {userInfo && (
         <div
