@@ -151,6 +151,7 @@ export default function MyPage() {
             <div className={'h-full flex-col-center justify-end'}>
               <button
                 className={'text-gray-dark text-[1rem] font-bold underline'}
+                data-cy={'pwChangeButton'}
                 onClick={() => {
                   onOpen();
                   onChangeIsClickPw(true);
@@ -238,6 +239,7 @@ export default function MyPage() {
               계정 삭제 시 프로필 및 참여한 제품의 모든 정보가 삭제됩니다.
             </span>
             <button
+              data-cy={'deleteAccountButton'}
               onClick={() => {
                 onOpen();
                 onChangeIsClickPw(false);

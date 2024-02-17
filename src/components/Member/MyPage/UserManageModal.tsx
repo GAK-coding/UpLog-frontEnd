@@ -145,6 +145,7 @@ export default function UserManageModal({
                 <span className={'text-gray-dark font-bold mb-[0.93rem]'}>현재 비밀번호</span>
                 <input
                   type="password"
+                  data-cy={'nowPasswordInput'}
                   value={password}
                   onChange={onChangePassword}
                   placeholder={'현재 비밀번호를 입력하세요.'}
@@ -173,6 +174,7 @@ export default function UserManageModal({
                   >
                     <input
                       type={`${isPwVisible ? 'text' : 'password'}`}
+                      data-cy={'newPasswordInput'}
                       value={newPassword}
                       onChange={onChangeNewPassword}
                       placeholder={'새로운 비밀번호를 입력하세요.'}
@@ -202,7 +204,7 @@ export default function UserManageModal({
           <button
             className={`bg-orange rounded font-bold text-sm text-white
             ${isClickPwChange ? 'w-[4.5rem] h-9' : 'w-[6rem] h-9'}`}
-            // onClick={()=>{onClickChangePassword()}
+            data-cy={'changePasswordButton'}
             onClick={() => {
               isClickPwChange ? onClickChangePassword() : onClickDeleteAccount();
             }}
