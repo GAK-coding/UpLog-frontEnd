@@ -57,6 +57,11 @@ export default function SignUp() {
     onSuccess: (data) => {
       if ('message' in data) {
         setMessageInfo({ type: 'warning', content: data.message });
+        if (data.message === '이미 존재하는 회원입니다.') {
+          setAuth('');
+          setIsAuthClick(false);
+          setIsAuth(false);
+        }
       } else {
         setName('');
         setNickname('');
