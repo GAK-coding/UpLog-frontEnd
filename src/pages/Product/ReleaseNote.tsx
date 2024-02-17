@@ -80,17 +80,17 @@ export default function ReleaseNote() {
   useLayoutEffect(() => {
     if (isFetching) return;
 
-    if (product === '-1' && productList?.length > 0) {
+    if (product === '-1' && productList && productList.length > 0) {
       sessionStorage.setItem('nowProduct', JSON.stringify(productList[0]));
       navigate(`/workspace/${productList[0].productId}`);
-    } else if (product === '-1' && productList.length === 0) {
+    } else if (product === '-1' && productList && productList.length === 0) {
       navigate('/');
     }
   }, [product, productList, isFetching]);
 
   return (
     <div>
-      {product === '-1' && <Loading isSetLoading={true} />}
+      {product === '-1' && <Loading isLoading={true} />}
 
       {product !== '-1' && (
         <section className={'w-full min-w-[50em] py-32 px-14 xl:px-56'} onClick={onCloseKebab}>
