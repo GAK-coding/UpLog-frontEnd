@@ -9,10 +9,8 @@ export default function Loading({ isSetLoading }: Props) {
   const isFetching = useIsFetching(); // for now, just don't display
   // useIsFetching과 비슷하지만 변이 호출 중 현재 해결되지 않은 것이 있는지 알려준다.
   const isMutating = useIsMutating();
-
   // isFetching이 0보다 크면 로딩 스피너가 나타나게 한다.
-  const display =
-    (isFetching || isMutating ? 'inherit' : 'none') || (isSetLoading ? 'inherit' : 'none');
+  const display = isSetLoading ? 'inherit' : isFetching || isMutating ? 'inherit' : 'none';
 
   return (
     <Spinner
