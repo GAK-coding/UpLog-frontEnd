@@ -2,12 +2,10 @@ import { http, HttpResponse } from 'msw';
 import { GetUserInfo, LoginInfo, SignUpInfo } from '@/typings/member.ts';
 import { faker } from '@faker-js/faker';
 
-let count = 0;
-
 export const auth = [
   http.post('/members/refresh', () => {
     return HttpResponse.json(
-      { accessToken: count !== 0 ? 'MSW-new-accessToken' : 'MSW-accessToken' && count++ },
+      { accessToken: 'MSW-new-accessToken' },
       {
         headers: {
           'Set-Cookie': 'refreshToken=MSW-refreshToken;Max-Age=999999999999;',
