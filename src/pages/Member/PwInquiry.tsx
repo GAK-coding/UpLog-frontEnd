@@ -13,13 +13,32 @@ export default function PwInquiry() {
   const [isSend, setIsSend] = useState(false);
   const [messageInfo, setMessageInfo] = useRecoilState(message);
 
-  const { mutate } = useMutation(emailRequest);
+  const { mutate } = useMutation(emailRequest, {
+    onSuccess: (data: { message: string }) => {
+      if (data.message === '해당 이메일은 존재하지 않습니다.') {
+        setMessageInfo({ type: 'warning', content: data.message });
+        return;
+      }
+
+      setIsSend(true);
+      setMessageInfo({ type: 'success', content: data.message });
+    },
+    onError: () => {
+      setMessageInfo({ type: 'error', content: '잠시후에 다시 시도해주세요.' });
+    },
+  });
 
   const onSubmit = useCallback(
     (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
-      if (!isSend) {
+      if (!isSend && !email) {
+        setMessageInfo({ type: 'warning', content: '이메일을 입력해주세요.' });
+
+        return;
+      }
+
+      if (!isSend && email) {
         const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
         if (!emailRegex.test(email)) {
           setMessageInfo({ type: 'warning', content: '이메일이 유효하지 않습니다.' });
@@ -27,7 +46,6 @@ export default function PwInquiry() {
         }
 
         mutate({ email, type: 1 });
-        setIsSend(true);
         return;
       }
 
@@ -90,6 +108,7 @@ export default function PwInquiry() {
                     </span>
                     <input
                       type="text"
+                      data-cy={'emailInput'}
                       value={email}
                       onChange={onChangeEmail}
                       placeholder={'이메일'}
@@ -105,6 +124,7 @@ export default function PwInquiry() {
               className={
                 'flex-row-center border-solid rounded-md w-[27rem] h-12 mt-10 py-7 bg-orange text-white font-bold text-xl'
               }
+              data-cy={'submitButton'}
             >
               {isSend ? '로그인으로 이동' : '다음'}
             </button>

@@ -38,7 +38,7 @@ export default function SignUp() {
   const [correctAuthNum, setCorrectAuthNum] = useState('');
   const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
 
-  const { mutate: sendAuthNumMutate } = useMutation(emailRequest, {
+  const { mutate: d } = useMutation(emailRequest, {
     onSuccess: (data) => {
       // TODO: 인증번호 지워야됨
       console.log('인증번호', data.message);
@@ -90,7 +90,7 @@ export default function SignUp() {
   /** 인증번호 전송 함수, 재전송에서도 활용하기 위해서 밖으로 뺌 */
   const sendAuth = useCallback(() => {
     const emailInfo: EmailInfo = { email, type: 0 };
-    sendAuthNumMutate(emailInfo);
+    d(emailInfo);
   }, [email]);
 
   /** 인증번호 버튼 */
