@@ -14,6 +14,7 @@ import { productOpen } from '@/recoil/Product/atom.ts';
 import { worker } from '../mocks/browser.ts';
 
 const Header = loadable(() => import('@/components/UI/Header'));
+const Loading = loadable(() => import('@/components/UI/Loading'));
 const Home = loadable(() => import('@/pages/Home'));
 const Login = loadable(() => import('@/pages/Member/Login'));
 const SignUp = loadable(() => import('@/pages/Member/SignUp'));
@@ -68,6 +69,7 @@ function App() {
             autoHideDuration={200}
           >
             <BrowserRouter>
+              <Loading />
               <section className={'h-[5.7rem]'} onClick={onCloseProduct}>
                 <Header />
               </section>
