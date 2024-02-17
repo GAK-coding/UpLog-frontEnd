@@ -90,8 +90,6 @@ https://www.youtube.com/watch?v=Jk-_V03pTn0
 3. [로그인](#로그인)
     - [비밀번호 찾기](#비밀번호-찾기)
 4. [마이페이지](#마이페이지)
-    - [회원정보 수정](#회원정보-수정)
-    - [비밀번호 변경](#비밀번호-변경)
 5. [제품](#제품-1)
     - [제품 생성](#제품-생성)
     - [제품에서 프로젝트 생성](#제품에서-프로젝트-생성)
@@ -141,7 +139,7 @@ https://www.youtube.com/watch?v=Jk-_V03pTn0
 - 개인 회원과 기업 회원 중 선택하여 회원가입이 가능합니다.
 - 이메일 인증을 하고 회원가입을 완료할 수 있습니다.
 
-<img width="85%" alt="image" src="https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/64392fe6-9282-45f2-8a1a-639095ef36e4"/>
+<video src="https://github.com/GAK-coding/UpLog-frontEnd/assets/86971770/662db149-6c3b-49d2-80c2-d99ee045dd30"></video>
 
 <br/>
 <br/>
@@ -150,37 +148,29 @@ https://www.youtube.com/watch?v=Jk-_V03pTn0
 
 - 회원가입 후 로그인이 가능합니다.
 
-<img width="85%" alt="image" src="https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/9c20638f-044f-4baa-93be-5a8be238f0a4"/>
+<video src="https://github.com/GAK-coding/UpLog-frontEnd/assets/86971770/805b6dc3-068d-452c-a413-514add8d2183
+"></video>
 
 ### 비밀번호 찾기
 
 - 비밀번호를 잃어버렸을 경우, 이메일을 통해서 비밀번호 찾기가 가능합니다.
 
-<img width="85%" alt="image" src="https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/4ed6ddce-87ff-4877-9391-498221de8122">
-<img width=85%" alt="image" src="https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/a348e277-98ed-40b1-bc58-ade5211c819e">
+<video src="https://github.com/GAK-coding/UpLog-frontEnd/assets/86971770/dd87520e-3496-436e-836f-371c0db3cd68"></video>
 
 <br/><br/>
 
 ## 마이페이지
 
-### 회원정보 수정
-
 - 이름, 닉네임, 프로필 사진 수정이 가능합니다.
 - 비밀번호 변경을 클릭하면 모달창이 뜹니다.
+- 현재 비밀번호, 새로운 비밀번호를 입력하고 변경이 가능합니다.
 - 계정 삭제 기능을 제공합니다.
 
-<img width="85%" alt="image" src="https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/72f43cf5-f002-47ba-943d-bedf75a48bca"/>
-<img width="85%" alt="image" src="https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/636382dd-480f-4432-a388-159660e105fc"/>
+<video src="https://github.com/GAK-coding/UpLog-frontEnd/assets/86971770/76434232-8d3f-4e20-bc06-5eed67a66409
+"></video>
+(Mock API를 사용해서 이미지 변경 시 다른 이미지가 나옵니다.)
 
 <br/>
-
-### 비밀번호 변경
-
-- 현재 비밀번호, 새로운 비밀번호를 입력하고 변경이 가능합니다.
-
-<img width="85%" alt="image" src="https://github.com/why-are-you-c0ding/project-frontend/assets/86971770/e778d9df-b9ec-46d6-9237-110d75594ef8"/>
-
-<br/><br/>
 
 ## 제품
 
