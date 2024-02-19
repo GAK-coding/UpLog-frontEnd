@@ -1,22 +1,18 @@
 import { instance } from '@/api';
 import { AxiosResponse } from 'axios';
 import {
-  FailProject,
-  ParentGroup,
-  Project,
   ChildGroup,
   ChildGroupMember,
+  FailProject,
+  ParentGroup,
   ParentGroupMember,
+  Project,
 } from '@/typings/project.ts';
 import { ChangeLogBody, ChangeLogData, FailProduct } from '@/typings/product.ts';
 
 export const getAllProductProjects = async (productId: number) => {
-  try {
-    const res: AxiosResponse<Project> = await instance.get(`/products/${productId}/projects`);
-    return res.data;
-  } catch (err) {
-    return 'fail get all product projects';
-  }
+  const res: AxiosResponse<Project> = await instance.get(`/products/${productId}/projects`);
+  return res.data;
 };
 
 export const createProject = async (data: { productId: number; version: string; link: string }) => {
@@ -165,14 +161,9 @@ export const createNewChangeLog = async (data: ChangeLogBody, projectId: number)
 
 // 변경이력 조회
 export const getChangeLogEachProject = async (projectId: number) => {
-  try {
-    const res: AxiosResponse<ChangeLogData[]> = await instance.get(
-      `/changedIssues/${projectId}/issue`
-    );
+  const res: AxiosResponse<ChangeLogData[]> = await instance.get(
+    `/changedIssues/${projectId}/issue`
+  );
 
-    return res.data;
-  } catch (err) {
-    console.log(err);
-    return 'fail getChangeLogEachProject';
-  }
+  return res.data;
 };

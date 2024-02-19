@@ -17,32 +17,9 @@ export default function ReleaseNote() {
   const [projects, setProjects] = useRecoilState(eachProductProjects);
   const nowProduct: ProductInfo = JSON.parse(sessionStorage.getItem('nowProduct')!);
   const { product } = useParams();
-
-  const queryResults = useQueries([
-    {
-      queryKey: ['getAllProductProjects', nowProduct?.productId],
-      queryFn: () => getAllProductProjects(nowProduct?.productId),
-      staleTime: 300000, // 5분
-      cacheTime: 600000, // 10분
-      refetchOnMount: false, // 마운트(리렌더링)될 때 데이터를 다시 가져오지 않음
-      refetchOnWindowFocus: false, // 브라우저를 포커싱했을때 데이터를 가져오지 않음
-      refetchOnReconnect: false, // 네트워크가 다시 연결되었을때 다시 가져오지 않음
-      enabled: !!nowProduct?.productId,
-    },
-  ]);
-
-  const eachProjectQueryResults = useQueries(
-    projects.map((project) => ({
-      queryKey: ['getChangeLog', project.id],
-      queryFn: () => getChangeLogEachProject(project.id),
-      enabled: !!projects,
-    }))
-  );
-
   const navigate = useNavigate();
   const [productList, refetch, isFetching] = useGetAllProduct()!;
   const [messageInfo, setMessageInfo] = useRecoilState(message);
-
   const { isOpen, onOpen, onClose } = useDisclosure();
   // 모달 프로젝트 추가로 띄울건지, 프로젝트 완료로 띄울건지
   const [isAdd, setIsAdd] = useState(true);
@@ -68,13 +45,34 @@ export default function ReleaseNote() {
     onOpen();
   }, []);
 
+  const allProjects = useQueries([
+    {
+      queryKey: ['getAllProductProjects', nowProduct?.productId],
+      queryFn: () => getAllProductProjects(nowProduct?.productId),
+      staleTime: 5 * 1000 * 60, // 5분
+      refetchOnMount: false, // 마운트(리렌더링)될 때 데이터를 다시 가져오지 않음
+      refetchOnWindowFocus: false, // 브라우저를 포커싱했을때 데이터를 가져오지 않음
+      refetchOnReconnect: false, // 네트워크가 다시 연결되었을때 다시 가져오지 않음
+      enabled: !!nowProduct?.productId,
+      onError: () => {},
+    },
+  ]);
+
+  const eachProjectQueryResults = useQueries(
+    projects.map((project) => ({
+      queryKey: ['getChangeLog', project.id],
+      queryFn: () => getChangeLogEachProject(project.id),
+      enabled: !!projects,
+    }))
+  );
+
   useEffect(() => {
-    const projectList = queryResults[0].data;
+    const projectList = allProjects[0].data;
     if (projectList && typeof projectList !== 'string') {
       const temp = JSON.parse(JSON.stringify(projectList));
       setProjects([...temp]);
     }
-  }, [queryResults[0].data]);
+  }, [allProjects[0].data]);
 
   // 로그인 페이지에서 넘어왔을 경우
   useLayoutEffect(() => {
@@ -174,6 +172,7 @@ export default function ReleaseNote() {
                     onClickComplete={onClickProjectModal}
                     setTempVersion={setTempVersion}
                     setNowProjectId={setNowProjectId}
+                    allProjects={allProjects[0].data}
                     eachProjectQueryResults={eachProjectQueryResults.reverse()}
                   />
                 )}

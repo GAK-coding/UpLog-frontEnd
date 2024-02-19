@@ -3,13 +3,12 @@ import { Tbody, Td, Tr } from '@chakra-ui/react';
 import { GoKebabHorizontal } from 'react-icons/go';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { typeBgColors } from '@/recoil/Product/ReleaseNote.ts';
+import { useRecoilState } from 'recoil';
 import { eachProductProjects } from '@/recoil/Project/atom.ts';
 import { editorChangeLog } from '@/recoil/Common/atom.ts';
 import { UseQueryResult } from 'react-query';
-import { ChangeLogData, Product, ProductInfo } from '@/typings/product.ts';
-import { UserInfo } from '@/typings/member.ts';
+import { ChangeLogData, ProductInfo } from '@/typings/product.ts';
+import { Project } from '@/typings/project';
 
 interface Props {
   isClickKebab: boolean;
@@ -18,6 +17,7 @@ interface Props {
   onClickComplete: (modalType: 'add' | 'complete') => void;
   setTempVersion: React.Dispatch<React.SetStateAction<string>>;
   setNowProjectId: React.Dispatch<React.SetStateAction<number>>;
+  allProjects: Project | undefined;
   eachProjectQueryResults: UseQueryResult<
     ChangeLogData[] | 'fail getChangeLogEachProject',
     unknown
@@ -31,8 +31,12 @@ export default function Tables({
   onClickComplete,
   setTempVersion,
   setNowProjectId,
+  allProjects,
   eachProjectQueryResults,
 }: Props) {
+  const reverseAllProjects: Project[] = allProjects
+    ? [...JSON.parse(JSON.stringify(allProjects))].reverse()
+    : [];
   const [editChangeLog, setEditChangeLog] = useRecoilState(editorChangeLog);
   const reverseEachProjectQueryResults = [...eachProjectQueryResults].reverse();
 
@@ -58,14 +62,14 @@ export default function Tables({
 
   return (
     <Tbody>
-      {[...projects].reverse()?.map((version, index) => {
+      {[...projects].reverse()?.map((project, index) => {
         return (
           <Tr
             key={index}
-            color={version.projectStatus === 'PROGRESS_IN' ? 'var(--gray-dark)' : ''}
+            color={project.projectStatus === 'PROGRESS_IN' ? 'var(--gray-dark)' : ''}
             position={'relative'}
-            onMouseEnter={() => handleMouseEnter(version.projectStatus)}
-            onMouseLeave={() => handleMouseLeave(version.projectStatus)}
+            onMouseEnter={() => handleMouseEnter(project.projectStatus)}
+            onMouseLeave={() => handleMouseLeave(project.projectStatus)}
           >
             <Td
               borderTop={'1px solid var(--gray-table)'}
@@ -74,23 +78,25 @@ export default function Tables({
               textAlign={'center'}
               cursor={'pointer'}
               onClick={() => {
-                const url = encodeURI(`/workspace/${product}/${version.id}`);
-                sessionStorage.setItem('nowProject', JSON.stringify(version));
+                const url = encodeURI(`/workspace/${product}/${project.id}`);
+                sessionStorage.setItem('nowProject', JSON.stringify(project));
                 {
-                  nowProduct.powerType === 'CLIENT' || version.projectStatus === 'PROGRESS_COMPLETE'
+                  nowProduct.powerType === 'CLIENT' || project.projectStatus === 'PROGRESS_COMPLETE'
                     ? navigate(`${url}/menu/결과물`)
                     : navigate(url);
                 }
               }}
             >
-              {version.version}
+              {project.version}
             </Td>
             <Td
               borderTop={'1px solid var(--gray-table)'}
               borderBottom={'1px solid var(--gray-table)'}
               textAlign={'center'}
             >
-              {version.projectStatus === 'PROGRESS_IN' ? '진행 중' : version.endDate}
+              {project.projectStatus === 'PROGRESS_IN'
+                ? '진행 중'
+                : `${reverseAllProjects[index]?.endDate}`}
             </Td>
             <Td
               borderTop={'1px solid var(--gray-table)'}
@@ -134,11 +140,11 @@ export default function Tables({
                   }
                   onClick={() => {
                     navigate(`/workspace/${product}/newchange`);
-                    sessionStorage.setItem('nowProject', JSON.stringify(version));
+                    sessionStorage.setItem('nowProject', JSON.stringify(project));
                     setEditChangeLog('');
                   }}
                 >
-                  {version.projectStatus === 'PROGRESS_IN' && (
+                  {project.projectStatus === 'PROGRESS_IN' && (
                     <>
                       <AiOutlinePlus className={'text-[1.6rem] mr-3'} /> 변경이력 추가
                     </>
@@ -149,7 +155,7 @@ export default function Tables({
 
             {/* Buttons for the "going" status */}
             {(nowProduct?.powerType === 'MASTER' || nowProduct?.powerType === 'LEADER') &&
-              version.projectStatus === 'PROGRESS_IN' &&
+              project.projectStatus === 'PROGRESS_IN' &&
               isHovering && (
                 <Td
                   position={'absolute'}
@@ -171,7 +177,7 @@ export default function Tables({
                         className={'h-1/2 hover:bg-orange-light-sideBar'}
                         onClick={() => {
                           navigate(`/workspace/${product}/newchange`);
-                          sessionStorage.setItem('nowProject', JSON.stringify(version));
+                          sessionStorage.setItem('nowProject', JSON.stringify(project));
                           setEditChangeLog('');
                         }}
                       >
@@ -181,8 +187,8 @@ export default function Tables({
                         className={'h-1/2 hover:bg-orange-light-sideBar'}
                         onClick={() => {
                           onClickComplete('complete');
-                          setTempVersion(version.version);
-                          setNowProjectId(version.id);
+                          setTempVersion(project.version);
+                          setNowProjectId(project.id);
                         }}
                       >
                         완료
