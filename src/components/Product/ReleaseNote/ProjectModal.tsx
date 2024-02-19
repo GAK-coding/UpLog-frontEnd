@@ -108,6 +108,7 @@ export default function ProjectModal({
         ['getAllProductProjects', nowProduct?.productId],
         context?.snapshot
       );
+      setMessageInfo({ type: 'error', content: '잠시후에 다시 시도해주세요.' });
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['getAllProductProjects', nowProduct?.productId] });
@@ -131,7 +132,7 @@ export default function ProjectModal({
 
   const onClickCompleteProject = useCallback(() => {
     if (projects.some((project) => project.version === text)) {
-      setMessageInfo({ type: 'error', content: '이미 존재하는 버전입니다!' });
+      setMessageInfo({ type: 'warning', content: '이미 존재하는 버전입니다!' });
       return;
     }
 

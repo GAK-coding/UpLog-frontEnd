@@ -16,34 +16,26 @@ export const getAllProductProjects = async (productId: number) => {
 };
 
 export const createProject = async (data: { productId: number; version: string; link: string }) => {
-  try {
-    const { productId, version, link } = data;
-    const res: AxiosResponse<Project | FailProject> = await instance.post(
-      `/products/${productId}/projects`,
-      {
-        version,
-        link,
-      }
-    );
+  const { productId, version, link } = data;
+  const res: AxiosResponse<Project | FailProject> = await instance.post(
+    `/products/${productId}/projects`,
+    {
+      version,
+      link,
+    }
+  );
 
-    return res.data;
-  } catch (err) {
-    return 'fail create project';
-  }
+  return res.data;
 };
 
 export const completeProject = async (data: { projectId: number; version: string }) => {
-  try {
-    const { projectId, version } = data;
+  const { projectId, version } = data;
 
-    const res: AxiosResponse<{ version: string }> = await instance.patch(`/projects/${projectId}`, {
-      version,
-    });
+  const res: AxiosResponse<{ version: string }> = await instance.patch(`/projects/${projectId}`, {
+    version,
+  });
 
-    return res.data;
-  } catch (err) {
-    return 'fail complete project';
-  }
+  return res.data;
 };
 
 export const getParentGroups = async (projectId: number) => {

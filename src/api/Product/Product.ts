@@ -75,14 +75,8 @@ export const changeProductsSequence = async (updateIndexList: number[]) => {
 };
 
 export const getProductMemberList = async (productId: number) => {
-  try {
-    const res: AxiosResponse<ProductMember[]> = await instance.get(
-      `/products/${productId}/members`
-    );
-    return res.data;
-  } catch (err) {
-    return 'fail product member list';
-  }
+  const res: AxiosResponse<ProductMember[]> = await instance.get(`/products/${productId}/members`);
+  return res.data;
 };
 
 export const changeProductMemberRole = async (data: {

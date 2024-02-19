@@ -54,7 +54,9 @@ export default function ReleaseNote() {
       refetchOnWindowFocus: false, // 브라우저를 포커싱했을때 데이터를 가져오지 않음
       refetchOnReconnect: false, // 네트워크가 다시 연결되었을때 다시 가져오지 않음
       enabled: !!nowProduct?.productId,
-      onError: () => {},
+      onError: () => {
+        setMessageInfo({ type: 'warning', content: '새로고침 후 다시 시도해주세요.' });
+      },
     },
   ]);
 
@@ -62,7 +64,13 @@ export default function ReleaseNote() {
     projects.map((project) => ({
       queryKey: ['getChangeLog', project.id],
       queryFn: () => getChangeLogEachProject(project.id),
+      refetchOnMount: false, // 마운트(리렌더링)될 때 데이터를 다시 가져오지 않음
+      refetchOnWindowFocus: false, // 브라우저를 포커싱했을때 데이터를 가져오지 않음
+      refetchOnReconnect: false, // 네트워크가 다시 연결되었을때 다시 가져오지 않음
       enabled: !!projects,
+      onError: () => {
+        setMessageInfo({ type: 'warning', content: '새로고침 후 다시 시도해주세요.' });
+      },
     }))
   );
 
@@ -108,7 +116,10 @@ export default function ReleaseNote() {
             <button
               className={'mr-2 text-gray-dark font-bold underline self-end'}
               onClick={() => {
-                if (projects?.[0].projectStatus === 'PROGRESS_IN') {
+                if (
+                  projects.length > 0 &&
+                  projects?.[projects.length - 1].projectStatus === 'PROGRESS_IN'
+                ) {
                   setMessageInfo({
                     type: 'warning',
                     content: '현재 진행 중인 프로젝트가 있습니다.',
