@@ -61,7 +61,7 @@ export const eachProduct = async (productId: number) => {
   }
 };
 
-export const getMyProducts = async () => {
+export const getAllProducts = async () => {
   const res: AxiosResponse<GetProductList[]> = await instance.get('/products');
   return res.data;
 };

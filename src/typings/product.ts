@@ -18,7 +18,8 @@ export interface GetProductList {
   delStatus: boolean;
 }
 
-export interface ProductInfo extends Omit<GetProductList, 'memberName'> {
+export interface ProductInfo
+  extends Omit<GetProductList, 'memberName' | 'memberNickname' | 'delStatus'> {
   draggableId: string;
   image?: string;
 }

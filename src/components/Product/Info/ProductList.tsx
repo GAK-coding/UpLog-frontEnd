@@ -11,7 +11,7 @@ import { Scrollbars } from 'rc-scrollbars';
 import { useNavigate } from 'react-router-dom';
 import { UserInfo } from '@/typings/member.ts';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { changeProductsSequence, getMyProducts } from '@/api/Product/Product.ts';
+import { changeProductsSequence, getAllProducts } from '@/api/Product/Product.ts';
 import { useGetAllProduct } from '@/components/Product/hooks/useGetAllProduct.ts';
 import { FaUserCircle } from 'react-icons/fa';
 import { user } from '@/recoil/User/atom';
