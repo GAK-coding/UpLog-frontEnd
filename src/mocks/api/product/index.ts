@@ -27,7 +27,11 @@ export const product = [
     const temp = faker.helpers.multiple(() => createProject(true), {
       count: faker.number.int({ min: 0, max: 5 }),
     });
-    temp.push(createProject());
+
+    const num = faker.number.int({ min: 0, max: 1 });
+    if (num % 2 === 0) {
+      temp.push(createProject());
+    }
 
     function getDateByOffset(offset: number) {
       const today = new Date();
