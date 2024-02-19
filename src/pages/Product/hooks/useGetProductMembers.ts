@@ -3,35 +3,33 @@ import { ProductMember } from '@/typings/product.ts';
 import { useQuery } from 'react-query';
 
 export function useGetProductMembers(productId: number) {
-  const { data, isSuccess, refetch } = useQuery(
+  const { data, isSuccess, refetch, isError } = useQuery(
     ['getProductMemberList', productId],
     () => getProductMemberList(productId),
     {
       select: (data) => {
-        if (typeof data !== 'string') {
-          const temp: ProductMember[] = [];
-          data.forEach((member) => {
-            temp.push({
-              ...member,
-              isOpen: false,
-            });
+        const temp: ProductMember[] = [];
+        data.forEach((member) => {
+          temp.push({
+            ...member,
+            isOpen: false,
           });
+        });
 
-          const powerTypePriority = {
-            MASTER: 1,
-            LEADER: 2,
-            CLIENT: 3,
-            DEFAULT: 4,
-          };
+        const powerTypePriority = {
+          MASTER: 1,
+          LEADER: 2,
+          CLIENT: 3,
+          DEFAULT: 4,
+        };
 
-          const sortedData = temp.sort((a, b) => {
-            const priorityA = powerTypePriority[a.powerType];
-            const priorityB = powerTypePriority[b.powerType];
-            return priorityA - priorityB;
-          });
+        const sortedData = temp.sort((a, b) => {
+          const priorityA = powerTypePriority[a.powerType];
+          const priorityB = powerTypePriority[b.powerType];
+          return priorityA - priorityB;
+        });
 
-          return sortedData;
-        }
+        return sortedData;
       },
       staleTime: 60000, // 1분
       cacheTime: 80000, // 1분 20초
@@ -40,6 +38,10 @@ export function useGetProductMembers(productId: number) {
       refetchOnReconnect: false, // 네트워크가 다시 연결되었을때 다시 가져오지 않음
     }
   );
+
+  if (isError) {
+    return [[], isSuccess, refetch];
+  }
 
   return [data, isSuccess, refetch];
 }

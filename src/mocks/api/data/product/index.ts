@@ -40,3 +40,18 @@ export function createIssue() {
     modifiedTime: faker.date.recent().toISOString(),
   };
 }
+
+const memberPowerType = ['MASTER', 'LEADER', 'DEFAULT', 'CLIENT'];
+export function createProductMembers() {
+  const num = faker.number.int({ min: 0, max: 1 });
+
+  return {
+    memberEmail: faker.number.int(),
+    image: num % 2 === 0 ? null : faker.image.url(),
+    memberId: faker.number.int(),
+    memberName: faker.person.middleName(),
+    memberNickName: faker.person.lastName(),
+    powerType: faker.helpers.arrayElement(memberPowerType),
+    delStatus: false,
+  };
+}
