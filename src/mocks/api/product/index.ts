@@ -1,6 +1,11 @@
 import { http, HttpResponse } from 'msw';
 import { faker } from '@faker-js/faker';
-import { createIssue, createProduct, createProject } from '@/mocks/api/data/product';
+import {
+  createIssue,
+  createProduct,
+  createProductMembers,
+  createProject,
+} from '@/mocks/api/data/product';
 import { checkAuthorization } from '@/mocks/api/common.ts';
 
 // 현재 날짜에서 매개변수만큼 더하거나 빼줌
@@ -95,5 +100,11 @@ export const product = [
     };
 
     return HttpResponse.json(newProjectInfo);
+  }),
+  http.get('/products/:productId/members', () => {
+    const productMembers = faker.helpers.multiple(createProductMembers, {
+      count: faker.number.int({ min: 0, max: 20 }),
+    });
+    return HttpResponse.json(productMembers);
   }),
 ];
