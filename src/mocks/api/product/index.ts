@@ -40,12 +40,20 @@ export const product = [
 
     return HttpResponse.json(products);
   }),
-  http.get('/products/:productId/projects', () => {
+  http.get('/products/:productId/projects', ({ cookies, request }) => {
+    // 함수 호출
+    const authCheckResult = checkAuthorization({ cookies, request });
+
+    // 만약 인증에 실패한 경우
+    if (authCheckResult !== null) {
+      return authCheckResult;
+    }
+
     const projectsTemp = faker.helpers.multiple(() => createProject(true), {
-      count: faker.number.int({ min: 0, max: 5 }),
+      count: faker.number.int({ min: 1, max: 5 }),
     });
 
-    const num = faker.number.int({ min: 0, max: 1 });
+    const num = faker.number.int({ min: 0, max: 0 });
     if (num % 2 === 0) {
       projectsTemp.push(createProject());
     }
@@ -60,17 +68,33 @@ export const product = [
 
     return HttpResponse.json(projects);
   }),
-  http.get('/changedIssues/:projectId/issue', () => {
+  http.get('/changedIssues/:projectId/issue', ({ cookies, request }) => {
+    // 함수 호출
+    const authCheckResult = checkAuthorization({ cookies, request });
+
+    // 만약 인증에 실패한 경우
+    if (authCheckResult !== null) {
+      return authCheckResult;
+    }
+
     const changedIssues = faker.helpers.multiple(createIssue, {
       count: faker.number.int({ min: 0, max: 10 }),
     });
 
     return HttpResponse.json(changedIssues);
   }),
-  http.patch('/projects/:projectId', async () => {
+  http.patch('/projects/:projectId', async ({ cookies, request }) => {
     return HttpResponse.json(createProject(true));
   }),
   http.post('/products/:productId/projects', async ({ request }) => {
+    // 함수 호출
+    const authCheckResult = checkAuthorization({ cookies, request });
+
+    // 만약 인증에 실패한 경우
+    if (authCheckResult !== null) {
+      return authCheckResult;
+    }
+
     const { version } = (await request.json()) as { version: string };
 
     const newProjectInfo = {
@@ -101,7 +125,15 @@ export const product = [
 
     return HttpResponse.json(newProjectInfo);
   }),
-  http.get('/products/:productId/members', () => {
+  http.get('/products/:productId/members', ({ cookies, request }) => {
+    // 함수 호출
+    const authCheckResult = checkAuthorization({ cookies, request });
+
+    // 만약 인증에 실패한 경우
+    if (authCheckResult !== null) {
+      return authCheckResult;
+    }
+
     const productMembers = faker.helpers.multiple(createProductMembers, {
       count: faker.number.int({ min: 0, max: 20 }),
     });
