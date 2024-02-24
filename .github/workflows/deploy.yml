@@ -21,6 +21,9 @@ jobs:
           echo "VITE_DEPLOYMENT_FRONTEND_URL: ${{ secrets.VITE_DEPLOYMENT_FRONTEND_URL }}" >> .env
           echo "VITE_DEV_BACKEND_URL: ${{ secrets.VITE_DEV_BACKEND_URL }}" >> .env
           echo "VITE_DEPLOYMENT_BACKEND_URL: ${{ secrets.VITE_DEPLOYMENT_BACKEND_URL }}" >> .env
+          echo "VITE_IS_MSW: ${{ secrets.VITE_IS_MSW }}" >> .env
+          echo "VITE_SALT: ${{ secrets.VITE_SALT }}" >> .env
+          echo "VITE_USERINFO_AUTH: ${{ secrets.VITE_USERINFO_AUTH }}" >> .env
           cat .env
 
       - name: Install Dependencies # 의존 파일 설치
