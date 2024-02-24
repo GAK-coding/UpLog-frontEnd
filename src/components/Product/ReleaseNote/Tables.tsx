@@ -90,6 +90,7 @@ export default function Tables({
               {project.version}
             </Td>
             <Td
+              data-cy={'projectStatus'}
               borderTop={'1px solid var(--gray-table)'}
               borderBottom={'1px solid var(--gray-table)'}
               textAlign={'center'}
